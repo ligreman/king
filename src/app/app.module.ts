@@ -4,6 +4,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginatorIntl } from '@angular/material/paginator';
@@ -19,6 +20,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
 import { MatPaginatorIntlSpanish } from './shared/spanish-paginator-intl';
@@ -32,7 +34,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     declarations: [
         AppComponent,
         NodeInformationComponent,
-        PageNotFoundComponent
+        PageNotFoundComponent,
+        LandingComponent
     ],
     imports: [
         BrowserModule,
@@ -42,6 +45,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         FlexLayoutModule,
         MatInputModule,
         MatButtonModule,
+        MatButtonToggleModule,
         MatSelectModule,
         MatRadioModule,
         MatToolbarModule,

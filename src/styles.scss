@@ -55,16 +55,16 @@ app-root {
     flex-grow: 1;
 }
 
-app-root > *:nth-child(2) {
+app-root > *:nth-child(3) {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
 }
 
 #appDiv > *:nth-child(2) {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    //display: flex;
+    //flex-direction: column;
+    //flex-grow: 1;
 }
 
 .flex-row-parent {
@@ -74,5 +74,5 @@ app-root > *:nth-child(2) {
 }
 
 footer {
-    text-align: center;
+    padding: 5px 20px;
 }

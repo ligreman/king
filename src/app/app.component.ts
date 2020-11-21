@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { DataSet, Network } from 'vis-network/standalone';
@@ -14,17 +15,27 @@ import { ToastService } from './services/toast.service';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+    lang = new FormControl('');
+
     formNodes = this.fb.group({
         node: ['', Validators.required]
     });
-    // nodesControl = new FormControl();
+
     node_list: string[] = [];
 
-    constructor(translate: TranslateService, private api: ApiService, private globals: GlobalsService, private fb: FormBuilder, private toast: ToastService) {
+    constructor(private translate: TranslateService, private api: ApiService, private globals: GlobalsService, private fb: FormBuilder, private toast: ToastService, private route: Router) {
+        // Cargo del localStorage el idioma
+        const language = localStorage.getItem('language');
+        if (language == 'es' || language == 'en') {
+            this.lang.setValue(language);
+        } else {
+            this.lang.setValue('en');
+        }
+
         // this language will be used as a fallback when a translation isn't found in the current language
-        translate.setDefaultLang('en');
+        translate.setDefaultLang(this.lang.value);
         // the lang to use, if the lang isn't available, it will use the current loader to get them
-        translate.use('en');
+        translate.use(this.lang.value);
 
         // Cargo del localStorage los datos de nodos usados
         let local = localStorage.getItem('kongNodes');
@@ -32,7 +43,6 @@ export class AppComponent implements OnInit, OnDestroy {
             local = atob(local);
             this.node_list = local.split(',');
         }
-
     }
 
     ngOnInit(): void {
@@ -91,9 +101,18 @@ export class AppComponent implements OnInit, OnDestroy {
                     this.node_list.push(node);
                     localStorage.setItem('kongNodes', btoa(this.node_list.join(',')));
                 }
+
+                // Voy a la página de información de nodos
+                this.route.navigate(['/node-information']);
             }, error => {
                 this.toast.error('error.node_connection');
             });
+    }
+
+    changeLang(newLang: string) {
+        this.lang.setValue(newLang);
+        this.translate.use(this.lang.value);
+        localStorage.setItem('language', this.lang.value);
     }
 
     // getter para acceder de forma más sencilla al campo

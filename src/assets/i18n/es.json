@@ -11,5 +11,8 @@
             "kong_node_button_tooltip": "Conectar",
             "error_node_field": "Introduce una url válida. Formato: http(s)://<admin-api>:<port>"
         }
+    },
+    "footer": {
+        "about": "Acerca"
     }
 }

@@ -11,5 +11,8 @@
             "kong_node_button_tooltip": "Connect",
             "error_node_field": "Must be a valid url. Format: http(s)://<admin-api>:<port>"
         }
+    },
+    "footer": {
+        "about": "About"
     }
 }

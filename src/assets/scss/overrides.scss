@@ -13,3 +13,16 @@
 .mat-tooltip.tooltip-teal {
     background: mat-color($mat-teal, 800);
 }
+
+.mat-button-toggle {
+    background-color: mat-color($mat-gray, 900);
+
+}
+
+.mat-button-toggle-checked {
+    background-color: mat-color($mat-teal, 900);
+}
+
+.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+    line-height: 24px;
+}
