@@ -1,0 +1,15 @@
+@import '~@angular/material/theming';
+
+/* Toastr Overrides */
+.toast-container .ngx-toastr {
+    box-shadow: none !important;
+}
+
+/* Material overrides */
+.mat-app-background {
+    background-color: mat-color($mat-gray, 900);
+}
+
+.mat-tooltip.tooltip-teal {
+    background: mat-color($mat-teal, 800);
+}

@@ -1,3 +1,15 @@
 {
-  "HELLO": "hola"
+    "error": {
+        "unknown": "Error desconocido",
+        "node_connection": "Error al conectar con el nodo de Kong"
+    },
+    "header": {
+        "menu": {
+            "graph": "Arquitecto",
+            "kong_node": "API de administración de un nodo de Kong",
+            "kong_node_tooltip": "Introduce la URL y puerto",
+            "kong_node_button_tooltip": "Conectar",
+            "error_node_field": "Introduce una url válida. Formato: http(s)://<admin-api>:<port>"
+        }
+    }
 }
