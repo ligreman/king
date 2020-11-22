@@ -15,7 +15,7 @@ export class ToastService {
         msg = this.translate.instant(msg, {extra: msgExtra});
         if (title != '') title = this.translate.instant(title, {extra: titleExtra});
         this.toastr.success(msg, title, {timeOut: timeOut, extendedTimeOut: extendedTimeOut, disableTimeOut: disableTimeOut});
-    };
+    }
 
     public error(msg: string, title: string = '', options: any = {}) {
         const {timeOut = 5000, extendedTimeOut = 1000, disableTimeOut = false, msgExtra = '', titleExtra = ''} = options;
@@ -25,13 +25,17 @@ export class ToastService {
         this.toastr.error(msg, title, {timeOut: timeOut, extendedTimeOut: extendedTimeOut, disableTimeOut: disableTimeOut});
     };
 
+    public error_general(err: any) {
+        this.error('error.content', 'error.title', {msgExtra: err.message, titleExtra: err.code});
+    }
+
     public warning(msg: string, title: string = '', options: any = {}) {
         const {timeOut = 5000, extendedTimeOut = 1000, disableTimeOut = false, msgExtra = '', titleExtra = ''} = options;
 
         msg = this.translate.instant(msg, {extra: msgExtra});
         if (title != '') title = this.translate.instant(title, {extra: titleExtra});
         this.toastr.warning(msg, title, {timeOut: timeOut, extendedTimeOut: extendedTimeOut, disableTimeOut: disableTimeOut});
-    };
+    }
 
     public info(msg: string, title: string = '', options: any = {}) {
         const {timeOut = 5000, extendedTimeOut = 1000, disableTimeOut = false, msgExtra = '', titleExtra = ''} = options;
@@ -39,5 +43,5 @@ export class ToastService {
         msg = this.translate.instant(msg, {extra: msgExtra});
         if (title != '') title = this.translate.instant(title, {extra: titleExtra});
         this.toastr.info(msg, title, {timeOut: timeOut, extendedTimeOut: extendedTimeOut, disableTimeOut: disableTimeOut});
-    };
+    }
 }

@@ -3,22 +3,56 @@
 
     <div [fxFlexOffset]="1"><a class="title" routerLink="/node-information">King for Kong</a></div>
 
-    <button mat-button color="accent" [fxFlexOffset]="2" routerLink="/architect" [disabled]="!isConnectedToNode()">
-        <mat-icon>architecture</mat-icon>
-        {{ 'header.menu.graph' | translate | uppercase }}
-    </button>
-    <button mat-button color="accent" routerLink="/el" [disabled]="!isConnectedToNode()">
-        <mat-icon>category</mat-icon>
-        {{ 'header.menu.elements' | translate | uppercase }}
-    </button>
-    <button mat-button color="accent" routerLink="/plugins" [disabled]="!isConnectedToNode()">
-        <mat-icon>settings_input_component</mat-icon>
-        {{ 'header.menu.plugins' | translate | uppercase }}
-    </button>
-    <button mat-button color="accent" routerLink="/ce" [disabled]="!isConnectedToNode()">
-        <mat-icon>https</mat-icon>
-        {{ 'header.menu.certs' | translate | uppercase }}
-    </button>
+    <div>
+        <button mat-button color="accent" [fxFlexOffset]="2" routerLink="/architect" [disabled]="!isConnectedToNode()">
+            <mat-icon>architecture</mat-icon>
+            {{ 'header.menu.graph' | translate | uppercase }}
+        </button>
+        <button mat-button [matMenuTriggerFor]="menuE" [disabled]="!isConnectedToNode()" color="accent">
+            <mat-icon>category</mat-icon>
+            {{ 'header.menu.elements' | translate | uppercase }}
+        </button>
+        <mat-menu #menuE="matMenu">
+            <button mat-menu-item>
+                <mat-icon>memory</mat-icon>
+                Servicios
+            </button>
+            <button mat-menu-item>
+                <mat-icon>timeline</mat-icon>
+                Rutas
+            </button>
+            <button mat-menu-item>
+                <mat-icon>mediation</mat-icon>
+                Upstreams
+            </button>
+            <button mat-menu-item>
+                <mat-icon>shopping_cart</mat-icon>
+                Consumidores
+            </button>
+        </mat-menu>
+        <button mat-button color="accent" routerLink="/plugins" [disabled]="!isConnectedToNode()">
+            <mat-icon>settings_input_component</mat-icon>
+            {{ 'header.menu.plugins' | translate | uppercase }}
+        </button>
+        <button mat-button [matMenuTriggerFor]="menuC" [disabled]="!isConnectedToNode()" color="accent">
+            <mat-icon>https</mat-icon>
+            {{ 'header.menu.certs' | translate | uppercase }}
+        </button>
+        <mat-menu #menuC="matMenu">
+            <button mat-menu-item>
+                <mat-icon>https</mat-icon>
+                Certificados
+            </button>
+            <button mat-menu-item>
+                <mat-icon>https</mat-icon>
+                Certificados de CA
+            </button>
+            <button mat-menu-item>
+                <mat-icon>https</mat-icon>
+                SNIs
+            </button>
+        </mat-menu>
+    </div>
 
     <span fxFlex></span>
 

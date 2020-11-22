@@ -16,14 +16,12 @@ export class ApiService {
      */
     handleError(error: HttpErrorResponse) {
         let errorMessage;
-        if (error.error instanceof ErrorEvent) {
-            // Client-side errors
-            errorMessage = `Error: ${error.error.message}`;
+        if (error['error']['message']) {
+            errorMessage = error.error.message;
         } else {
-            // Server-side errors
             errorMessage = `Code: ${error.status}. Error: ${error.message}`;
         }
-        return throwError(errorMessage);
+        return throwError({code: error.status, message: errorMessage});
     }
 
     /*
@@ -37,5 +35,20 @@ export class ApiService {
 
     public getNodeStatus() {
         return this.httpClient.get(this.globals.NODE_API_URL + '/status').pipe(catchError(this.handleError));
+    }
+
+    /*
+        SERVICE ENDPOINTS
+     */
+    public getServices() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/services').pipe(catchError(this.handleError));
+    }
+
+    public postNewService(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/services', body).pipe(catchError(this.handleError));
+    }
+
+    public deleteService(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/services/' + id).pipe(catchError(this.handleError));
     }
 }

@@ -1,1 +1,66 @@
-<div id="node-network"></div>
+<div id="net-reference" fxLayout="row" fxFlexFill>
+    <div fxFlex="75" [fxShow]="loading" fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+        </p>
+    </div>
+    <div fxFlex="75" [fxShow]="!loading">
+        <div id="node-network"></div>
+    </div>
+    <div fxFlex="25">
+        <mat-list>
+            <div mat-subheader>Acciones globales</div>
+            <mat-list-item>
+                <div mat-line>
+                    <button mat-button color="" (click)="addService()">
+                        <mat-icon>memory</mat-icon>
+                        Add Service
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>
+                    <button mat-button color="">
+                        <mat-icon>timeline</mat-icon>
+                        Add Route
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>
+                    <button mat-button color="">
+                        <mat-icon>mediation</mat-icon>
+                        Add Upstream
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>
+                    <button mat-button color="">
+                        <mat-icon>shopping_cart</mat-icon>
+                        Add Consumer
+                    </button>
+                </div>
+            </mat-list-item>
+
+            <mat-divider class="margin-10"></mat-divider>
+
+            <mat-list-item>
+                <div mat-line>
+                    <button mat-button color="accent">
+                        <mat-icon>edit</mat-icon>
+                        Edit
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>
+                    <button mat-button color="warn">
+                        <mat-icon>shopping_cart</mat-icon>
+                        Delete
+                    </button>
+                </div>
+            </mat-list-item>
+        </mat-list>
+    </div>
+</div>

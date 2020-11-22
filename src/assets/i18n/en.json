@@ -1,7 +1,15 @@
 {
     "error": {
         "unknown": "Unknown error",
-        "node_connection": "Error connecting to Kong node"
+        "node_connection": "Error connecting to Kong node",
+        "title": "Error en la operación - {{extra}}",
+        "content": "{{extra}}"
+    },
+    "success": {
+        "new_service": "Service created"
+    },
+    "text": {
+        "id_extra": "ID: {{extra}}"
     },
     "header": {
         "menu": {
