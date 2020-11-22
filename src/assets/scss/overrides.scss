@@ -26,3 +26,167 @@
 .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
     line-height: 24px;
 }
+
+/*
+    NGX-CHARTS
+ */
+.dark {
+    // Backgrounds
+    $color-bg-darkest: #13141b;
+    $color-bg-darker: #1b1e27;
+    $color-bg-dark: #232837;
+    $color-bg-med: #2f3646;
+    $color-bg-light: #4DB6AC;
+    $color-bg-lighter: #4DB6AC;
+
+    // Text
+    $color-text-dark: #26A69A;
+    //$color-text-med-dark: #26A69A;
+    $color-text-med: #4DB6AC;
+    //$color-text-med-light: #4DB6AC;
+    $color-text-light: #80CBC4;
+    $color-text-lighter: #B2DFDB;
+
+    //background: $color-bg-darker;
+
+    .ngx-charts {
+
+        text {
+            fill: $color-text-med;
+        }
+
+        .tooltip-anchor {
+            fill: rgb(255, 255, 255);
+        }
+
+        .gridline-path {
+            stroke: $color-bg-med;
+        }
+
+        .refline-path {
+            stroke: $color-bg-light;
+        }
+
+        .reference-area {
+            fill: #fff;
+        }
+
+        .grid-panel {
+            &.odd {
+                rect {
+                    fill: rgba(255, 255, 255, 0.05);
+                }
+            }
+        }
+
+        .force-directed-graph {
+            .edge {
+                stroke: $color-bg-light;
+            }
+        }
+
+        .number-card {
+            p {
+                color: $color-text-light;
+            }
+        }
+
+        .gauge {
+            .background-arc {
+                path {
+                    fill: $color-bg-med;
+                }
+            }
+
+            .gauge-tick {
+                path {
+                    stroke: $color-text-med;
+                }
+
+                text {
+                    fill: $color-text-med;
+                }
+            }
+        }
+
+        .linear-gauge {
+            .background-bar {
+                path {
+                    fill: $color-bg-med;
+                }
+            }
+
+            .units {
+                fill: $color-text-dark;
+            }
+        }
+
+        .timeline {
+            .brush-background {
+                fill: rgba(255, 255, 255, 0.05);
+            }
+
+            .brush {
+                .selection {
+                    fill: rgba(255, 255, 255, 0.1);
+                    stroke: #aaa;
+                }
+            }
+        }
+
+        .polar-chart .polar-chart-background {
+            fill: rgb(30, 34, 46);
+        }
+
+    }
+
+    .chart-legend {
+        .legend-labels {
+            background: rgba(255, 255, 255, 0.05) !important;
+        }
+
+        .legend-title {
+            color: $color-text-light;
+            font-weight: normal;
+        }
+
+        .legend-item {
+            &:hover {
+                color: #f0f;
+            }
+        }
+
+        .legend-label {
+            color: $color-text-med;
+
+            &:hover {
+                color: #ff0 !important;
+            }
+
+            .active {
+                .legend-label-text {
+                    color: $color-text-lighter !important;
+                }
+            }
+        }
+
+        .scale-legend-label {
+            color: $color-text-med;
+        }
+    }
+
+    .advanced-pie-legend {
+        color: $color-text-med;
+
+        .legend-item {
+            &:hover {
+                color: $color-text-lighter !important;
+            }
+        }
+    }
+
+    .number-card .number-card-label {
+        font-size: 0.8em;
+        color: $color-text-med;
+    }
+}

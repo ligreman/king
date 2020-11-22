@@ -34,4 +34,8 @@ export class ApiService {
         //  const options = { params: new HttpParams({fromString: "_page=1&_limit=20"}) };
         //     return this.httpClient.get(this.REST_API_SERVER, options).pipe(retry(3), catchError(this.handleError));
     }
+
+    public getNodeStatus() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/status').pipe(catchError(this.handleError));
+    }
 }

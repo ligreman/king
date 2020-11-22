@@ -6,13 +6,21 @@
     "header": {
         "menu": {
             "graph": "Architect",
+            "elements": "Elements",
+            "plugins": "Plugins",
+            "certs": "Certificates",
             "kong_node": "Kong node admin API",
             "kong_node_tooltip": "Type in the URL and port",
             "kong_node_button_tooltip": "Connect",
             "error_node_field": "Must be a valid url. Format: http(s)://<admin-api>:<port>"
-        }
+        },
+        "node_connected": "Connected to node {{extra}}"
     },
     "footer": {
         "about": "About"
+    },
+    "landing": {
+        "title": "Type here the address and port of the administration API of a Kong node, and click on the arrow to connect",
+        "subtitle": "If you have connected with a node previously you will see it in the selector"
     }
 }

@@ -3,14 +3,26 @@
 
     <div [fxFlexOffset]="1"><a class="title" routerLink="/node-information">King for Kong</a></div>
 
-    <button mat-button color="accent" [fxFlexOffset]="2" routerLink="/heroes">
+    <button mat-button color="accent" [fxFlexOffset]="2" routerLink="/architect" [disabled]="!isConnectedToNode()">
         <mat-icon>architecture</mat-icon>
         {{ 'header.menu.graph' | translate | uppercase }}
+    </button>
+    <button mat-button color="accent" routerLink="/el" [disabled]="!isConnectedToNode()">
+        <mat-icon>category</mat-icon>
+        {{ 'header.menu.elements' | translate | uppercase }}
+    </button>
+    <button mat-button color="accent" routerLink="/plugins" [disabled]="!isConnectedToNode()">
+        <mat-icon>settings_input_component</mat-icon>
+        {{ 'header.menu.plugins' | translate | uppercase }}
+    </button>
+    <button mat-button color="accent" routerLink="/ce" [disabled]="!isConnectedToNode()">
+        <mat-icon>https</mat-icon>
+        {{ 'header.menu.certs' | translate | uppercase }}
     </button>
 
     <span fxFlex></span>
 
-    <form [formGroup]="formNodes" fxFlex="20">
+    <form [formGroup]="formNodes" fxFlex.gt-md="25" fxFlex.lt-lg="40">
         <mat-form-field class="small-font" color="accent" fxFlex>
             <input type="text" aria-label="" matInput
                    placeholder="{{'header.menu.kong_node' | translate}}"
@@ -30,7 +42,8 @@
         </mat-form-field>
         <button mat-icon-button (click)="connectToNode()" color="accent"
                 matTooltip="{{'header.menu.kong_node_button_tooltip' | translate}}"
-                matTooltipClass="tooltip-teal">
+                matTooltipClass="tooltip-teal"
+                [matTooltipShowDelay]="1000">
             <mat-icon>play_arrow</mat-icon>
         </button>
     </form>
@@ -48,7 +61,7 @@
     <div>
         <button mat-button>{{'footer.about' | translate}}</button>
     </div>
-    <button mat-icon-button matTooltip="https://github.com/ligreman/king" matTooltipPosition="left">
+    <a href="https://github.com/ligreman/king" mat-icon-button matTooltip="https://github.com/ligreman/king" matTooltipPosition="left" target="_blank">
         <img src="assets/img/github.png" alt="GitHub"/>
-    </button>
+    </a>
 </footer>

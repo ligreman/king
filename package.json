@@ -24,6 +24,7 @@
         "@angular/router": "~11.0.2",
         "@ngx-translate/core": "^13.0.0",
         "@ngx-translate/http-loader": "^6.0.0",
+        "@swimlane/ngx-charts": "^16.0.0",
         "moment": "^2.29.1",
         "ngx-auto-unsubscribe": "^3.0.1",
         "ngx-toastr": "^13.1.0",

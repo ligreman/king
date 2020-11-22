@@ -1,1 +1,14 @@
-<p>landing works!</p>
+<div fxLayout="row" fxLayoutAlign="end start">
+    <img fxFlex="10" src="assets/img/landing-arrow.png"/>
+</div>
+
+<div fxLayout="row">
+    <div fxFlex="20"></div>
+    <div fxFlex>
+        <div fxLayout="column" fxLayoutAlign="center center" class="intro">
+            <p>{{'landing.title' | translate}}</p>
+            <p class="sub-intro">{{'landing.subtitle' | translate}}</p>
+        </div>
+    </div>
+    <div fxFlex="20"></div>
+</div>

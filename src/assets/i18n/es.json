@@ -6,13 +6,21 @@
     "header": {
         "menu": {
             "graph": "Arquitecto",
+            "elements": "Elementos",
+            "plugins": "Plugins",
+            "certs": "Certificados",
             "kong_node": "API de administración de un nodo de Kong",
             "kong_node_tooltip": "Introduce la URL y puerto",
             "kong_node_button_tooltip": "Conectar",
             "error_node_field": "Introduce una url válida. Formato: http(s)://<admin-api>:<port>"
-        }
+        },
+        "node_connected": "Conectado al nodo {{extra}}"
     },
     "footer": {
         "about": "Acerca"
+    },
+    "landing": {
+        "title": "Introduce la dirección y puerto del API de administración de un nodo de Kong, y pulsa la flecha para conectar",
+        "subtitle": "Si ya has conectado con algún nodo previamente lo verás en el desplegable"
     }
 }

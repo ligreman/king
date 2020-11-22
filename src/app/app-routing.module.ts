@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ArchitectComponent } from './routes/architect/architect.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
@@ -7,6 +8,7 @@ import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.co
 const routes: Routes = [
     {path: 'landing', component: LandingComponent},
     {path: 'node-information', component: NodeInformationComponent},
+    {path: 'architect', component: ArchitectComponent},
     {
         path: '',
         redirectTo: '/landing',
@@ -16,8 +18,13 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes, {useHash: true, relativeLinkResolution: 'legacy'})],
+    imports: [RouterModule.forRoot(routes, {
+        useHash: true,
+        scrollPositionRestoration: 'enabled',
+        relativeLinkResolution: 'corrected'
+    })],
     exports: [RouterModule]
 })
+
 export class AppRoutingModule {
 }

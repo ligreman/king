@@ -16,10 +16,12 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { ArchitectComponent } from './routes/architect/architect.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
@@ -35,7 +37,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         AppComponent,
         NodeInformationComponent,
         PageNotFoundComponent,
-        LandingComponent
+        LandingComponent,
+        ArchitectComponent
     ],
     imports: [
         BrowserModule,
@@ -52,6 +55,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatIconModule,
         MatAutocompleteModule,
         MatTooltipModule,
+        NgxChartsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot({
             loader: {

@@ -1,0 +1,23 @@
+img {
+    width: 100%;
+    margin-top: 2rem;
+    margin-right: 5rem;
+}
+
+.intro {
+    margin-top: 3rem;
+}
+
+.intro p {
+    color: #009688;
+    font-weight: bold;
+    font-size: 2rem;
+    line-height: 3rem;
+    font-family: 'ShareTechMono-Regular', "Roboto", "Helvetica Neue", sans-serif;
+    text-align: justify;
+}
+
+.intro p.sub-intro {
+    font-size: 1rem;
+    font-style: italic;
+}

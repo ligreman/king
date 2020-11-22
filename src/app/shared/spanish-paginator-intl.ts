@@ -1,8 +1,12 @@
 /**
  * Sobrescribo la clase original para añadir los textos en español
  */
+import { Injectable } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 
+@Injectable({
+    providedIn: 'root'
+})
 export class MatPaginatorIntlSpanish extends MatPaginatorIntl {
     itemsPerPageLabel = 'Elementos por página:';
     nextPageLabel = 'Página siguiente';
