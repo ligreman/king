@@ -6,7 +6,11 @@
         "content": "{{extra}}"
     },
     "success": {
-        "new_service": "Servicio creado"
+        "new_service": "Servicio creado",
+        "new_route": "Ruta creado",
+        "new_upstream": "Upstream creado",
+        "new_consumer": "Consumidor creado",
+        "new_plugin": "Plugin creado"
     },
     "text": {
         "id_extra": "ID: {{extra}}"

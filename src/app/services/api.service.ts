@@ -51,4 +51,19 @@ export class ApiService {
     public deleteService(id: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/services/' + id).pipe(catchError(this.handleError));
     }
+
+    /*
+        ROUTE ENDPOINTS
+     */
+    public getRoutes() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/routes').pipe(catchError(this.handleError));
+    }
+
+    public postNewRoute(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/routes', body).pipe(catchError(this.handleError));
+    }
+
+    public deleteRoute(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/routes/' + id).pipe(catchError(this.handleError));
+    }
 }

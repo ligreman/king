@@ -5,6 +5,7 @@ import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataSet, Network } from 'vis-network/standalone';
 import { ApiService } from '../../services/api.service';
+import { GlobalsService } from '../../services/globals.service';
 import { ToastService } from '../../services/toast.service';
 
 @AutoUnsubscribe()
@@ -27,7 +28,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         edges: new DataSet([])
     };
 
-    constructor(private api: ApiService, private route: Router, private toast: ToastService) {
+    constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService) {
         // Compruebo la conexión al nodo
         this.api.getNodeStatus()
             .subscribe(value => {
@@ -50,6 +51,12 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             const container = document.getElementById('node-network');
             const reference = document.getElementById('net-reference');
             let options = {
+                groups: this.globals.NETWORK_GROUPS,
+                nodes: this.globals.NETWORK_NODES,
+                edges: this.globals.NETWORK_EDGES,
+                interaction: {
+                    tooltipDelay: 1000
+                },
                 height: '90%'
             };
             if (reference) {
@@ -79,10 +86,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     getGraphData() {
         // Recojo del api los datos
         return forkJoin([
-            this.api.getServices()
-        ]).pipe(map(([services]) => {
+            this.api.getServices(),
+            this.api.getRoutes()
+        ]).pipe(map(([services, routes]) => {
             // forkJoin returns an array of values, here we map those values to an object
-            return {services: services['data']};
+            return {services: services['data'], routes: routes['data']};
         }));
     }
 
@@ -96,7 +104,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 id: service.id,
                 shape: 'box',
                 label: service.name,
-                title: service.id
+                title: service.id,
+                group: 'service'
+            });
+        }
+
+        // Recorro las rutas creando los nodos de rutas
+        for (let route of data.routes) {
+            this.data.nodes.add({
+                id: route.id,
+                shape: 'box',
+                label: route.name,
+                title: route.id,
+                group: 'route'
             });
         }
 
@@ -115,7 +135,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             'host': 'example.com',
             'port': 80,
             // Optional
-            'name': 'my-service',
+            'name': 'my-service2',
             'retries': 5,
             'path': '/some_api',
             'connect_timeout': 60000,
@@ -134,6 +154,39 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }, error => {
                 this.toast.error_general(error);
             });
+    }
+
+    addRoute() {
+        const body = {
+            // Required
+            'protocols': ['http', 'https'],
+            // Semi-optional
+            'methods': ['GET', 'POST'],
+            'hosts': ['example.com', 'foo.test'],
+            'paths': ['/foo', '/bar'],
+            'headers': {'x-another-header': ['bla'], 'x-my-header': ['foo', 'bar']},
+            // Optional
+            'name': 'my-route',
+            'regex_priority': 0,
+            'strip_path': true,
+            'path_handling': 'v0',
+            'preserve_host': false,
+            'tags': ['user-level', 'low-priority'],
+            'service': {'name': 'my-service'}
+            // 'service': {'id': 'af8330d3-dbdc-48bd-b1be-55b98608834b'}
+        };
+        this.api.postNewRoute(body)
+            .subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_route', {msgExtra: value['id']});
+            }, error => {
+                this.toast.error_general(error);
+            });
+    }
+
+    addUpstream() {
+    }
+
+    addConsumer() {
     }
 
     /*

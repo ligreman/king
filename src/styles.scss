@@ -36,6 +36,7 @@ $king-theme: mat-dark-theme((
 
 @import 'assets/scss/fonts';
 @import 'assets/scss/overrides';
+@import 'assets/scss/colors';
 
 
 html, body {
@@ -59,12 +60,6 @@ app-root > *:nth-child(3) {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-}
-
-#appDiv > *:nth-child(2) {
-    //display: flex;
-    //flex-direction: column;
-    //flex-grow: 1;
 }
 
 .flex-row-parent {
