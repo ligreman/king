@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { filter } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -38,6 +39,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.toast.error('error.node_connection');
                     this.route.navigate(['/landing']);
                 });
+
+        let a = filter([{name: 'pepe', age: 3}, {name: 'manolo', age: 2}, {name: 'arturo', age: 3}], {age: 3});
+        console.log(a);
     }
 
     ngOnInit(): void {}
@@ -55,7 +59,13 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 nodes: this.globals.NETWORK_NODES,
                 edges: this.globals.NETWORK_EDGES,
                 interaction: {
-                    tooltipDelay: 1000
+                    tooltipDelay: 300
+                },
+                physics: {
+                    barnesHut: {
+                        springLength: 115,
+                        avoidOverlap: 0
+                    }
                 },
                 height: '90%'
             };
@@ -87,10 +97,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         // Recojo del api los datos
         return forkJoin([
             this.api.getServices(),
-            this.api.getRoutes()
-        ]).pipe(map(([services, routes]) => {
+            this.api.getRoutes(),
+            this.api.getUpstreams()
+        ]).pipe(map(([services, routes, upstreams]) => {
             // forkJoin returns an array of values, here we map those values to an object
-            return {services: services['data'], routes: routes['data']};
+            return {services: services['data'], routes: routes['data'], upstreams: upstreams['data']};
         }));
     }
 
@@ -100,24 +111,55 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     populateGraphNodes(data) {
         // Recorro los servicios creando los nodos de servicios
         for (let service of data.services) {
+            // Nodos de servicio
             this.data.nodes.add({
                 id: service.id,
-                shape: 'box',
                 label: service.name,
-                title: service.id,
+                title: 'Servicio: ' + service.id,
                 group: 'service'
             });
+
+            // Si el host de este servicio se corresponde con el name de un Upstream, edge
+            const serviceUpstream = filter(data.upstreams, {name: service.host});
+            if (serviceUpstream.length > 0) {
+            }
+            // Si el host no se corresponde con Upstreams, creo un nodo Host y edge hacia él
+            else {
+                this.data.nodes.add({
+                    id: 'h#' + service.id,
+                    label: service.protocol + '://' + service.host + ':' + service.port + service.path,
+                    group: 'host'
+                });
+                this.data.edges.add({
+                    from: service.id,
+                    to: 'h#' + service.id
+                });
+            }
+
         }
 
         // Recorro las rutas creando los nodos de rutas
         for (let route of data.routes) {
+            // Nodos de ruta
             this.data.nodes.add({
                 id: route.id,
-                shape: 'box',
                 label: route.name,
                 title: route.id,
                 group: 'route'
             });
+
+            // Busco los servicios asociados a la ruta para crear los edges, si está enlazado a un servicio
+            if (route['service']['id']) {
+                const routeServices = filter(data.services, {id: route.service.id});
+                for (let ss of routeServices) {
+                    // Edges de la ruta al servicio
+                    this.data.edges.add({
+                        // id:
+                        from: route.id,
+                        to: ss.id
+                    });
+                }
+            }
         }
 
         // Ajusto el tamaño del grafo después de recoger todos los datos
@@ -132,10 +174,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
             // Required
             'protocol': 'http',
-            'host': 'example.com',
+            'host': 'example2.com',
             'port': 80,
             // Optional
-            'name': 'my-service2',
+            'name': 'my-service3',
             'retries': 5,
             'path': '/some_api',
             'connect_timeout': 60000,
@@ -156,6 +198,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
+    /*
+        Añade una ruta nueva
+     */
     addRoute() {
         const body = {
             // Required
@@ -166,13 +211,13 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             'paths': ['/foo', '/bar'],
             'headers': {'x-another-header': ['bla'], 'x-my-header': ['foo', 'bar']},
             // Optional
-            'name': 'my-route',
+            'name': 'my-route2',
             'regex_priority': 0,
             'strip_path': true,
             'path_handling': 'v0',
             'preserve_host': false,
             'tags': ['user-level', 'low-priority'],
-            'service': {'name': 'my-service'}
+            'service': {'name': 'my-service3'}
             // 'service': {'id': 'af8330d3-dbdc-48bd-b1be-55b98608834b'}
         };
         this.api.postNewRoute(body)
@@ -183,10 +228,84 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
+    /*
+        Añade un upstream nuevo
+     */
     addUpstream() {
+        const body = {
+            // Required - This is a hostname, which must be equal to the host of a Service.
+            'name': 'example.com',
+            // Optional or semi
+            'algorithm': 'round-robin',
+            'hash_on': 'none',
+            'hash_fallback': 'none',
+            'hash_on_cookie_path': '/',
+            'slots': 10000,
+            'healthchecks': {
+                'active': {
+                    'https_verify_certificate': true,
+                    'unhealthy': {
+                        'http_statuses': [429, 404, 500, 501, 502, 503, 504, 505],
+                        'tcp_failures': 0,
+                        'timeouts': 0,
+                        'http_failures': 0,
+                        'interval': 0
+                    },
+                    'http_path': '/',
+                    'timeout': 1,
+                    'healthy': {
+                        'http_statuses': [200, 302],
+                        'interval': 0,
+                        'successes': 0
+                    },
+                    'https_sni': 'example.com',
+                    'concurrency': 10,
+                    'type': 'http'
+                },
+                'passive': {
+                    'unhealthy': {
+                        'http_failures': 0,
+                        'http_statuses': [429, 500, 503],
+                        'tcp_failures': 0,
+                        'timeouts': 0
+                    },
+                    'type': 'http',
+                    'healthy': {
+                        'successes': 0,
+                        'http_statuses': [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+                    }
+                },
+                'threshold': 0
+            },
+            'tags': ['user-level', 'low-priority'],
+            'host_header': 'example.com',
+            'client_certificate': {'id': 'ea29aaa3-3b2d-488c-b90c-56df8e0dd8c6'}
+        };
+        this.api.postNewUpstream(body)
+            .subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_upstream', {msgExtra: value['id']});
+            }, error => {
+                this.toast.error_general(error);
+            });
     }
 
+    /*
+        Añade un consumidor nuevo
+     */
     addConsumer() {
+        const body = {
+            // Semi-optional, OR
+            'username': 'my-username',
+            'custom_id': 'my-custom-id',
+            // Optional
+            'tags': ['user-level', 'low-priority']
+        };
+        this.api.postNewConsumer(body)
+            .subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_consumer', {msgExtra: value['id']});
+            }, error => {
+                this.toast.error_general(error);
+            });
     }
 
     /*

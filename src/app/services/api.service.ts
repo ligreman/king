@@ -66,4 +66,34 @@ export class ApiService {
     public deleteRoute(id: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/routes/' + id).pipe(catchError(this.handleError));
     }
+
+    /*
+        UPSTREAMS ENDPOINTS
+     */
+    public getUpstreams() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams').pipe(catchError(this.handleError));
+    }
+
+    public postNewUpstream(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams', body).pipe(catchError(this.handleError));
+    }
+
+    public deleteUpstream(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/upstreams/' + id).pipe(catchError(this.handleError));
+    }
+
+    /*
+        CONSUMERS ENDPOINTS
+     */
+    public getConsumers() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumer').pipe(catchError(this.handleError));
+    }
+
+    public postNewConsumer(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/consumer', body).pipe(catchError(this.handleError));
+    }
+
+    public deleteConsumer(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/consumer/' + id).pipe(catchError(this.handleError));
+    }
 }

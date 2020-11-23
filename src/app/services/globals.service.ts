@@ -9,34 +9,34 @@ export class GlobalsService {
     // NETWORK GRAPH
     private _NETWORK_NODES = {
         font: {
-            color: '#343434',
-            size: 14, // px
-            face: 'arial',
+            color: '#CCCCCC',
+            size: 12, // px
+            face: 'Roboto',
             background: 'none',
-            strokeWidth: 0, // px
-            strokeColor: '#ffffff',
+            strokeWidth: 1, // px
+            strokeColor: '#343434',
             align: 'center',
             multi: true,
             bold: {
-                color: '#343434',
-                size: 14, // px
-                face: 'arial',
+                color: '#CCCCCC',
+                size: 16, // px
+                face: 'Roboto',
                 mod: 'bold'
             },
             ital: {
-                color: '#343434',
-                size: 14, // px
-                face: 'arial',
+                color: '#CCCCCC',
+                size: 12, // px
+                face: 'Roboto',
                 mod: 'italic'
             },
             boldital: {
-                color: '#343434',
-                size: 14, // px
-                face: 'arial',
+                color: '#CCCCCC',
+                size: 12, // px
+                face: 'Roboto',
                 mod: 'bold italic'
             },
             mono: {
-                color: '#343434',
+                color: '#CCCCCC',
                 size: 15, // px
                 face: 'courier new',
                 mod: ''
@@ -51,31 +51,27 @@ export class GlobalsService {
     private _NETWORK_EDGES = {
         arrows: {
             to: {
-                enabled: false,
-                imageHeight: undefined,
-                imageWidth: undefined,
+                enabled: true,
+                // imageHeight: undefined,
+                // imageWidth: undefined,
                 scaleFactor: 1,
-                src: undefined,
+                // src: undefined,
                 type: 'arrow'
-            },
-            middle: {
-                enabled: false,
-                imageHeight: 32,
-                imageWidth: 32,
-                scaleFactor: 1,
-                src: 'https://visjs.org/images/visjs_logo.png',
-                type: 'image'
             },
             from: {
                 enabled: false,
-                imageHeight: undefined,
-                imageWidth: undefined,
+                // imageHeight: undefined,
+                // imageWidth: undefined,
                 scaleFactor: 1,
-                src: undefined,
+                // src: undefined,
                 type: 'arrow'
             }
         },
         chosen: true,
+        smooth: true,
+        endPointOffset: {
+            to: -10
+        },
         color: {
             inherit: 'from'
         },
@@ -83,7 +79,7 @@ export class GlobalsService {
         font: {
             color: '#343434',
             size: 14, // px
-            face: 'arial',
+            face: 'Roboto',
             background: 'none',
             strokeWidth: 2, // px
             strokeColor: '#ffffff',
@@ -92,19 +88,19 @@ export class GlobalsService {
             bold: {
                 color: '#343434',
                 size: 14, // px
-                face: 'arial',
+                face: 'Roboto',
                 mod: 'bold'
             },
             ital: {
                 color: '#343434',
                 size: 14, // px
-                face: 'arial',
+                face: 'Roboto',
                 mod: 'italic'
             },
             boldital: {
                 color: '#343434',
                 size: 14, // px
-                face: 'arial',
+                face: 'Roboto',
                 mod: 'bold italic'
             },
             mono: {
@@ -121,7 +117,13 @@ export class GlobalsService {
 
     private _NETWORK_GROUPS = {
         service: {
-            shape: 'box',
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'memory',
+                color: '#81C784',
+                size: 50
+            },
             borderWidth: 2,
             borderWidthSelected: 3,
             chosen: true,
@@ -139,7 +141,13 @@ export class GlobalsService {
             }
         },
         route: {
-            shape: 'box',
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'timeline',
+                color: '#4FC3F7',
+                size: 50
+            },
             borderWidth: 2,
             borderWidthSelected: 3,
             chosen: true,
@@ -157,7 +165,13 @@ export class GlobalsService {
             }
         },
         upstream: {
-            shape: 'box',
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'mediation',
+                color: '#FFB74D',
+                size: 50
+            },
             borderWidth: 2,
             borderWidthSelected: 3,
             chosen: true,
@@ -175,7 +189,13 @@ export class GlobalsService {
             }
         },
         plugin: {
-            shape: 'box',
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'settings_input_component',
+                color: '#FFF176',
+                size: 30
+            },
             borderWidth: 2,
             borderWidthSelected: 3,
             chosen: true,
@@ -193,7 +213,13 @@ export class GlobalsService {
             }
         },
         consumer: {
-            shape: 'box',
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'shopping_cart',
+                color: '#E0E0E0',
+                size: 30
+            },
             borderWidth: 2,
             borderWidthSelected: 3,
             chosen: true,
@@ -211,7 +237,13 @@ export class GlobalsService {
             }
         },
         target: {
-            shape: 'circle',
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'gps_fixed',
+                color: '#E57373',
+                size: 30
+            },
             borderWidth: 1,
             borderWidthSelected: 2,
             chosen: true,
@@ -229,7 +261,13 @@ export class GlobalsService {
             }
         },
         host: {
-            shape: 'circle',
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'language',
+                color: '#E57373',
+                size: 30
+            },
             borderWidth: 1,
             borderWidthSelected: 2,
             chosen: true,
