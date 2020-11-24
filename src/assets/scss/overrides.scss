@@ -1,5 +1,6 @@
 @import '~@angular/material/theming';
 
+
 /* Toastr Overrides */
 .toast-container .ngx-toastr {
     box-shadow: none !important;
@@ -7,7 +8,15 @@
 
 /* Material overrides */
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: red;
+}
+
+.mat-input-element, .mat-input-element::-webkit-search-cancel-button, .mat-input-element::-webkit-search-decoration, .mat-input-element::-webkit-search-results-button, .mat-input-element::-webkit-search-results-decoration {
+    -webkit-appearance: textfield !important;
+    -moz-appearance: textfield !important;
+}
+
+.mat-form-field-label {
+    color: rgba(255, 255, 255, 0.5) !important;
 }
 
 .mat-app-background {

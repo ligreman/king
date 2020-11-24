@@ -1,5 +1,8 @@
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { isNumber } from 'lodash';
 
 @Component({
     selector: 'app-dialog-new-service',
@@ -8,6 +11,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class DialogNewServiceComponent implements OnInit {
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp', 'tls', 'udp'];
+    tags = [];
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
         name: ['', Validators.required],
@@ -20,7 +25,12 @@ export class DialogNewServiceComponent implements OnInit {
         retries: [5, [Validators.min(0), Validators.max(20)]],
         connect_timeout: [60000, [Validators.min(0), Validators.max(3600000)]],
         write_timeout: [60000, [Validators.min(0), Validators.max(3600000)]],
-        read_timeout: [60000, [Validators.min(0), Validators.max(3600000)]]
+        read_timeout: [60000, [Validators.min(0), Validators.max(3600000)]],
+        client_certificate: [''],
+        tls_verify: [''],
+        tls_verify_depth: [''],
+        ca_certificates: [''],
+        tags: ['']
     });
 
     constructor(private fb: FormBuilder) { }
@@ -42,7 +52,41 @@ export class DialogNewServiceComponent implements OnInit {
             status = false;
         }
 
+        if (this.retriesField.invalid || this.connectTimeoutField.invalid || this.writeTimeoutField.invalid || this.readTimeoutField.invalid) {
+            status = false;
+        }
+
+        if (!isNumber(this.retriesField.value) || !isNumber(this.connectTimeoutField.value) || !isNumber(this.writeTimeoutField.value) ||
+            !isNumber(this.readTimeoutField.value || (this.tlsVerifyDepthField.value !== '' && !isNumber(this.tlsVerifyDepthField.value)))) {
+            status = false;
+        }
+
         return status;
+    }
+
+    /*
+        Gestión de tags
+     */
+    addTag(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value;
+
+        // Add our tag
+        if ((value || '').trim()) {
+            this.tags.push(value.trim());
+        }
+
+        // Reset the input value
+        if (input) {
+            input.value = '';
+        }
+    }
+
+    removeTag(tag): void {
+        const index = this.tags.indexOf(tag);
+        if (index >= 0) {
+            this.tags.splice(index, 1);
+        }
     }
 
     /*
@@ -70,4 +114,13 @@ export class DialogNewServiceComponent implements OnInit {
 
     get readTimeoutField() { return this.form.get('read_timeout'); }
 
+    get clientCertificateField() { return this.form.get('client_certificate'); }
+
+    get tlsVerifyField() { return this.form.get('tls_verify'); }
+
+    get tlsVerifyDepthField() { return this.form.get('tls_verify_depth'); }
+
+    get caCertificatesField() { return this.form.get('ca_certificates'); }
+
+    get tagsField() { return this.form.get('tags'); }
 }

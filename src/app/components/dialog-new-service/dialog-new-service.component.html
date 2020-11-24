@@ -28,7 +28,7 @@
                 <div>
                     <mat-form-field fxFlex color="accent" class="margin-bottom-10" appearance="outline" [fxShow]="inputMethodField.value === 'url'">
                         <mat-label>{{'service.dialog.url' | translate}}</mat-label>
-                        <input type="text" aria-label="" matInput required
+                        <input type="url" aria-label="" matInput required
                                placeholder="{{'service.dialog.url_example' | translate}}"
                                formControlName="url"/>
                         <mat-hint>{{'service.dialog.url_hint' | translate}}</mat-hint>
@@ -80,41 +80,145 @@
 
             <mat-divider></mat-divider>
 
-            <mat-accordion multi>
+            <mat-accordion multi displayMode="flat">
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>{{'text.advanced_fields' | translate}}</mat-panel-title>
                     </mat-expansion-panel-header>
 
-                    <mat-form-field color="accent" appearance="outline">
-                        <mat-label>{{'service.dialog.retries' | translate}}</mat-label>
-                        <input type="number" aria-label="" matInput formControlName="retries"/>
-                        <mat-error *ngIf="pathField.hasError('min') || pathField.hasError('max')">
-                            {{ 'service.dialog.error.retries_min_max' | translate }}
-                        </mat-error>
-                    </mat-form-field>
+                    <div fxLayout="row" fxLayoutAlign="space-between start">
+                        <!--Reintentos-->
+                        <mat-form-field fxFlex="24" color="accent" appearance="outline" class="margin-bottom-10">
+                            <mat-label>{{'service.dialog.retries' | translate}}</mat-label>
+                            <input type="number" aria-label="" matInput formControlName="retries"/>
+                            <mat-error *ngIf="retriesField.hasError('min') || retriesField.hasError('max')">
+                                {{ 'service.dialog.error.retries_min_max' | translate }}
+                            </mat-error>
+                        </mat-form-field>
 
+                        <!--Timeout conexión-->
+                        <mat-form-field fxFlex="24" color="accent" appearance="outline">
+                            <mat-label>{{'service.dialog.connect_timeout' | translate}}</mat-label>
+                            <input type="number" aria-label="" matInput formControlName="connect_timeout"/>
+                            <mat-icon matSuffix matTooltip="{{'service.dialog.connect_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                            <mat-error *ngIf="connectTimeoutField.hasError('min') || connectTimeoutField.hasError('max')">
+                                {{ 'service.dialog.error.timeout_min_max' | translate }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!--Timeout escritura-->
+                        <mat-form-field fxFlex="24" color="accent" appearance="outline">
+                            <mat-label>{{'service.dialog.write_timeout' | translate}}</mat-label>
+                            <input type="number" aria-label="" matInput formControlName="write_timeout"/>
+                            <mat-icon matSuffix matTooltip="{{'service.dialog.write_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                            <mat-error *ngIf="writeTimeoutField.hasError('min') || writeTimeoutField.hasError('max')">
+                                {{ 'service.dialog.error.timeout_min_max' | translate }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!--Timeout lectura-->
+                        <mat-form-field fxFlex="24" color="accent" appearance="outline">
+                            <mat-label>{{'service.dialog.read_timeout' | translate}}</mat-label>
+                            <input type="number" aria-label="" matInput formControlName="read_timeout"/>
+                            <mat-icon matSuffix matTooltip="{{'service.dialog.read_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                            <mat-error *ngIf="readTimeoutField.hasError('min') || readTimeoutField.hasError('max')">
+                                {{ 'service.dialog.error.timeout_min_max' | translate }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="row" fxLayoutAlign="space-between start">
+                        <!--Certificado cliente-->
+                        <mat-form-field fxFlex="35" color="accent" class="margin-bottom-10" appearance="outline">
+                            <mat-label>{{'service.dialog.certificate' | translate}}</mat-label>
+                            <input type="text" aria-label="" matInput formControlName="client_certificate"
+                                   placeholder="{{'service.dialog.certificate_example' | translate}}"/>
+                            <mat-icon matSuffix matTooltip="{{'service.dialog.certificate_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                        </mat-form-field>
+
+                        <!--TLS-->
+                        <mat-form-field fxFlex="30" color="accent" class="margin-bottom-10" appearance="outline">
+                            <mat-label>{{'service.dialog.tls_verify' | translate}}</mat-label>
+                            <mat-select formControlName="tls_verify">
+                                <mat-option value="null"></mat-option>
+                                <mat-option value="true">true</mat-option>
+                                <mat-option value="false">false</mat-option>
+                            </mat-select>
+                            <mat-icon matSuffix matTooltip="{{'service.dialog.tls_verify_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                        </mat-form-field>
+
+                        <!--TLS Depth-->
+                        <mat-form-field fxFlex="30" color="accent" class="margin-bottom-10" appearance="outline">
+                            <mat-label>{{'service.dialog.tls_verify_depth' | translate}}</mat-label>
+                            <input type="number" aria-label="" matInput formControlName="tls_verify_depth"/>
+                            <mat-icon matSuffix matTooltip="{{'service.dialog.tls_verify_depth_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="row" fxLayoutAlign="space-between start">
+                        <!--CA Certificates-->
+                        <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
+                            <mat-label>{{'service.dialog.ca_certificates' | translate}}</mat-label>
+                            <textarea aria-label="" matInput formControlName="ca_certificates"
+                                      placeholder="{{'service.dialog.ca_certificates_example' | translate}}"></textarea>
+                            <mat-icon matSuffix matTooltip="{{'service.dialog.ca_certificates_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                        </mat-form-field>
+
+
+                        <mat-form-field fxFlex="45" color="accent" appearance="outline">
+                            <mat-chip-list #chipList aria-label="Fruit selection">
+                                <mat-chip *ngFor="let tag of tags" color="accent"
+                                          removable="true" (removed)="removeTag(tag)">{{tag}}
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </mat-chip>
+                                <input placeholder="{{'service.dialog.tags' | translate}}"
+                                       formControlName="tags"
+                                       [matChipInputFor]="chipList"
+                                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                       matChipInputAddOnBlur="true"
+                                       (matChipInputTokenEnd)="addTag($event)">
+                            </mat-chip-list>
+                            <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                        </mat-form-field>
+
+                    </div>
                 </mat-expansion-panel>
-                <!--  retries
+                <!--
 
-                connect_timeout
-optional 	The timeout in milliseconds for establishing a connection to the upstream server. Default: 60000.
-write_timeout
-optional 	The timeout in milliseconds between two successive write operations for transmitting a request to the upstream server. Default: 60000.
-read_timeout
-optional 	The timeout in milliseconds between two successive read operations for transmitting a request to the upstream server. Default: 60000.
+
+    get caCertificatesField() { return this.form.get('ca_certificates'); }
+
+    get tagsField() { return this.form.get('tags'); }
+
+
 tags
 optional 	An optional set of strings associated with the Service for grouping and filtering.
+
 client_certificate
 optional 	Certificate to be used as client certificate while TLS handshaking to the upstream server. With form-encoded, the notation is client_certificate.id=<client_certificate id>. With JSON, use “"client_certificate":{"id":"<client_certificate id>"}.
+
 tls_verify
 optional 	Whether to enable verification of upstream server TLS certificate. If set to null, then the Nginx default is respected.
+
 tls_verify_depth
 optional 	Maximum depth of chain while verifying Upstream server’s TLS certificate. If set to null, then the Nginx default is respected. Default: null.
+
 ca_certificates
 optional 	Array of CA Certificate object UUIDs that are used to build the trust store while verifying upstream server’s TLS certificate. If set to null when Nginx default is respected. If default CA list in Nginx are not specified and TLS verification is enabled, then handshake with upstream server will always fail (because no CA are trusted). With form-encoded, the notation is ca_certificates[]=4e3ad2e4-0bc4-4638-8e34-c84a417ba39b&ca_certificates[]=51e77dc2-8f3e-4afa-9d0e-0e3bbbcfd515. With JSON, use an Array.
-url
-shorthand-attribute 	Shorthand attribute to set protocol, host, port and path at once. This attribute is write-only (the Admin API never returns the URL).
 
   -->
             </mat-accordion>

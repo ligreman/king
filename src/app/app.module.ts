@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
@@ -64,6 +65,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatProgressBarModule,
         MatTabsModule,
         MatExpansionModule,
+        MatChipsModule,
         MatToolbarModule,
         MatListModule,
         MatIconModule,
