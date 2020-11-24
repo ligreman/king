@@ -15,7 +15,7 @@ $king-primary: mat-palette($mat-blue-gray, 900);
 $king-accent: mat-palette($mat-teal);
 
 // The warn palette is optional (defaults to red).
-$king-warn: mat-palette($mat-red, 700);
+$king-warn: mat-palette($mat-red, 600);
 
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
@@ -37,6 +37,7 @@ $king-theme: mat-dark-theme((
 @import 'assets/scss/fonts';
 @import 'assets/scss/overrides';
 @import 'assets/scss/colors';
+@import 'assets/scss/common';
 
 
 html, body {

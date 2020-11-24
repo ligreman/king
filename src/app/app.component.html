@@ -64,7 +64,7 @@
                    [matAutocomplete]="auto"
                    matTooltip="{{'header.menu.kong_node_tooltip' | translate}}"
                    matTooltipClass="tooltip-teal"
-                   [matTooltipShowDelay]="1000">
+                   [matTooltipShowDelay]="1000"/>
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of node_list" [value]="option" class="small-font">
                     {{option}}

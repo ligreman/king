@@ -3,7 +3,8 @@
         "unknown": "Error desconocido",
         "node_connection": "Error al conectar con el nodo de Kong",
         "title": "Error en la operación - {{extra}}",
-        "content": "{{extra}}"
+        "content": "{{extra}}",
+        "field_required": "Campo obligatorio"
     },
     "success": {
         "new_service": "Servicio creado",
@@ -13,7 +14,11 @@
         "new_plugin": "Plugin creado"
     },
     "text": {
-        "id_extra": "ID: {{extra}}"
+        "id_extra": "ID: {{extra}}",
+        "documentation": "Documentación",
+        "advanced_fields": "Campos avanzados",
+        "create": "Crear",
+        "cancel": "Cancelar"
     },
     "header": {
         "menu": {
@@ -34,5 +39,33 @@
     "landing": {
         "title": "Introduce la dirección y puerto del API de administración de un nodo de Kong, y pulsa la flecha para conectar",
         "subtitle": "Si ya has conectado con algún nodo previamente lo verás en el desplegable"
+    },
+    "service": {
+        "dialog": {
+            "create": "Crear un servicio nuevo",
+            "name": "Nombre del servicio",
+            "name_example": "mi-servicio",
+            "url": "URL completa",
+            "url_hint": "Debe contener el protocolo, host, puerto y ruta si es necesaria",
+            "url_example": "https://example.com:80/api",
+            "complete": "Indicar valores por separado",
+            "protocol": "Protocolo",
+            "host": "Host o IP",
+            "host_example": "example.com",
+            "port": "Puerto",
+            "port_example": "80",
+            "path": "Ruta (path)",
+            "path_example": "/api_rest",
+            "retries": "Reintentos",
+            "connect_timeout": "Timeout conexión",
+            "write_timeout": "Timeout escritura",
+            "read_timeout": "Timeout lectura",
+            "error": {
+                "port_min_max": "Número entre 0 y 65535",
+                "path_pattern": "Debe empezar por /",
+                "retries_min_max": "Número entre 0 y 20",
+                "timeout_min_max": "Número entre 0 y 3600000"
+            }
+        }
     }
 }

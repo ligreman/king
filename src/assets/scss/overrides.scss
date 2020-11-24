@@ -6,6 +6,10 @@
 }
 
 /* Material overrides */
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: red;
+}
+
 .mat-app-background {
     background-color: mat-color($mat-gray, 900);
 }

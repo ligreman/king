@@ -1,10 +1,12 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { filter } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataSet, Network } from 'vis-network/standalone';
+import { DialogNewServiceComponent } from '../../components/dialog-new-service/dialog-new-service.component';
 import { ApiService } from '../../services/api.service';
 import { GlobalsService } from '../../services/globals.service';
 import { ToastService } from '../../services/toast.service';
@@ -29,7 +31,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         edges: new DataSet([])
     };
 
-    constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService) {
+    constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService, private dialog: MatDialog) {
         // Compruebo la conexión al nodo
         this.api.getNodeStatus()
             .subscribe(value => {
@@ -44,7 +46,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         console.log(a);
     }
 
-    ngOnInit(): void {}
+    ngOnInit(): void {
+    }
 
     ngOnDestroy(): void {}
 
@@ -170,7 +173,43 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade un servicio nuevo
      */
     addService() {
-        const body = {
+        const dialogRef = this.dialog.open(DialogNewServiceComponent, {
+            disableClose: true,
+            minWidth: '80vw',
+            minHeight: '50vh'
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            let body = {
+                'name': result.name,
+                'retries': result.retries,
+                'connect_timeout': result.connect_timeout,
+                'write_timeout': result.write_timeout,
+                'read_timeout': result.read_timeout
+                // 'tags': ['user-level', 'low-priority']
+                // 'client_certificate': {'id': '4e3ad2e4-0bc4-4638-8e34-c84a417ba39b'},
+                // 'tls_verify': true,
+                // 'tls_verify_depth': null,
+                // 'ca_certificates': ['4e3ad2e4-0bc4-4638-8e34-c84a417ba39b', '51e77dc2-8f3e-4afa-9d0e-0e3bbbcfd515'],
+            };
+
+            if (result.inputMethodField === 'url') {
+                body['url'] = result.url;
+            } else {
+                body['protocol'] = result.protocol;
+                body['host'] = result.host;
+                body['port'] = result.port;
+                body['path'] = result.path;
+            }
+
+            this.api.postNewService(body)
+                .subscribe(value => {
+                    this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
+                }, error => {
+                    this.toast.error_general(error);
+                });
+        });
+
+        /*const body = {
 
             // Required
             'protocol': 'http',
@@ -189,13 +228,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             // 'tls_verify_depth': null,
             // 'ca_certificates': ['4e3ad2e4-0bc4-4638-8e34-c84a417ba39b', '51e77dc2-8f3e-4afa-9d0e-0e3bbbcfd515'],
             // 'url': 'https://10.20.30.40:5355/api/v1/'
-        };
-        this.api.postNewService(body)
-            .subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
-            }, error => {
-                this.toast.error_general(error);
-            });
+        };*/
+
     }
 
     /*

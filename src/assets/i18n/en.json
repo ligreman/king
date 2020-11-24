@@ -3,7 +3,8 @@
         "unknown": "Unknown error",
         "node_connection": "Error connecting to Kong node",
         "title": "Error en la operación - {{extra}}",
-        "content": "{{extra}}"
+        "content": "{{extra}}",
+        "field_required": "Field required"
     },
     "success": {
         "new_service": "Service created",
@@ -13,7 +14,11 @@
         "new_plugin": "Plugin created"
     },
     "text": {
-        "id_extra": "ID: {{extra}}"
+        "id_extra": "ID: {{extra}}",
+        "documentation": "Documentation",
+        "advanced_fields": "Advanced fields",
+        "create": "Create",
+        "cancel": "Cancel"
     },
     "header": {
         "menu": {
@@ -34,5 +39,33 @@
     "landing": {
         "title": "Type here the address and port of the administration API of a Kong node, and click on the arrow to connect",
         "subtitle": "If you have connected with a node previously you will see it in the selector"
+    },
+    "service": {
+        "dialog": {
+            "create": "Create a new service",
+            "name": "Name for the service",
+            "name_example": "my-service",
+            "url": "Complete URL",
+            "url_hint": "Must include protocol, host, port and path if it´s needed",
+            "url_example": "https://example.com:80/api",
+            "complete": "Different fields for each value",
+            "protocol": "Protocol",
+            "host": "Host or IP",
+            "host_example": "example.com",
+            "port": "Port",
+            "port_example": "80",
+            "path": "Path",
+            "path_example": "/api_rest",
+            "retries": "Retries",
+            "connect_timeout": "Connect timeout",
+            "write_timeout": "Write timeout",
+            "read_timeout": "Read timeout",
+            "error": {
+                "port_min_max": "Number between 0 and 65535",
+                "path_pattern": "Must start with /",
+                "retries_min_max": "Number between 0 and 20",
+                "timeout_min_max": "Number between 0 and 3600000"
+            }
+        }
     }
 }
