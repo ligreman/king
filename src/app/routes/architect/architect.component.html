@@ -9,12 +9,24 @@
     </div>
     <div fxFlex="25">
         <mat-list>
-            <div mat-subheader>Acciones globales</div>
+            <mat-list-item>
+                <div mat-line fxLayout="row" fxLayoutAlign="end start">
+                    <button mat-icon-button color="accent" (click)="fitNetwork()"
+                            matTooltip="{{'architect.center_network' | translate}}"
+                            matTooltipClass="tooltip-teal" [matTooltipShowDelay]="1000"
+                            matTooltipPosition="left">
+                        <mat-icon>center_focus_strong</mat-icon>
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-divider class="margin-top-10 margin-bottom-10"></mat-divider>
+
+            <div mat-subheader>{{'architect.global_actions' | translate}}</div>
             <mat-list-item>
                 <div mat-line>
                     <button mat-button (click)="addService()">
                         <mat-icon class="color-service">memory</mat-icon>
-                        Add Service
+                        {{'architect.add_service' | translate}}
                     </button>
                 </div>
             </mat-list-item>
@@ -22,7 +34,7 @@
                 <div mat-line>
                     <button mat-button (click)="addRoute()">
                         <mat-icon class="color-route">timeline</mat-icon>
-                        Add Route
+                        {{'architect.add_route' | translate}}
                     </button>
                 </div>
             </mat-list-item>
@@ -30,7 +42,7 @@
                 <div mat-line>
                     <button mat-button (click)="addUpstream()">
                         <mat-icon class="color-upstream">mediation</mat-icon>
-                        Add Upstream
+                        {{'architect.add_upstream' | translate}}
                     </button>
                 </div>
             </mat-list-item>
@@ -38,14 +50,17 @@
                 <div mat-line>
                     <button mat-button (click)="addConsumer()">
                         <mat-icon class="color-consumer">shopping_cart</mat-icon>
-                        Add Consumer
+                        {{'architect.add_consumer' | translate}}
                     </button>
                 </div>
             </mat-list-item>
 
             <mat-divider class="margin-top-10 margin-bottom-10"></mat-divider>
 
-            <mat-list-item>
+            <div mat-subheader *ngIf="selection !== ''">
+                {{'architect.local_actions_' + selection.group | translate }}: {{ selection.label }}
+            </div>
+            <mat-list-item *ngIf="selection !== ''">
                 <div mat-line>
                     <button mat-button color="accent">
                         <mat-icon>edit</mat-icon>
@@ -53,7 +68,7 @@
                     </button>
                 </div>
             </mat-list-item>
-            <mat-list-item>
+            <mat-list-item *ngIf="selection !== ''">
                 <div mat-line>
                     <button mat-button color="warn">
                         <mat-icon>shopping_cart</mat-icon>

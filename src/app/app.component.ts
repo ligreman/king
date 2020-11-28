@@ -1,10 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { DialogNewServiceComponent } from './components/dialog-new-service/dialog-new-service.component';
 import { ApiService } from './services/api.service';
 import { GlobalsService } from './services/globals.service';
 import { NodeService } from './services/node.service';
@@ -26,7 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
     node_list: string[] = [];
 
     constructor(private translate: TranslateService, private api: ApiService, private globals: GlobalsService, private fb: FormBuilder,
-                private toast: ToastService, private route: Router, private nodeWatcher: NodeService, private dialog: MatDialog) {
+                private toast: ToastService, private route: Router, private nodeWatcher: NodeService) {
         // Cargo del localStorage el idioma
         const language = localStorage.getItem('language');
         if (language == 'es' || language == 'en') {
@@ -55,14 +53,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        const dialogRef = this.dialog.open(DialogNewServiceComponent, {
-            disableClose: true,
-            minWidth: '80vw',
-            minHeight: '50vh'
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            console.log(result.value);
-        });
+
     }
 
     ngOnDestroy(): void {

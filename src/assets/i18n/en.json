@@ -40,6 +40,18 @@
         "title": "Type here the address and port of the administration API of a Kong node, and click on the arrow to connect",
         "subtitle": "If you have connected with a node previously you will see it in the selector"
     },
+    "architect": {
+        "global_actions": "Global actions",
+        "local_actions_service": "Actions on service",
+        "local_actions_route": "Actions on route",
+        "local_actions_upstream": "Actions on upstream",
+        "local_actions_consumer": "Actions on consumer",
+        "add_service": "Add Service",
+        "add_route": "Add Route",
+        "add_upstream": "Add Upstream",
+        "add_consumer": "Add Consumer",
+        "center_network": "Adjust graph to fit all nodes"
+    },
     "service": {
         "dialog": {
             "create": "Create a new service",
@@ -77,6 +89,7 @@
             "tags": "Tags",
             "tags_hint": "Write a tag and press enter or comma",
             "error": {
+                "name_pattern": "Allowed alphanumeric characters and - _ . ~",
                 "port_min_max": "Number between 0 and 65535",
                 "path_pattern": "Must start with /",
                 "retries_min_max": "Number between 0 and 20",

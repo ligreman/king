@@ -25,8 +25,15 @@ export class ToastService {
         this.toastr.error(msg, title, {timeOut: timeOut, extendedTimeOut: extendedTimeOut, disableTimeOut: disableTimeOut});
     };
 
-    public error_general(err: any) {
-        this.error('error.content', 'error.title', {msgExtra: err.message, titleExtra: err.code});
+    public error_general(err: any, options: any = {}) {
+        const {timeOut = 5000, extendedTimeOut = 1000, disableTimeOut = false, msgExtra = err.message, titleExtra = err.code} = options;
+        this.error('error.content', 'error.title', {
+            timeOut: timeOut,
+            extendedTimeOut: extendedTimeOut,
+            disableTimeOut: disableTimeOut,
+            msgExtra: msgExtra,
+            titleExtra: titleExtra
+        });
     }
 
     public warning(msg: string, title: string = '', options: any = {}) {

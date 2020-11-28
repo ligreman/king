@@ -34,11 +34,23 @@
         "node_connected": "Conectado al nodo {{extra}}"
     },
     "footer": {
-        "about": "Acerca"
+        "about": "Acerca de"
     },
     "landing": {
         "title": "Introduce la dirección y puerto del API de administración de un nodo de Kong, y pulsa la flecha para conectar",
         "subtitle": "Si ya has conectado con algún nodo previamente lo verás en el desplegable"
+    },
+    "architect": {
+        "global_actions": "Acciones globales",
+        "local_actions_service": "Acciones sobre servicio",
+        "local_actions_route": "Acciones sobre ruta",
+        "local_actions_upstream": "Acciones sobre upstream",
+        "local_actions_consumer": "Acciones sobre consumidor",
+        "add_service": "Añadir Servicio",
+        "add_route": "Añadir Ruta",
+        "add_upstream": "Añadir Upstream",
+        "add_consumer": "Añadir Consumidor",
+        "center_network": "Ajustar grafo para abarcar todos los nodos"
     },
     "service": {
         "dialog": {
@@ -77,6 +89,7 @@
             "tags": "Etiquetas",
             "tags_hint": "Escribe una etiqueta y pulsa enter o coma",
             "error": {
+                "name_pattern": "Admite caracteres alfanuméricos y - _ . ~",
                 "port_min_max": "Número entre 0 y 65535",
                 "path_pattern": "Debe empezar por /",
                 "retries_min_max": "Número entre 0 y 20",

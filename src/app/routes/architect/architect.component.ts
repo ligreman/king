@@ -20,11 +20,12 @@ import { ToastService } from '../../services/toast.service';
 export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     loading = false;
     // Si tengo seleccionado un elemento del grafo
-    selection;
-    // Tipo de elemento seleccionado: servicio, ruta, upstream, ...
-    scope;
+    selection: any = '';
+    // First stabilization
+    stabilized = false;
     // Grafo
     network;
+
     // Datos del grafo
     data = {
         nodes: new DataSet([]),
@@ -41,9 +42,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.toast.error('error.node_connection');
                     this.route.navigate(['/landing']);
                 });
-
-        let a = filter([{name: 'pepe', age: 3}, {name: 'manolo', age: 2}, {name: 'arturo', age: 3}], {age: 3});
-        console.log(a);
     }
 
     ngOnInit(): void {
@@ -77,26 +75,49 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.network = new Network(container, this.data, options);
 
                 // Eventos sobre el grafo
-                this.network.on('selectNode', node => {
-                    console.log('Elegio');
-                    console.log(node);
-                    console.log(this.data.nodes.get(node.nodes[0]));
+                // this.network.on('selectNode', node => {
+                //     console.log('Elegio');
+                //     console.log(node);
+                //     console.log(this.data.nodes.get(node.nodes[0]));
+                //     this.selection = this.data.nodes.get(node.nodes[0]);
+                // });
+                this.network.on('click', info => {
+                    if (info.nodes.length > 0) {
+                        console.log(this.data.nodes.get(info.nodes[0]));
+                        this.selection = this.data.nodes.get(info.nodes[0]);
+                    } else {
+                        this.selection = '';
+                    }
                 });
 
-                // Llamo al API por la información para pintar el grafo
-                this.getGraphData().subscribe(value => {
-                    // Ahora construyo los nodos y edges del grafo
-                    this.populateGraphNodes(value);
+                this.network.on('stabilized', d => {
+                    if (!this.stabilized) {
+                        this.stabilized = true;
+                        this.network.fit();
+                    }
                 });
+
+                this.populateGraph();
             }
         }, 2000);
 
     }
 
     /*
+        Llama al API y genera nodos y edges
+     */
+    populateGraph() {
+        // Llamo al API por la información para pintar el grafo
+        this.getGraphDataFromApi().subscribe(value => {
+            // Ahora construyo los nodos y edges del grafo
+            this.createGraphNodesAndEdges(value);
+        });
+    }
+
+    /*
         Agrupo las llamadas al API para pedir los datos del grafo
      */
-    getGraphData() {
+    getGraphDataFromApi() {
         // Recojo del api los datos
         return forkJoin([
             this.api.getServices(),
@@ -111,7 +132,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     /*
         Calculo los datos de nodos y edges del grafo
      */
-    populateGraphNodes(data) {
+    createGraphNodesAndEdges(data) {
+        // Limpio el grafo
+        this.data.nodes.clear();
+        this.data.edges.clear();
+
         // Recorro los servicios creando los nodos de servicios
         for (let service of data.services) {
             // Nodos de servicio
@@ -128,9 +153,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             // Si el host no se corresponde con Upstreams, creo un nodo Host y edge hacia él
             else {
+                const pathLabel = service.path || '';
                 this.data.nodes.add({
                     id: 'h#' + service.id,
-                    label: service.protocol + '://' + service.host + ':' + service.port + service.path,
+                    label: service.protocol + '://' + service.host + ':' + service.port + pathLabel,
                     group: 'host'
                 });
                 this.data.edges.add({
@@ -138,7 +164,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     to: 'h#' + service.id
                 });
             }
-
         }
 
         // Recorro las rutas creando los nodos de rutas
@@ -165,8 +190,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
 
+        this.stabilized = false;
         // Ajusto el tamaño del grafo después de recoger todos los datos
-        this.network.fit();
+        /*setTimeout(() => {
+            this.network.fit();
+        }, 1000);*/
+    }
+
+    fitNetwork() {
+        this.network.fit({animation: {duration: 1000}});
     }
 
     /*
@@ -179,57 +211,16 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             minHeight: '50vh'
         });
         dialogRef.afterClosed().subscribe(result => {
-            let body = {
-                'name': result.name,
-                'retries': result.retries,
-                'connect_timeout': result.connect_timeout,
-                'write_timeout': result.write_timeout,
-                'read_timeout': result.read_timeout
-                // 'tags': ['user-level', 'low-priority']
-                // 'client_certificate': {'id': '4e3ad2e4-0bc4-4638-8e34-c84a417ba39b'},
-                // 'tls_verify': true,
-                // 'tls_verify_depth': null,
-                // 'ca_certificates': ['4e3ad2e4-0bc4-4638-8e34-c84a417ba39b', '51e77dc2-8f3e-4afa-9d0e-0e3bbbcfd515'],
-            };
-
-            if (result.inputMethodField === 'url') {
-                body['url'] = result.url;
-            } else {
-                body['protocol'] = result.protocol;
-                body['host'] = result.host;
-                body['port'] = result.port;
-                body['path'] = result.path;
-            }
-
-            this.api.postNewService(body)
-                .subscribe(value => {
+            if (result !== null && result !== 'null') {
+                // llamo al API
+                this.api.postNewService(result).subscribe(value => {
                     this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
+                    this.populateGraph();
                 }, error => {
-                    this.toast.error_general(error);
+                    this.toast.error_general(error, {disableTimeOut: true});
                 });
+            }
         });
-
-        /*const body = {
-
-            // Required
-            'protocol': 'http',
-            'host': 'example2.com',
-            'port': 80,
-            // Optional
-            'name': 'my-service3',
-            'retries': 5,
-            'path': '/some_api',
-            'connect_timeout': 60000,
-            'write_timeout': 60000,
-            'read_timeout': 60000,
-            'tags': ['user-level', 'low-priority']
-            // 'client_certificate': {'id': '4e3ad2e4-0bc4-4638-8e34-c84a417ba39b'},
-            // 'tls_verify': true,
-            // 'tls_verify_depth': null,
-            // 'ca_certificates': ['4e3ad2e4-0bc4-4638-8e34-c84a417ba39b', '51e77dc2-8f3e-4afa-9d0e-0e3bbbcfd515'],
-            // 'url': 'https://10.20.30.40:5355/api/v1/'
-        };*/
-
     }
 
     /*
