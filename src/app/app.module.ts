@@ -28,6 +28,8 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
+import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
 import { DialogNewServiceComponent } from './components/dialog-new-service/dialog-new-service.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
 import { LandingComponent } from './routes/landing/landing.component';
@@ -47,7 +49,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         PageNotFoundComponent,
         LandingComponent,
         ArchitectComponent,
-        DialogNewServiceComponent
+        DialogNewServiceComponent,
+        DialogInfoServiceComponent,
+        DialogConfirmComponent
     ],
     imports: [
         BrowserModule,

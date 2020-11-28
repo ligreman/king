@@ -6,6 +6,8 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataSet, Network } from 'vis-network/standalone';
+import { DialogConfirmComponent } from '../../components/dialog-confirm/dialog-confirm.component';
+import { DialogInfoServiceComponent } from '../../components/dialog-info-service/dialog-info-service.component';
 import { DialogNewServiceComponent } from '../../components/dialog-new-service/dialog-new-service.component';
 import { ApiService } from '../../services/api.service';
 import { GlobalsService } from '../../services/globals.service';
@@ -52,7 +54,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     ngAfterViewInit() {
         // create a network
         setTimeout(() => {
-            this.loading = false;
             const container = document.getElementById('node-network');
             const reference = document.getElementById('net-reference');
             let options = {
@@ -74,13 +75,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 options.height = reference.offsetHeight + 'px';
                 this.network = new Network(container, this.data, options);
 
-                // Eventos sobre el grafo
-                // this.network.on('selectNode', node => {
-                //     console.log('Elegio');
-                //     console.log(node);
-                //     console.log(this.data.nodes.get(node.nodes[0]));
-                //     this.selection = this.data.nodes.get(node.nodes[0]);
-                // });
                 this.network.on('click', info => {
                     if (info.nodes.length > 0) {
                         console.log(this.data.nodes.get(info.nodes[0]));
@@ -144,7 +138,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 id: service.id,
                 label: service.name,
                 title: 'Servicio: ' + service.id,
-                group: 'service'
+                group: 'service',
+                data: service
             });
 
             // Si el host de este servicio se corresponde con el name de un Upstream, edge
@@ -157,7 +152,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.data.nodes.add({
                     id: 'h#' + service.id,
                     label: service.protocol + '://' + service.host + ':' + service.port + pathLabel,
-                    group: 'host'
+                    group: 'host',
+                    title: 'Host'
                 });
                 this.data.edges.add({
                     from: service.id,
@@ -171,9 +167,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             // Nodos de ruta
             this.data.nodes.add({
                 id: route.id,
-                label: route.name,
+                label: route.name + '\n[' + route.paths.join(', ') + ']',
                 title: route.id,
-                group: 'route'
+                group: 'route',
+                data: route
             });
 
             // Busco los servicios asociados a la ruta para crear los edges, si está enlazado a un servicio
@@ -191,10 +188,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         this.stabilized = false;
-        // Ajusto el tamaño del grafo después de recoger todos los datos
-        /*setTimeout(() => {
-            this.network.fit();
-        }, 1000);*/
+        this.loading = false;
     }
 
     fitNetwork() {
@@ -339,6 +333,70 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     deleteService(id: string) {
         this.api.deleteService(id).subscribe(value => {}, error => {
             this.toast.error_general(error);
+        });
+    }
+
+    showInfo(select) {
+        let opt = {
+            data: ''
+        };
+
+        switch (select.group) {
+            case 'service':
+                opt.data = select.id;
+                break;
+            case 'route':
+                break;
+            case 'upstream':
+                break;
+            case 'consumer':
+                break;
+        }
+
+        this.dialog.open(DialogInfoServiceComponent, opt);
+    }
+
+    delete(select) {
+        let opt = {
+            data: {}
+        };
+        switch (select.group) {
+            case 'service':
+                opt.data = {title: 'dialog.confirm.delete_service_title', content: 'dialog.confirm.delete_service', name: select.label, id: select.id};
+                console.log(opt);
+                break;
+            case 'route':
+                break;
+            case 'upstream':
+                break;
+            case 'consumer':
+                break;
+        }
+
+        const dialogRef = this.dialog.open(DialogConfirmComponent, opt);
+
+        dialogRef.afterClosed().subscribe(result => {
+            if (result === 'true') {
+                this.loading = true;
+
+                // llamo al API
+                switch (select.group) {
+                    case 'service':
+                        this.api.deleteService(select.id).subscribe(() => {
+                            this.toast.success('text.id_extra', 'success.delete_service', {msgExtra: select.id});
+                            this.populateGraph();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                        });
+                        break;
+                    case 'route':
+                        break;
+                    case 'upstream':
+                        break;
+                    case 'consumer':
+                        break;
+                }
+            }
         });
     }
 }

@@ -11,14 +11,25 @@
         "new_route": "Ruta creado",
         "new_upstream": "Upstream creado",
         "new_consumer": "Consumidor creado",
-        "new_plugin": "Plugin creado"
+        "new_plugin": "Plugin creado",
+        "delete_service": "Servicio eliminado"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
         "documentation": "Documentación",
         "advanced_fields": "Campos avanzados",
         "create": "Crear",
-        "cancel": "Cancelar"
+        "info": "Información",
+        "edit": "Editar",
+        "delete": "Eliminar",
+        "cancel": "Cancelar",
+        "accept": "Aceptar"
+    },
+    "dialog": {
+        "confirm": {
+            "delete_service_title": "Eliminar servicio",
+            "delete_service": "¿Deseas eliminar este servicio?"
+        }
     },
     "header": {
         "menu": {

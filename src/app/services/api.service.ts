@@ -44,6 +44,10 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/services').pipe(catchError(this.handleError));
     }
 
+    public getService(id: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/services/' + id).pipe(catchError(this.handleError));
+    }
+
     public postNewService(body) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/services', body).pipe(catchError(this.handleError));
     }

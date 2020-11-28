@@ -18,7 +18,7 @@ export class ToastService {
     }
 
     public error(msg: string, title: string = '', options: any = {}) {
-        const {timeOut = 5000, extendedTimeOut = 1000, disableTimeOut = false, msgExtra = '', titleExtra = ''} = options;
+        const {timeOut = 15000, extendedTimeOut = 3000, disableTimeOut = false, msgExtra = '', titleExtra = ''} = options;
 
         msg = this.translate.instant(msg, {extra: msgExtra});
         if (title != '') title = this.translate.instant(title, {extra: titleExtra});
@@ -26,7 +26,7 @@ export class ToastService {
     };
 
     public error_general(err: any, options: any = {}) {
-        const {timeOut = 5000, extendedTimeOut = 1000, disableTimeOut = false, msgExtra = err.message, titleExtra = err.code} = options;
+        const {timeOut = 15000, extendedTimeOut = 3000, disableTimeOut = false, msgExtra = err.message, titleExtra = err.code} = options;
         this.error('error.content', 'error.title', {
             timeOut: timeOut,
             extendedTimeOut: extendedTimeOut,

@@ -126,6 +126,7 @@ export class GlobalsService {
             },
             borderWidth: 2,
             borderWidthSelected: 3,
+            font: {size: 16},
             chosen: true,
             color: {
                 border: '#388E3C',
@@ -150,6 +151,7 @@ export class GlobalsService {
             },
             borderWidth: 2,
             borderWidthSelected: 3,
+            font: {size: 16},
             chosen: true,
             color: {
                 border: '#0288D1',
@@ -174,6 +176,7 @@ export class GlobalsService {
             },
             borderWidth: 2,
             borderWidthSelected: 3,
+            font: {size: 16},
             chosen: true,
             color: {
                 border: '#F57C00',

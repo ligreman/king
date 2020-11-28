@@ -58,21 +58,29 @@
             <mat-divider class="margin-top-10 margin-bottom-10"></mat-divider>
 
             <div mat-subheader *ngIf="selection !== ''">
-                {{'architect.local_actions_' + selection.group | translate }}: {{ selection.label }}
+                {{'architect.local_actions_' + selection.group | translate }}&nbsp;<span class="italic">{{ selection.label }}</span>
             </div>
             <mat-list-item *ngIf="selection !== ''">
                 <div mat-line>
-                    <button mat-button color="accent">
-                        <mat-icon>edit</mat-icon>
-                        Edit
+                    <button mat-button (click)="showInfo(selection)">
+                        <mat-icon>info</mat-icon>
+                        {{'text.info' | translate}}
                     </button>
                 </div>
             </mat-list-item>
             <mat-list-item *ngIf="selection !== ''">
                 <div mat-line>
-                    <button mat-button color="warn">
-                        <mat-icon>shopping_cart</mat-icon>
-                        Delete
+                    <button mat-button color="accent">
+                        <mat-icon>edit</mat-icon>
+                        {{'text.edit' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item *ngIf="selection !== ''">
+                <div mat-line>
+                    <button mat-button color="warn" (click)="delete(selection)">
+                        <mat-icon>delete</mat-icon>
+                        {{'text.delete' | translate}}
                     </button>
                 </div>
             </mat-list-item>

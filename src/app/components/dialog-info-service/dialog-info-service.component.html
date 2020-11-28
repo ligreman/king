@@ -1,0 +1,15 @@
+<h2 mat-dialog-title>{{'service.dialog.create' | translate}}</h2>
+
+<mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
+    <div fxFlex="90">
+        {{service|json}}
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-flat-button mat-dialog-close="null" color="accent">{{'text.accept' | translate}}</button>
+    <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
+    <!--<button mat-flat-button [mat-dialog-close]="onSubmit()" color="accent"
+            [disabled]="form.invalid">{{'text.create' | translate}}</button>-->
+</mat-dialog-actions>
+

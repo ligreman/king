@@ -11,14 +11,25 @@
         "new_route": "Route created",
         "new_upstream": "Upstream created",
         "new_consumer": "Consumer created",
-        "new_plugin": "Plugin created"
+        "new_plugin": "Plugin created",
+        "delete_service": "Service deleted"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
         "documentation": "Documentation",
         "advanced_fields": "Advanced fields",
         "create": "Create",
-        "cancel": "Cancel"
+        "info": "Information",
+        "edit": "Edit",
+        "delete": "Delete",
+        "cancel": "Cancel",
+        "accept": "Accept"
+    },
+    "dialog": {
+        "confirm": {
+            "delete_service_title": "Delete service",
+            "delete_service": "Do you want to delete this service?"
+        }
     },
     "header": {
         "menu": {
