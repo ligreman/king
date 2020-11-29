@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
@@ -27,6 +28,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     stabilized = false;
     // Grafo
     network;
+    // Posibles tipos de nodos que tienen acciones propias
+    groups = ['service', 'route', 'upstream', 'consumer'];
 
     // Datos del grafo
     data = {
@@ -34,7 +37,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         edges: new DataSet([])
     };
 
-    constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService, private dialog: MatDialog) {
+    constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService,
+                private translate: TranslateService, private dialog: MatDialog) {
         // Compruebo la conexión al nodo
         this.api.getNodeStatus()
             .subscribe(value => {
@@ -137,7 +141,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             this.data.nodes.add({
                 id: service.id,
                 label: service.name,
-                title: 'Servicio: ' + service.id,
+                title: this.translate.instant('service.label') + ': ' + service.id,
                 group: 'service',
                 data: service
             });
@@ -168,7 +172,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             this.data.nodes.add({
                 id: route.id,
                 label: route.name + '\n[' + route.paths.join(', ') + ']',
-                title: route.id,
+                title: this.translate.instant('route.label') + ': ' + route.id,
                 group: 'route',
                 data: route
             });
@@ -338,7 +342,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
     showInfo(select) {
         let opt = {
-            data: ''
+            data: '',
+            minHeight: '50vh',
+            minWidth: '75vw'
         };
 
         switch (select.group) {

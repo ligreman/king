@@ -1,9 +1,11 @@
-<h2 mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start">
+<h2 mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-5-i">
     <span>{{'service.dialog.create' | translate}}</span>
-    <span><a mat-button href="https://docs.konghq.com/enterprise/2.1.x/admin-api/#service-object" target="_blank">
+    <span><a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#add-service" target="_blank">
     {{'text.documentation' | translate}}
         <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
 </h2>
+
+<mat-divider class="margin-bottom-20-i"></mat-divider>
 
 <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="90">
@@ -198,7 +200,6 @@
                                 </mat-chip>
                                 <input placeholder="{{'service.dialog.tags' | translate}}"
                                        formControlName="tags"
-
                                        [matChipInputFor]="chipList"
                                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                        matChipInputAddOnBlur="true"
@@ -213,6 +214,8 @@
         </form>
     </div>
 </mat-dialog-content>
+
+<mat-divider class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
 <mat-dialog-actions align="end">
     <button mat-button mat-dialog-close="null" color="warn">{{'text.cancel' | translate}}</button>

@@ -23,13 +23,19 @@
         "edit": "Edit",
         "delete": "Delete",
         "cancel": "Cancel",
-        "accept": "Accept"
+        "accept": "Accept",
+        "name": "Name",
+        "id": "ID",
+        "created_at": "Created at",
+        "updated_at": "Updated at",
+        "tags": "Tags"
     },
     "dialog": {
         "confirm": {
             "delete_service_title": "Delete service",
             "delete_service": "Do you want to delete this service?"
-        }
+        },
+        "copy_clipboard": "Copy JSON to clipboard"
     },
     "header": {
         "menu": {
@@ -57,15 +63,14 @@
         "local_actions_route": "Actions on route",
         "local_actions_upstream": "Actions on upstream",
         "local_actions_consumer": "Actions on consumer",
-        "add_service": "Add Service",
-        "add_route": "Add Route",
-        "add_upstream": "Add Upstream",
-        "add_consumer": "Add Consumer",
         "center_network": "Adjust graph to fit all nodes"
     },
     "service": {
+        "label": "Service",
+        "add": "Add Service",
         "dialog": {
             "create": "Create a new service",
+            "info": "Service`s information",
             "name": "Name for the service",
             "name_example": "my-service",
             "url": "Complete URL",
@@ -107,5 +112,14 @@
                 "timeout_min_max": "Number between 0 and 3600000"
             }
         }
+    },
+    "route": {
+        "add": "Add Route"
+    },
+    "upstream": {
+        "add": "Add Upstream"
+    },
+    "consumer": {
+        "add": "Add Consumer"
     }
 }

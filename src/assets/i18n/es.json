@@ -23,13 +23,19 @@
         "edit": "Editar",
         "delete": "Eliminar",
         "cancel": "Cancelar",
-        "accept": "Aceptar"
+        "accept": "Aceptar",
+        "name": "Nombre",
+        "id": "ID",
+        "created_at": "Creado el",
+        "updated_at": "Actualizado el",
+        "tags": "Etiquetas"
     },
     "dialog": {
         "confirm": {
             "delete_service_title": "Eliminar servicio",
             "delete_service": "¿Deseas eliminar este servicio?"
-        }
+        },
+        "copy_clipboard": "Copiar JSON al portapapeles"
     },
     "header": {
         "menu": {
@@ -57,15 +63,14 @@
         "local_actions_route": "Acciones sobre ruta",
         "local_actions_upstream": "Acciones sobre upstream",
         "local_actions_consumer": "Acciones sobre consumidor",
-        "add_service": "Añadir Servicio",
-        "add_route": "Añadir Ruta",
-        "add_upstream": "Añadir Upstream",
-        "add_consumer": "Añadir Consumidor",
         "center_network": "Ajustar grafo para abarcar todos los nodos"
     },
     "service": {
+        "label": "Servicio",
+        "add": "Añadir Servicio",
         "dialog": {
             "create": "Crear un servicio nuevo",
+            "info": "Información del servicio",
             "name": "Nombre del servicio",
             "name_example": "mi-servicio",
             "url": "URL completa",
@@ -107,5 +112,14 @@
                 "timeout_min_max": "Número entre 0 y 3600000"
             }
         }
+    },
+    "route": {
+        "add": "Añadir Ruta"
+    },
+    "upstream": {
+        "add": "Añadir Upstream"
+    },
+    "consumer": {
+        "add": "Añadir Consumidor"
     }
 }

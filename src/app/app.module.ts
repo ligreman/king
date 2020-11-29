@@ -1,3 +1,4 @@
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -16,6 +17,7 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -59,6 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         AppRoutingModule,
         BrowserAnimationsModule,
         FlexLayoutModule,
+        ClipboardModule,
         MatInputModule,
         MatButtonModule,
         MatButtonToggleModule,
@@ -75,6 +78,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatIconModule,
         MatAutocompleteModule,
         MatTooltipModule,
+        MatSidenavModule,
         NgxChartsModule,
         ReactiveFormsModule,
         TranslateModule.forRoot({

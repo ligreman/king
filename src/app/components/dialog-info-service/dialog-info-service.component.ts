@@ -10,16 +10,23 @@ import { ToastService } from '../../services/toast.service';
 })
 export class DialogInfoServiceComponent implements OnInit {
     service;
+    loading = true;
 
     constructor(@Inject(MAT_DIALOG_DATA) public serviceId: string, private api: ApiService, private toast: ToastService) { }
 
     ngOnInit(): void {
         // Recojo los datos del api
-        this.api.getService(this.serviceId).subscribe(service => {
-            this.service = service;
-        }, error => {
-            this.toast.error_general(error);
-        });
+        this.api.getService(this.serviceId)
+            .subscribe(service => {
+                this.service = service;
+            }, error => {
+                this.toast.error_general(error);
+            }, () => {
+                this.loading = false;
+            });
     }
 
+    copyClip() {
+        return JSON.stringify(this.service);
+    }
 }

@@ -1,3 +1,5 @@
+@import '~@angular/material/theming';
+
 .title {
     text-decoration: none;
     color: white;
@@ -13,3 +15,6 @@
     font-size: .8rem;
 }
 
+.active-route {
+    color: mat-color($mat-teal, A400);
+}

@@ -21,12 +21,12 @@
             </mat-list-item>
             <mat-divider class="margin-top-10 margin-bottom-10"></mat-divider>
 
-            <div mat-subheader>{{'architect.global_actions' | translate}}</div>
+            <div mat-subheader class="subheader">{{'architect.global_actions' | translate}}</div>
             <mat-list-item>
                 <div mat-line>
                     <button mat-button (click)="addService()">
                         <mat-icon class="color-service">memory</mat-icon>
-                        {{'architect.add_service' | translate}}
+                        {{'service.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
@@ -34,7 +34,7 @@
                 <div mat-line>
                     <button mat-button (click)="addRoute()">
                         <mat-icon class="color-route">timeline</mat-icon>
-                        {{'architect.add_route' | translate}}
+                        {{'route.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
@@ -42,7 +42,7 @@
                 <div mat-line>
                     <button mat-button (click)="addUpstream()">
                         <mat-icon class="color-upstream">mediation</mat-icon>
-                        {{'architect.add_upstream' | translate}}
+                        {{'upstream.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
@@ -50,17 +50,17 @@
                 <div mat-line>
                     <button mat-button (click)="addConsumer()">
                         <mat-icon class="color-consumer">shopping_cart</mat-icon>
-                        {{'architect.add_consumer' | translate}}
+                        {{'consumer.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
 
-            <mat-divider class="margin-top-10 margin-bottom-10"></mat-divider>
+            <mat-divider class="margin-top-10 margin-bottom-10" *ngIf="groups.includes(selection.group)"></mat-divider>
 
-            <div mat-subheader *ngIf="selection !== ''">
+            <div mat-subheader class="subheader" *ngIf="groups.includes(selection.group)">
                 {{'architect.local_actions_' + selection.group | translate }}&nbsp;<span class="italic">{{ selection.label }}</span>
             </div>
-            <mat-list-item *ngIf="selection !== ''">
+            <mat-list-item *ngIf="groups.includes(selection.group)">
                 <div mat-line>
                     <button mat-button (click)="showInfo(selection)">
                         <mat-icon>info</mat-icon>
@@ -68,7 +68,7 @@
                     </button>
                 </div>
             </mat-list-item>
-            <mat-list-item *ngIf="selection !== ''">
+            <mat-list-item *ngIf="groups.includes(selection.group)">
                 <div mat-line>
                     <button mat-button color="accent">
                         <mat-icon>edit</mat-icon>
@@ -76,7 +76,7 @@
                     </button>
                 </div>
             </mat-list-item>
-            <mat-list-item *ngIf="selection !== ''">
+            <mat-list-item *ngIf="groups.includes(selection.group)">
                 <div mat-line>
                     <button mat-button color="warn" (click)="delete(selection)">
                         <mat-icon>delete</mat-icon>

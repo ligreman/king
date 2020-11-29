@@ -1,0 +1,5 @@
+@import '~@angular/material/theming';
+
+.subheader {
+    color: mat-color($mat-blue-gray, 300);
+}

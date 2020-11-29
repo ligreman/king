@@ -1,15 +1,117 @@
-<h2 mat-dialog-title>{{'service.dialog.create' | translate}}</h2>
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" fxFlex>
+        <span>{{'service.dialog.info' | translate}}</span>
 
-<mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
-    <div fxFlex="90">
-        {{service|json}}
+        <span fxFlexAlign="end">
+            <a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#service-object" target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button mat-icon-button [cdkCopyToClipboard]="copyClip()" [cdkCopyToClipboardAttempts]="5"
+                    matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div fxFlex [fxShow]="loading" fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+        </p>
     </div>
-</mat-dialog-content>
 
-<mat-dialog-actions align="end">
-    <button mat-flat-button mat-dialog-close="null" color="accent">{{'text.accept' | translate}}</button>
-    <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
-    <!--<button mat-flat-button [mat-dialog-close]="onSubmit()" color="accent"
-            [disabled]="form.invalid">{{'text.create' | translate}}</button>-->
-</mat-dialog-actions>
+    <div fxFlex>
+        <mat-dialog-content *ngIf="service && !loading" class="margin-0-i">
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.name' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['name']}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.id' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['id']}}</p>
+                </div>
+            </div>
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.created_at' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['created_at'] * 1000 | date:'medium'}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.updated_at' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['updated_at'] * 1000 | date:'medium'}}</p>
+                </div>
+            </div>
 
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.protocol' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['protocol']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.host' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['host']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.port' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['port']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.path' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['path']}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.retries' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['retries']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.connect_timeout' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['connect_timeout']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.read_timeout' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['read_timeout']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.write_timeout' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['write_timeout']}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'service.dialog.certificate' | translate}}</p>
+                    <p class="margin-left-20-i">{{service?.client_certificate?.id}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.tls_verify' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['tls_verify']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'service.dialog.tls_verify_depth' | translate}}</p>
+                    <p class="margin-left-20-i">{{service['tls_verify_depth']}}</p>
+                </div>
+            </div>
+            <div fxLayout="row">
+                <p class="title">{{'service.dialog.ca_certificates' | translate}}</p>
+                <div>
+                    <p *ngFor="let ca of service['ca_certificates']">{{ca}}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider class="margin-bottom-10-i margin-top-10-i" *ngIf="!loading"></mat-divider>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between" fxFlex *ngIf="!loading">
+        <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="service">
+            <mat-chip *ngFor="let chip of service['tags']">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>

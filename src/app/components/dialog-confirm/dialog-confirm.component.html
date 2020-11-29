@@ -1,9 +1,13 @@
 <h2 mat-dialog-title>{{ texts.title | translate}}: {{texts.name}}</h2>
 
+<mat-divider class="margin-bottom-20-i"></mat-divider>
+
 <mat-dialog-content class="mat-typography">
     <p>{{ texts.content | translate}}</p>
     <p>ID: {{texts.id}}</p>
 </mat-dialog-content>
+
+<mat-divider class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
 <mat-dialog-actions align="end">
     <button mat-flat-button mat-dialog-close="false" color="">{{'text.cancel' | translate}}</button>

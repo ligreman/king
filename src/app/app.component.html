@@ -4,33 +4,33 @@
     <div [fxFlexOffset]="1"><a class="title" routerLink="/node-information">King for Kong</a></div>
 
     <div>
-        <button mat-button color="accent" [fxFlexOffset]="2" routerLink="/architect" [disabled]="!isConnectedToNode()">
+        <button mat-button color="accent" [fxFlexOffset]="2" routerLink="/architect" routerLinkActive="active-route" [disabled]="!isConnectedToNode()">
             <mat-icon>architecture</mat-icon>
             {{ 'header.menu.graph' | translate | uppercase }}
         </button>
-        <button mat-button [matMenuTriggerFor]="menuE" [disabled]="!isConnectedToNode()" color="accent">
+        <button mat-button [matMenuTriggerFor]="menuE" routerLinkActive="active-route" [disabled]="!isConnectedToNode()" color="accent">
             <mat-icon>category</mat-icon>
             {{ 'header.menu.elements' | translate | uppercase }}
         </button>
         <mat-menu #menuE="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item routerLinkActive="active-route">
                 <mat-icon class="color-service">memory</mat-icon>
                 Servicios
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item routerLinkActive="active-route">
                 <mat-icon class="color-route">timeline</mat-icon>
                 Rutas
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item routerLinkActive="active-route">
                 <mat-icon class="color-upstream">mediation</mat-icon>
                 Upstreams
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item routerLinkActive="active-route">
                 <mat-icon class="color-consumer">shopping_cart</mat-icon>
                 Consumidores
             </button>
         </mat-menu>
-        <button mat-button color="accent" routerLink="/plugins" [disabled]="!isConnectedToNode()">
+        <button mat-button color="accent" routerLink="/plugins" routerLinkActive="active-route" [disabled]="!isConnectedToNode()">
             <mat-icon>settings_input_component</mat-icon>
             {{ 'header.menu.plugins' | translate | uppercase }}
         </button>
@@ -39,15 +39,15 @@
             {{ 'header.menu.certs' | translate | uppercase }}
         </button>
         <mat-menu #menuC="matMenu">
-            <button mat-menu-item>
+            <button mat-menu-item routerLinkActive="active-route">
                 <mat-icon>https</mat-icon>
                 Certificados
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item routerLinkActive="active-route">
                 <mat-icon>https</mat-icon>
                 Certificados de CA
             </button>
-            <button mat-menu-item>
+            <button mat-menu-item routerLinkActive="active-route">
                 <mat-icon>https</mat-icon>
                 SNIs
             </button>
