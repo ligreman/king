@@ -202,21 +202,39 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     /*
         Añade un servicio nuevo
      */
-    addService() {
+    addEditService(selected = null) {
+        let selectedServiceId = null;
+        if (selected !== null) {
+            selectedServiceId = selected.id;
+        }
+
         const dialogRef = this.dialog.open(DialogNewServiceComponent, {
             disableClose: true,
             minWidth: '80vw',
-            minHeight: '50vh'
+            minHeight: '50vh',
+            data: selectedServiceId
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== 'null') {
-                // llamo al API
-                this.api.postNewService(result).subscribe(value => {
-                    this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
-                    this.populateGraph();
-                }, error => {
-                    this.toast.error_general(error, {disableTimeOut: true});
-                });
+                // Si no venía selected, es que es nuevo servicio
+                if (selectedServiceId === null) {
+                    // llamo al API
+                    this.api.postNewService(result).subscribe(value => {
+                        this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
+                        this.populateGraph();
+                    }, error => {
+                        this.toast.error_general(error, {disableTimeOut: true});
+                    });
+                }
+                // Si venía es que es edición
+                else {
+                    this.api.patchService(selectedServiceId, result).subscribe(value => {
+                        this.toast.success('text.id_extra', 'success.update_service', {msgExtra: value['id']});
+                        this.populateGraph();
+                    }, error => {
+                        this.toast.error_general(error, {disableTimeOut: true});
+                    });
+                }
             }
         });
     }
@@ -332,14 +350,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /*
-        Elimina un servicio dado su id
+        Muestra la info del elemento seleccionado
      */
-    deleteService(id: string) {
-        this.api.deleteService(id).subscribe(value => {}, error => {
-            this.toast.error_general(error);
-        });
-    }
-
     showInfo(select) {
         let opt = {
             data: '',
@@ -362,6 +374,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.dialog.open(DialogInfoServiceComponent, opt);
     }
 
+    /*
+        Borra el elemento seleccionado
+     */
     delete(select) {
         let opt = {
             data: {}

@@ -1,7 +1,10 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ApiService } from '../../services/api.service';
+import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
 @Component({
@@ -14,6 +17,7 @@ export class DialogNewServiceComponent implements OnInit {
     formValid = false;
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp', 'tls', 'udp'];
     tags = [];
+    editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
@@ -33,13 +37,54 @@ export class DialogNewServiceComponent implements OnInit {
         tls_verify_depth: ['', [CustomValidators.isNumber(true)]],
         ca_certificates: ['', Validators.pattern(/^([0-9abcdefABCDEF\-]|[\r\n])+$/)],
         tags: ['']
-    });
+    }, {validator: ProtocolPathValidator});
 
-    constructor(private fb: FormBuilder) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public serviceIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
 
     ngOnInit(): void {
-        // Estado inicial de los campos disabled
-        this.changeRadio();
+        // Si viene un servicio para editar
+        if (this.serviceIdEdit !== null) {
+            this.editMode = true;
+            
+            // Rescato la info del servicio del api
+            this.api.getService(this.serviceIdEdit)
+                .subscribe(service => {
+                    // Cambios especiales para representarlos en el formulario
+                    delete service['id'];
+                    delete service['created_at'];
+                    delete service['updated_at'];
+                    service['input_method'] = 'complete';
+                    service['url'] = '';
+
+                    if (service['client_certificate'] && service['client_certificate']['id']) {
+                        service['client_certificate'] = service['client_certificate']['id'];
+                    } else {
+                        service['client_certificate'] = '';
+                    }
+                    if (service['ca_certificates'] && service['ca_certificates'].length > 0) {
+                        service['ca_certificates'] = service['ca_certificates'].join('\n');
+                    } else {
+                        service['ca_certificates'] = '';
+                    }
+                    if (service['tls_verify'] === null) {
+                        service['tls_verify'] = '';
+                    }
+
+                    this.tags = service['tags'];
+                    service['tags'] = [];
+
+                    // Relleno el formuarlio
+                    this.form.setValue(service);
+
+                    // Estado inicial de los campos disabled
+                    this.changeRadio();
+                }, error => {
+                    this.toast.error_general(error);
+                });
+        } else {
+            // Estado inicial de los campos disabled
+            this.changeRadio();
+        }
     }
 
     /*
@@ -177,3 +222,16 @@ export class DialogNewServiceComponent implements OnInit {
 
     get tagsField() { return this.form.get('tags'); }
 }
+
+const ProtocolPathValidator: ValidatorFn = (fg: FormGroup) => {
+    const proto = fg.get('protocol').value;
+    let valid = true;
+
+    // Si no es http o https no puede llevar path
+    if (proto !== 'http' && proto !== 'https') {
+        if (fg.get('path').value !== '' && fg.get('path').value !== null) {
+            valid = false;
+        }
+    }
+    return valid ? null : {protocol: proto};
+};

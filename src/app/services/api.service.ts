@@ -52,6 +52,10 @@ export class ApiService {
         return this.httpClient.post(this.globals.NODE_API_URL + '/services', body).pipe(catchError(this.handleError));
     }
 
+    public patchService(id: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/services/' + id, body).pipe(catchError(this.handleError));
+    }
+
     public deleteService(id: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/services/' + id).pipe(catchError(this.handleError));
     }
@@ -63,8 +67,16 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/routes').pipe(catchError(this.handleError));
     }
 
+    public getRoute(id: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/routes/' + id).pipe(catchError(this.handleError));
+    }
+
     public postNewRoute(body) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/routes', body).pipe(catchError(this.handleError));
+    }
+
+    public patchRoute(id: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/routes/' + id, body).pipe(catchError(this.handleError));
     }
 
     public deleteRoute(id: string) {
@@ -78,8 +90,20 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams').pipe(catchError(this.handleError));
     }
 
+    public getUpstream(id: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id).pipe(catchError(this.handleError));
+    }
+
+    public getUpstreamHealth(id: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id + '/health').pipe(catchError(this.handleError));
+    }
+
     public postNewUpstream(body) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams', body).pipe(catchError(this.handleError));
+    }
+
+    public patchUpstream(id: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/upstreams/' + id, body).pipe(catchError(this.handleError));
     }
 
     public deleteUpstream(id: string) {
@@ -93,8 +117,16 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/consumer').pipe(catchError(this.handleError));
     }
 
+    public getConsumer(id: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumer/' + id).pipe(catchError(this.handleError));
+    }
+
     public postNewConsumer(body) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/consumer', body).pipe(catchError(this.handleError));
+    }
+
+    public patchConsumer(id: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/consumer/' + id, body).pipe(catchError(this.handleError));
     }
 
     public deleteConsumer(id: string) {

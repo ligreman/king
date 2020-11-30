@@ -9,13 +9,14 @@ export class CustomValidators {
 
             // Verifico que es un número
             let number = regexp.test(control.value);
-            console.log('test ' + number);
+
             // A ver si permito nulls o vacíos
-            if (allowEmpty && (control.value === '')) {
+            if (allowEmpty && (control.value === '' || control.value === null)) {
                 number = true;
             }
 
             return number ? null : {isNumber: {value: control.value}};
         };
     }
+
 }

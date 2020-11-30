@@ -24,7 +24,7 @@
             <div mat-subheader class="subheader">{{'architect.global_actions' | translate}}</div>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addService()">
+                    <button mat-button (click)="addEditService()">
                         <mat-icon class="color-service">memory</mat-icon>
                         {{'service.add' | translate}}
                     </button>
@@ -70,7 +70,7 @@
             </mat-list-item>
             <mat-list-item *ngIf="groups.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button color="accent">
+                    <button mat-button color="accent" (click)="addEditService(selection)">
                         <mat-icon>edit</mat-icon>
                         {{'text.edit' | translate}}
                     </button>

@@ -12,6 +12,7 @@
         "new_upstream": "Upstream created",
         "new_consumer": "Consumer created",
         "new_plugin": "Plugin created",
+        "update_service": "Service updated",
         "delete_service": "Service deleted"
     },
     "text": {
@@ -70,6 +71,7 @@
         "add": "Add Service",
         "dialog": {
             "create": "Create a new service",
+            "edit": "Edit service",
             "info": "Service`s information",
             "name": "Name for the service",
             "name_example": "my-service",
@@ -109,7 +111,8 @@
                 "port_min_max": "Number between 0 and 65535",
                 "path_pattern": "Must start with /",
                 "retries_min_max": "Number between 0 and 20",
-                "timeout_min_max": "Number between 0 and 3600000"
+                "timeout_min_max": "Number between 0 and 3600000",
+                "protocol_path_collision": "Selected protocol does not allow any path param, leave it empty"
             }
         }
     },

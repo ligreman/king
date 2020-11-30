@@ -12,6 +12,7 @@
         "new_upstream": "Upstream creado",
         "new_consumer": "Consumidor creado",
         "new_plugin": "Plugin creado",
+        "update_service": "Servicio actualizado",
         "delete_service": "Servicio eliminado"
     },
     "text": {
@@ -70,6 +71,7 @@
         "add": "Añadir Servicio",
         "dialog": {
             "create": "Crear un servicio nuevo",
+            "edit": "Editar servicio",
             "info": "Información del servicio",
             "name": "Nombre del servicio",
             "name_example": "mi-servicio",
@@ -109,7 +111,8 @@
                 "port_min_max": "Número entre 0 y 65535",
                 "path_pattern": "Debe empezar por /",
                 "retries_min_max": "Número entre 0 y 20",
-                "timeout_min_max": "Número entre 0 y 3600000"
+                "timeout_min_max": "Número entre 0 y 3600000",
+                "protocol_path_collision": "El protocolo seleccionado no admite parámetro path, dejarlo vacío"
             }
         }
     },
