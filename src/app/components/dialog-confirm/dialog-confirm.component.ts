@@ -16,7 +16,6 @@ export interface DialogData {
 export class DialogConfirmComponent implements OnInit {
 
     constructor(@Inject(MAT_DIALOG_DATA) public texts: DialogData) {
-        console.log(texts);
     }
 
     ngOnInit(): void {

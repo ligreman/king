@@ -7,10 +7,8 @@ import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataSet, Network } from 'vis-network/standalone';
-import { DialogConfirmComponent } from '../../components/dialog-confirm/dialog-confirm.component';
-import { DialogInfoServiceComponent } from '../../components/dialog-info-service/dialog-info-service.component';
-import { DialogNewServiceComponent } from '../../components/dialog-new-service/dialog-new-service.component';
 import { ApiService } from '../../services/api.service';
+import { DialogHelperService } from '../../services/dialog-helper.service';
 import { GlobalsService } from '../../services/globals.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -38,7 +36,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService,
-                private translate: TranslateService, private dialog: MatDialog) {
+                private translate: TranslateService, private dialog: MatDialog, private dialogHelper: DialogHelperService) {
         // Compruebo la conexión al nodo
         this.api.getNodeStatus()
             .subscribe(value => {
@@ -56,7 +54,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnDestroy(): void {}
 
     ngAfterViewInit() {
-        // create a network
+        // create a network. El setTimeout es para dejar tiempo a que cargue bien el DOM
         setTimeout(() => {
             const container = document.getElementById('node-network');
             const reference = document.getElementById('net-reference');
@@ -81,7 +79,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
                 this.network.on('click', info => {
                     if (info.nodes.length > 0) {
-                        console.log(this.data.nodes.get(info.nodes[0]));
                         this.selection = this.data.nodes.get(info.nodes[0]);
                     } else {
                         this.selection = '';
@@ -97,14 +94,14 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
                 this.populateGraph();
             }
-        }, 2000);
-
+        }, 1500);
     }
 
     /*
         Llama al API y genera nodos y edges
      */
     populateGraph() {
+        this.loading = true;
         // Llamo al API por la información para pintar el grafo
         this.getGraphDataFromApi().subscribe(value => {
             // Ahora construyo los nodos y edges del grafo
@@ -203,40 +200,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade un servicio nuevo
      */
     addEditService(selected = null) {
-        let selectedServiceId = null;
-        if (selected !== null) {
-            selectedServiceId = selected.id;
-        }
-
-        const dialogRef = this.dialog.open(DialogNewServiceComponent, {
-            disableClose: true,
-            minWidth: '80vw',
-            minHeight: '50vh',
-            data: selectedServiceId
-        });
-        dialogRef.afterClosed().subscribe(result => {
-            if (result !== null && result !== 'null') {
-                // Si no venía selected, es que es nuevo servicio
-                if (selectedServiceId === null) {
-                    // llamo al API
-                    this.api.postNewService(result).subscribe(value => {
-                        this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
-                        this.populateGraph();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
-                    });
-                }
-                // Si venía es que es edición
-                else {
-                    this.api.patchService(selectedServiceId, result).subscribe(value => {
-                        this.toast.success('text.id_extra', 'success.update_service', {msgExtra: value['id']});
-                        this.populateGraph();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
-                    });
-                }
-            }
-        });
+        this.dialogHelper.addEditService(selected)
+            .then(() => { this.populateGraph(); })
+            .catch(error => {});
     }
 
     /*
@@ -353,71 +319,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Muestra la info del elemento seleccionado
      */
     showInfo(select) {
-        let opt = {
-            data: '',
-            minHeight: '50vh',
-            minWidth: '75vw'
-        };
-
-        switch (select.group) {
-            case 'service':
-                opt.data = select.id;
-                break;
-            case 'route':
-                break;
-            case 'upstream':
-                break;
-            case 'consumer':
-                break;
-        }
-
-        this.dialog.open(DialogInfoServiceComponent, opt);
+        this.dialogHelper.showInfoElement(select);
     }
 
     /*
         Borra el elemento seleccionado
      */
     delete(select) {
-        let opt = {
-            data: {}
-        };
-        switch (select.group) {
-            case 'service':
-                opt.data = {title: 'dialog.confirm.delete_service_title', content: 'dialog.confirm.delete_service', name: select.label, id: select.id};
-                console.log(opt);
-                break;
-            case 'route':
-                break;
-            case 'upstream':
-                break;
-            case 'consumer':
-                break;
-        }
-
-        const dialogRef = this.dialog.open(DialogConfirmComponent, opt);
-
-        dialogRef.afterClosed().subscribe(result => {
-            if (result === 'true') {
-                this.loading = true;
-
-                // llamo al API
-                switch (select.group) {
-                    case 'service':
-                        this.api.deleteService(select.id).subscribe(() => {
-                            this.toast.success('text.id_extra', 'success.delete_service', {msgExtra: select.id});
-                            this.populateGraph();
-                        }, error => {
-                            this.toast.error_general(error, {disableTimeOut: true});
-                        });
-                        break;
-                    case 'route':
-                        break;
-                    case 'upstream':
-                        break;
-                    case 'consumer':
-                        break;
-                }
-            }
-        });
+        this.dialogHelper.deleteElement(select)
+            .then(() => { this.populateGraph(); })
+            .catch(error => {});
     }
 }

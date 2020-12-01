@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { Subscription } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { NodeService } from '../../services/node.service';
 import { ToastService } from '../../services/toast.service';
@@ -16,7 +15,6 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
     node_info;
     node_status;
     data = {};
-    subscription: Subscription;
 
     /////////////////////
 
@@ -120,15 +118,13 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
     }
 
     constructor(private api: ApiService, private toast: ToastService, private route: Router, private nodeWatcher: NodeService) {
-        const aux = this.multi;
-        Object.assign(this, {aux});
     }
 
     ngOnInit(): void {
         this.getData();
 
         // Escucho cambios de nodo
-        this.subscription = this.nodeWatcher.nodeChanged$.subscribe(node => {
+        this.nodeWatcher.nodeChanged$.subscribe(node => {
             this.getData();
         });
     }
