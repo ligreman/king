@@ -38,6 +38,14 @@
     margin-bottom: 20px !important;
 }
 
+.padding-10 {
+    padding: 10px;
+}
+
+.padding-20 {
+    padding: 20px;
+}
+
 .padding-left-10 {
     padding-left: 10px;
 }
@@ -65,4 +73,8 @@
 .mini-icon {
     font-size: 1rem;
     vertical-align: text-top;
+}
+
+.spacer {
+    flex: 1 1 auto;
 }

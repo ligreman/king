@@ -194,8 +194,8 @@
 
 
                         <mat-form-field fxFlex="45" color="accent" appearance="outline">
-                            <mat-chip-list #chipList aria-label="Fruit selection">
-                                <mat-chip *ngFor="let tag of tags" color="accent"
+                            <mat-chip-list #chipList aria-label="">
+                                <mat-chip *ngFor="let tag of tags"
                                           removable="true" (removed)="removeTag(tag)">{{tag}}
                                     <mat-icon matChipRemove>cancel</mat-icon>
                                 </mat-chip>

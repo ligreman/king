@@ -186,6 +186,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
                 }
             }
+
+            // TODO completar con consumidores, plugins...
         }
 
         this.stabilized = false;

@@ -40,6 +40,14 @@
     line-height: 24px;
 }
 
+.mat-chip.mat-primary {
+    background: mat-color($mat-gray, 800);
+}
+
+.mat-chip.mat-accent {
+    background: mat-color($mat-teal, 500);
+}
+
 /*
     NGX-CHARTS
  */

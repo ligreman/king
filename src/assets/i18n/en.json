@@ -29,7 +29,9 @@
         "id": "ID",
         "created_at": "Created at",
         "updated_at": "Updated at",
-        "tags": "Tags"
+        "tags": "Tags",
+        "true": "Sí",
+        "false": "No"
     },
     "dialog": {
         "confirm": {
@@ -57,6 +59,30 @@
     "landing": {
         "title": "Type here the address and port of the administration API of a Kong node, and click on the arrow to connect",
         "subtitle": "If you have connected with a node previously you will see it in the selector"
+    },
+    "information": {
+        "node": "Kong node information",
+        "database": "Database",
+        "server": "Connections",
+        "plugins": "Available and in use plugins",
+        "available": "Available",
+        "used": "In use",
+        "download_info": "Download information JSON",
+        "download_status": "Download status JSON",
+        "version": "Version",
+        "admin_listen": "Administration API",
+        "admin_ssl": "SSL administration API",
+        "proxy_listen": "Gateway proxy API",
+        "proxy_ssl": "SSL gateway proxy API",
+        "chart": {
+            "connections_accepted": "Accepted",
+            "connections_active": "Active",
+            "connections_waiting": "Waiting",
+            "connections_writing": "Writing",
+            "connections_reading": "Reading",
+            "connections_handled": "Handled",
+            "total_requests": "Total requests"
+        }
     },
     "architect": {
         "global_actions": "Global actions",

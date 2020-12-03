@@ -29,7 +29,9 @@
         "id": "ID",
         "created_at": "Creado el",
         "updated_at": "Actualizado el",
-        "tags": "Etiquetas"
+        "tags": "Etiquetas",
+        "true": "Yes",
+        "false": "No"
     },
     "dialog": {
         "confirm": {
@@ -57,6 +59,30 @@
     "landing": {
         "title": "Introduce la dirección y puerto del API de administración de un nodo de Kong, y pulsa la flecha para conectar",
         "subtitle": "Si ya has conectado con algún nodo previamente lo verás en el desplegable"
+    },
+    "information": {
+        "node": "Información del nodo de Kong",
+        "database": "Base de datos",
+        "server": "Conexiones",
+        "plugins": "Plugins disponibles y en uso",
+        "available": "Disponible",
+        "used": "En uso",
+        "download_info": "Descargar JSON de información",
+        "download_status": "Descargar JSON de estado",
+        "version": "Versión",
+        "admin_listen": "API de administración",
+        "admin_ssl": "SSL en API de administración",
+        "proxy_listen": "API de proxy gateway",
+        "proxy_ssl": "SSL en API de proxy gateway",
+        "chart": {
+            "connections_accepted": "Aceptadas",
+            "connections_active": "Activas",
+            "connections_waiting": "En espera",
+            "connections_writing": "Escribiendo",
+            "connections_reading": "Leyendo",
+            "connections_handled": "Procesadas",
+            "total_requests": "Total peticiones"
+        }
     },
     "architect": {
         "global_actions": "Acciones globales",

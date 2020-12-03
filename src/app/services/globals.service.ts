@@ -343,6 +343,8 @@ export class GlobalsService {
         }
     };
 
+    private _GRAPH_SCHEME = ['#B2DFDB', '#80CBC4', '#4DB6AC', '#009688', '#00796B', '#004D40'];
+
     constructor() {
     }
 
@@ -364,5 +366,9 @@ export class GlobalsService {
 
     get NETWORK_EDGES(): {} {
         return this._NETWORK_EDGES;
+    }
+
+    get GRAPH_SCHEME(): string[] {
+        return this._GRAPH_SCHEME;
     }
 }
