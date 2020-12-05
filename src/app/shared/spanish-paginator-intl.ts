@@ -3,22 +3,38 @@
  */
 import { Injectable } from '@angular/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root'
 })
 export class MatPaginatorIntlSpanish extends MatPaginatorIntl {
-    itemsPerPageLabel = 'Elementos por página:';
-    nextPageLabel = 'Página siguiente';
-    previousPageLabel = 'Página anterior';
+    itemsPerPageLabel = '';
+    nextPageLabel = '';
+    previousPageLabel = '';
+    firstPageLabel = '';
+    lastPageLabel = '';
+    ofLabel = '';
 
-    getRangeLabel: any = function (
+
+    constructor(private translate: TranslateService) {
+        super();
+
+        this.itemsPerPageLabel = this.translate.instant('pagination.itemsPerPageLabel');
+        this.nextPageLabel = this.translate.instant('pagination.nextPageLabel');
+        this.previousPageLabel = this.translate.instant('pagination.previousPageLabel');
+        this.firstPageLabel = this.translate.instant('pagination.firstPageLabel');
+        this.lastPageLabel = this.translate.instant('pagination.lastPageLabel');
+        this.ofLabel = this.translate.instant('pagination.ofLabel');
+    }
+
+    getRangeLabel: any = (
         page: number,
         pageSize: number,
         length: number
-    ): string {
+    ): string => {
         if (length === 0 || pageSize === 0) {
-            return '0 de ' + length;
+            return '0' + this.ofLabel + length;
         }
         length = Math.max(length, 0);
         const startIndex: number = page * pageSize;
@@ -27,6 +43,6 @@ export class MatPaginatorIntlSpanish extends MatPaginatorIntl {
             startIndex < length
                 ? Math.min(startIndex + pageSize, length)
                 : startIndex + pageSize;
-        return startIndex + 1 + ' - ' + endIndex + ' de ' + length;
+        return startIndex + 1 + ' - ' + endIndex + this.ofLabel + length;
     };
 }

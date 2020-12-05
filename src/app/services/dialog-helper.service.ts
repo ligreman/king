@@ -63,14 +63,14 @@ export class DialogHelperService {
     /*
         Muestra la info del elemento seleccionado
      */
-    showInfoElement(select) {
+    showInfoElement(select, group) {
         let opt = {
             data: '',
             minHeight: '50vh',
             minWidth: '75vw'
         };
 
-        switch (select.group) {
+        switch (group) {
             case 'service':
                 opt.data = select.id;
                 break;
@@ -88,14 +88,14 @@ export class DialogHelperService {
     /*
         Borra el elemento seleccionado
      */
-    deleteElement(select) {
+    deleteElement(select, group) {
         return new Promise((resolve, reject) => {
             let opt = {
                 data: {}
             };
-            switch (select.group) {
+            switch (group) {
                 case 'service':
-                    opt.data = {title: 'dialog.confirm.delete_service_title', content: 'dialog.confirm.delete_service', name: select.label, id: select.id};
+                    opt.data = {title: 'dialog.confirm.delete_service_title', content: 'dialog.confirm.delete_service', name: select.name, id: select.id};
                     break;
                 case 'route':
                     break;

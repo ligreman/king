@@ -33,12 +33,20 @@
         "true": "Yes",
         "false": "No"
     },
+    "pagination": {
+        "itemsPerPageLabel": "Elementos por página:",
+        "nextPageLabel": "Página siguiente",
+        "previousPageLabel": "Página anterior",
+        "firstPageLabel": "Primera página",
+        "lastPageLabel": "Última página",
+        "ofLabel": " de "
+    },
     "dialog": {
         "confirm": {
             "delete_service_title": "Eliminar servicio",
             "delete_service": "¿Deseas eliminar este servicio?"
         },
-        "copy_clipboard": "Copiar JSON al portapapeles"
+        "copy_clipboard": "Descargar en JSON"
     },
     "header": {
         "menu": {
@@ -46,6 +54,13 @@
             "elements": "Elementos",
             "plugins": "Plugins",
             "certs": "Certificados",
+            "services": "Servicios",
+            "routes": "Rutas",
+            "upstreams": "Upstreams",
+            "consumers": "Consumidores",
+            "certificates": "Certificados",
+            "cacerts": "Certificados de CA",
+            "snis": "SNIs",
             "kong_node": "API de administración de un nodo de Kong",
             "kong_node_tooltip": "Introduce la URL y puerto",
             "kong_node_button_tooltip": "Conectar",
@@ -136,11 +151,11 @@
             "path": "Ruta (path)",
             "path_example": "/api_rest",
             "retries": "Reintentos",
-            "connect_timeout": "Timeout conexión",
+            "connect_timeout": "Timeout conexión (ms)",
             "connect_tooltip": "Timeout para conectar al servidor upstream",
-            "write_timeout": "Timeout escritura",
+            "write_timeout": "Timeout escritura (ms)",
             "write_tooltip": "Timeout entre dos operaciones de escritura sucesivas al enviar una petición al servidor upstream",
-            "read_timeout": "Timeout lectura",
+            "read_timeout": "Timeout lectura (ms)",
             "read_tooltip": "Timeout entre dos operaciones de lectura sucesivas al enviar una petición al servidor upstream",
             "certificate": "Certificado de cliente",
             "certificate_example": "4e3ad2e4-0bc4-4638-8e34-c84a417ba39b",
@@ -173,5 +188,12 @@
     },
     "consumer": {
         "add": "Añadir Consumidor"
+    },
+    "element": {
+        "text_search": "texto a buscar",
+        "no_data": "No hay resultados buscando por",
+        "actions": "Acciones",
+        "reload": "Recargar los datos",
+        "ssl": "Certificados"
     }
 }

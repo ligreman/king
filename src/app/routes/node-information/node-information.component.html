@@ -1,4 +1,7 @@
-<div class="padding-30">
+<mat-progress-bar mode="indeterminate" color="accent" [fxShow]="loading"></mat-progress-bar>
+<div class="progress-placeholder" [fxShow]="!loading"></div>
+
+<div class="padding-30" [fxShow]="!loading">
     <div gdAreas="node node server server | database database files files | plugins plugins plugins plugins"
          gdGap="30px"
          gdRows="auto auto auto">

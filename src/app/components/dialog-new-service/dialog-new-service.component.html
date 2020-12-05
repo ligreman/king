@@ -151,8 +151,9 @@
                         <!--Certificado cliente-->
                         <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
                             <mat-label>{{'service.dialog.certificate' | translate}}</mat-label>
-                            <input type="text" aria-label="" matInput formControlName="client_certificate"
-                                   placeholder="{{'service.dialog.certificate_example' | translate}}"/>
+                            <mat-select formControlName="client_certificate" [disabled]="certificatesAvailable.length === 0">
+                                <mat-option value="{{cert}}" *ngFor="let cert of certificatesAvailable">{{cert}}</mat-option>
+                            </mat-select>
                             <mat-icon matSuffix matTooltip="{{'service.dialog.certificate_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>

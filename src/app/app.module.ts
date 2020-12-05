@@ -2,7 +2,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -13,11 +13,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatPaginatorIntl, MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -34,6 +36,10 @@ import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confi
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
 import { DialogNewServiceComponent } from './components/dialog-new-service/dialog-new-service.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
+import { ElementConsumerComponent } from './routes/elements/element-consumer/element-consumer.component';
+import { ElementRouteComponent } from './routes/elements/element-route/element-route.component';
+import { ElementServiceComponent } from './routes/elements/element-service/element-service.component';
+import { ElementUpstreamComponent } from './routes/elements/element-upstream/element-upstream.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
@@ -53,7 +59,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         ArchitectComponent,
         DialogNewServiceComponent,
         DialogInfoServiceComponent,
-        DialogConfirmComponent
+        DialogConfirmComponent,
+        ElementServiceComponent,
+        ElementRouteComponent,
+        ElementUpstreamComponent,
+        ElementConsumerComponent
     ],
     imports: [
         BrowserModule,
@@ -79,8 +89,12 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatAutocompleteModule,
         MatTooltipModule,
         MatSidenavModule,
+        MatSortModule,
+        MatPaginatorModule,
+        MatTableModule,
         NgxChartsModule,
         ReactiveFormsModule,
+        FormsModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -105,4 +119,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     bootstrap: [AppComponent]
 })
 export class AppModule {
+    constructor() {
+    }
 }

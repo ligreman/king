@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { saveAs } from 'file-saver';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -26,7 +27,8 @@ export class DialogInfoServiceComponent implements OnInit {
             });
     }
 
-    copyClip() {
-        return JSON.stringify(this.service);
+    downloadJson() {
+        const blob = new Blob([JSON.stringify(this.service, null, 2)], {type: 'text/json'});
+        saveAs(blob, 'service_' + this.serviceId + '.json');
     }
 }

@@ -10,6 +10,10 @@
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
 }
 
+.mat-chip.mat-primary {
+    background: mat-color($mat-gray, 700) !important;
+}
+
 .mat-input-element, .mat-input-element::-webkit-search-cancel-button, .mat-input-element::-webkit-search-decoration, .mat-input-element::-webkit-search-results-button, .mat-input-element::-webkit-search-results-decoration {
     -webkit-appearance: textfield !important;
     -moz-appearance: textfield !important;

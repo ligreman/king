@@ -8,48 +8,48 @@
             <mat-icon>architecture</mat-icon>
             {{ 'header.menu.graph' | translate | uppercase }}
         </button>
-        <button mat-button [matMenuTriggerFor]="menuE" routerLinkActive="active-route" [disabled]="!isConnectedToNode()" color="accent">
+        <button mat-button [matMenuTriggerFor]="menuE" [ngClass]="isElementRouteActive()" [disabled]="!isConnectedToNode()" color="accent">
             <mat-icon>category</mat-icon>
             {{ 'header.menu.elements' | translate | uppercase }}
         </button>
         <mat-menu #menuE="matMenu">
-            <button mat-menu-item routerLinkActive="active-route">
+            <button mat-menu-item routerLinkActive="active-route" routerLink="/element-service">
                 <mat-icon class="color-service">memory</mat-icon>
-                Servicios
+                {{ 'header.menu.services' | translate | uppercase }}
             </button>
-            <button mat-menu-item routerLinkActive="active-route">
+            <button mat-menu-item routerLinkActive="active-route" routerLink="/architect">
                 <mat-icon class="color-route">timeline</mat-icon>
-                Rutas
+                {{ 'header.menu.routes' | translate | uppercase }}
             </button>
-            <button mat-menu-item routerLinkActive="active-route">
+            <button mat-menu-item routerLinkActive="active-route" routerLink="/architect">
                 <mat-icon class="color-upstream">mediation</mat-icon>
-                Upstreams
+                {{ 'header.menu.upstreams' | translate | uppercase }}
             </button>
-            <button mat-menu-item routerLinkActive="active-route">
+            <button mat-menu-item routerLinkActive="active-route" routerLink="/architect">
                 <mat-icon class="color-consumer">shopping_cart</mat-icon>
-                Consumidores
+                {{ 'header.menu.consumers' | translate | uppercase }}
             </button>
         </mat-menu>
-        <button mat-button color="accent" routerLink="/plugins" routerLinkActive="active-route" [disabled]="!isConnectedToNode()">
+        <button mat-button color="accent" routerLink="/plugins" [ngClass]="isCertificateRouteActive()" [disabled]="!isConnectedToNode()">
             <mat-icon>settings_input_component</mat-icon>
             {{ 'header.menu.plugins' | translate | uppercase }}
         </button>
         <button mat-button [matMenuTriggerFor]="menuC" [disabled]="!isConnectedToNode()" color="accent">
-            <mat-icon>https</mat-icon>
+            <mat-icon>security</mat-icon>
             {{ 'header.menu.certs' | translate | uppercase }}
         </button>
         <mat-menu #menuC="matMenu">
             <button mat-menu-item routerLinkActive="active-route">
                 <mat-icon>https</mat-icon>
-                Certificados
+                {{'header.menu.certificates' | translate}}
             </button>
             <button mat-menu-item routerLinkActive="active-route">
-                <mat-icon>https</mat-icon>
-                Certificados de CA
+                <mat-icon>account_balance</mat-icon>
+                {{'header.menu.cacerts' | translate}}
             </button>
             <button mat-menu-item routerLinkActive="active-route">
-                <mat-icon>https</mat-icon>
-                SNIs
+                <mat-icon>vpn_lock</mat-icon>
+                {{'header.menu.snis' | translate}}
             </button>
         </mat-menu>
     </div>

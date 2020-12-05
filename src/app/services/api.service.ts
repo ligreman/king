@@ -132,4 +132,15 @@ export class ApiService {
     public deleteConsumer(id: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/consumer/' + id).pipe(catchError(this.handleError));
     }
+
+    /*
+       CERTIFICATE ENDPOINTS
+    */
+    public getCertificates() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/certificates').pipe(catchError(this.handleError));
+    }
+
+    public postNewCertificate(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/certificates', body).pipe(catchError(this.handleError));
+    }
 }

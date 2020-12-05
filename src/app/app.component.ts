@@ -105,6 +105,18 @@ export class AppComponent implements OnInit, OnDestroy {
         return this.globals.NODE_API_URL !== '';
     }
 
+    isElementRouteActive() {
+        if (this.route.url === '/element-service' || this.route.url === '/element-route' || this.route.url === '/element-upstream' || this.route.url === '/element-consumer') {
+            return 'active-route';
+        } else {
+            return '';
+        }
+    }
+
+    isCertificateRouteActive() {
+        return '';
+    }
+
     // getter para acceder de forma más sencilla al campo
     get nodeField() { return this.formNodes.get('node'); }
 }

@@ -7,7 +7,7 @@
                 {{'text.documentation' | translate}}
                 <mat-icon class="mini-icon">open_in_new</mat-icon>
             </a>
-            <button mat-icon-button [cdkCopyToClipboard]="copyClip()" [cdkCopyToClipboardAttempts]="5"
+            <button mat-icon-button (click)="downloadJson()"
                     matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>content_copy</mat-icon>
             </button>
@@ -110,7 +110,7 @@
 
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between" fxFlex *ngIf="!loading">
         <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="service">
-            <mat-chip *ngFor="let chip of service['tags']">{{chip}}</mat-chip>
+            <mat-chip *ngFor="let chip of service['tags']" color="primary">{{chip}}</mat-chip>
         </mat-chip-list>
         <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>

@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { filter } from 'lodash';
@@ -36,7 +35,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     };
 
     constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService,
-                private translate: TranslateService, private dialog: MatDialog, private dialogHelper: DialogHelperService) {
+                private translate: TranslateService, private dialogHelper: DialogHelperService) {
     }
 
     ngOnInit(): void {
@@ -321,14 +320,14 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Muestra la info del elemento seleccionado
      */
     showInfo(select) {
-        this.dialogHelper.showInfoElement(select);
+        this.dialogHelper.showInfoElement(select, select.group);
     }
 
     /*
         Borra el elemento seleccionado
      */
     delete(select) {
-        this.dialogHelper.deleteElement(select)
+        this.dialogHelper.deleteElement(select, select.group)
             .then(() => { this.populateGraph(); })
             .catch(error => {});
     }

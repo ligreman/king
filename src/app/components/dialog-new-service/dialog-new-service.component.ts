@@ -17,6 +17,7 @@ export class DialogNewServiceComponent implements OnInit {
     formValid = false;
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp', 'tls', 'udp'];
     tags = [];
+    certificatesAvailable = [];
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -42,10 +43,20 @@ export class DialogNewServiceComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public serviceIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
 
     ngOnInit(): void {
+        // Recupero la lista de certificados
+        this.api.getCertificates()
+            .subscribe(certs => {
+                for (let cert of certs['data']) {
+                    this.certificatesAvailable.push(cert.id);
+                }
+            }, error => {
+                this.toast.error_general(error);
+            });
+
         // Si viene un servicio para editar
         if (this.serviceIdEdit !== null) {
             this.editMode = true;
-            
+
             // Rescato la info del servicio del api
             this.api.getService(this.serviceIdEdit)
                 .subscribe(service => {
@@ -68,6 +79,8 @@ export class DialogNewServiceComponent implements OnInit {
                     }
                     if (service['tls_verify'] === null) {
                         service['tls_verify'] = '';
+                    } else {
+                        service['tls_verify'] = '' + service['tls_verify'];
                     }
 
                     this.tags = service['tags'];
@@ -138,7 +151,7 @@ export class DialogNewServiceComponent implements OnInit {
             delete body.client_certificate;
         }
 
-        if (this.tags.length > 0) {
+        if (this.tags && this.tags.length > 0) {
             body.tags = this.tags;
         } else {
             delete body.tags;

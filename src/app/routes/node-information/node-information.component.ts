@@ -19,26 +19,7 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
     node_info;
     node_status;
     data = {};
-
-    a = {
-        'configuration': {
-            'cluster_control_plane': '127.0.0.1:8005',
-            'anonymous_reports': true,
-
-            'proxy_access_log': 'logs\/access.log',
-            'proxy_error_log': 'logs\/error.log',
-            'nginx_acc_logs': '\/usr\/local\/kong\/logs\/access.log',
-            'nginx_err_logs': '\/usr\/local\/kong\/logs\/error.log',
-            'admin_acc_logs': '\/usr\/local\/kong\/logs\/admin_access.log',
-            'admin_access_log': 'logs\/admin_access.log',
-            'admin_error_log': 'logs\/error.log',
-            'nginx_conf': '\/usr\/local\/kong\/nginx.conf',
-            'kong_env': '\/usr\/local\/kong\/.kong_env'
-        }
-    };
-
-
-    /////////////////////
+    loading = false;
 
     chartData = [];
     chartSize: any[] = [500, 300];
@@ -66,6 +47,8 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
         Obtiene los datos del nodo
      */
     getData() {
+        this.loading = true;
+
         this.api.getNodeInformation()
             .subscribe(res => {
                 this.node_info = res;
@@ -74,12 +57,17 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
                 this.api.getNodeStatus()
                     .subscribe(value => {
                         this.node_status = value;
-
                         this.processData();
+                    }, error => {
+                        this.toast.error('error.node_connection');
+                        this.route.navigate(['/landing']);
+                    }, () => {
+                        this.loading = false;
                     });
             }, error => {
                 this.toast.error('error.node_connection');
                 this.route.navigate(['/landing']);
+                this.loading = false;
             });
     }
 
@@ -152,10 +140,6 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
             this.data['database']['host'] = this.node_info['configuration']['cassandra_contact_points'].join(', ');
             this.data['database']['timeout'] = this.node_info['configuration']['cassandra_timeout'];
         }
-
-
-        console.log(this.data);
-        // TODO
     }
 
     /*
