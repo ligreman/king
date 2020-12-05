@@ -50,11 +50,7 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        if (this.globals.NODE_API_URL === '') {
-            this.route.navigate(['/landing']);
-        } else {
-            this.getData();
-        }
+        this.getData();
 
         // Escucho cambios de nodo
         this.nodeWatcher.nodeChanged$.subscribe(node => {

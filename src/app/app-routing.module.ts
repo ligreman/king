@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ConnectedGuard } from './guards/connected.guard';
 import { ArchitectComponent } from './routes/architect/architect.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
@@ -7,8 +8,8 @@ import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.co
 
 const routes: Routes = [
     {path: 'landing', component: LandingComponent},
-    {path: 'node-information', component: NodeInformationComponent},
-    {path: 'architect', component: ArchitectComponent},
+    {path: 'node-information', component: NodeInformationComponent, canActivate: [ConnectedGuard]},
+    {path: 'architect', component: ArchitectComponent, canActivate: [ConnectedGuard]},
     {
         path: '',
         redirectTo: '/landing',
