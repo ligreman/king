@@ -63,6 +63,15 @@
     "information": {
         "node": "Kong node information",
         "database": "Database",
+        "db": {
+            "name": "Name",
+            "host": "Host",
+            "port": "Port",
+            "username": "Username",
+            "timeout": "Timeout",
+            "ssl": "SSL",
+            "ssl_verify": "SSL verify"
+        },
         "server": "Connections",
         "plugins": "Available and in use plugins",
         "available": "Available",
@@ -74,6 +83,20 @@
         "admin_ssl": "SSL administration API",
         "proxy_listen": "Gateway proxy API",
         "proxy_ssl": "SSL gateway proxy API",
+        "cluster_control_plane": "Cluster control plane",
+        "anonymous_reports": "Send anonymous reports",
+        "files": {
+            "title": "Files",
+            "proxy_access_log": "Proxy: access",
+            "proxy_error_log": "Proxy: error",
+            "nginx_acc_logs": "Nginx: access",
+            "nginx_err_logs": "Nginx: error",
+            "admin_acc_logs": "Admin: access",
+            "admin_access_log": "Admin: access",
+            "admin_error_log": "Admin: error",
+            "nginx_conf": "Nginx: configuration",
+            "kong_env": "Kong: environment"
+        },
         "chart": {
             "connections_accepted": "Accepted",
             "connections_active": "Active",

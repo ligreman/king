@@ -1,21 +1,23 @@
-<div class="padding-20">
-    <div gdAreas="node node server server | plugins plugins plugins database"
-         gdGap="20px"
+<div class="padding-30">
+    <div gdAreas="node node server server | database database files files | plugins plugins plugins plugins"
+         gdGap="30px"
          gdRows="auto auto auto">
         <div gdArea="node">
             <mat-toolbar color="accent">
                 {{'information.node' | translate}}
                 <span class="spacer"></span>
-                <button mat-icon-button matTooltip="{{'information.download_info' | translate}}" matTooltipClass="tooltip-teal">
+                <button mat-icon-button matTooltip="{{'information.download_info' | translate}}" matTooltipClass="tooltip-teal"
+                        (click)="downloadJson('info')">
                     <mat-icon>info</mat-icon>
                 </button>
-                <button mat-icon-button matTooltip="{{'information.download_status' | translate}}" matTooltipClass="tooltip-teal">
+                <button mat-icon-button matTooltip="{{'information.download_status' | translate}}" matTooltipClass="tooltip-teal"
+                        (click)="downloadJson('status')">
                     <mat-icon>assignment</mat-icon>
                 </button>
             </mat-toolbar>
 
             <div>
-                <mat-list role="list">
+                <mat-list>
                     <mat-list-item><span class="badge">{{'text.id' | translate}}</span> {{data['node_id']}}</mat-list-item>
                     <mat-list-item><span class="badge">{{'information.version' | translate}}</span> {{data['version']}}</mat-list-item>
                     <mat-list-item><span class="badge">{{'information.admin_listen' | translate}}</span> {{data['admin_listen']}}</mat-list-item>
@@ -23,6 +25,12 @@
                     </mat-list-item>
                     <mat-list-item><span class="badge">{{'information.proxy_listen' | translate}}</span> {{data['proxy_listen']}}</mat-list-item>
                     <mat-list-item><span class="badge">{{'information.proxy_ssl' | translate}}</span> {{'text.' + data['proxy_ssl'] | translate}}
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span class="badge">{{'information.cluster_control_plane' | translate}}</span> {{data['cluster_control_plane'] | translate}}
+                    </mat-list-item>
+                    <mat-list-item>
+                        <span class="badge">{{'information.anonymous_reports' | translate}}</span> {{'text.' + data['anonymous_reports'] | translate}}
                     </mat-list-item>
                 </mat-list>
             </div>
@@ -52,25 +60,57 @@
             <div class="padding-20">
                 <mat-chip-list *ngIf="data['plugins']">
                     <mat-chip *ngFor="let plug of data['plugins']" [color]="plug['used']?'accent':'primary'" [fxShow]="plug['available']"
-                              matTooltip="{{ plug['used']?'information.used':'information.available' | translate}}" matTooltipClass="tooltip-teal">
+                              matTooltip="{{ (plug['used'] ? 'information.used' : 'information.available') | translate}}" matTooltipClass="tooltip-teal">
                         {{plug.name}}
                     </mat-chip>
                 </mat-chip-list>
             </div>
         </div>
-        <div gdArea="database">
+        <div gdArea="files" *ngIf="data['files']" class="block-25">
             <mat-toolbar color="accent">
-                {{'information.database' | translate}}
+                {{'information.files.title' | translate}}
             </mat-toolbar>
 
             <div>
-                <mat-list role="list">
-                    <mat-list-item><span class="badge">{{'' | translate}}</span> {{data['node_id']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'' | translate}}</span> {{data['version']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'' | translate}}</span> {{data['admin_listen']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'' | translate}}</span> {{data['admin_ssl']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'' | translate}}</span> {{data['proxy_listen']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'' | translate}}</span> {{data['proxy_ssl']}}</mat-list-item>
+                <mat-list>
+                    <mat-list-item><span class="badge">{{'information.files.kong_env' | translate}}</span> {{data['files']['kong_env']}}</mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.files.nginx_conf' | translate}}</span> {{data['files']['nginx_conf']}}</mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.files.nginx_acc_logs' | translate}}</span> {{data['files']['nginx_acc_logs']}}
+                    </mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.files.nginx_err_logs' | translate}}</span> {{data['files']['nginx_err_logs']}}
+                    </mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.files.proxy_access_log' | translate}}</span> {{data['files']['proxy_access_log']}}
+                    </mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.files.proxy_error_log' | translate}}</span> {{data['files']['proxy_error_log']}}
+                    </mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.files.admin_acc_logs' | translate}}</span> {{data['files']['admin_acc_logs']}}
+                    </mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.files.admin_access_log' | translate}}</span> {{data['files']['admin_access_log']}}
+                    </mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.files.admin_error_log' | translate}}</span> {{data['files']['admin_error_log']}}
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </div>
+        <div gdArea="database" *ngIf="data['database']" class="block-25">
+            <mat-toolbar color="accent">
+                {{'information.database' | translate}}
+                <span class="spacer"></span>
+                {{ data['database']['type'] }}
+            </mat-toolbar>
+
+            <div>
+                <mat-list>
+                    <mat-list-item><span class="badge">{{'information.db.host' | translate}}</span> {{data['database']['host']}}</mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.db.port' | translate}}</span> {{data['database']['port']}}</mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.db.name' | translate}}</span> {{data['database']['name']}}</mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.db.username' | translate}}</span> {{data['database']['username']}}</mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.db.ssl' | translate}}</span> {{ 'text.' + data['database']['ssl'] | translate}}
+                    </mat-list-item>
+                    <mat-list-item><span
+                            class="badge">{{'information.db.ssl_verify' | translate}}</span> {{ 'text.' + data['database']['ssl_verify'] | translate}}
+                    </mat-list-item>
+                    <mat-list-item><span class="badge">{{'information.db.timeout' | translate}}</span> {{data['database']['timeout']}}</mat-list-item>
                 </mat-list>
             </div>
         </div>

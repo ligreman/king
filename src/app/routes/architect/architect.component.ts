@@ -37,6 +37,13 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService,
                 private translate: TranslateService, private dialog: MatDialog, private dialogHelper: DialogHelperService) {
+    }
+
+    ngOnInit(): void {
+        if (this.globals.NODE_API_URL === '') {
+            this.route.navigate(['/landing']);
+        }
+
         // Compruebo la conexión al nodo
         this.api.getNodeStatus()
             .subscribe(value => {
@@ -46,9 +53,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.toast.error('error.node_connection');
                     this.route.navigate(['/landing']);
                 });
-    }
-
-    ngOnInit(): void {
     }
 
     ngOnDestroy(): void {}

@@ -63,6 +63,15 @@
     "information": {
         "node": "Información del nodo de Kong",
         "database": "Base de datos",
+        "db": {
+            "name": "Nombre",
+            "host": "Host",
+            "port": "Puerto",
+            "username": "Usuario",
+            "timeout": "Timeout",
+            "ssl": "SSL",
+            "ssl_verify": "Verificar SSL"
+        },
         "server": "Conexiones",
         "plugins": "Plugins disponibles y en uso",
         "available": "Disponible",
@@ -74,6 +83,20 @@
         "admin_ssl": "SSL en API de administración",
         "proxy_listen": "API de proxy gateway",
         "proxy_ssl": "SSL en API de proxy gateway",
+        "cluster_control_plane": "Cluster control plane",
+        "anonymous_reports": "Enviar reportes anónimos",
+        "files": {
+            "title": "Ficheros",
+            "proxy_access_log": "Proxy: acceso",
+            "proxy_error_log": "Proxy: error",
+            "nginx_acc_logs": "Nginx: acceso",
+            "nginx_err_logs": "Nginx: error",
+            "admin_acc_logs": "Admin: acceso",
+            "admin_access_log": "Admin: acceso",
+            "admin_error_log": "Admin: error",
+            "nginx_conf": "Nginx: configuración",
+            "kong_env": "Kong: environment"
+        },
         "chart": {
             "connections_accepted": "Aceptadas",
             "connections_active": "Activas",
