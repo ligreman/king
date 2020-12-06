@@ -41,7 +41,7 @@ export class ApiService {
         SERVICE ENDPOINTS
      */
     public getServices() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/services').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/services?size=1000').pipe(catchError(this.handleError));
     }
 
     public getService(id: string) {
@@ -64,7 +64,7 @@ export class ApiService {
         ROUTE ENDPOINTS
      */
     public getRoutes() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/routes').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/routes?size=1000').pipe(catchError(this.handleError));
     }
 
     public getRoute(id: string) {
@@ -87,7 +87,7 @@ export class ApiService {
         UPSTREAMS ENDPOINTS
      */
     public getUpstreams() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams?size=1000').pipe(catchError(this.handleError));
     }
 
     public getUpstream(id: string) {
@@ -114,7 +114,7 @@ export class ApiService {
         CONSUMERS ENDPOINTS
      */
     public getConsumers() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/consumer').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumer?size=1000').pipe(catchError(this.handleError));
     }
 
     public getConsumer(id: string) {
@@ -137,7 +137,7 @@ export class ApiService {
        CERTIFICATE ENDPOINTS
     */
     public getCertificates() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/certificates').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/certificates?size=1000').pipe(catchError(this.handleError));
     }
 
     public postNewCertificate(body) {

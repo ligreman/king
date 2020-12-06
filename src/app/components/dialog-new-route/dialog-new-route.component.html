@@ -1,7 +1,7 @@
 <h2 mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-5-i">
-    <span *ngIf="!editMode">{{'service.dialog.create' | translate}}</span>
-    <span *ngIf="editMode">{{'service.dialog.edit' | translate}}</span>
-    <span><a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#add-service" target="_blank">
+    <span *ngIf="!editMode">{{'route.dialog.create' | translate}}</span>
+    <span *ngIf="editMode">{{'route.dialog.edit' | translate}}</span>
+    <span><a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#add-route" target="_blank">
     {{'text.documentation' | translate}}
         <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
 </h2>
@@ -14,16 +14,15 @@
             <!--Nombre-->
             <div fxLayout="column" class="margin-bottom-10">
                 <div fxLayout="row" fxLayoutAlign="space-between start">
-
                     <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
-                        <mat-label>{{'service.dialog.name' | translate}}</mat-label>
+                        <mat-label>{{'route.dialog.name' | translate}}</mat-label>
                         <input type="text" aria-label="" matInput required formControlName="name"
-                               cdkFocusInitial placeholder="{{'service.dialog.name_example' | translate}}"/>
+                               cdkFocusInitial placeholder="{{'route.dialog.name_example' | translate}}"/>
                         <mat-error *ngIf="nameField.hasError('required')">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
                         <mat-error *ngIf="nameField.hasError('pattern')">
-                            {{ 'service.dialog.error.name_pattern' | translate }}
+                            {{ 'route.dialog.error.name_pattern' | translate }}
                         </mat-error>
                     </mat-form-field>
 
@@ -33,39 +32,20 @@
                                       removable="true" (removed)="removeTag(tag)">{{tag}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
-                            <input placeholder="{{'service.dialog.tags' | translate}}"
+                            <input placeholder="{{'route.dialog.tags' | translate}}"
                                    formControlName="tags"
                                    [matChipInputFor]="chipList"
                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                    matChipInputAddOnBlur="true"
                                    (matChipInputTokenEnd)="addTag($event)">
                         </mat-chip-list>
-                        <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                        <mat-hint>{{'route.dialog.tags_hint' | translate}}</mat-hint>
                     </mat-form-field>
                 </div>
 
-                <!--Tipo de entrada, shorthand o completa-->
-                <mat-radio-group aria-label="" class="margin-bottom-5" color="accent" formControlName="input_method" (change)="changeRadio()" required>
-                    <mat-radio-button value="url">{{'service.dialog.url' | translate}}</mat-radio-button>
-                    <mat-radio-button class="margin-left-20" value="complete">{{'service.dialog.complete' | translate}}</mat-radio-button>
-                </mat-radio-group>
-                <!--Shorthand: url-->
-                <div>
-                    <mat-form-field fxFlex color="accent" class="margin-bottom-10" appearance="outline" [fxShow]="inputMethodField.value === 'url'">
-                        <mat-label>{{'service.dialog.url' | translate}}</mat-label>
-                        <input type="url" aria-label="" matInput required
-                               placeholder="{{'service.dialog.url_example' | translate}}"
-                               formControlName="url"/>
-                        <mat-hint>{{'service.dialog.url_hint' | translate}}</mat-hint>
-                        <mat-error *ngIf="urlField.hasError('required')">
-                            {{ 'error.field_required' | translate }}
-                        </mat-error>
-                    </mat-form-field>
-                </div>
-                <!--Completa-->
-                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10" [fxShow]="inputMethodField.value === 'complete'">
+                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
                     <mat-form-field fxFlex="15" color="accent" appearance="outline">
-                        <mat-label>{{'service.dialog.protocol' | translate}}</mat-label>
+                        <mat-label>{{'route.dialog.protocol' | translate}}</mat-label>
                         <mat-select formControlName="protocol" required>
                             <mat-option *ngFor="let proto of validProtocols" value="{{proto}}">{{proto}}</mat-option>
                         </mat-select>
@@ -73,28 +53,33 @@
                             {{ 'error.field_required' | translate }}
                         </mat-error>
                     </mat-form-field>
+
+                    <mat-form-field fxFlex="15" color="accent" appearance="outline">
+                        <mat-label>{{'route.dialog.service' | translate}}</mat-label>
+                        <mat-select formControlName="service" required>
+                            <mat-option value=""></mat-option>
+                            <mat-option *ngFor="let serv of servicesAvailable" value="{{serv.id}}">{{serv.name}} - {{serv.id}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="protocolField.invalid">
+                            {{ 'error....' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
                     <mat-form-field fxFlex="35" color="accent" appearance="outline">
-                        <mat-label>{{'service.dialog.host' | translate}}</mat-label>
+                        <mat-label>{{'route.dialog.host' | translate}}</mat-label>
                         <input type="text" aria-label="" matInput formControlName="host" required
-                               placeholder="{{'service.dialog.host_example' | translate}}"/>
-                        <mat-error *ngIf="hostField.hasError('required')">
+                               placeholder="{{'route.dialog.host_example' | translate}}"/>
+                        <mat-error *ngIf="hostsField.hasError('required')">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
                     </mat-form-field>
-                    <mat-form-field fxFlex="15" color="accent" appearance="outline">
-                        <mat-label>{{'service.dialog.port' | translate}}</mat-label>
-                        <input type="number" aria-label="" matInput formControlName="port" required
-                               placeholder="{{'service.dialog.port_example' | translate}}"/>
-                        <mat-error *ngIf="portField.invalid">
-                            {{ 'service.dialog.error.port_min_max' | translate }}
-                        </mat-error>
-                    </mat-form-field>
+
                     <mat-form-field fxFlex="30" color="accent" appearance="outline">
-                        <mat-label>{{'service.dialog.path' | translate}}</mat-label>
+                        <mat-label>{{'route.dialog.path' | translate}}</mat-label>
                         <input type="text" aria-label="" matInput formControlName="path"
-                               placeholder="{{'service.dialog.path_example' | translate}}"/>
-                        <mat-error *ngIf="pathField.hasError('required')">
-                            {{ 'service.dialog.error.path_pattern' | translate }}
+                               placeholder="{{'route.dialog.path_example' | translate}}"/>
+                        <mat-error *ngIf="pathsField.hasError('required')">
+                            {{ 'route.dialog.error.path_pattern' | translate }}
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -102,6 +87,7 @@
 
             <mat-divider></mat-divider>
 
+            <!-- ADVANCED -->
             <mat-accordion multi displayMode="flat" hideToggle>
                 <mat-expansion-panel #matExp disabled>
                     <mat-expansion-panel-header>
@@ -121,81 +107,57 @@
 
                     <div fxLayout="row" fxLayoutAlign="space-between start">
                         <!--Reintentos-->
-                        <mat-form-field fxFlex="23" color="accent" appearance="outline" class="margin-bottom-10">
-                            <mat-label>{{'service.dialog.retries' | translate}}</mat-label>
+                        <!--<mat-form-field fxFlex="23" color="accent" appearance="outline" class="margin-bottom-10">
+                            <mat-label>{{'route.dialog.retries' | translate}}</mat-label>
                             <input type="number" aria-label="" matInput formControlName="retries"/>
                             <mat-error *ngIf="retriesField.invalid">
-                                {{ 'service.dialog.error.retries_min_max' | translate }}
+                                {{ 'route.dialog.error.retries_min_max' | translate }}
                             </mat-error>
-                        </mat-form-field>
-
-                        <!--Timeout conexión-->
-                        <mat-form-field fxFlex="23" color="accent" appearance="outline">
-                            <mat-label>{{'service.dialog.connect_timeout' | translate}}</mat-label>
-                            <input type="number" aria-label="" matInput formControlName="connect_timeout"/>
-                            <mat-icon matSuffix matTooltip="{{'service.dialog.connect_tooltip' | translate}}"
-                                      matTooltipClass="tooltip-teal">info_outline
-                            </mat-icon>
-                            <mat-error *ngIf="connectTimeoutField.invalid">
-                                {{ 'service.dialog.error.timeout_min_max' | translate }}
-                            </mat-error>
-                        </mat-form-field>
-
-                        <!--Timeout escritura-->
-                        <mat-form-field fxFlex="23" color="accent" appearance="outline">
-                            <mat-label>{{'service.dialog.write_timeout' | translate}}</mat-label>
-                            <input type="number" aria-label="" matInput formControlName="write_timeout"/>
-                            <mat-icon matSuffix matTooltip="{{'service.dialog.write_tooltip' | translate}}"
-                                      matTooltipClass="tooltip-teal">info_outline
-                            </mat-icon>
-                            <mat-error *ngIf="writeTimeoutField.invalid">
-                                {{ 'service.dialog.error.timeout_min_max' | translate }}
-                            </mat-error>
-                        </mat-form-field>
+                        </mat-form-field>-->
 
                         <!--Timeout lectura-->
-                        <mat-form-field fxFlex="23" color="accent" appearance="outline">
-                            <mat-label>{{'service.dialog.read_timeout' | translate}}</mat-label>
+                        <!--<mat-form-field fxFlex="23" color="accent" appearance="outline">
+                            <mat-label>{{'route.dialog.read_timeout' | translate}}</mat-label>
                             <input type="number" aria-label="" matInput formControlName="read_timeout"/>
-                            <mat-icon matSuffix matTooltip="{{'service.dialog.read_tooltip' | translate}}"
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.read_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
                             <mat-error *ngIf="readTimeoutField.invalid">
-                                {{ 'service.dialog.error.timeout_min_max' | translate }}
+                                {{ 'route.dialog.error.timeout_min_max' | translate }}
                             </mat-error>
-                        </mat-form-field>
+                        </mat-form-field>-->
                     </div>
 
                     <div fxLayout="row" fxLayoutAlign="space-between start">
                         <!--Certificado cliente-->
-                        <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
-                            <mat-label>{{'service.dialog.certificate' | translate}}</mat-label>
+                        <!--<mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
+                            <mat-label>{{'route.dialog.certificate' | translate}}</mat-label>
                             <mat-select formControlName="client_certificate" [disabled]="certificatesAvailable.length === 0">
                                 <mat-option value="{{cert}}" *ngFor="let cert of certificatesAvailable">{{cert}}</mat-option>
                             </mat-select>
-                            <mat-icon matSuffix matTooltip="{{'service.dialog.certificate_tooltip' | translate}}"
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.certificate_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
-                        </mat-form-field>
+                        </mat-form-field>-->
 
                         <!--TLS-->
                         <mat-form-field fxFlex="20" color="accent" class="margin-bottom-10" appearance="outline">
-                            <mat-label>{{'service.dialog.tls_verify' | translate}}</mat-label>
+                            <mat-label>{{'route.dialog.tls_verify' | translate}}</mat-label>
                             <mat-select formControlName="tls_verify">
                                 <mat-option value=""></mat-option>
                                 <mat-option value="true">true</mat-option>
                                 <mat-option value="false">false</mat-option>
                             </mat-select>
-                            <mat-icon matSuffix matTooltip="{{'service.dialog.tls_verify_tooltip' | translate}}"
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.tls_verify_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
                         </mat-form-field>
 
                         <!--TLS Depth-->
                         <mat-form-field fxFlex="25" color="accent" class="margin-bottom-10" appearance="outline">
-                            <mat-label>{{'service.dialog.tls_verify_depth' | translate}}</mat-label>
+                            <mat-label>{{'route.dialog.tls_verify_depth' | translate}}</mat-label>
                             <input type="number" aria-label="" matInput formControlName="tls_verify_depth"/>
-                            <mat-icon matSuffix matTooltip="{{'service.dialog.tls_verify_depth_tooltip' | translate}}"
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.tls_verify_depth_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
                         </mat-form-field>
@@ -204,10 +166,10 @@
                     <div fxLayout="row" fxLayoutAlign="space-between start">
                         <!--CA Certificates-->
                         <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
-                            <mat-label>{{'service.dialog.ca_certificates' | translate}}</mat-label>
+                            <mat-label>{{'route.dialog.ca_certificates' | translate}}</mat-label>
                             <textarea aria-label="" matInput formControlName="ca_certificates"
-                                      placeholder="{{'service.dialog.ca_certificates_example' | translate}}"></textarea>
-                            <mat-icon matSuffix matTooltip="{{'service.dialog.ca_certificates_tooltip' | translate}}"
+                                      placeholder="{{'route.dialog.ca_certificates_example' | translate}}"></textarea>
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.ca_certificates_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
                         </mat-form-field>
@@ -223,7 +185,7 @@
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between start">
     <div>
         <mat-error *ngIf="form.hasError('protocol')">
-            {{ 'service.dialog.error.protocol_path_collision' | translate }}
+            {{ 'route.dialog.error.protocol_path_collision' | translate }}
         </mat-error>
     </div>
 

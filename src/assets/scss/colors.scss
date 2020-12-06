@@ -1,27 +1,33 @@
+@import '~@angular/material/theming';
+
 .color-service {
-    color: #81C784 !important;
+    color: mat-color($mat-green, 300) !important;
 }
 
 .color-route {
-    color: #4FC3F7 !important;
+    color: mat-color($mat-blue, 300) !important;
 }
 
 .color-upstream {
-    color: #FFB74D !important;
+    color: mat-color($mat-orange, 300) !important;
 }
 
 .color-plugin {
-    color: #FFF176 !important;
+    color: mat-color($mat-yellow, 300) !important;
 }
 
 .color-consumer {
-    color: #E0E0E0 !important;
+    color: mat-color($mat-gray, 300) !important;
 }
 
 .color-target {
-    color: #E57373 !important;
+    color: mat-color($mat-red, 300) !important;
 }
 
 .color-host {
-    color: #E57373 !important;
+    color: mat-color($mat-red, 300) !important;
+}
+
+.color-plugin {
+    color: mat-color($mat-purple, 300) !important;
 }

@@ -34,7 +34,11 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
+import { DialogNewConsumerComponent } from './components/dialog-new-consumer/dialog-new-consumer.component';
+import { DialogNewPluginComponent } from './components/dialog-new-plugin/dialog-new-plugin.component';
+import { DialogNewRouteComponent } from './components/dialog-new-route/dialog-new-route.component';
 import { DialogNewServiceComponent } from './components/dialog-new-service/dialog-new-service.component';
+import { DialogNewUpstreamComponent } from './components/dialog-new-upstream/dialog-new-upstream.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
 import { ElementConsumerComponent } from './routes/elements/element-consumer/element-consumer.component';
 import { ElementRouteComponent } from './routes/elements/element-route/element-route.component';
@@ -63,7 +67,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         ElementServiceComponent,
         ElementRouteComponent,
         ElementUpstreamComponent,
-        ElementConsumerComponent
+        ElementConsumerComponent,
+        DialogNewRouteComponent,
+        DialogNewConsumerComponent,
+        DialogNewUpstreamComponent,
+        DialogNewPluginComponent
     ],
     imports: [
         BrowserModule,

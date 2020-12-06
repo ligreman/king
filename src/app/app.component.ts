@@ -48,7 +48,10 @@ export class AppComponent implements OnInit, OnDestroy {
         let last = localStorage.getItem('kongLastNode');
         if (last) {
             last = atob(last);
+            // Pongo el valor
             this.formNodes.setValue({node: last});
+            this.globals.NODE_API_URL = last;
+            // Voy a la página inicial
         }
     }
 

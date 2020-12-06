@@ -68,7 +68,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     barnesHut: {
                         springLength: 115,
                         avoidOverlap: 0
-                    }
+                    },
+                    minVelocity: 1.2
                 },
                 height: '90%'
             };
@@ -88,6 +89,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (!this.stabilized) {
                         this.stabilized = true;
                         this.network.fit();
+                        this.network.focus('center');
                     }
                 });
 
@@ -131,6 +133,13 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.data.nodes.clear();
         this.data.edges.clear();
 
+        // Genero el nodo central del grafo
+        this.data.nodes.add({
+            id: 'center',
+            title: this.translate.instant('text.kong_node') + '<br>' + this.globals.NODE_API_URL,
+            group: 'kong'
+        });
+
         // Recorro los servicios creando los nodos de servicios
         for (let service of data.services) {
             // Nodos de servicio
@@ -157,7 +166,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
                 this.data.edges.add({
                     from: service.id,
-                    to: 'h#' + service.id
+                    to: 'h#' + service.id,
+                    width: 2
                 });
             }
         }
@@ -179,12 +189,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 for (let ss of routeServices) {
                     // Edges de la ruta al servicio
                     this.data.edges.add({
-                        // id:
                         from: route.id,
-                        to: ss.id
+                        to: ss.id,
+                        width: 3
                     });
                 }
             }
+
+            // Edge del nodo central a la ruta
+            this.data.edges.add({
+                from: 'center',
+                to: route.id,
+                arrows: {to: {enabled: false}}
+            });
 
             // TODO completar con consumidores, plugins...
         }
@@ -195,6 +212,30 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
     fitNetwork() {
         this.network.fit({animation: {duration: 1000}});
+        this.network.focus('center');
+    }
+
+    /*
+        Alta edición general
+     */
+    addEdit(selected = null, group) {
+        switch (group) {
+            case 'service':
+                this.addEditService(selected);
+                break;
+            case 'route':
+                this.addEditRoute(selected);
+                break;
+            case 'upstream':
+                this.addEditUpstream(selected);
+                break;
+            case 'consumer':
+                this.addEditConsumer(selected);
+                break;
+            case 'plugin':
+                this.addEditPlugin(selected);
+                break;
+        }
     }
 
     /*
@@ -209,111 +250,37 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     /*
         Añade una ruta nueva
      */
-    addRoute() {
-        const body = {
-            // Required
-            'protocols': ['http', 'https'],
-            // Semi-optional
-            'methods': ['GET', 'POST'],
-            'hosts': ['example.com', 'foo.test'],
-            'paths': ['/foo', '/bar'],
-            'headers': {'x-another-header': ['bla'], 'x-my-header': ['foo', 'bar']},
-            // Optional
-            'name': 'my-route2',
-            'regex_priority': 0,
-            'strip_path': true,
-            'path_handling': 'v0',
-            'preserve_host': false,
-            'tags': ['user-level', 'low-priority'],
-            'service': {'name': 'my-service3'}
-            // 'service': {'id': 'af8330d3-dbdc-48bd-b1be-55b98608834b'}
-        };
-        this.api.postNewRoute(body)
-            .subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_route', {msgExtra: value['id']});
-            }, error => {
-                this.toast.error_general(error);
-            });
+    addEditRoute(selected = null) {
+        this.dialogHelper.addEditRoute(selected)
+            .then(() => { this.populateGraph(); })
+            .catch(error => {});
     }
 
     /*
         Añade un upstream nuevo
      */
-    addUpstream() {
-        const body = {
-            // Required - This is a hostname, which must be equal to the host of a Service.
-            'name': 'example.com',
-            // Optional or semi
-            'algorithm': 'round-robin',
-            'hash_on': 'none',
-            'hash_fallback': 'none',
-            'hash_on_cookie_path': '/',
-            'slots': 10000,
-            'healthchecks': {
-                'active': {
-                    'https_verify_certificate': true,
-                    'unhealthy': {
-                        'http_statuses': [429, 404, 500, 501, 502, 503, 504, 505],
-                        'tcp_failures': 0,
-                        'timeouts': 0,
-                        'http_failures': 0,
-                        'interval': 0
-                    },
-                    'http_path': '/',
-                    'timeout': 1,
-                    'healthy': {
-                        'http_statuses': [200, 302],
-                        'interval': 0,
-                        'successes': 0
-                    },
-                    'https_sni': 'example.com',
-                    'concurrency': 10,
-                    'type': 'http'
-                },
-                'passive': {
-                    'unhealthy': {
-                        'http_failures': 0,
-                        'http_statuses': [429, 500, 503],
-                        'tcp_failures': 0,
-                        'timeouts': 0
-                    },
-                    'type': 'http',
-                    'healthy': {
-                        'successes': 0,
-                        'http_statuses': [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
-                    }
-                },
-                'threshold': 0
-            },
-            'tags': ['user-level', 'low-priority'],
-            'host_header': 'example.com',
-            'client_certificate': {'id': 'ea29aaa3-3b2d-488c-b90c-56df8e0dd8c6'}
-        };
-        this.api.postNewUpstream(body)
-            .subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_upstream', {msgExtra: value['id']});
-            }, error => {
-                this.toast.error_general(error);
-            });
+    addEditUpstream(selected = null) {
+        this.dialogHelper.addEditUpstream(selected)
+            .then(() => { this.populateGraph(); })
+            .catch(error => {});
     }
 
     /*
         Añade un consumidor nuevo
      */
-    addConsumer() {
-        const body = {
-            // Semi-optional, OR
-            'username': 'my-username',
-            'custom_id': 'my-custom-id',
-            // Optional
-            'tags': ['user-level', 'low-priority']
-        };
-        this.api.postNewConsumer(body)
-            .subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_consumer', {msgExtra: value['id']});
-            }, error => {
-                this.toast.error_general(error);
-            });
+    addEditConsumer(selected = null) {
+        this.dialogHelper.addEditConsumer(selected)
+            .then(() => { this.populateGraph(); })
+            .catch(error => {});
+    }
+
+    /*
+        Añade un Plugin
+     */
+    addEditPlugin(selected = null) {
+        this.dialogHelper.addEditConsumer(selected)
+            .then(() => { this.populateGraph(); })
+            .catch(error => {});
     }
 
     /*

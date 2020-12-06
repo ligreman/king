@@ -116,6 +116,30 @@ export class GlobalsService {
     };
 
     private _NETWORK_GROUPS = {
+        kong: {
+            labelHighlightBold: false,
+            shape: 'hexagon',
+            size: 15,
+            fixed: true,
+            chosen: false,
+            borderWidth: 4,
+            color: {
+                border: '#009789',
+                background: '#212121',
+                highlight: {
+                    border: '#009789',
+                    background: '#212121'
+                },
+                hover: {
+                    border: '#009789',
+                    background: '#212121'
+                }
+            },
+            font: {
+                color: '#009789',
+                size: 14
+            }
+        },
         service: {
             shape: 'icon',
             icon: {

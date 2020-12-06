@@ -24,33 +24,41 @@
             <div mat-subheader class="subheader">{{'architect.global_actions' | translate}}</div>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addEditService()">
-                        <mat-icon class="color-service">memory</mat-icon>
+                    <button mat-button (click)="addEdit(null, 'service')">
+                        <mat-icon class="color-service">memory</mat-icon>&nbsp;
                         {{'service.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addRoute()">
-                        <mat-icon class="color-route">timeline</mat-icon>
+                    <button mat-button (click)="addEdit(null, 'route')">
+                        <mat-icon class="color-route">timeline</mat-icon>&nbsp;
                         {{'route.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addUpstream()">
-                        <mat-icon class="color-upstream">mediation</mat-icon>
+                    <button mat-button (click)="addEdit(null, 'upstream')">
+                        <mat-icon class="color-upstream">mediation</mat-icon>&nbsp;
                         {{'upstream.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addConsumer()">
-                        <mat-icon class="color-consumer">shopping_cart</mat-icon>
+                    <button mat-button (click)="addEdit(null, 'consumer')">
+                        <mat-icon class="color-consumer">shopping_cart</mat-icon>&nbsp;
                         {{'consumer.add' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>
+                    <button mat-button (click)="addEdit(null, 'plugin')">
+                        <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
+                        {{'plugin.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
@@ -70,10 +78,9 @@
             </mat-list-item>
             <mat-list-item *ngIf="groups.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button color="accent" (click)="addEditService(selection)">
+                    <button mat-button color="accent" (click)="addEdit(selection, selection.group)">
                         <mat-icon>edit</mat-icon>
-                        {{'text.edit' | translate}}
-                    </button>
+                        {{'text.edit' | translate}}</button>
                 </div>
             </mat-list-item>
             <mat-list-item *ngIf="groups.includes(selection.group)">
@@ -81,6 +88,14 @@
                     <button mat-button color="warn" (click)="delete(selection)">
                         <mat-icon>delete</mat-icon>
                         {{'text.delete' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item *ngIf="groups.includes(selection.group)">
+                <div mat-line>
+                    <button mat-button (click)="addEditPlugin(selection)">
+                        <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
+                        {{'plugin.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>

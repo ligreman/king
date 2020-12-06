@@ -13,10 +13,17 @@
         "new_consumer": "Consumer created",
         "new_plugin": "Plugin created",
         "update_service": "Service updated",
-        "delete_service": "Service deleted"
+        "update_route": "Route updated",
+        "update_upstream": "Upstream updated",
+        "update_consumer": "Consumer updated",
+        "delete_service": "Service deleted",
+        "delete_route": "Route deleted",
+        "delete_upstream": "Upstream deleted",
+        "delete_consumer": "Consumer deleted"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
+        "kong_node": "Kong node",
         "documentation": "Documentation",
         "advanced_fields": "Advanced fields",
         "create": "Create",
@@ -181,13 +188,36 @@
         }
     },
     "route": {
-        "add": "Add Route"
+        "add": "Add Route",
+        "label": "Route",
+        "dialog": {
+            "create": "Create a new route",
+            "edit": "Edit route",
+            "info": "Route`s information",
+            "name": "Name for the route",
+            "name_example": "my-route",
+            "protocol": "Protocol",
+            "host": "Host or IP",
+            "host_example": "example.com",
+            "path": "Path",
+            "path_example": "/api_rest",
+            "tags": "Tags",
+            "tags_hint": "Write a tag and press enter or comma",
+            "error": {
+                "name_pattern": "Allowed alphanumeric characters and - _ . ~",
+                "port_min_max": "Number between 0 and 65535",
+                "path_pattern": "Must start with /"
+            }
+        }
     },
     "upstream": {
         "add": "Add Upstream"
     },
     "consumer": {
         "add": "Add Consumer"
+    },
+    "plugin": {
+        "add": "Add Plugin"
     },
     "element": {
         "text_search": "search text",

@@ -8,15 +8,22 @@
     },
     "success": {
         "new_service": "Servicio creado",
-        "new_route": "Ruta creado",
+        "new_route": "Ruta creada",
         "new_upstream": "Upstream creado",
         "new_consumer": "Consumidor creado",
         "new_plugin": "Plugin creado",
         "update_service": "Servicio actualizado",
-        "delete_service": "Servicio eliminado"
+        "update_route": "Ruta actualizada",
+        "update_upstream": "Upstream actualizado",
+        "update_consumer": "Consumidor actualizado",
+        "delete_service": "Servicio eliminado",
+        "delete_route": "Ruta eliminada",
+        "delete_upstream": "Upstream eliminado",
+        "delete_consumer": "Consumidor eliminado"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
+        "kong_node": "Nodo de Kong",
         "documentation": "Documentación",
         "advanced_fields": "Campos avanzados",
         "create": "Crear",
@@ -181,13 +188,36 @@
         }
     },
     "route": {
-        "add": "Añadir Ruta"
+        "add": "Añadir Ruta",
+        "label": "Ruta",
+        "dialog": {
+            "create": "Crear una ruta nueva",
+            "edit": "Editar ruta",
+            "info": "Información del servicio",
+            "name": "Nombre de la ruta",
+            "name_example": "mi-ruta",
+            "protocol": "Protocolo",
+            "host": "Host o IP",
+            "host_example": "example.com",
+            "path": "Ruta (path)",
+            "path_example": "/api_rest",
+            "tags": "Etiquetas",
+            "tags_hint": "Escribe una etiqueta y pulsa enter o coma",
+            "error": {
+                "name_pattern": "Admite caracteres alfanuméricos y - _ . ~",
+                "port_min_max": "Número entre 0 y 65535",
+                "path_pattern": "Debe empezar por /"
+            }
+        }
     },
     "upstream": {
         "add": "Añadir Upstream"
     },
     "consumer": {
         "add": "Añadir Consumidor"
+    },
+    "plugin": {
+        "add": "Añadir Plugin"
     },
     "element": {
         "text_search": "texto a buscar",
