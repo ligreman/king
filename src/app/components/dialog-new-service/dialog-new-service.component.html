@@ -19,17 +19,14 @@
                         <mat-label>{{'service.dialog.name' | translate}}</mat-label>
                         <input type="text" aria-label="" matInput required formControlName="name"
                                cdkFocusInitial placeholder="{{'service.dialog.name_example' | translate}}"/>
-                        <mat-error *ngIf="nameField.hasError('required')">
-                            {{ 'error.field_required' | translate }}
-                        </mat-error>
-                        <mat-error *ngIf="nameField.hasError('pattern')">
+                        <mat-error *ngIf="nameField.hasError('isAlphaNum')">
                             {{ 'service.dialog.error.name_pattern' | translate }}
                         </mat-error>
                     </mat-form-field>
 
                     <mat-form-field fxFlex="45" color="accent" appearance="outline">
                         <mat-chip-list #chipList aria-label="">
-                            <mat-chip *ngFor="let tag of tags"
+                            <mat-chip *ngFor="let tag of currentTags"
                                       removable="true" (removed)="removeTag(tag)">{{tag}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
@@ -57,7 +54,7 @@
                                placeholder="{{'service.dialog.url_example' | translate}}"
                                formControlName="url"/>
                         <mat-hint>{{'service.dialog.url_hint' | translate}}</mat-hint>
-                        <mat-error *ngIf="urlField.hasError('required')">
+                        <mat-error *ngIf="urlField.invalid">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
                     </mat-form-field>
@@ -69,7 +66,7 @@
                         <mat-select formControlName="protocol" required>
                             <mat-option *ngFor="let proto of validProtocols" value="{{proto}}">{{proto}}</mat-option>
                         </mat-select>
-                        <mat-error *ngIf="protocolField.hasError('required')">
+                        <mat-error *ngIf="protocolField.invalid">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
                     </mat-form-field>
@@ -77,7 +74,7 @@
                         <mat-label>{{'service.dialog.host' | translate}}</mat-label>
                         <input type="text" aria-label="" matInput formControlName="host" required
                                placeholder="{{'service.dialog.host_example' | translate}}"/>
-                        <mat-error *ngIf="hostField.hasError('required')">
+                        <mat-error *ngIf="hostField.invalid">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
                     </mat-form-field>
@@ -93,7 +90,7 @@
                         <mat-label>{{'service.dialog.path' | translate}}</mat-label>
                         <input type="text" aria-label="" matInput formControlName="path"
                                placeholder="{{'service.dialog.path_example' | translate}}"/>
-                        <mat-error *ngIf="pathField.hasError('required')">
+                        <mat-error *ngIf="pathField.invalid">
                             {{ 'service.dialog.error.path_pattern' | translate }}
                         </mat-error>
                     </mat-form-field>
@@ -198,6 +195,9 @@
                             <mat-icon matSuffix matTooltip="{{'service.dialog.tls_verify_depth_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
+                            <mat-error *ngIf="tlsVerifyDepthField.invalid">
+                                {{ 'service.dialog.error.tls_depth_min_max' | translate }}
+                            </mat-error>
                         </mat-form-field>
                     </div>
 
@@ -210,6 +210,9 @@
                             <mat-icon matSuffix matTooltip="{{'service.dialog.ca_certificates_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
+                            <mat-error *ngIf="caCertificatesField.invalid">
+                                {{ 'service.dialog.error.ca_certificate_pattern' | translate }}
+                            </mat-error>
                         </mat-form-field>
                     </div>
                 </mat-expansion-panel>

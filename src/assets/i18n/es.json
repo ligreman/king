@@ -181,9 +181,11 @@
                 "name_pattern": "Admite caracteres alfanuméricos y - _ . ~",
                 "port_min_max": "Número entre 0 y 65535",
                 "path_pattern": "Debe empezar por /",
-                "retries_min_max": "Número entre 0 y 20",
-                "timeout_min_max": "Número entre 0 y 3600000",
-                "protocol_path_collision": "El protocolo seleccionado no admite parámetro path, dejarlo vacío"
+                "retries_min_max": "Número entre 0 y 32767",
+                "timeout_min_max": "Número entre 1 y 2147483646",
+                "tls_depth_min_max": "Número entre 0 y 64",
+                "protocol_path_collision": "El protocolo seleccionado no admite parámetro path, déjalo vacío",
+                "ca_certificate_pattern": "Un certificado por línea (formato UIID)"
             }
         }
     },

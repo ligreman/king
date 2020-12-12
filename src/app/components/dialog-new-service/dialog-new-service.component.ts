@@ -16,27 +16,27 @@ export class DialogNewServiceComponent implements OnInit {
     // Uso la variable para el estado del formulario
     formValid = false;
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp', 'tls', 'udp'];
-    tags = [];
+    currentTags = [];
     certificatesAvailable = [];
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
-        name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\-._~]+$/)]],
+        name: ['', [Validators.required, CustomValidators.isAlphaNum()]],
         input_method: ['url', Validators.required],
-        url: ['', [Validators.required, Validators.pattern(/^(http|https|grpc|grpcs|tcp|tls|udp)+:\/\/(.+):([0-9]{1,5})(\/)?.*/)]],
-        protocol: ['', Validators.required],
-        host: ['', Validators.required],
+        url: ['', [Validators.required, CustomValidators.isHostProtocolPort(this.validProtocols)]],
+        protocol: ['', [Validators.required, CustomValidators.isProtocol(this.validProtocols)]],
+        host: ['', [Validators.required, CustomValidators.isHost()]],
         port: ['', [Validators.required, CustomValidators.isNumber(), Validators.min(1), Validators.max(65535)]],
         path: ['', [Validators.pattern(/^\//)]],
-        retries: [5, [CustomValidators.isNumber(), Validators.min(0), Validators.max(20)]],
-        connect_timeout: [60000, [CustomValidators.isNumber(), Validators.min(0), Validators.max(3600000)]],
-        write_timeout: [60000, [CustomValidators.isNumber(), Validators.min(0), Validators.max(3600000)]],
-        read_timeout: [60000, [CustomValidators.isNumber(), Validators.min(0), Validators.max(3600000)]],
-        client_certificate: ['', Validators.pattern(/^[0-9abcdefABCDEF\-]+$/)],
-        tls_verify: [''],
-        tls_verify_depth: ['', [CustomValidators.isNumber(true)]],
-        ca_certificates: ['', Validators.pattern(/^([0-9abcdefABCDEF\-]|[\r\n])+$/)],
+        retries: [5, [CustomValidators.isNumber(), Validators.min(0), Validators.max(32767)]],
+        connect_timeout: [60000, [CustomValidators.isNumber(), Validators.min(1), Validators.max(2147483646)]],
+        write_timeout: [60000, [CustomValidators.isNumber(), Validators.min(1), Validators.max(2147483646)]],
+        read_timeout: [60000, [CustomValidators.isNumber(), Validators.min(1), Validators.max(2147483646)]],
+        client_certificate: [''],
+        tls_verify: ['', [CustomValidators.isBoolean(true)]],
+        tls_verify_depth: ['', [CustomValidators.isNumber(true), Validators.min(0), Validators.max(64)]],
+        ca_certificates: ['', [CustomValidators.isUIID(true)]],
         tags: ['']
     }, {validator: ProtocolPathValidator});
 
@@ -61,33 +61,7 @@ export class DialogNewServiceComponent implements OnInit {
             this.api.getService(this.serviceIdEdit)
                 .subscribe(service => {
                     // Cambios especiales para representarlos en el formulario
-                    delete service['id'];
-                    delete service['created_at'];
-                    delete service['updated_at'];
-                    service['input_method'] = 'complete';
-                    service['url'] = '';
-
-                    if (service['client_certificate'] && service['client_certificate']['id']) {
-                        service['client_certificate'] = service['client_certificate']['id'];
-                    } else {
-                        service['client_certificate'] = '';
-                    }
-                    if (service['ca_certificates'] && service['ca_certificates'].length > 0) {
-                        service['ca_certificates'] = service['ca_certificates'].join('\n');
-                    } else {
-                        service['ca_certificates'] = '';
-                    }
-                    if (service['tls_verify'] === null) {
-                        service['tls_verify'] = '';
-                    } else {
-                        service['tls_verify'] = '' + service['tls_verify'];
-                    }
-
-                    this.tags = service['tags'];
-                    service['tags'] = [];
-
-                    // Relleno el formuarlio
-                    this.form.setValue(service);
+                    this.form.setValue(this.prepareDataForForm(service));
 
                     // Estado inicial de los campos disabled
                     this.changeRadio();
@@ -124,55 +98,7 @@ export class DialogNewServiceComponent implements OnInit {
         Submit del formulario
      */
     onSubmit() {
-        // Genero el body a devolver
-        let body = this.form.value;
-
-        // Limpio el campo si viene como '' para enviar null
-        if (this.tlsVerifyField.value === '') {
-            body.tls_verify = null;
-        } else {
-            // Convierto 'true' a true...
-            body.tls_verify = this.tlsVerifyField.value === 'true';
-        }
-        if (this.tlsVerifyDepthField.value === '') {
-            body.tls_verify_depth = null;
-        }
-
-        if (this.caCertificatesField.value !== '') {
-            body.ca_certificates = this.caCertificatesField.value.split('\n');
-        } else {
-            body.ca_certificates = null;
-        }
-
-        if (this.clientCertificateField.value !== '') {
-            body.client_certificate = {id: this.clientCertificateField.value};
-        } else {
-            // no me interesa enviarlo si es ''
-            delete body.client_certificate;
-        }
-
-        if (this.tags && this.tags.length > 0) {
-            body.tags = this.tags;
-        } else {
-            delete body.tags;
-        }
-
-        if (this.inputMethodField.value === 'url') {
-            delete body.protocol;
-            delete body.host;
-            delete body.port;
-            delete body.path;
-        } else {
-            delete body.url;
-
-            if (this.pathField.value === '') {
-                delete body.path;
-            }
-        }
-
-        delete body.input_method;
-
-        return body;
+        return this.prepareDataForKong(this.form.value);
     }
 
     /*
@@ -183,22 +109,99 @@ export class DialogNewServiceComponent implements OnInit {
         const value = event.value;
 
         // Add our tag
-        if ((value || '').trim()) {
-            this.tags.push(value.trim());
-        }
+        if ((value || '').trim() && /^[\w.\-_~]+$/.test(value)) {
+            this.currentTags.push(value.trim());
 
-        // Reset the input value
-        if (input) {
-            input.value = '';
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
         }
     }
 
     removeTag(tag): void {
-        const index = this.tags.indexOf(tag);
+        const index = this.currentTags.indexOf(tag);
         if (index >= 0) {
-            this.tags.splice(index, 1);
+            this.currentTags.splice(index, 1);
         }
     }
+
+    prepareDataForForm(service) {
+        delete service['id'];
+        delete service['created_at'];
+        delete service['updated_at'];
+        service['input_method'] = 'complete';
+        service['url'] = '';
+
+        if (service['client_certificate'] && service['client_certificate']['id']) {
+            service['client_certificate'] = service['client_certificate']['id'];
+        } else {
+            service['client_certificate'] = '';
+        }
+        if (service['ca_certificates'] && service['ca_certificates'].length > 0) {
+            service['ca_certificates'] = service['ca_certificates'].join('\n');
+        } else {
+            service['ca_certificates'] = '';
+        }
+        if (service['tls_verify'] === null) {
+            service['tls_verify'] = '';
+        } else {
+            service['tls_verify'] = '' + service['tls_verify'];
+        }
+
+        this.currentTags = service['tags'];
+        service['tags'] = [];
+
+        return service;
+    }
+
+    prepareDataForKong(body) {
+        if (body.input_method === 'url') {
+            delete body.protocol;
+            delete body.host;
+            delete body.port;
+            delete body.path;
+        } else {
+            delete body.url;
+
+            if (body.path === '') {
+                delete body.path;
+            }
+        }
+        delete body.input_method;
+
+
+        if (body.tls_verify === '' || body.tls_verify === null) {
+            body.tls_verify = null;
+        } else {
+            // Convierto 'true' a true...
+            body.tls_verify = body.tls_verify === 'true';
+        }
+        if (body.tls_verify_depth === '') {
+            body.tls_verify_depth = null;
+        }
+
+        if (body.ca_certificates === '' || body.ca_certificates === null) {
+            body.ca_certificates = null;
+        } else {
+            body.ca_certificates = body.ca_certificates.split('\n');
+        }
+
+        if (body.client_certificate === '' || body.client_certificate === null) {
+            body.client_certificate = null;
+        } else {
+            body.client_certificate = {id: body.client_certificate};
+        }
+
+        if (this.currentTags && this.currentTags.length > 0) {
+            body.tags = this.currentTags;
+        } else {
+            body.tags = [];
+        }
+
+        return body;
+    }
+
 
     /*
         Getters de campos del formulario
@@ -241,10 +244,11 @@ const ProtocolPathValidator: ValidatorFn = (fg: FormGroup) => {
     let valid = true;
 
     // Si no es http o https no puede llevar path
-    if (proto !== 'http' && proto !== 'https') {
+    if (fg.get('input_method').value === 'complete' && proto !== 'http' && proto !== 'https') {
         if (fg.get('path').value !== '' && fg.get('path').value !== null) {
             valid = false;
         }
     }
+
     return valid ? null : {protocol: proto};
 };

@@ -26,6 +26,7 @@
         "@ngx-translate/http-loader": "^6.0.0",
         "@swimlane/ngx-charts": "^16.0.0",
         "file-saver": "^2.0.5",
+        "joi": "^17.3.0",
         "lodash": "^4.17.20",
         "moment": "^2.29.1",
         "ngx-auto-unsubscribe": "^3.0.1",
