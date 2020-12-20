@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
-import { sortBy } from 'lodash';
+import { sortBy as _sortBy } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { GlobalsService } from '../../services/globals.service';
@@ -155,7 +155,7 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
                 used: list['enabled_in_cluster'].includes(plugin)
             });
         }
-        return sortBy(final, ['name']);
+        return _sortBy(final, ['name']);
     }
 
     /*

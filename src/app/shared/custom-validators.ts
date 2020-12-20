@@ -1,5 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import * as Joi from 'joi';
+import { invert as _invert } from 'lodash';
 
 export class CustomValidators {
 
@@ -146,5 +147,49 @@ export class CustomValidators {
         };
     }
 
+    // Comprueba si es uno de los valores permitidos
+    static isOneOf(validValues): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            let valid = true;
+
+            try {
+                Joi.assert(control.value, Joi.string().valid(...validValues));
+            } catch (e) {
+                valid = false;
+            }
+            return valid ? null : {isOneOf: {value: control.value}};
+        };
+    }
+
+    // Comprueba si la lsita de protocolos es válida para una ruta
+    static isProtocolListValidForRoute(validProtocols): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            let valid = true;
+
+            try {
+                // Son todo protocolos permitidos
+                Joi.assert(control.value, Joi.array().items(Joi.string().valid(...validProtocols)));
+
+                // Convierto a objeto para validar exclusiones
+                let obj = Object.assign({}, control.value);
+                obj = _invert(obj);
+                
+                // Valido las exclusiones
+                Joi.assert(obj,
+                    Joi.object()
+                        .without('http', ['tcp', 'tls', 'udp', 'grpc', 'grpcs'])
+                        .without('https', ['tcp', 'tls', 'udp', 'grpc', 'grpcs'])
+                        .without('tcp', ['http', 'https', 'grpc', 'grpcs'])
+                        .without('tls', ['http', 'https', 'grpc', 'grpcs'])
+                        .without('udp', ['http', 'https', 'grpc', 'grpcs'])
+                        .without('grpc', ['tcp', 'tls', 'udp', 'http', 'https'])
+                        .without('grpcs', ['tcp', 'tls', 'udp', 'http', 'https'])
+                );
+            } catch (e) {
+                valid = false;
+            }
+            return valid ? null : {isProtocolListValidForRoute: {value: control.value}};
+        };
+    }
 
 }

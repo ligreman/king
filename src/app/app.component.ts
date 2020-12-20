@@ -58,7 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.dialogHelper.addEditService(null)
+        this.dialogHelper.addEditRoute(null)
             .then(() => { })
             .catch(error => {});
     }

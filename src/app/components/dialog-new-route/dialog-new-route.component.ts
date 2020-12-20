@@ -3,6 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { isNil as _isNil } from 'lodash';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
@@ -23,29 +24,21 @@ export class DialogNewRouteComponent implements OnInit {
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    /*
-    For http, at least one of methods, hosts, headers or paths;
-For https, at least one of methods, hosts, headers, paths or snis;
-For tcp, at least one of sources or destinations;
-For tls, at least one of sources, destinations or snis;
-For grpc, at least one of hosts, headers or paths;
-For grpcs, at least one of hosts, headers, paths or snis
-     */
 
     form = this.fb.group({
         name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\-._~]+$/)]],
         // service: {'id': 'f2f74df2-f920-4eb5-9d02-721779a967f0'}
-        service: [''],
-        protocol: ['', Validators.required],
-        // 'methods': ['GET', 'POST'],
-        methods: [''],
+        service: ['', [Validators.required]],
+        protocols: ['', [Validators.required, CustomValidators.isProtocolListValidForRoute(this.validProtocols)]],
+        methods: ['', [CustomValidators.isOneOf(this.validMethods)]],
+
         // 'hosts': ['example.com', 'foo.test'],
         hosts: [''],
         // 'paths': ['\/foo', '\/bar'],
         paths: ['', [Validators.pattern(/^\//)]],
         // 'headers': {'x-another-header': ['bla'], 'x-my-header': ['foo', 'bar']},
         headers: [''],
-        https_redirect_status_code: [426, [Validators.required]],
+        https_redirect_status_code: [426, [Validators.required, CustomValidators.isOneOf(this.validRedirectCodes)]],
         tags: [''],
 
         // null ["kkkk", "jijij"]
@@ -62,7 +55,7 @@ For grpcs, at least one of hosts, headers, paths or snis
         response_buffering: [true, [Validators.required]]
 
         // ca_certificates: ['', Validators.pattern(/^([0-9abcdefABCDEF\-]|[\r\n])+$/)]
-    }, {validator: ProtocolPathValidator});
+    }, {validator: FinalFormValidator});
 
     constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
 
@@ -88,9 +81,17 @@ For grpcs, at least one of hosts, headers, paths or snis
                     delete route['id'];
                     delete route['created_at'];
                     delete route['updated_at'];
-                    route['input_method'] = 'complete';
-                    route['url'] = '';
 
+                    if (route['service'] && route['service']['id']) {
+                        route['service'] = route['service']['id'];
+                    } else {
+                        route['service'] = '';
+                    }
+
+                    this.tags = route['tags'];
+                    route['tags'] = [];
+
+                    /*
                     if (route['client_certificate'] && route['client_certificate']['id']) {
                         route['client_certificate'] = route['client_certificate']['id'];
                     } else {
@@ -106,29 +107,15 @@ For grpcs, at least one of hosts, headers, paths or snis
                     } else {
                         route['tls_verify'] = '' + route['tls_verify'];
                     }
+                    */
 
-                    this.tags = route['tags'];
-                    route['tags'] = [];
 
                     // Relleno el formuarlio
                     this.form.setValue(route);
-
-                    // Estado inicial de los campos disabled
-                    this.changeRadio();
                 }, error => {
                     this.toast.error_general(error);
                 });
-        } else {
-            // Estado inicial de los campos disabled
-            this.changeRadio();
         }
-    }
-
-    /*
-        Al cambiar el tipo de input activo y desactivo campos
-     */
-    changeRadio() {
-
     }
 
     /*
@@ -137,6 +124,15 @@ For grpcs, at least one of hosts, headers, paths or snis
     onSubmit() {
         // Genero el body a devolver
         let body = this.form.value;
+
+        // El servicio hay que mandarlo así
+        body.service = {id: this.serviceField.value};
+
+        if (this.tags && this.tags.length > 0) {
+            body.tags = this.tags;
+        } else {
+            delete body.tags;
+        }
 
         // Limpio el campo si viene como '' para enviar null
         /*if (this.tlsVerifyField.value === '') {
@@ -162,11 +158,7 @@ For grpcs, at least one of hosts, headers, paths or snis
             delete body.client_certificate;
         }
 
-        if (this.tags && this.tags.length > 0) {
-            body.tags = this.tags;
-        } else {
-            delete body.tags;
-        }
+
 
         if (this.inputMethodField.value === 'url') {
             delete body.protocol;
@@ -180,8 +172,6 @@ For grpcs, at least one of hosts, headers, paths or snis
                 delete body.path;
             }
         }*/
-
-        delete body.input_method;
 
         return body;
     }
@@ -218,7 +208,7 @@ For grpcs, at least one of hosts, headers, paths or snis
 
     get serviceField() { return this.form.get('service'); }
 
-    get protocolField() { return this.form.get('protocol'); }
+    get protocolsField() { return this.form.get('protocols'); }
 
     get hostsField() { return this.form.get('hosts'); }
 
@@ -251,15 +241,39 @@ For grpcs, at least one of hosts, headers, paths or snis
     get tagsField() { return this.form.get('tags'); }
 }
 
-const ProtocolPathValidator: ValidatorFn = (fg: FormGroup) => {
-    const proto = fg.get('protocol').value;
+/*
+    Validación final del formulario
+ */
+const FinalFormValidator: ValidatorFn = (fg: FormGroup) => {
+    const protos = fg.get('protocols').value;
     let valid = true;
 
-    // Si no es http o https no puede llevar path
-    if (proto !== 'http' && proto !== 'https') {
-        if (fg.get('path').value !== '' && fg.get('path').value !== null) {
-            valid = false;
-        }
+    // For http, at least one of methods, hosts, headers or paths;
+    if (protos.includes('http') && _isNil(fg.get('methods').value) && _isNil(fg.get('hosts').value) && _isNil(fg.get('headers').value) && _isNil(fg.get('paths').value)) {
+        valid = false;
     }
-    return valid ? null : {protocol: proto};
+    // For https, at least one of methods, hosts, headers, paths or snis;
+    if (protos.includes('https') && _isNil(fg.get('methods').value) && _isNil(fg.get('hosts').value) && _isNil(fg.get('headers').value) && _isNil(fg.get('paths').value) && _isNil(fg.get('snis').value)) {
+        valid = false;
+    }
+
+    // For tcp or udp, at least one of sources or destinations;
+    if ((protos.includes('tcp') || protos.includes('udp')) && _isNil(fg.get('sources').value) && _isNil(fg.get('destinations').value)) {
+        valid = false;
+    }
+    // For tls, at least one of sources, destinations or snis;
+    if (protos.includes('tls') && _isNil(fg.get('sources').value) && _isNil(fg.get('destinations').value) && _isNil(fg.get('snis').value)) {
+        valid = false;
+    }
+
+    // For grpc, at least one of hosts, headers or paths;
+    if (protos.includes('grpc') && _isNil(fg.get('hosts').value) && _isNil(fg.get('headers').value) && _isNil(fg.get('paths').value)) {
+        valid = false;
+    }
+    // For grpcs, at least one of hosts, headers, paths or snis
+    if (protos.includes('grpcs') && _isNil(fg.get('hosts').value) && _isNil(fg.get('headers').value) && _isNil(fg.get('paths').value) && _isNil(fg.get('snis').value)) {
+        valid = false;
+    }
+    console.log(fg.get('hosts').value);
+    return valid ? null : {finalValidation: protos};
 };

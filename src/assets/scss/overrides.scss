@@ -31,6 +31,10 @@
     background: mat-color($mat-teal, 800);
 }
 
+.mat-tooltip.tooltip-multi {
+    white-space: pre-line !important;
+}
+
 .mat-button-toggle {
     background-color: mat-color($mat-gray, 900);
 
@@ -51,6 +55,7 @@
 .mat-chip.mat-accent {
     background: mat-color($mat-teal, 500);
 }
+
 
 /*
     NGX-CHARTS

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter } from 'lodash';
+import { filter as _filter } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -152,7 +152,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             });
 
             // Si el host de este servicio se corresponde con el name de un Upstream, edge
-            const serviceUpstream = filter(data.upstreams, {name: service.host});
+            const serviceUpstream = _filter(data.upstreams, {name: service.host});
             if (serviceUpstream.length > 0) {
             }
             // Si el host no se corresponde con Upstreams, creo un nodo Host y edge hacia él
@@ -185,7 +185,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
             // Busco los servicios asociados a la ruta para crear los edges, si está enlazado a un servicio
             if (route['service']['id']) {
-                const routeServices = filter(data.services, {id: route.service.id});
+                const routeServices = _filter(data.services, {id: route.service.id});
                 for (let ss of routeServices) {
                     // Edges de la ruta al servicio
                     this.data.edges.add({
