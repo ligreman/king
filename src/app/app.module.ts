@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -98,6 +99,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatTooltipModule,
         MatSidenavModule,
         MatSortModule,
+        MatCheckboxModule,
         MatPaginatorModule,
         MatTableModule,
         NgxChartsModule,

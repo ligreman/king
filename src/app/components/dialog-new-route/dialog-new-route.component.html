@@ -14,6 +14,7 @@
             <!--Nombre-->
             <div fxLayout="column" class="margin-bottom-10">
                 <div fxLayout="row" fxLayoutAlign="space-between start">
+
                     <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
                         <mat-label>{{'route.dialog.name' | translate}}</mat-label>
                         <input type="text" aria-label="" matInput required formControlName="name"
@@ -28,18 +29,18 @@
 
                     <mat-form-field fxFlex="45" color="accent" appearance="outline">
                         <mat-chip-list #chipList aria-label="">
-                            <mat-chip *ngFor="let tag of tags"
+                            <mat-chip *ngFor="let tag of currentTags"
                                       removable="true" (removed)="removeTag(tag)">{{tag}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
-                            <input placeholder="{{'route.dialog.tags' | translate}}"
+                            <input placeholder="{{'service.dialog.tags' | translate}}"
                                    formControlName="tags"
                                    [matChipInputFor]="chipList"
                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                    matChipInputAddOnBlur="true"
                                    (matChipInputTokenEnd)="addTag($event)">
                         </mat-chip-list>
-                        <mat-hint>{{'route.dialog.tags_hint' | translate}}</mat-hint>
+                        <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
                     </mat-form-field>
                 </div>
 
@@ -76,37 +77,49 @@
 
                 <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
                     <!--Hosts-->
-                    <!--TODO-->
                     <mat-form-field fxFlex="50" color="accent" appearance="outline">
-                        <mat-label>{{'route.dialog.hosts' | translate}}</mat-label>
-                        <input type="text" aria-label="" matInput formControlName="hosts" required
-                               placeholder="{{'route.dialog.hosts_example' | translate}}"/>
+                        <mat-chip-list #chipList aria-label="">
+                            <mat-chip *ngFor="let host of currentHosts"
+                                      removable="true" (removed)="removeHost(host)">{{host}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip>
+                            <input placeholder="{{'route.dialog.hosts' | translate}}"
+                                   formControlName="hosts"
+                                   [matChipInputFor]="chipList"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   matChipInputAddOnBlur="true"
+                                   (matChipInputTokenEnd)="addHost($event)">
+                        </mat-chip-list>
                         <mat-icon matSuffix matTooltip="{{'route.dialog.hosts_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
-                        <mat-error *ngIf="hostsField.hasError('required')">
-                            {{ 'error.field_required' | translate }}
-                        </mat-error>
+                        <mat-hint>{{'route.dialog.hosts_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
                     <!--Rutas-->
-                    <!--TODO-->
                     <mat-form-field fxFlex="45" color="accent" appearance="outline">
-                        <mat-label>{{'route.dialog.paths' | translate}}</mat-label>
-                        <input type="text" aria-label="" matInput formControlName="paths"
-                               placeholder="{{'route.dialog.paths_example' | translate}}"/>
+                        <mat-chip-list #chipList aria-label="">
+                            <mat-chip *ngFor="let path of currentPaths"
+                                      removable="true" (removed)="removePath(path)">{{path}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip>
+                            <input placeholder="{{'route.dialog.paths' | translate}}"
+                                   formControlName="paths"
+                                   [matChipInputFor]="chipList"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   matChipInputAddOnBlur="true"
+                                   (matChipInputTokenEnd)="addPath($event)">
+                        </mat-chip-list>
                         <mat-icon matSuffix matTooltip="{{'route.dialog.paths_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
-                        <mat-error *ngIf="pathsField.hasError('required')">
-                            {{ 'route.dialog.error.path_pattern' | translate }}
-                        </mat-error>
+                        <mat-hint>{{'route.dialog.hosts_hint' | translate}}</mat-hint>
                     </mat-form-field>
                 </div>
 
                 <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
                     <!--Métodos-->
-                    <mat-form-field fxFlex="45" color="accent" appearance="outline">
+                    <mat-form-field fxFlex="50" color="accent" appearance="outline">
                         <mat-label>{{'route.dialog.methods' | translate}}</mat-label>
                         <mat-select formControlName="methods" multiple>
                             <mat-option *ngFor="let method of validMethods" [value]="method">{{method}}</mat-option>
@@ -116,15 +129,24 @@
                         </mat-icon>
                     </mat-form-field>
 
-                    <!--Redirect-->
-                    <mat-form-field fxFlex="20" color="accent" appearance="outline">
-                        <mat-label>{{'route.dialog.redirect' | translate}}</mat-label>
-                        <mat-select formControlName="https_redirect_status_code">
-                            <mat-option *ngFor="let redirect of validRedirectCodes" [value]="redirect">{{redirect}}</mat-option>
-                        </mat-select>
-                        <mat-icon matSuffix matTooltip="{{'route.dialog.redirect_tooltip' | translate}}"
+                    <!--SNIS-->
+                    <mat-form-field fxFlex="45" color="accent" appearance="outline">
+                        <mat-chip-list #chipList aria-label="">
+                            <mat-chip *ngFor="let path of currentSnis"
+                                      removable="true" (removed)="removeSni(path)">{{path}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip>
+                            <input placeholder="{{'route.dialog.snis' | translate}}"
+                                   formControlName="snis"
+                                   [matChipInputFor]="chipList"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   matChipInputAddOnBlur="true"
+                                   (matChipInputTokenEnd)="addSni($event)">
+                        </mat-chip-list>
+                        <mat-icon matSuffix matTooltip="{{'route.dialog.snis_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
+                        <mat-hint>{{'route.dialog.hosts_hint' | translate}}</mat-hint>
                     </mat-form-field>
                 </div>
             </div>
@@ -150,26 +172,66 @@
                     </mat-expansion-panel-header>
 
                     <div fxLayout="row" fxLayoutAlign="space-between start">
-                        <!--Reintentos-->
-                        <!--<mat-form-field fxFlex="23" color="accent" appearance="outline" class="margin-bottom-10">
-                            <mat-label>{{'route.dialog.retries' | translate}}</mat-label>
-                            <input type="number" aria-label="" matInput formControlName="retries"/>
-                            <mat-error *ngIf="retriesField.invalid">
-                                {{ 'route.dialog.error.retries_min_max' | translate }}
-                            </mat-error>
-                        </mat-form-field>-->
-
-                        <!--Timeout lectura-->
-                        <!--<mat-form-field fxFlex="23" color="accent" appearance="outline">
-                            <mat-label>{{'route.dialog.read_timeout' | translate}}</mat-label>
-                            <input type="number" aria-label="" matInput formControlName="read_timeout"/>
-                            <mat-icon matSuffix matTooltip="{{'route.dialog.read_tooltip' | translate}}"
+                        <!--Redirect-->
+                        <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                            <mat-label>{{'route.dialog.redirect' | translate}}</mat-label>
+                            <mat-select formControlName="https_redirect_status_code">
+                                <mat-option *ngFor="let redirect of validRedirectCodes" [value]="redirect">{{redirect}}</mat-option>
+                            </mat-select>
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.redirect_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
-                            <mat-error *ngIf="readTimeoutField.invalid">
-                                {{ 'route.dialog.error.timeout_min_max' | translate }}
+                        </mat-form-field>
+
+                        <!--RegExp priority-->
+                        <mat-form-field fxFlex="30" color="accent" appearance="outline" class="margin-bottom-10">
+                            <mat-label>{{'route.dialog.regex_priority' | translate}}</mat-label>
+                            <input type="number" aria-label="" matInput formControlName="regex_priority"/>
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.regex_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                            <mat-error *ngIf="regexPriorityField.invalid">
+                                {{ 'route.dialog.error.regex_min_max' | translate }}
                             </mat-error>
-                        </mat-form-field>-->
+                        </mat-form-field>
+
+                        <!--Path handling-->
+                        <mat-form-field fxFlex="30" color="accent" class="margin-bottom-10" appearance="outline">
+                            <mat-label>{{'route.dialog.path_handling' | translate}}</mat-label>
+                            <mat-select formControlName="path_handling">
+                                <mat-option value="v0">v0</mat-option>
+                                <mat-option value="v1">v1</mat-option>
+                            </mat-select>
+                            <mat-hint>{{'route.dialog.path_handling_hint' | translate}}</mat-hint>
+                        </mat-form-field>
+                    </div>
+
+                    <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-top-10 margin-bottom-10">
+                        <!--    Strip path-->
+                        <div fxFlex="23" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-checkbox formControlName="strip_path">{{'route.dialog.strip_path' | translate}}</mat-checkbox>
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.strip_path_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal" class="margin-left-10">info_outline
+                            </mat-icon>
+                        </div>
+
+                        <!-- Preserve host-->
+                        <div fxFlex="23" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-checkbox formControlName="preserve_host">{{'route.dialog.preserve_host' | translate}}</mat-checkbox>
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.preserve_host_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal" class="margin-left-10">info_outline
+                            </mat-icon>
+                        </div>
+
+                        <!-- request_buffering-->
+                        <div fxFlex="23" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-checkbox formControlName="request_buffering">{{'route.dialog.request_buffering' | translate}}</mat-checkbox>
+                        </div>
+
+                        <!-- response_buffering-->
+                        <div fxFlex="23" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-checkbox formControlName="response_buffering">{{'route.dialog.response_buffering' | translate}}</mat-checkbox>
+                        </div>
                     </div>
 
                     <div fxLayout="row" fxLayoutAlign="space-between start">
@@ -185,7 +247,7 @@
                         </mat-form-field>-->
 
                         <!--TLS-->
-                        <mat-form-field fxFlex="20" color="accent" class="margin-bottom-10" appearance="outline">
+                        <!--<mat-form-field fxFlex="20" color="accent" class="margin-bottom-10" appearance="outline">
                             <mat-label>{{'route.dialog.tls_verify' | translate}}</mat-label>
                             <mat-select formControlName="tls_verify">
                                 <mat-option value=""></mat-option>
@@ -195,16 +257,16 @@
                             <mat-icon matSuffix matTooltip="{{'route.dialog.tls_verify_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
-                        </mat-form-field>
+                        </mat-form-field>-->
 
                         <!--TLS Depth-->
-                        <mat-form-field fxFlex="25" color="accent" class="margin-bottom-10" appearance="outline">
+                        <!--<mat-form-field fxFlex="25" color="accent" class="margin-bottom-10" appearance="outline">
                             <mat-label>{{'route.dialog.tls_verify_depth' | translate}}</mat-label>
                             <input type="number" aria-label="" matInput formControlName="tls_verify_depth"/>
                             <mat-icon matSuffix matTooltip="{{'route.dialog.tls_verify_depth_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
-                        </mat-form-field>
+                        </mat-form-field>-->
                     </div>
 
                     <div fxLayout="row" fxLayoutAlign="space-between start">

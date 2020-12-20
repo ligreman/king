@@ -106,11 +106,11 @@ export class DialogNewServiceComponent implements OnInit {
      */
     addTag(event: MatChipInputEvent): void {
         const input = event.input;
-        const value = event.value;
+        const value = event.value.trim();
 
         // Add our tag
-        if ((value || '').trim() && /^[\w.\-_~]+$/.test(value)) {
-            this.currentTags.push(value.trim());
+        if ((value || '') && /^[\w.\-_~]+$/.test(value)) {
+            this.currentTags.push(value);
 
             // Reset the input value
             if (input) {

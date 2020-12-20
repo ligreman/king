@@ -148,16 +148,20 @@ export class CustomValidators {
     }
 
     // Comprueba si es uno de los valores permitidos
-    static isOneOf(validValues): ValidatorFn {
+    static isArrayOfOneOf(validValues, required = false): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             let valid = true;
-
+            
             try {
-                Joi.assert(control.value, Joi.string().valid(...validValues));
+                if (required) {
+                    Joi.assert(control.value, Joi.array().items(Joi.string().valid(...validValues)).min(1));
+                } else {
+                    Joi.assert(control.value, Joi.array().items(Joi.string().valid(...validValues)));
+                }
             } catch (e) {
                 valid = false;
             }
-            return valid ? null : {isOneOf: {value: control.value}};
+            return valid ? null : {isArrayOfOneOf: {value: control.value}};
         };
     }
 
@@ -173,7 +177,7 @@ export class CustomValidators {
                 // Convierto a objeto para validar exclusiones
                 let obj = Object.assign({}, control.value);
                 obj = _invert(obj);
-                
+
                 // Valido las exclusiones
                 Joi.assert(obj,
                     Joi.object()

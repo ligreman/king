@@ -16,10 +16,13 @@ import { CustomValidators } from '../../shared/custom-validators';
 export class DialogNewRouteComponent implements OnInit {
     // Uso la variable para el estado del formulario
     formValid = false;
-    validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp', 'tls', 'udp'];
+    validProtocols = ['http', 'https', 'tcp', 'tls', 'udp', 'grpc', 'grpcs'];
     validMethods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE'];
     validRedirectCodes = [426, 301, 302, 307, 308];
-    tags = [];
+    currentTags = [];
+    currentHosts = [];
+    currentPaths = [];
+    currentSnis = [];
     servicesAvailable = [];
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -30,31 +33,24 @@ export class DialogNewRouteComponent implements OnInit {
         // service: {'id': 'f2f74df2-f920-4eb5-9d02-721779a967f0'}
         service: ['', [Validators.required]],
         protocols: ['', [Validators.required, CustomValidators.isProtocolListValidForRoute(this.validProtocols)]],
-        methods: ['', [CustomValidators.isOneOf(this.validMethods)]],
-
-        // 'hosts': ['example.com', 'foo.test'],
+        methods: ['', [CustomValidators.isArrayOfOneOf(this.validMethods)]],
         hosts: [''],
-        // 'paths': ['\/foo', '\/bar'],
-        paths: ['', [Validators.pattern(/^\//)]],
+        paths: [''],
         // 'headers': {'x-another-header': ['bla'], 'x-my-header': ['foo', 'bar']},
         headers: [''],
-        https_redirect_status_code: [426, [Validators.required, CustomValidators.isOneOf(this.validRedirectCodes)]],
+        https_redirect_status_code: [426, [Validators.required, CustomValidators.isArrayOfOneOf(this.validRedirectCodes)]],
         tags: [''],
-
-        // null ["kkkk", "jijij"]
-        snis: [null],
+        snis: [''],
         // null [{"ip": 12.13.14.15, "port": 23}]
         destinations: [null],
         // null [{"ip": 12.13.14.15, "port": 23}]
         sources: [null],
-        regex_priority: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(1000)]],
-        path_handling: ['v0'],
+        regex_priority: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(999999)]],
+        path_handling: ['v0', [Validators.pattern(/(v0|v1)/)]],
         strip_path: [true],
         preserve_host: [false],
         request_buffering: [true, [Validators.required]],
         response_buffering: [true, [Validators.required]]
-
-        // ca_certificates: ['', Validators.pattern(/^([0-9abcdefABCDEF\-]|[\r\n])+$/)]
     }, {validator: FinalFormValidator});
 
     constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
@@ -88,8 +84,17 @@ export class DialogNewRouteComponent implements OnInit {
                         route['service'] = '';
                     }
 
-                    this.tags = route['tags'];
+                    this.currentTags = route['tags'];
                     route['tags'] = [];
+
+                    this.currentHosts = route['hosts'];
+                    route['hosts'] = [];
+
+                    this.currentPaths = route['paths'];
+                    route['paths'] = [];
+
+                    this.currentSnis = route['snis'];
+                    route['snis'] = [];
 
                     /*
                     if (route['client_certificate'] && route['client_certificate']['id']) {
@@ -128,10 +133,28 @@ export class DialogNewRouteComponent implements OnInit {
         // El servicio hay que mandarlo así
         body.service = {id: this.serviceField.value};
 
-        if (this.tags && this.tags.length > 0) {
-            body.tags = this.tags;
+        if (this.currentTags && this.currentTags.length > 0) {
+            body.tags = this.currentTags;
         } else {
             delete body.tags;
+        }
+
+        if (this.currentHosts && this.currentHosts.length > 0) {
+            body.hosts = this.currentHosts;
+        } else {
+            delete body.hosts;
+        }
+
+        if (this.currentPaths && this.currentPaths.length > 0) {
+            body.paths = this.currentPaths;
+        } else {
+            delete body.paths;
+        }
+
+        if (this.currentSnis && this.currentSnis.length > 0) {
+            body.snis = this.currentSnis;
+        } else {
+            delete body.snis;
         }
 
         // Limpio el campo si viene como '' para enviar null
@@ -181,23 +204,98 @@ export class DialogNewRouteComponent implements OnInit {
      */
     addTag(event: MatChipInputEvent): void {
         const input = event.input;
-        const value = event.value;
+        const value = event.value.trim();
 
         // Add our tag
-        if ((value || '').trim()) {
-            this.tags.push(value.trim());
-        }
+        if ((value || '') && /^[\w.\-_~]+$/.test(value)) {
+            this.currentTags.push(value);
 
-        // Reset the input value
-        if (input) {
-            input.value = '';
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
         }
     }
 
     removeTag(tag): void {
-        const index = this.tags.indexOf(tag);
+        const index = this.currentTags.indexOf(tag);
         if (index >= 0) {
-            this.tags.splice(index, 1);
+            this.currentTags.splice(index, 1);
+        }
+    }
+
+    /*
+        Gestión de hosts
+     */
+    addHost(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value.trim();
+
+        // Add
+        if ((value || '') && /^[^*]*\*?[^*]*$/.test(value) && (/^\*\./.test(value) || /\.\*$/.test(value) || /^[^*]*$/.test(value))) {
+            this.currentHosts.push(value);
+
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
+        }
+    }
+
+    removeHost(host): void {
+        const index = this.currentHosts.indexOf(host);
+        if (index >= 0) {
+            this.currentHosts.splice(index, 1);
+        }
+    }
+
+    /*
+        Gestión de rutas
+     */
+    addPath(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value.trim();
+
+        // Add
+        if ((value || '') && /^\//.test(value) && !/\/\//.test(value)) {
+            this.currentPaths.push(value);
+
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
+        }
+    }
+
+    removePath(host): void {
+        const index = this.currentPaths.indexOf(host);
+        if (index >= 0) {
+            this.currentPaths.splice(index, 1);
+        }
+    }
+
+    /*
+        Gestión de snis
+     */
+    addSni(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value.trim();
+
+        // Add
+        if ((value || '')) {
+            this.currentSnis.push(value);
+
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
+        }
+    }
+
+    removeSni(host): void {
+        const index = this.currentSnis.indexOf(host);
+        if (index >= 0) {
+            this.currentSnis.splice(index, 1);
         }
     }
 
@@ -274,6 +372,6 @@ const FinalFormValidator: ValidatorFn = (fg: FormGroup) => {
     if (protos.includes('grpcs') && _isNil(fg.get('hosts').value) && _isNil(fg.get('headers').value) && _isNil(fg.get('paths').value) && _isNil(fg.get('snis').value)) {
         valid = false;
     }
-    console.log(fg.get('hosts').value);
+
     return valid ? null : {finalValidation: protos};
 };

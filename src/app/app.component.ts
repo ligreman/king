@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -126,4 +126,38 @@ export class AppComponent implements OnInit, OnDestroy {
 
     // getter para acceder de forma más sencilla al campo
     get nodeField() { return this.formNodes.get('node'); }
+
+    /*
+        Prevent backspace navigate back in browser
+     */
+    @HostListener('document:keydown', ['$event'])
+    onKeyDown(evt: KeyboardEvent) {
+        if (evt.key === 'Backspace') {
+            let doPrevent = true;
+            const types = ['text', 'password', 'file', 'search', 'email', 'number', 'date', 'color', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'url', 'week'];
+            const target = (<HTMLInputElement>evt.target);
+
+            const disabled = target.disabled || (<HTMLInputElement>event.target).readOnly;
+            if (!disabled) {
+                if (target.isContentEditable) {
+                    doPrevent = false;
+                } else if (target.nodeName === 'INPUT') {
+                    let type = target.type;
+                    if (type) {
+                        type = type.toLowerCase();
+                    }
+                    if (types.indexOf(type) > -1) {
+                        doPrevent = false;
+                    }
+                } else if (target.nodeName === 'TEXTAREA') {
+                    doPrevent = false;
+                }
+            }
+            if (doPrevent) {
+                evt.preventDefault();
+                return false;
+            }
+        }
+    }
 }
+
