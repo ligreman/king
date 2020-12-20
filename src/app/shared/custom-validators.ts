@@ -148,10 +148,24 @@ export class CustomValidators {
     }
 
     // Comprueba si es uno de los valores permitidos
+    static isOneOf(validValues): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            let valid = true;
+
+            try {
+                Joi.assert(control.value, Joi.string().valid(...validValues));
+            } catch (e) {
+                valid = false;
+            }
+            return valid ? null : {isOneOf: {value: control.value}};
+        };
+    }
+
+    // Comprueba si es uno de los valores permitidos
     static isArrayOfOneOf(validValues, required = false): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             let valid = true;
-            
+
             try {
                 if (required) {
                     Joi.assert(control.value, Joi.array().items(Joi.string().valid(...validValues)).min(1));

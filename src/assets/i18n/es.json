@@ -223,6 +223,10 @@
             "response_buffering": "Búfer de respuestas",
             "snis": "SNIs",
             "snis_tooltip": "Una lista de SNIs que encajan en esta Ruta al usar ruteo en stream",
+            "headers": "Cabeceras",
+            "header": "Cabecera",
+            "header_value": "Valor/es",
+            "header_value_hint": "Valores separados por comas",
             "error": {
                 "name_pattern": "Admite caracteres alfanuméricos y - _ . ~",
                 "port_min_max": "Número entre 0 y 65535",

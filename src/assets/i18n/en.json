@@ -223,6 +223,10 @@
             "response_buffering": "Response buffering",
             "snis": "SNIs",
             "snis_tooltip": "A list of SNIs that match this Route when using stream routing",
+            "headers": "Headers",
+            "header": "Header",
+            "header_value": "Value/s",
+            "header_value_hint": "Comma separated values",
             "error": {
                 "name_pattern": "Allowed alphanumeric characters and - _ . ~",
                 "port_min_max": "Number between 0 and 65535",

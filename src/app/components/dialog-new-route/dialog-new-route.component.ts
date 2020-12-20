@@ -3,6 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import * as Joi from 'joi';
 import { isNil as _isNil } from 'lodash';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
@@ -23,6 +24,7 @@ export class DialogNewRouteComponent implements OnInit {
     currentHosts = [];
     currentPaths = [];
     currentSnis = [];
+    currentHeaders = {};
     servicesAvailable = [];
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -36,9 +38,7 @@ export class DialogNewRouteComponent implements OnInit {
         methods: ['', [CustomValidators.isArrayOfOneOf(this.validMethods)]],
         hosts: [''],
         paths: [''],
-        // 'headers': {'x-another-header': ['bla'], 'x-my-header': ['foo', 'bar']},
-        headers: [''],
-        https_redirect_status_code: [426, [Validators.required, CustomValidators.isArrayOfOneOf(this.validRedirectCodes)]],
+        https_redirect_status_code: [426, [Validators.required, CustomValidators.isOneOf(this.validRedirectCodes)]],
         tags: [''],
         snis: [''],
         // null [{"ip": 12.13.14.15, "port": 23}]
@@ -95,6 +95,9 @@ export class DialogNewRouteComponent implements OnInit {
 
                     this.currentSnis = route['snis'];
                     route['snis'] = [];
+
+                    this.currentHeaders = route['headers'];
+                    delete route['headers'];
 
                     /*
                     if (route['client_certificate'] && route['client_certificate']['id']) {
@@ -155,6 +158,10 @@ export class DialogNewRouteComponent implements OnInit {
             body.snis = this.currentSnis;
         } else {
             delete body.snis;
+        }
+
+        if (this.currentHeaders && this.currentHeaders[0]) {
+            body.headers = this.currentHeaders;
         }
 
         // Limpio el campo si viene como '' para enviar null
@@ -297,6 +304,28 @@ export class DialogNewRouteComponent implements OnInit {
         if (index >= 0) {
             this.currentSnis.splice(index, 1);
         }
+    }
+
+    /*
+        Gestión de headers
+     */
+    addHeader(keyInput, valInput): void {
+        const {error, value} = Joi.object({
+            key: Joi.string().invalid('Host').required(),
+            value: Joi.string().required()
+        }).validate({key: keyInput.value, value: valInput.value});
+
+        // Add
+        if (error === undefined) {
+            this.currentHeaders[keyInput.value] = valInput.value.split(',');
+
+            keyInput.value = '';
+            valInput.value = '';
+        }
+    }
+
+    removeHeader(key): void {
+        delete this.currentHeaders[key];
     }
 
     /*
