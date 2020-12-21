@@ -97,19 +97,14 @@
                 </div>
             </div>
 
-            <mat-divider></mat-divider>
-
             <mat-accordion multi displayMode="flat" hideToggle>
                 <mat-expansion-panel #matExp disabled>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <button mat-flat-button (click)="matExp.toggle(); $event.stopPropagation();">
+                    <mat-expansion-panel-header class="margin-bottom-20-i">
+                        <mat-panel-description fxLayout="row" fxLayoutAlign="center start">
+                            <button mat-flat-button (click)="matExp.toggle(); $event.stopPropagation();" fxFlex="50" color="primary">
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
                                 {{'text.advanced_fields' | translate}}
-                            </button>
-                        </mat-panel-title>
-                        <mat-panel-description fxLayout=" row
-                            " fxLayoutAlign="end start">
-                            <button mat-icon-button (click)="matExp.toggle(); $event.stopPropagation();">
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
                             </button>

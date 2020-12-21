@@ -89,14 +89,14 @@
 
                     <!--Hosts-->
                     <mat-form-field fxFlex="45" color="accent" appearance="outline">
-                        <mat-chip-list #chipList aria-label="">
+                        <mat-chip-list #chipList2 aria-label="">
                             <mat-chip *ngFor="let host of currentHosts"
                                       removable="true" (removed)="removeHost(host)">{{host}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
                             <input placeholder="{{'route.dialog.hosts' | translate}}"
                                    formControlName="hosts"
-                                   [matChipInputFor]="chipList"
+                                   [matChipInputFor]="chipList2"
                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                    matChipInputAddOnBlur="true"
                                    (matChipInputTokenEnd)="addHost($event)">
@@ -108,17 +108,17 @@
                     </mat-form-field>
                 </div>
 
-                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
+                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-20-i">
                     <!--Rutas-->
                     <mat-form-field fxFlex="50" color="accent" appearance="outline">
-                        <mat-chip-list #chipList aria-label="">
+                        <mat-chip-list #chipList3 aria-label="">
                             <mat-chip *ngFor="let path of currentPaths"
                                       removable="true" (removed)="removePath(path)">{{path}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
                             <input placeholder="{{'route.dialog.paths' | translate}}"
                                    formControlName="paths"
-                                   [matChipInputFor]="chipList"
+                                   [matChipInputFor]="chipList3"
                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                    matChipInputAddOnBlur="true"
                                    (matChipInputTokenEnd)="addPath($event)">
@@ -131,14 +131,14 @@
 
                     <!--SNIS-->
                     <mat-form-field fxFlex="45" color="accent" appearance="outline">
-                        <mat-chip-list #chipList aria-label="">
+                        <mat-chip-list #chipList4 aria-label="">
                             <mat-chip *ngFor="let path of currentSnis"
                                       removable="true" (removed)="removeSni(path)">{{path}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
                             <input placeholder="{{'route.dialog.snis' | translate}}"
                                    formControlName="snis"
-                                   [matChipInputFor]="chipList"
+                                   [matChipInputFor]="chipList4"
                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                    matChipInputAddOnBlur="true"
                                    (matChipInputTokenEnd)="addSni($event)">
@@ -151,6 +151,7 @@
                 </div>
 
                 <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
+                    <!--Cabeceras-->
                     <div fxLayout="row" fxFlex="55" fxLayoutAlign="space-between center">
                         <mat-form-field fxFlex="40" color="accent" class="margin-bottom-10" appearance="standard">
                             <mat-label>{{'route.dialog.header' | translate}}</mat-label>
@@ -164,7 +165,7 @@
                         </mat-form-field>
 
                         <button mat-icon-button color="accent" (click)="addHeader(hKey, hVal)">
-                            <mat-icon>forward</mat-icon>
+                            <mat-icon>add_box</mat-icon>
                         </button>
                         <div fxFlex="5"></div>
                     </div>
@@ -183,20 +184,16 @@
                 </div>
             </div>
 
-            <mat-divider></mat-divider>
 
             <!-- ADVANCED -->
             <mat-accordion multi displayMode="flat" hideToggle>
                 <mat-expansion-panel #matExp disabled>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <button mat-flat-button (click)="matExp.toggle(); $event.stopPropagation();">
+                    <mat-expansion-panel-header class="margin-bottom-20-i">
+                        <mat-panel-description fxLayout="row" fxLayoutAlign="center start">
+                            <button mat-flat-button (click)="matExp.toggle(); $event.stopPropagation();" fxFlex="50" color="primary">
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
                                 {{'text.advanced_fields' | translate}}
-                            </button>
-                        </mat-panel-title>
-                        <mat-panel-description fxLayout=" row
-                            " fxLayoutAlign="end start">
-                            <button mat-icon-button (click)="matExp.toggle(); $event.stopPropagation();">
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
                             </button>
@@ -238,7 +235,7 @@
                         </mat-form-field>
                     </div>
 
-                    <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-top-10 margin-bottom-10">
+                    <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-top-10 margin-bottom-20-i">
                         <!--    Strip path-->
                         <div fxFlex="23" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="start center">
                             <mat-checkbox formControlName="strip_path">{{'route.dialog.strip_path' | translate}}</mat-checkbox>
@@ -266,51 +263,71 @@
                         </div>
                     </div>
 
-                    <div fxLayout="row" fxLayoutAlign="space-between start">
-                        <!--Certificado cliente-->
-                        <!--<mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
-                            <mat-label>{{'route.dialog.certificate' | translate}}</mat-label>
-                            <mat-select formControlName="client_certificate" [disabled]="certificatesAvailable.length === 0">
-                                <mat-option value="{{cert}}" *ngFor="let cert of certificatesAvailable">{{cert}}</mat-option>
-                            </mat-select>
-                            <mat-icon matSuffix matTooltip="{{'route.dialog.certificate_tooltip' | translate}}"
-                                      matTooltipClass="tooltip-teal">info_outline
-                            </mat-icon>
-                        </mat-form-field>-->
+                    <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
+                        <!--Sources and destinations-->
+                        <div fxLayout="column" fxFlex="47">
+                            <div fxLayout="row">{{'route.dialog.sources' | translate}}
+                                <mat-icon matSuffix matTooltip="{{'route.dialog.sources_hint' | translate}}"
+                                          matTooltipClass="tooltip-teal" class="margin-left-10">info_outline
+                                </mat-icon>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <mat-form-field fxFlex="40" color="accent" class="margin-bottom-10" appearance="standard">
+                                    <mat-label>{{'route.dialog.sources_ip' | translate}}</mat-label>
+                                    <input type="text" #ipVal matInput/>
+                                </mat-form-field>
 
-                        <!--TLS-->
-                        <!--<mat-form-field fxFlex="20" color="accent" class="margin-bottom-10" appearance="outline">
-                            <mat-label>{{'route.dialog.tls_verify' | translate}}</mat-label>
-                            <mat-select formControlName="tls_verify">
-                                <mat-option value=""></mat-option>
-                                <mat-option value="true">true</mat-option>
-                                <mat-option value="false">false</mat-option>
-                            </mat-select>
-                            <mat-icon matSuffix matTooltip="{{'route.dialog.tls_verify_tooltip' | translate}}"
-                                      matTooltipClass="tooltip-teal">info_outline
-                            </mat-icon>
-                        </mat-form-field>-->
+                                <mat-form-field fxFlex="40" color="accent" class="margin-bottom-10" appearance="standard">
+                                    <mat-label>{{'route.dialog.sources_port' | translate}}</mat-label>
+                                    <input type="text" #portVal matInput/>
+                                </mat-form-field>
 
-                        <!--TLS Depth-->
-                        <!--<mat-form-field fxFlex="25" color="accent" class="margin-bottom-10" appearance="outline">
-                            <mat-label>{{'route.dialog.tls_verify_depth' | translate}}</mat-label>
-                            <input type="number" aria-label="" matInput formControlName="tls_verify_depth"/>
-                            <mat-icon matSuffix matTooltip="{{'route.dialog.tls_verify_depth_tooltip' | translate}}"
-                                      matTooltipClass="tooltip-teal">info_outline
-                            </mat-icon>
-                        </mat-form-field>-->
-                    </div>
+                                <button mat-icon-button color="accent" (click)="addSource(ipVal, portVal)">
+                                    <mat-icon>add_box</mat-icon>
+                                </button>
+                            </div>
 
-                    <div fxLayout="row" fxLayoutAlign="space-between start">
-                        <!--CA Certificates-->
-                        <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
-                            <mat-label>{{'route.dialog.ca_certificates' | translate}}</mat-label>
-                            <textarea aria-label="" matInput formControlName="ca_certificates"
-                                      placeholder="{{'route.dialog.ca_certificates_example' | translate}}"></textarea>
-                            <mat-icon matSuffix matTooltip="{{'route.dialog.ca_certificates_tooltip' | translate}}"
-                                      matTooltipClass="tooltip-teal">info_outline
-                            </mat-icon>
-                        </mat-form-field>
+                            <mat-list role="list" class="list">
+                                <mat-list-item role="listitem" *ngFor="let source of currentSources; let idx = index">
+                                    {{source.ip}}:{{source.port}}
+                                    <button mat-icon-button (click)="removeSource(idx)" color="warn">
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+
+                        <div fxLayout="column" fxFlex="47">
+                            <div fxLayout="row">{{'route.dialog.destinations' | translate}}
+                                <mat-icon matSuffix matTooltip="{{'route.dialog.destinations_hint' | translate}}"
+                                          matTooltipClass="tooltip-teal" class="margin-left-10">info_outline
+                                </mat-icon>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <mat-form-field fxFlex="40" color="accent" class="margin-bottom-10" appearance="standard">
+                                    <mat-label>{{'route.dialog.sources_ip' | translate}}</mat-label>
+                                    <input type="text" #ipVal2 matInput/>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="40" color="accent" class="margin-bottom-10" appearance="standard">
+                                    <mat-label>{{'route.dialog.sources_port' | translate}}</mat-label>
+                                    <input type="text" #portVal2 matInput/>
+                                </mat-form-field>
+
+                                <button mat-icon-button color="accent" (click)="addDestination(ipVal2, portVal2)">
+                                    <mat-icon>add_box</mat-icon>
+                                </button>
+                            </div>
+
+                            <mat-list role="list" class="list">
+                                <mat-list-item role="listitem" *ngFor="let destination of currentDestinations; let idx2 = index">
+                                    {{destination.ip}}:{{destination.port}}
+                                    <button mat-icon-button (click)="removeDestination(idx2)" color="warn">
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
                     </div>
                 </mat-expansion-panel>
             </mat-accordion>

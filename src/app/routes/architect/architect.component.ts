@@ -174,11 +174,27 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Recorro las rutas creando los nodos de rutas
         for (let route of data.routes) {
+            let extras = [''];
+
+            if (route.methods) {
+                extras.push(this.translate.instant('route.dialog.methods') + ': ' + route.methods.join(', '));
+            }
+            if (route.hosts) {
+                extras.push(this.translate.instant('route.dialog.hosts') + ': ' + route.hosts.join(', '));
+            }
+            if (route.paths) {
+                extras.push(this.translate.instant('route.dialog.paths') + ': ' + route.paths.join(', '));
+            }
+            if (route.headers) {
+                extras.push(this.translate.instant('route.dialog.headers') + ': ' + JSON.stringify(route.headers));
+            }
+
+
             // Nodos de ruta
             this.data.nodes.add({
                 id: route.id,
-                label: route.name + '\n[' + route.paths.join(', ') + ']',
-                title: this.translate.instant('route.label') + ': ' + route.id,
+                label: route.name + '\n[' + route.protocols.join(', ') + ']',
+                title: this.translate.instant('route.label') + ': ' + route.id + extras.join('<br>'),
                 group: 'route',
                 data: route
             });

@@ -1,6 +1,6 @@
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import * as Joi from 'joi';
-import { invert as _invert } from 'lodash';
+import { invert as _invert, isEmpty as _isEmpty } from 'lodash';
 
 export class CustomValidators {
 
@@ -170,7 +170,9 @@ export class CustomValidators {
                 if (required) {
                     Joi.assert(control.value, Joi.array().items(Joi.string().valid(...validValues)).min(1));
                 } else {
-                    Joi.assert(control.value, Joi.array().items(Joi.string().valid(...validValues)));
+                    if (!_isEmpty(control.value)) {
+                        Joi.assert(control.value, Joi.array().items(Joi.string().valid(...validValues)));
+                    }
                 }
             } catch (e) {
                 valid = false;

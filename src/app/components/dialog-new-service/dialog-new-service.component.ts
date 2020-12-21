@@ -149,7 +149,7 @@ export class DialogNewServiceComponent implements OnInit {
             service['tls_verify'] = '' + service['tls_verify'];
         }
 
-        this.currentTags = service['tags'];
+        this.currentTags = service['tags'] || [];
         service['tags'] = [];
 
         return service;
