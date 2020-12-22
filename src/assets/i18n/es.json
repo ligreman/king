@@ -16,10 +16,10 @@
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
         "update_consumer": "Consumidor actualizado",
-        "delete_service": "Servicio eliminado",
-        "delete_route": "Ruta eliminada",
-        "delete_upstream": "Upstream eliminado",
-        "delete_consumer": "Consumidor eliminado"
+        "delete_service": "Servicio {{extra}} eliminado",
+        "delete_route": "Ruta {{extra}} eliminada",
+        "delete_upstream": "Upstream {{extra}} eliminado",
+        "delete_consumer": "Consumidor {{extra}} eliminado"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
@@ -51,7 +51,13 @@
     "dialog": {
         "confirm": {
             "delete_service_title": "Eliminar servicio",
-            "delete_service": "¿Deseas eliminar este servicio?"
+            "delete_service": "¿Deseas eliminar este servicio?",
+            "delete_route_title": "Eliminar ruta",
+            "delete_route": "¿Deseas eliminar esta ruta?",
+            "delete_upstream_title": "Eliminar upstream",
+            "delete_upstream": "¿Deseas eliminar este upstream?",
+            "delete_consumer_title": "Eliminar consumidor",
+            "delete_consumer": "¿Deseas eliminar este consumidor?"
         },
         "copy_clipboard": "Descargar en JSON"
     },

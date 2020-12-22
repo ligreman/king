@@ -221,12 +221,15 @@ export class DialogHelperService {
                 component = DialogInfoServiceComponent;
                 break;
             case 'route':
+                opt.data = select.id;
                 component = DialogInfoServiceComponent;
                 break;
             case 'upstream':
+                opt.data = select.id;
                 component = DialogInfoServiceComponent;
                 break;
             case 'consumer':
+                opt.data = select.id;
                 component = DialogInfoServiceComponent;
                 break;
         }
@@ -242,15 +245,25 @@ export class DialogHelperService {
             let opt = {
                 data: {}
             };
+            console.log(select);
             switch (group) {
                 case 'service':
-                    opt.data = {title: 'dialog.confirm.delete_service_title', content: 'dialog.confirm.delete_service', name: select.name, id: select.id};
-                    break;
                 case 'route':
-                    break;
                 case 'upstream':
+                    opt.data = {
+                        title: 'dialog.confirm.delete_' + group + '_title',
+                        content: 'dialog.confirm.delete_' + group,
+                        name: select.data.name,
+                        id: select.data.id
+                    };
                     break;
                 case 'consumer':
+                    opt.data = {
+                        title: 'dialog.confirm.delete_consumer_title',
+                        content: 'dialog.confirm.delete_consumer',
+                        name: select.data.username,
+                        id: select.data.id
+                    };
                     break;
             }
 
@@ -259,10 +272,10 @@ export class DialogHelperService {
                 if (result === 'true') {
 
                     // llamo al API
-                    switch (select.group) {
+                    switch (group) {
                         case 'service':
-                            this.api.deleteService(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
+                            this.api.deleteService(select.data.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.data.name});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});
@@ -270,10 +283,31 @@ export class DialogHelperService {
                             });
                             break;
                         case 'route':
+                            this.api.deleteRoute(select.data.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.data.name});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
                             break;
                         case 'upstream':
+                            this.api.deleteUpstream(select.data.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.data.name});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
                             break;
                         case 'consumer':
+                            this.api.deleteConsumer(select.data.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.data.username});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
                             break;
                     }
                 } else {

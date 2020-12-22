@@ -13,7 +13,7 @@ import { ToastService } from '../../../services/toast.service';
     styleUrls: ['./element-service.component.scss']
 })
 export class ElementServiceComponent implements OnInit, AfterViewInit {
-    displayedColumns: string[] = ['id', 'name', 'protocol', 'host', 'port', 'path', 'tags', 'ssl', 'actions'];
+    displayedColumns: string[] = ['id', 'name', 'protocol', 'host', 'port', 'path', 'ssl', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -74,7 +74,7 @@ export class ElementServiceComponent implements OnInit, AfterViewInit {
     /*
         Añade un servicio nuevo
      */
-    addEditService(selected = null) {
+    addEdit(selected = null) {
         this.dialogHelper.addEditService(selected)
             .then(() => { this.reloadData(); })
             .catch(error => {});
