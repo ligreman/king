@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from '../components/dialog-confirm/dialog-confirm.component';
+import { DialogInfoConsumerComponent } from '../components/dialog-info-consumer/dialog-info-consumer.component';
+import { DialogInfoRouteComponent } from '../components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from '../components/dialog-info-service/dialog-info-service.component';
+import { DialogInfoUpstreamComponent } from '../components/dialog-info-upstream/dialog-info-upstream.component';
 import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewRouteComponent } from '../components/dialog-new-route/dialog-new-route.component';
 import { DialogNewServiceComponent } from '../components/dialog-new-service/dialog-new-service.component';
@@ -222,15 +225,15 @@ export class DialogHelperService {
                 break;
             case 'route':
                 opt.data = select.id;
-                component = DialogInfoServiceComponent;
+                component = DialogInfoRouteComponent;
                 break;
             case 'upstream':
                 opt.data = select.id;
-                component = DialogInfoServiceComponent;
+                component = DialogInfoUpstreamComponent;
                 break;
             case 'consumer':
                 opt.data = select.id;
-                component = DialogInfoServiceComponent;
+                component = DialogInfoConsumerComponent;
                 break;
         }
 
@@ -245,7 +248,7 @@ export class DialogHelperService {
             let opt = {
                 data: {}
             };
-            console.log(select);
+
             switch (group) {
                 case 'service':
                 case 'route':
@@ -253,16 +256,16 @@ export class DialogHelperService {
                     opt.data = {
                         title: 'dialog.confirm.delete_' + group + '_title',
                         content: 'dialog.confirm.delete_' + group,
-                        name: select.data.name,
-                        id: select.data.id
+                        name: select.name,
+                        id: select.id
                     };
                     break;
                 case 'consumer':
                     opt.data = {
                         title: 'dialog.confirm.delete_consumer_title',
                         content: 'dialog.confirm.delete_consumer',
-                        name: select.data.username,
-                        id: select.data.id
+                        name: select.username,
+                        id: select.id
                     };
                     break;
             }
@@ -274,8 +277,8 @@ export class DialogHelperService {
                     // llamo al API
                     switch (group) {
                         case 'service':
-                            this.api.deleteService(select.data.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.data.name});
+                            this.api.deleteService(select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});
@@ -283,8 +286,8 @@ export class DialogHelperService {
                             });
                             break;
                         case 'route':
-                            this.api.deleteRoute(select.data.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.data.name});
+                            this.api.deleteRoute(select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});
@@ -292,8 +295,8 @@ export class DialogHelperService {
                             });
                             break;
                         case 'upstream':
-                            this.api.deleteUpstream(select.data.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.data.name});
+                            this.api.deleteUpstream(select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});
@@ -301,8 +304,8 @@ export class DialogHelperService {
                             });
                             break;
                         case 'consumer':
-                            this.api.deleteConsumer(select.data.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.data.username});
+                            this.api.deleteConsumer(select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.username});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});

@@ -20,12 +20,12 @@ export class MatPaginatorIntlSpanish extends MatPaginatorIntl {
     constructor(private translate: TranslateService) {
         super();
 
-        this.itemsPerPageLabel = this.translate.instant('pagination.itemsPerPageLabel');
-        this.nextPageLabel = this.translate.instant('pagination.nextPageLabel');
-        this.previousPageLabel = this.translate.instant('pagination.previousPageLabel');
-        this.firstPageLabel = this.translate.instant('pagination.firstPageLabel');
-        this.lastPageLabel = this.translate.instant('pagination.lastPageLabel');
-        this.ofLabel = this.translate.instant('pagination.ofLabel');
+        translate.get('pagination.itemsPerPageLabel').subscribe(res => this.itemsPerPageLabel = res);
+        translate.get('pagination.nextPageLabel').subscribe(res => this.nextPageLabel = res);
+        translate.get('pagination.previousPageLabel').subscribe(res => this.previousPageLabel = res);
+        translate.get('pagination.firstPageLabel').subscribe(res => this.firstPageLabel = res);
+        translate.get('pagination.lastPageLabel').subscribe(res => this.lastPageLabel = res);
+        translate.get('pagination.ofLabel').subscribe(res => this.ofLabel = res);
     }
 
     getRangeLabel: any = (

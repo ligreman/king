@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { find as _find } from 'lodash';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
@@ -32,39 +33,10 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        /*console.log('pepepeee');
-        forkJoin([{
-            services: this.api.getServices(),
-            routes: this.api.getRoutes()
-        }]).subscribe(value => {
-                this.dataSource = new MatTableDataSource(value['routes']['data']);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
-            },
-            error => {
-                this.toast.error('error.node_connection');
-                this.route.navigate(['/landing']);
-            }, () => {
-                this.loading = false;
-            });*/
-
         this.api.getServices()
             .subscribe(ss => {
                     this.services = ss['data'];
-                    console.log(ss);
-
-                    this.api.getRoutes()
-                        .subscribe(value => {
-                                console.log(value.data);
-                                this.dataSource = new MatTableDataSource(value['data']);
-                                this.dataSource.paginator = this.paginator;
-                                this.dataSource.sort = this.sort;
-                            },
-                            error => {
-                                this.toast.error('error.node_connection');
-                            }, () => {
-                                this.loading = false;
-                            });
+                    this.getRoutes();
                 },
                 error => {
                     this.toast.error('error.node_connection');
@@ -77,6 +49,10 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.filter = '';
 
+        this.getRoutes();
+    }
+
+    getRoutes() {
         this.api.getRoutes()
             .subscribe(value => {
                     this.dataSource = new MatTableDataSource(value['data']);
@@ -88,10 +64,6 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
                 }, () => {
                     this.loading = false;
                 });
-    }
-
-    getService(id) {
-        
     }
 
     applyFilter() {
@@ -126,5 +98,28 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
         this.dialogHelper.deleteElement(select, 'route')
             .then(() => { this.reloadData(); })
             .catch(error => {});
+    }
+
+    /*
+        Busco el nombre entre la lista de servicios
+     */
+    getServiceName(id) {
+        const service = _find(this.services, {'id': id});
+        return service.name;
+    }
+
+    getJSON(txt) {
+        if (txt === null) {
+            return '';
+        }
+
+        let res = [];
+        const d = Object.getOwnPropertyNames(txt);
+
+        for (const i of d) {
+            res.push(i.toUpperCase() + ': ' + txt[i]);
+        }
+
+        return res.join('\n');
     }
 }

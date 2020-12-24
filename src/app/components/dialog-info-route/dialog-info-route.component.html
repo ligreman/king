@@ -1,0 +1,117 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" fxFlex>
+        <span>{{'route.dialog.info' | translate}}</span>
+
+        <span fxFlexAlign="end">
+            <a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#route-object" target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button mat-icon-button (click)="downloadJson()"
+                    matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div fxFlex [fxShow]="loading" fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+        </p>
+    </div>
+
+    <div fxFlex>
+        <mat-dialog-content *ngIf="route && !loading" class="margin-0-i">
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.name' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['name']}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.id' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['id']}}</p>
+                </div>
+            </div>
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.created_at' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['created_at'] * 1000 | date:'medium'}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.updated_at' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['updated_at'] * 1000 | date:'medium'}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.protocol' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['protocol']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.host' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['host']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.port' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['port']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.path' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['path']}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.retries' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['retries']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.connect_timeout' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['connect_timeout']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.read_timeout' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['read_timeout']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.write_timeout' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['write_timeout']}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'route.dialog.certificate' | translate}}</p>
+                    <p class="margin-left-20-i">{{route?.client_certificate?.id}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.tls_verify' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['tls_verify']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.tls_verify_depth' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['tls_verify_depth']}}</p>
+                </div>
+            </div>
+            <div fxLayout="row">
+                <p class="title">{{'route.dialog.ca_certificates' | translate}}</p>
+                <div>
+                    <p *ngFor="let ca of route['ca_certificates']">{{ca}}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider class="margin-bottom-10-i margin-top-10-i" *ngIf="!loading"></mat-divider>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between" fxFlex *ngIf="!loading">
+        <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="route">
+            <mat-chip *ngFor="let chip of route['tags']" color="primary">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>

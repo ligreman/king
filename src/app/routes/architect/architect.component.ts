@@ -85,6 +85,18 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 });
 
+                this.network.on('doubleClick', info => {
+                    if (info.nodes.length > 0) {
+                        this.selection = this.data.nodes.get(info.nodes[0]);
+                        
+                        if (this.groups.includes(this.selection.group)) {
+                            this.showInfo(this.selection);
+                        }
+                    } else {
+                        this.selection = '';
+                    }
+                });
+
                 this.network.on('stabilized', d => {
                     if (!this.stabilized) {
                         this.stabilized = true;
@@ -310,7 +322,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Borra el elemento seleccionado
      */
     delete(select) {
-        this.dialogHelper.deleteElement(select, select.group)
+        this.dialogHelper.deleteElement(select.data, select.group)
             .then(() => { this.populateGraph(); })
             .catch(error => {});
     }

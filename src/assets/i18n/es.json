@@ -26,6 +26,7 @@
         "kong_node": "Nodo de Kong",
         "documentation": "Documentación",
         "advanced_fields": "Campos avanzados",
+        "search": "Buscar",
         "create": "Crear",
         "info": "Información",
         "edit": "Editar",
@@ -37,7 +38,7 @@
         "created_at": "Creado el",
         "updated_at": "Actualizado el",
         "tags": "Etiquetas",
-        "true": "Yes",
+        "true": "Sí",
         "false": "No"
     },
     "pagination": {
@@ -123,7 +124,7 @@
             "admin_access_log": "Admin: acceso",
             "admin_error_log": "Admin: error",
             "nginx_conf": "Nginx: configuración",
-            "kong_env": "Kong: environment"
+            "kong_env": "Kong: entorno"
         },
         "chart": {
             "connections_accepted": "Aceptadas",

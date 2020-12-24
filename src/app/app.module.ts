@@ -34,7 +34,10 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
+import { DialogInfoConsumerComponent } from './components/dialog-info-consumer/dialog-info-consumer.component';
+import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
+import { DialogInfoUpstreamComponent } from './components/dialog-info-upstream/dialog-info-upstream.component';
 import { DialogNewConsumerComponent } from './components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewPluginComponent } from './components/dialog-new-plugin/dialog-new-plugin.component';
 import { DialogNewRouteComponent } from './components/dialog-new-route/dialog-new-route.component';
@@ -72,7 +75,10 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogNewRouteComponent,
         DialogNewConsumerComponent,
         DialogNewUpstreamComponent,
-        DialogNewPluginComponent
+        DialogNewPluginComponent,
+        DialogInfoRouteComponent,
+        DialogInfoUpstreamComponent,
+        DialogInfoConsumerComponent
     ],
     imports: [
         BrowserModule,
