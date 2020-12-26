@@ -88,7 +88,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.network.on('doubleClick', info => {
                     if (info.nodes.length > 0) {
                         this.selection = this.data.nodes.get(info.nodes[0]);
-                        
+
                         if (this.groups.includes(this.selection.group)) {
                             this.showInfo(this.selection);
                         }
@@ -166,6 +166,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             // Si el host de este servicio se corresponde con el name de un Upstream, edge
             const serviceUpstream = _filter(data.upstreams, {name: service.host});
             if (serviceUpstream.length > 0) {
+                serviceUpstream.forEach(up => {
+                    this.data.nodes.add({
+                        id: up.id,
+                        label: up.name,
+                        group: 'upstream',
+                        title: 'Upstream'
+                    });
+                    this.data.edges.add({
+                        from: service.id,
+                        to: up.id,
+                        width: 2
+                    });
+                });
             }
             // Si el host no se corresponde con Upstreams, creo un nodo Host y edge hacia él
             else {

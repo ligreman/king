@@ -257,9 +257,11 @@
             "create": "Crear un Upstream nuevo",
             "edit": "Editar Upstream",
             "info": "Información del Upstream",
-            "name": "Nombre del Upstream",
-            "name_example": "mi-upstream",
+            "no_upstream": "No se puede crear un nuevo upstream porque no hay hosts de servicios disponibles",
+            "name": "Host del Upstream",
+            "name_hint": "Elige un host de un servicio existente",
             "algorithm": "Algortimo de balanceo de carga",
+            "algorithm_hint": "Información sobre balanceo de carga",
             "hash_on": "Hash de balanceo",
             "hash_on_tooltip": "Qué usar como hash para el balanceo de carga. El uso de 'none' da como resultado un algoritmo de round-robin ponderado sin hash",
             "hash_fallback": "Hash de fallback",
@@ -274,6 +276,9 @@
     },
     "plugin": {
         "add": "Añadir Plugin"
+    },
+    "target": {
+        "add": "Añadir Target"
     },
     "element": {
         "text_search": "texto a buscar",

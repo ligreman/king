@@ -1,3 +1,15 @@
+a.link, a.link:visited, mat-icon.link {
+    color: #6495ed;
+}
+
+a.link:hover, mat-icon.link:hover {
+    color: #81a6e9;
+}
+
+mat-icon.link {
+    vertical-align: middle;
+}
+
 .bold {
     font-weight: bold;
 }

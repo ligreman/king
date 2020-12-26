@@ -10,19 +10,25 @@
 
 <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="90">
-        <form [formGroup]="form">
+        <p fxFlex="100" fxLayout="row" fxLayoutAlign="center center" *ngIf="servicesAvailable.length === 0">
+            {{ 'upstream.dialog.no_upstream' | translate}}
+        </p>
+
+        <form [formGroup]="form" *ngIf="servicesAvailable.length > 0">
             <!--Nombre-->
             <div fxLayout="column" class="margin-bottom-10">
-                <div fxLayout="row" fxLayoutAlign="space-between start">
-
-                    <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
+                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
+                    <mat-form-field fxFlex="50" color="accent" appearance="outline">
                         <mat-label>{{'upstream.dialog.name' | translate}}</mat-label>
-                        <input type="text" aria-label="" matInput required formControlName="name"
-                               cdkFocusInitial placeholder="{{'upstream.dialog.name_example' | translate}}"/>
-                        <mat-error *ngIf="nameField.hasError('isAlphaNum')">
-                            {{ 'service.dialog.error.name_pattern' | translate }}
+                        <mat-select formControlName="name" cdkFocusInitial>
+                            <mat-option *ngFor="let srvs of servicesAvailable" value="{{srvs}}">{{srvs}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="nameField.invalid">
+                            {{ 'error.field_required' | translate }}
                         </mat-error>
+                        <mat-hint>{{'upstream.dialog.name_hint' | translate}}</mat-hint>
                     </mat-form-field>
+
 
                     <mat-form-field fxFlex="45" color="accent" appearance="outline">
                         <mat-chip-list #chipList aria-label="">
@@ -52,6 +58,12 @@
                         <mat-error *ngIf="algorithmField.invalid">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
+                        <mat-hint>
+                            <a class="link" target="_blank" href="https://docs.konghq.com/2.2.x/loadbalancing/">
+                                {{'upstream.dialog.algorithm_hint' | translate}}
+                                <mat-icon class="link">open_in_new</mat-icon>
+                            </a>
+                        </mat-hint>
                     </mat-form-field>
                     <mat-form-field fxFlex="30" color="accent" appearance="outline">
                         <mat-label>{{'upstream.dialog.hash_on' | translate}}</mat-label>

@@ -4,23 +4,17 @@
             <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
         </p>
     </div>
-    <div fxFlex="75" [fxShow]="!loading">
+    <div fxFlex="75" [fxShow]="!loading" class="graph-container">
         <div id="node-network"></div>
+        <button mat-icon-button color="accent" (click)="fitNetwork()" class="net-button"
+                matTooltip="{{'architect.center_network' | translate}}"
+                matTooltipClass="tooltip-teal" [matTooltipShowDelay]="1000"
+                matTooltipPosition="left">
+            <mat-icon>center_focus_strong</mat-icon>
+        </button>
     </div>
     <div fxFlex="25">
         <mat-list>
-            <mat-list-item>
-                <div mat-line fxLayout="row" fxLayoutAlign="end start">
-                    <button mat-icon-button color="accent" (click)="fitNetwork()"
-                            matTooltip="{{'architect.center_network' | translate}}"
-                            matTooltipClass="tooltip-teal" [matTooltipShowDelay]="1000"
-                            matTooltipPosition="left">
-                        <mat-icon>center_focus_strong</mat-icon>
-                    </button>
-                </div>
-            </mat-list-item>
-            <mat-divider class="margin-top-10 margin-bottom-10"></mat-divider>
-
             <div mat-subheader class="subheader">{{'architect.global_actions' | translate}}</div>
             <mat-list-item>
                 <div mat-line>
@@ -96,6 +90,14 @@
                     <button mat-button (click)="addEditPlugin(selection)">
                         <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
                         {{'plugin.add' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item *ngIf="selection.group === 'upstream'">
+                <div mat-line>
+                    <button mat-button (click)="addEditPlugin(selection)">
+                        <mat-icon class="color-target">gps_fixed</mat-icon>&nbsp;
+                        {{'target.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>

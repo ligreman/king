@@ -67,6 +67,7 @@ export class GlobalsService {
                 type: 'arrow'
             }
         },
+        arrowStrikethrough: false,
         chosen: true,
         smooth: true,
         endPointOffset: {
@@ -194,7 +195,7 @@ export class GlobalsService {
             shape: 'icon',
             icon: {
                 face: 'Material Icons',
-                code: 'mediation',
+                code: 'share',
                 color: '#FFB74D',
                 size: 50
             },

@@ -257,9 +257,11 @@
             "create": "Create a new Upstream",
             "edit": "Edit Upstream",
             "info": "Upstream`s information",
-            "name": "Name for the Upstream",
-            "name_example": "my-upstream",
+            "no_upstream": "Cannot create a new upstream because there are no service hosts available",
+            "name": "Hostname for the Upstream",
+            "name_hint": "Choose a host from an existing service",
             "algorithm": "Algorithm for load balancing",
+            "algorithm_hint": "Information on load balancing",
             "hash_on": "Hash for load balancing",
             "hash_on_tooltip": "What to use as hashing input. Using none results in a weighted-round-robin scheme with no hashing",
             "hash_fallback": "Hash fallback",
@@ -274,6 +276,9 @@
     },
     "plugin": {
         "add": "Add Plugin"
+    },
+    "target": {
+        "add": "Add Target"
     },
     "element": {
         "text_search": "search text",

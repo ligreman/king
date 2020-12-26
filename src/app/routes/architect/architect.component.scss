@@ -3,3 +3,14 @@
 .subheader {
     color: mat-color($mat-blue-gray, 300);
 }
+
+.graph-container {
+    position: relative;
+}
+
+.net-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: #212121;
+}

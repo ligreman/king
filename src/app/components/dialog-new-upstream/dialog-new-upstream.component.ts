@@ -3,6 +3,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
@@ -21,6 +23,7 @@ export class DialogNewUpstreamComponent implements OnInit {
     validHttpStatuses = [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 427, 428, 429, 431, 451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511];
     currentTags = [];
     certificatesAvailable = [];
+    servicesAvailable = [];
 
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -48,15 +51,54 @@ export class DialogNewUpstreamComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public upstreamIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
 
     ngOnInit(): void {
-        // Recupero la lista de certificados
-        this.api.getCertificates()
-            .subscribe(certs => {
-                for (let cert of certs['data']) {
-                    this.certificatesAvailable.push(cert.id);
+        forkJoin([
+            this.api.getServices(),
+            this.api.getCertificates(),
+            this.api.getUpstreams()
+        ]).pipe(map(([services, certs, upstreams]) => {
+            // forkJoin returns an array of values, here we map those values to an object
+            return {services: services['data'], certs: certs['data'], upstreams: upstreams['data']};
+        })).subscribe(value => {
+            for (let cert of value['certs']) {
+                this.certificatesAvailable.push(cert.id);
+            }
+
+            let upstreams = [];
+            for (let up of value['upstreams']) {
+                upstreams.push(up.name);
+            }
+
+            for (let srv of value['services']) {
+                // Si no está ya añadido como upstream
+                if (!upstreams.includes(srv.host)) {
+                    this.servicesAvailable.push(srv.host);
                 }
-            }, error => {
-                this.toast.error_general(error);
-            });
+            }
+        }, error => {
+            this.toast.error_general(error);
+        });
+        /*
+                // Recupero la lista de certificados
+                this.api.getCertificates()
+                    .subscribe(certs => {
+                        for (let cert of certs['data']) {
+                            this.certificatesAvailable.push(cert.id);
+                        }
+                    }, error => {
+                        this.toast.error_general(error);
+                    });
+
+                // Recupero la lista de servicios
+                this.api.getServices()
+                    .subscribe(servs => {
+                        // Cojo la lista de upstreams para ver qué hosts quedan libres
+
+                        for (let srv of servs['data']) {
+                            this.servicesAvailable.push(srv.host);
+                        }
+                    }, error => {
+                        this.toast.error_general(error);
+                    });*/
 
         // Si viene un servicio para editar
         if (this.upstreamIdEdit !== null) {
@@ -138,6 +180,19 @@ export class DialogNewUpstreamComponent implements OnInit {
             body.tags = this.currentTags;
         } else {
             body.tags = [];
+        }
+
+        if (body.hash_fallback_header === '' || body.hash_fallback_header === null) {
+            body.hash_fallback_header = null;
+        }
+        if (body.hash_on_cookie === '' || body.hash_on_cookie === null) {
+            body.hash_on_cookie = null;
+        }
+        if (body.hash_on_header === '' || body.hash_on_header === null) {
+            body.hash_on_header = null;
+        }
+        if (body.host_header === '' || body.host_header === null) {
+            body.host_header = null;
         }
 
         return body;
