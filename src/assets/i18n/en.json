@@ -251,7 +251,23 @@
         }
     },
     "upstream": {
-        "add": "Add Upstream"
+        "add": "Add Upstream",
+        "label": "Upstream",
+        "dialog": {
+            "create": "Create a new Upstream",
+            "edit": "Edit Upstream",
+            "info": "Upstream`s information",
+            "name": "Name for the Upstream",
+            "name_example": "my-upstream",
+            "algorithm": "Algorithm for load balancing",
+            "hash_on": "Hash for load balancing",
+            "hash_on_tooltip": "What to use as hashing input. Using none results in a weighted-round-robin scheme with no hashing",
+            "hash_fallback": "Hash fallback",
+            "hash_fallback_tooltip": "What to use as hashing input if the primary hash_on does not return a hash",
+            "certificate": "Client certificate",
+            "certificate_example": "4e3ad2e4-0bc4-4638-8e34-c84a417ba39b",
+            "certificate_tooltip": "Certificate (UUID) to be used as client certificate while TLS handshaking to the upstream server"
+        }
     },
     "consumer": {
         "add": "Add Consumer"

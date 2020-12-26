@@ -1,15 +1,179 @@
-import { Component, OnInit } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ApiService } from '../../services/api.service';
+import { ToastService } from '../../services/toast.service';
+import { CustomValidators } from '../../shared/custom-validators';
 
 @Component({
-  selector: 'app-dialog-new-upstream',
-  templateUrl: './dialog-new-upstream.component.html',
-  styleUrls: ['./dialog-new-upstream.component.scss']
+    selector: 'app-dialog-new-upstream',
+    templateUrl: './dialog-new-upstream.component.html',
+    styleUrls: ['./dialog-new-upstream.component.scss']
 })
 export class DialogNewUpstreamComponent implements OnInit {
+    // Uso la variable para el estado del formulario
+    formValid = false;
+    validAlgorithms = ['consistent-hashing', 'least-connections', 'round-robin'];
+    validHash = ['none', 'consumer', 'ip', 'header', 'cookie'];
+    validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp'];
+    validHttpStatuses = [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 427, 428, 429, 431, 451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511];
+    currentTags = [];
+    certificatesAvailable = [];
 
-  constructor() { }
+    editMode = false;
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-  ngOnInit(): void {
-  }
+    form = this.fb.group({
+        name: ['', [Validators.required, CustomValidators.isAlphaNum()]],
+        algorithm: ['round-robin', [CustomValidators.isOneOf(this.validAlgorithms)]],
+        hash_on: ['none', [CustomValidators.isOneOf(this.validHash)]],
+        hash_fallback: ['none', [CustomValidators.isOneOf(this.validHash)]],
+        // si hash_on es header
+        hash_on_header: ['', []],
+        // si hash_fallback es header
+        hash_fallback_header: ['', []],
+        // si hash_on o hash_fallback es cookie
+        hash_on_cookie: ['', []],
+        // si hash_on o hash_fallback es cookie
+        hash_on_cookie_path: ['/', []],
+        slots: [10000, [CustomValidators.isNumber(), Validators.min(10), Validators.max(65536)]],
 
+        host_header: ['', []],
+        client_certificate: [''],
+        tags: ['']
+    }, {validator: FinalFormValidator});
+
+    constructor(@Inject(MAT_DIALOG_DATA) public upstreamIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
+
+    ngOnInit(): void {
+        // Recupero la lista de certificados
+        this.api.getCertificates()
+            .subscribe(certs => {
+                for (let cert of certs['data']) {
+                    this.certificatesAvailable.push(cert.id);
+                }
+            }, error => {
+                this.toast.error_general(error);
+            });
+
+        // Si viene un servicio para editar
+        if (this.upstreamIdEdit !== null) {
+            this.editMode = true;
+
+            // Rescato la info del upstream del api
+            this.api.getUpstream(this.upstreamIdEdit)
+                .subscribe(upstream => {
+                    // Cambios especiales para representarlos en el formulario
+                    this.form.setValue(this.prepareDataForForm(upstream));
+                }, error => {
+                    this.toast.error_general(error);
+                });
+        }
+    }
+
+    /*
+      Submit del formulario
+   */
+    onSubmit() {
+        return this.prepareDataForKong(this.form.value);
+    }
+
+    /*
+        Gestión de tags
+     */
+    addTag(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value.trim();
+
+        // Add our tag
+        if ((value || '') && /^[\w.\-_~]+$/.test(value)) {
+            this.currentTags.push(value);
+
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
+        }
+    }
+
+    removeTag(tag): void {
+        const index = this.currentTags.indexOf(tag);
+        if (index >= 0) {
+            this.currentTags.splice(index, 1);
+        }
+    }
+
+    prepareDataForForm(upstream) {
+        delete upstream['id'];
+        delete upstream['created_at'];
+        delete upstream['updated_at'];
+
+
+        if (upstream['client_certificate'] && upstream['client_certificate']['id']) {
+            upstream['client_certificate'] = upstream['client_certificate']['id'];
+        } else {
+            upstream['client_certificate'] = '';
+        }
+
+        this.currentTags = upstream['tags'] || [];
+        upstream['tags'] = [];
+
+        return upstream;
+    }
+
+    prepareDataForKong(body) {
+
+        // delete body.input_method;
+
+
+        if (body.client_certificate === '' || body.client_certificate === null) {
+            body.client_certificate = null;
+        } else {
+            body.client_certificate = {id: body.client_certificate};
+        }
+
+        if (this.currentTags && this.currentTags.length > 0) {
+            body.tags = this.currentTags;
+        } else {
+            body.tags = [];
+        }
+
+        return body;
+    }
+
+
+    /*
+        Getters de campos del formulario
+     */
+    get nameField() { return this.form.get('name'); }
+
+    get algorithmField() { return this.form.get('algorithm'); }
+
+    get hashOnField() { return this.form.get('hash_on'); }
+
+    get hashFallbackField() { return this.form.get('hash_fallback'); }
+
+    //////////////
+
+
+    get clientCertificateField() { return this.form.get('client_certificate'); }
+
+    get tagsField() { return this.form.get('tags'); }
 }
+
+const FinalFormValidator: ValidatorFn = (fg: FormGroup) => {
+    const hashOn = fg.get('hash_on').value;
+    const hashFallback = fg.get('hash_fallback').value;
+    let valid = true;
+
+    // Si no es http o https no puede llevar path
+    /*if (fg.get('input_method').value === 'complete' && proto !== 'http' && proto !== 'https') {
+        if (fg.get('path').value !== '' && fg.get('path').value !== null) {
+            valid = false;
+        }
+    }*/
+
+    return valid ? null : {finalForm: ''};
+};

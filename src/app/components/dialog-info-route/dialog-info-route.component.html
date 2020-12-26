@@ -47,60 +47,82 @@
 
             <div fxLayout="row" class="margin-top-10-i">
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.protocol' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['protocol']}}</p>
+                    <p class="title margin-0-i">{{'service.label' | translate}}</p>
+                    <p class="margin-left-20-i margin-0-i" matTooltip="{{route['service']['id']}}"
+                       matTooltipClass="tooltip-teal">{{ getServiceName(route['service']['id']) }}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.host' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['host']}}</p>
+                    <p class="title margin-0-i">{{'route.dialog.protocols' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['protocols'].join(', ')}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.port' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['port']}}</p>
+                    <p class="title margin-0-i">{{'route.dialog.methods' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['methods'].join(', ')}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.path' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['path']}}</p>
+                    <p class="title margin-0-i">{{'route.dialog.redirect' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['https_redirect_status_code']}}</p>
                 </div>
             </div>
 
             <div fxLayout="row" class="margin-top-10-i">
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.retries' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['retries']}}</p>
+                    <p class="title margin-0-i">{{'route.dialog.hosts' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['hosts'].join(', ')}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'route.dialog.paths' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['paths'].join(', ')}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.connect_timeout' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['connect_timeout']}}</p>
-                </div>
-                <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.read_timeout' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['read_timeout']}}</p>
-                </div>
-                <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.write_timeout' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['write_timeout']}}</p>
+                    <p class="title margin-0-i">{{'route.dialog.snis' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['snis'].join(', ')}}</p>
                 </div>
             </div>
 
             <div fxLayout="row" class="margin-top-10-i">
                 <div fxFlex="50">
-                    <p class="title margin-0-i">{{'route.dialog.certificate' | translate}}</p>
-                    <p class="margin-left-20-i">{{route?.client_certificate?.id}}</p>
+                    <p class="title margin-0-i">{{'route.dialog.headers' | translate}}</p>
+                    <p class="margin-left-20-i" *ngFor="let h of drawHeaders(route['headers'])">{{ h }}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.tls_verify' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['tls_verify']}}</p>
+                    <p class="title margin-0-i">{{'route.dialog.request_buffering' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['request_buffering']}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.tls_verify_depth' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['tls_verify_depth']}}</p>
+                    <p class="title margin-0-i">{{'route.dialog.response_buffering' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['response_buffering']}}</p>
                 </div>
             </div>
-            <div fxLayout="row">
-                <p class="title">{{'route.dialog.ca_certificates' | translate}}</p>
-                <div>
-                    <p *ngFor="let ca of route['ca_certificates']">{{ca}}</p>
+
+            <div fxLayout="row" class="margin-top-10-i">
+
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.preserve_host' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['preserve_host']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.strip_path' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['strip_path']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.path_handling' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['path_handling']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.regex_priority' | translate}}</p>
+                    <p class="margin-left-20-i">{{route['regex_priority']}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'route.dialog.sources' | translate}}</p>
+                    <p class="margin-left-20-i" *ngFor="let s of route['sources']">{{ s }}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'route.dialog.destinations' | translate}}</p>
+                    <p class="margin-left-20-i" *ngFor="let d of route['destinations']">{{ d }}</p>
                 </div>
             </div>
         </mat-dialog-content>

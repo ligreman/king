@@ -251,7 +251,23 @@
         }
     },
     "upstream": {
-        "add": "Añadir Upstream"
+        "add": "Añadir Upstream",
+        "label": "Upstream",
+        "dialog": {
+            "create": "Crear un Upstream nuevo",
+            "edit": "Editar Upstream",
+            "info": "Información del Upstream",
+            "name": "Nombre del Upstream",
+            "name_example": "mi-upstream",
+            "algorithm": "Algortimo de balanceo de carga",
+            "hash_on": "Hash de balanceo",
+            "hash_on_tooltip": "Qué usar como hash para el balanceo de carga. El uso de 'none' da como resultado un algoritmo de round-robin ponderado sin hash",
+            "hash_fallback": "Hash de fallback",
+            "hash_fallback_tooltip": "Qué usar como hash si el hash_on primario no devuelve un hash",
+            "certificate": "Certificado de cliente",
+            "certificate_example": "4e3ad2e4-0bc4-4638-8e34-c84a417ba39b",
+            "certificate_tooltip": "Certificado de cliente (UUID) para la conexión TLS con el servidor upstream"
+        }
     },
     "consumer": {
         "add": "Añadir Consumidor"

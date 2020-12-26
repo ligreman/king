@@ -36,7 +36,6 @@ export class DialogNewRouteComponent implements OnInit {
         name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\-._~]+$/)]],
         service: ['', [Validators.required]],
         protocols: ['', [Validators.required, CustomValidators.isProtocolListValidForRoute(this.validProtocols)]],
-        // methods: ['', [CustomValidators.isArrayOfOneOf(this.validMethods)]],
         methods: ['', []],
         https_redirect_status_code: [426, [Validators.required, CustomValidators.isOneOf(this.validRedirectCodes)]],
         tags: [''],
@@ -377,7 +376,7 @@ export class DialogNewRouteComponent implements OnInit {
             body.snis = [];
         }
 
-        if (this.currentHeaders && this.currentHeaders[0]) {
+        if (this.currentHeaders && Object.getOwnPropertyNames(this.currentHeaders).length > 0) {
             body.headers = this.currentHeaders;
         } else {
             body.headers = {};

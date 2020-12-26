@@ -64,9 +64,9 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'route.dialog.headers' | translate}}</th>
                 <td mat-cell *matCellDef="let row" class="cell-highlight">
                     <span matTooltip="{{getJSON(row.headers)}}" matTooltipClass="tooltip-teal"
-                          [fxShow]="row.headers === null">HEAD</span>
+                          [fxShow]="row.headers === null || getJSON(row.headers) === ''">HEAD</span>
                     <span matTooltip="{{getJSON(row.headers)}}" matTooltipClass="tooltip-teal tooltip-multi"
-                          [fxShow]="row.headers !== null" class="on">HEAD</span>
+                          [fxShow]="row.headers !== null && getJSON(row.headers) !== ''" class="on">HEAD</span>
                 </td>
             </ng-container>
 
