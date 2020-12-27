@@ -63,13 +63,14 @@ export class DialogNewUpstreamComponent implements OnInit {
                 this.certificatesAvailable.push(cert.id);
             }
 
+            // Host para el upstream disponibles
             let upstreams = [];
             for (let up of value['upstreams']) {
                 upstreams.push(up.name);
             }
 
             for (let srv of value['services']) {
-                // Si no está ya añadido como upstream
+                // Si el Host no está ya añadido como posible elección válida
                 if (!upstreams.includes(srv.host)) {
                     this.servicesAvailable.push(srv.host);
                 }
@@ -77,36 +78,17 @@ export class DialogNewUpstreamComponent implements OnInit {
         }, error => {
             this.toast.error_general(error);
         });
-        /*
-                // Recupero la lista de certificados
-                this.api.getCertificates()
-                    .subscribe(certs => {
-                        for (let cert of certs['data']) {
-                            this.certificatesAvailable.push(cert.id);
-                        }
-                    }, error => {
-                        this.toast.error_general(error);
-                    });
 
-                // Recupero la lista de servicios
-                this.api.getServices()
-                    .subscribe(servs => {
-                        // Cojo la lista de upstreams para ver qué hosts quedan libres
-
-                        for (let srv of servs['data']) {
-                            this.servicesAvailable.push(srv.host);
-                        }
-                    }, error => {
-                        this.toast.error_general(error);
-                    });*/
-
-        // Si viene un servicio para editar
+        // Si viene un upstream para editar
         if (this.upstreamIdEdit !== null) {
             this.editMode = true;
 
             // Rescato la info del upstream del api
             this.api.getUpstream(this.upstreamIdEdit)
                 .subscribe(upstream => {
+                    // Añado el Host a la lista de válidos ya que lo estoy editando
+                    this.servicesAvailable.push(upstream['name']);
+
                     // Cambios especiales para representarlos en el formulario
                     this.form.setValue(this.prepareDataForForm(upstream));
                 }, error => {

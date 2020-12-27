@@ -22,7 +22,7 @@
                 {{ 'header.menu.routes' | translate | uppercase }}
             </button>
             <button mat-menu-item routerLinkActive="active-route" routerLink="/element-upstream">
-                <mat-icon class="color-upstream">mediation</mat-icon>
+                <mat-icon class="color-upstream">share</mat-icon>
                 {{ 'header.menu.upstreams' | translate | uppercase }}
             </button>
             <button mat-menu-item routerLinkActive="active-route" routerLink="/element-consumer">
@@ -110,8 +110,11 @@
 <div id="manual-container" [fxShow]="openedManual" [ngStyle]="{'height.px': manualStyles.height, 'top.px': manualStyles.top}"
      [ngClass]="{'showing': showManualText}">
     <div class="manual-text" id="manual-text">
-        <mat-toolbar color="accent">
+        <mat-toolbar color="accent" fxLayout="row" fxLayoutAlign="space-between center">
             <span id="mSummary" #mSummary>{{ 'manual.title' | translate}}</span>
+            <button mat-icon-button (click)="toggleManual()">
+                <mat-icon>clear</mat-icon>
+            </button>
         </mat-toolbar>
 
         <div class="manual-block">

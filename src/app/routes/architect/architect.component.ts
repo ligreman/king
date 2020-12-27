@@ -65,11 +65,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     tooltipDelay: 300
                 },
                 physics: {
-                    barnesHut: {
-                        springLength: 115,
-                        avoidOverlap: 0
-                    },
-                    minVelocity: 1.2
+                    minVelocity: 1.2,
+                    wind: {x: 1, y: 0}
                 },
                 height: '90%'
             };
@@ -78,6 +75,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.network = new Network(container, this.data, options);
 
                 this.network.on('click', info => {
+                    console.log(info);
                     if (info.nodes.length > 0) {
                         this.selection = this.data.nodes.get(info.nodes[0]);
                     } else {
@@ -101,7 +99,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (!this.stabilized) {
                         this.stabilized = true;
                         this.network.fit();
-                        this.network.focus('center');
+                        // this.network.focus('center');
                     }
                 });
 
@@ -154,7 +152,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Recorro los servicios creando los nodos de servicios
         for (let service of data.services) {
-            // Nodos de servicio
+            // Nodos de Servicio
             this.data.nodes.add({
                 id: service.id,
                 label: service.name,
@@ -170,8 +168,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.data.nodes.add({
                         id: up.id,
                         label: up.name,
+                        title: 'Upstream',
                         group: 'upstream',
-                        title: 'Upstream'
+                        data: up
                     });
                     this.data.edges.add({
                         from: service.id,
@@ -253,7 +252,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
     fitNetwork() {
         this.network.fit({animation: {duration: 1000}});
-        this.network.focus('center');
+        // this.network.focus('center');
     }
 
     /*

@@ -123,18 +123,28 @@ export class AppComponent implements OnInit, OnDestroy {
             this.openedManual = !this.openedManual;
 
             const body = document.getElementById('body-container');
-            const header = document.getElementById('header-container');
             const footer = document.getElementById('footer-container');
+            this.manualStyles.height = (body.offsetHeight - footer.offsetHeight);
 
-            this.manualStyles.height = (body.offsetHeight - header.offsetHeight - footer.offsetHeight);
-            this.manualStyles.top = header.offsetHeight;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
+            // if any scroll is attempted, set this to the previous value
+            window.onscroll = function () {
+                window.scrollTo(scrollLeft, scrollTop);
+            };
+
+            // Animation for manual open
             setTimeout(() => {
                 this.showManualText = true;
             }, 100);
         } else {
             this.showManualText = false;
 
+            // Reset scroll
+            window.onscroll = function () {};
+
+            // Animation for manual close
             setTimeout(() => {
                 this.openedManual = !this.openedManual;
             }, 500);
