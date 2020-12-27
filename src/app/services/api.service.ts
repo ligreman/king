@@ -143,4 +143,12 @@ export class ApiService {
     public postNewCertificate(body) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/certificates', body).pipe(catchError(this.handleError));
     }
+
+    /*
+       CA CERTIFICATE ENDPOINTS
+    */
+    public getCACertificates() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/ca_certificates?size=1000').pipe(catchError(this.handleError));
+    }
+
 }

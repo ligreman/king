@@ -160,7 +160,7 @@
 
                     <div fxLayout="row" fxLayoutAlign="space-between start">
                         <!--Certificado cliente-->
-                        <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
+                        <mat-form-field fxFlex="49" color="accent" class="margin-bottom-10" appearance="outline">
                             <mat-label>{{'service.dialog.certificate' | translate}}</mat-label>
                             <mat-select formControlName="client_certificate" [disabled]="certificatesAvailable.length === 0">
                                 <mat-option value="{{cert}}" *ngFor="let cert of certificatesAvailable">{{cert}}</mat-option>
@@ -171,7 +171,7 @@
                         </mat-form-field>
 
                         <!--TLS-->
-                        <mat-form-field fxFlex="20" color="accent" class="margin-bottom-10" appearance="outline">
+                        <mat-form-field fxFlex="23" color="accent" class="margin-bottom-10" appearance="outline">
                             <mat-label>{{'service.dialog.tls_verify' | translate}}</mat-label>
                             <mat-select formControlName="tls_verify">
                                 <mat-option value=""></mat-option>
@@ -184,7 +184,7 @@
                         </mat-form-field>
 
                         <!--TLS Depth-->
-                        <mat-form-field fxFlex="25" color="accent" class="margin-bottom-10" appearance="outline">
+                        <mat-form-field fxFlex="23" color="accent" class="margin-bottom-10" appearance="outline">
                             <mat-label>{{'service.dialog.tls_verify_depth' | translate}}</mat-label>
                             <input type="number" aria-label="" matInput formControlName="tls_verify_depth"/>
                             <mat-icon matSuffix matTooltip="{{'service.dialog.tls_verify_depth_tooltip' | translate}}"
@@ -198,15 +198,16 @@
 
                     <div fxLayout="row" fxLayoutAlign="space-between start">
                         <!--CA Certificates-->
-                        <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
+                        <mat-form-field fxFlex="100" color="accent" appearance="outline">
                             <mat-label>{{'service.dialog.ca_certificates' | translate}}</mat-label>
-                            <textarea aria-label="" matInput formControlName="ca_certificates"
-                                      placeholder="{{'service.dialog.ca_certificates_example' | translate}}"></textarea>
+                            <mat-select formControlName="ca_certificates" multiple>
+                                <mat-option *ngFor="let cacert of caCertificatesAvailable" value="{{cacert}}">{{cacert}}</mat-option>
+                            </mat-select>
                             <mat-icon matSuffix matTooltip="{{'service.dialog.ca_certificates_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
                             </mat-icon>
                             <mat-error *ngIf="caCertificatesField.invalid">
-                                {{ 'service.dialog.error.ca_certificate_pattern' | translate }}
+                                {{ 'service.dialog.error.ca_certificate_pattern' | translate }}º
                             </mat-error>
                         </mat-form-field>
                     </div>

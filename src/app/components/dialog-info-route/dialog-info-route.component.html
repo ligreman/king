@@ -134,6 +134,7 @@
         <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="route">
             <mat-chip *ngFor="let chip of route['tags']" color="primary">{{chip}}</mat-chip>
         </mat-chip-list>
+        <div><!-- leave empty --></div>
         <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>
 </div>

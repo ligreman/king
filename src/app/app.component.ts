@@ -17,6 +17,9 @@ import { ToastService } from './services/toast.service';
 })
 export class AppComponent implements OnInit, OnDestroy {
     lang = new FormControl('');
+    openedManual = false;
+    showManualText = false;
+    manualStyles = {'height': 0, 'top': 0};
 
     formNodes = this.fb.group({
         node: ['', Validators.required]
@@ -53,11 +56,11 @@ export class AppComponent implements OnInit, OnDestroy {
             // Pongo el valor
             this.formNodes.setValue({node: last});
             this.globals.NODE_API_URL = last;
-            // Voy a la página inicial
         }
     }
 
     ngOnInit(): void {
+        //TODO remove
         this.dialogHelper.addEditUpstream(null)
             .then(() => { })
             .catch(error => {});
@@ -102,16 +105,59 @@ export class AppComponent implements OnInit, OnDestroy {
             });
     }
 
+    /*
+        Cambia el idioma
+     */
     changeLang(newLang: string) {
         this.lang.setValue(newLang);
         this.translate.use(this.lang.value);
         localStorage.setItem('language', this.lang.value);
     }
 
+    /*
+        Muestra u oculta el manual de usuario
+     */
+    toggleManual() {
+        // Si voy a mostrar el manual
+        if (!this.openedManual) {
+            this.openedManual = !this.openedManual;
+
+            const body = document.getElementById('body-container');
+            const header = document.getElementById('header-container');
+            const footer = document.getElementById('footer-container');
+
+            this.manualStyles.height = (body.offsetHeight - header.offsetHeight - footer.offsetHeight);
+            this.manualStyles.top = header.offsetHeight;
+
+            setTimeout(() => {
+                this.showManualText = true;
+            }, 100);
+        } else {
+            this.showManualText = false;
+
+            setTimeout(() => {
+                this.openedManual = !this.openedManual;
+            }, 500);
+        }
+    }
+
+    /*
+        Scroll hacia un elemento
+     */
+    scrollTo(element) {
+        element.scrollIntoView();
+    }
+
+    /*
+        Comprueba si estamos conectados a un nodo o no
+     */
     isConnectedToNode() {
         return this.globals.NODE_API_URL !== '';
     }
 
+    /*
+        Comprueba si estamos en la ruta de elementos
+     */
     isElementRouteActive() {
         if (this.route.url === '/element-service' || this.route.url === '/element-route' || this.route.url === '/element-upstream' || this.route.url === '/element-consumer') {
             return 'active-route';
@@ -120,11 +166,14 @@ export class AppComponent implements OnInit, OnDestroy {
         }
     }
 
+    /*
+        Comprueba si estamos en la ruta de certificados
+     */
     isCertificateRouteActive() {
         return '';
     }
 
-    // getter para acceder de forma más sencilla al campo
+    // GETTERS
     get nodeField() { return this.formNodes.get('node'); }
 
     /*

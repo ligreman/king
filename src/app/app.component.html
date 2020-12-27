@@ -1,4 +1,4 @@
-<mat-toolbar color="primary">
+<mat-toolbar color="primary" id="header-container">
     <img class="logo" src="assets/img/logo.svg" alt="" matTooltip="ROAR!" matTooltipClass="tooltip-teal" matTooltipShowDelay="2000"/>
 
     <div [fxFlexOffset]="1"><a class="title" routerLink="/node-information">King for Kong</a></div>
@@ -85,7 +85,7 @@
 
 <router-outlet></router-outlet>
 
-<footer fxLayout="row" fxLayoutAlign="space-between center">
+<footer id="footer-container" fxLayout="row" fxLayoutAlign="space-between center">
     <div>
         <mat-button-toggle-group aria-label="" [formControl]="lang">
             <mat-button-toggle (click)="changeLang('en')" value="en">english</mat-button-toggle>
@@ -93,9 +93,75 @@
         </mat-button-toggle-group>
     </div>
     <div>
-        <button mat-button>{{'footer.about' | translate}}</button>
+        <button mat-button>
+            <mat-icon>not_listed_location</mat-icon>
+            {{'footer.about' | translate}}
+        </button>
+        <button mat-button (click)="toggleManual()">
+            <mat-icon>import_contacts</mat-icon>
+            {{'footer.manual' | translate}}
+        </button>
     </div>
     <a href="https://github.com/ligreman/king" mat-icon-button matTooltip="https://github.com/ligreman/king" matTooltipPosition="left" target="_blank">
         <img src="assets/img/github.png" alt="GitHub"/>
     </a>
 </footer>
+
+<div id="manual-container" [fxShow]="openedManual" [ngStyle]="{'height.px': manualStyles.height, 'top.px': manualStyles.top}"
+     [ngClass]="{'showing': showManualText}">
+    <div class="manual-text" id="manual-text">
+        <mat-toolbar color="accent">
+            <span id="mSummary" #mSummary>{{ 'manual.title' | translate}}</span>
+        </mat-toolbar>
+
+        <div class="manual-block">
+            <ol class="padding-0">
+                <li><a (click)="scrollTo(mOne)">Introducción al manual</a></li>
+                <li>two
+                    <ol>
+                        <li>two.one</li>
+                        <li>two.two</li>
+                        <li>two.three</li>
+                    </ol>
+                </li>
+                <li>three
+                    <ol>
+                        <li>three.one</li>
+                        <li>three.two
+                            <ol>
+                                <li>three.two.one</li>
+                                <li>three.two.two</li>
+                            </ol>
+                        </li>
+                    </ol>
+                </li>
+                <li>four</li>
+            </ol>
+        </div>
+        <div class="manual-block" id="mOne" #mOne>
+            <h2>1. Pepeppepepepepeppe</h2>
+            <section>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <p>Pepeppepepepepeppe</p>
+                <a (click)="scrollTo(mSummary)">Up</a>
+            </section>
+        </div>
+        <button mat-icon-button color="primary" (click)="scrollTo(mSummary)" class="manual-btn-top">
+            <mat-icon>vertical_align_top</mat-icon>
+        </button>
+    </div>
+</div>

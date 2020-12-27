@@ -83,11 +83,15 @@
         "node_connected": "Conectado al nodo {{extra}}"
     },
     "footer": {
-        "about": "Acerca de"
+        "about": "Acerca de",
+        "manual": "Manual de usuario"
     },
     "landing": {
         "title": "Introduce la dirección y puerto del API de administración de un nodo de Kong, y pulsa la flecha para conectar",
         "subtitle": "Si ya has conectado con algún nodo previamente lo verás en el desplegable"
+    },
+    "manual": {
+        "title": "Manual de usuario"
     },
     "information": {
         "node": "Información del nodo de Kong",

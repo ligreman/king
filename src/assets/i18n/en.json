@@ -83,11 +83,15 @@
         "node_connected": "Connected to node {{extra}}"
     },
     "footer": {
-        "about": "About"
+        "about": "About",
+        "manual": "User manual"
     },
     "landing": {
         "title": "Type here the address and port of the administration API of a Kong node, and click on the arrow to connect",
         "subtitle": "If you have connected with a node previously you will see it in the selector"
+    },
+    "manual": {
+        "title": "User manual"
     },
     "information": {
         "node": "Kong node information",

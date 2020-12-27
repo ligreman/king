@@ -20,11 +20,11 @@ $king-warn: mat-palette($mat-red, 600);
 // Create the theme object. A theme consists of configurations for individual
 // theming systems such as "color" or "typography".
 $king-theme: mat-dark-theme((
-    color: (
-        primary: $king-primary,
-        accent: $king-accent,
-        warn: $king-warn
-    )
+        color: (
+                primary: $king-primary,
+                accent: $king-accent,
+                warn: $king-warn
+        )
 ));
 
 // Include theme styles for core and each component used in your app.
@@ -49,6 +49,7 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 app-root {

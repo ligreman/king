@@ -18,6 +18,7 @@ export class DialogNewServiceComponent implements OnInit {
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp', 'tls', 'udp'];
     currentTags = [];
     certificatesAvailable = [];
+    caCertificatesAvailable = [];
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -36,7 +37,7 @@ export class DialogNewServiceComponent implements OnInit {
         client_certificate: [''],
         tls_verify: ['', [CustomValidators.isBoolean(true)]],
         tls_verify_depth: ['', [CustomValidators.isNumber(true), Validators.min(0), Validators.max(64)]],
-        ca_certificates: ['', [CustomValidators.isUIID(true)]],
+        ca_certificates: [''],
         tags: ['']
     }, {validator: ProtocolPathValidator});
 
@@ -48,6 +49,16 @@ export class DialogNewServiceComponent implements OnInit {
             .subscribe(certs => {
                 for (let cert of certs['data']) {
                     this.certificatesAvailable.push(cert.id);
+                }
+            }, error => {
+                this.toast.error_general(error);
+            });
+
+        // Recupero la lista de certificados
+        this.api.getCACertificates()
+            .subscribe(cacerts => {
+                for (let cert of cacerts['data']) {
+                    this.caCertificatesAvailable.push(cert.id);
                 }
             }, error => {
                 this.toast.error_general(error);
@@ -138,10 +149,8 @@ export class DialogNewServiceComponent implements OnInit {
         } else {
             service['client_certificate'] = '';
         }
-        if (service['ca_certificates'] && service['ca_certificates'].length > 0) {
-            service['ca_certificates'] = service['ca_certificates'].join('\n');
-        } else {
-            service['ca_certificates'] = '';
+        if (service['ca_certificates'] === null || service['ca_certificates'].length > 0) {
+            service['ca_certificates'] = [];
         }
         if (service['tls_verify'] === null) {
             service['tls_verify'] = '';
@@ -181,10 +190,8 @@ export class DialogNewServiceComponent implements OnInit {
             body.tls_verify_depth = null;
         }
 
-        if (body.ca_certificates === '' || body.ca_certificates === null) {
+        if (body.ca_certificates === '' || body.ca_certificates === null || body.ca_certificates.length === 0) {
             body.ca_certificates = null;
-        } else {
-            body.ca_certificates = body.ca_certificates.split('\n');
         }
 
         if (body.client_certificate === '' || body.client_certificate === null) {
