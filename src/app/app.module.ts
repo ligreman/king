@@ -19,6 +19,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -108,6 +109,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatCheckboxModule,
         MatPaginatorModule,
         MatTableModule,
+        MatSlideToggleModule,
         NgxChartsModule,
         ReactiveFormsModule,
         FormsModule,

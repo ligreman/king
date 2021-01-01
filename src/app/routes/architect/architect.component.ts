@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter as _filter } from 'lodash';
+import { filter as _filter, uniq as _uniq } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -25,6 +25,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     stabilized = false;
     // Grafo
     network;
+    // Datos del API para pintar el grafo
+    dataApi;
+    // Filtros del grafo
+    netFilter = {tag: '', element: 'all', mode: true};
     // Posibles tipos de nodos que tienen acciones propias
     groups = ['service', 'route', 'upstream', 'consumer'];
 
@@ -57,6 +61,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         setTimeout(() => {
             const container = document.getElementById('node-network');
             const reference = document.getElementById('net-reference');
+
             let options = {
                 groups: this.globals.NETWORK_GROUPS,
                 nodes: this.globals.NETWORK_NODES,
@@ -71,11 +76,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 height: '90%'
             };
             if (reference) {
-                options.height = reference.offsetHeight + 'px';
+                options.height = (reference.offsetHeight - 55) + 'px';
                 this.network = new Network(container, this.data, options);
 
                 this.network.on('click', info => {
-                    console.log(info);
                     if (info.nodes.length > 0) {
                         this.selection = this.data.nodes.get(info.nodes[0]);
                     } else {
@@ -115,6 +119,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loading = true;
         // Llamo al API por la información para pintar el grafo
         this.getGraphDataFromApi().subscribe(value => {
+            this.dataApi = value;
             // Ahora construyo los nodos y edges del grafo
             this.createGraphNodesAndEdges(value);
         });
@@ -242,9 +247,26 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 to: route.id,
                 arrows: {to: {enabled: false}}
             });
-
-            // TODO completar con consumidores, plugins...
         }
+
+        // TODO completar con consumidores, plugins...
+
+        // Ahora voy a enganchar al center los nodos que hayan quedado sueltos
+        // Recojo todos los ids de edges
+        let edgesTos = ['center'];
+        this.data.edges.forEach(edge => {
+            edgesTos.push(edge.to);
+        });
+        this.data.nodes.forEach(node => {
+            // Si el nodo no tiene un edge que vaya a él (un to), pues lo engancho con el centro
+            if (!edgesTos.includes(node.id)) {
+                this.data.edges.add({
+                    from: 'center',
+                    to: node.id,
+                    arrows: {to: {enabled: false}}
+                });
+            }
+        });
 
         this.stabilized = false;
         this.loading = false;
@@ -253,6 +275,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     fitNetwork() {
         this.network.fit({animation: {duration: 1000}});
         // this.network.focus('center');
+    }
+
+    getNodesConnectedTo(nodeId) {
+        let nodes = [];
+
+        let aux = this.network.getConnectedNodes(nodeId, 'to');
+        aux.forEach(nodeId => {
+            nodes.push(nodeId);
+
+            nodes = nodes.concat(this.getNodesConnectedTo(nodeId));
+        });
+
+        return nodes;
     }
 
     /*
@@ -283,7 +318,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     addEditService(selected = null) {
         this.dialogHelper.addEditService(selected)
-            .then(() => { this.populateGraph(); })
+            .then(() => {
+                this.netFilter.tag = '';
+                this.netFilter.element = 'all';
+                this.populateGraph();
+            })
             .catch(error => {});
     }
 
@@ -292,7 +331,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     addEditRoute(selected = null) {
         this.dialogHelper.addEditRoute(selected)
-            .then(() => { this.populateGraph(); })
+            .then(() => {
+                this.netFilter.tag = '';
+                this.netFilter.element = 'all';
+                this.populateGraph();
+            })
             .catch(error => {});
     }
 
@@ -301,7 +344,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     addEditUpstream(selected = null) {
         this.dialogHelper.addEditUpstream(selected)
-            .then(() => { this.populateGraph(); })
+            .then(() => {
+                this.netFilter.tag = '';
+                this.netFilter.element = 'all';
+                this.populateGraph();
+            })
             .catch(error => {});
     }
 
@@ -310,7 +357,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     addEditConsumer(selected = null) {
         this.dialogHelper.addEditConsumer(selected)
-            .then(() => { this.populateGraph(); })
+            .then(() => {
+                this.netFilter.tag = '';
+                this.netFilter.element = 'all';
+                this.populateGraph();
+            })
             .catch(error => {});
     }
 
@@ -319,7 +370,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     addEditPlugin(selected = null) {
         this.dialogHelper.addEditConsumer(selected)
-            .then(() => { this.populateGraph(); })
+            .then(() => {
+                this.netFilter.tag = '';
+                this.netFilter.element = 'all';
+                this.populateGraph();
+            })
             .catch(error => {});
     }
 
@@ -335,7 +390,62 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     delete(select) {
         this.dialogHelper.deleteElement(select.data, select.group)
-            .then(() => { this.populateGraph(); })
+            .then(() => {
+                this.netFilter.tag = '';
+                this.netFilter.element = 'all';
+                this.populateGraph();
+            })
             .catch(error => {});
+    }
+
+    /*
+        Filtra el grafo por la etiqueta elegida
+     */
+    filterGraphByTag() {
+        const tags = this.netFilter.tag;
+
+        if (tags === '') {
+            this.createGraphNodesAndEdges(this.dataApi);
+        } else {
+            let theTags = tags.split(',');
+            theTags = theTags.map(value => value.trim());
+
+            let newData = {services: [], routes: [], upstreams: []};
+
+            // AND
+            if (this.netFilter.mode) {
+                newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: theTags}));
+                newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: theTags}));
+                newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: theTags}));
+            }
+            // OR
+            else {
+                theTags.forEach(tag => {
+                    newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: [tag]}));
+                    newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: [tag]}));
+                    newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: [tag]}));
+                });
+
+                // Elimino duplicados
+                newData.services = _uniq(newData.services);
+                newData.routes = _uniq(newData.routes);
+                newData.upstreams = _uniq(newData.upstreams);
+            }
+
+            // Filtro de elementos a mostrar
+            if (this.netFilter.element === 'mainonly') {
+                // TODO delete de data.consumers y plugins... solo dejar services, routes y upstreams
+            }
+
+            this.createGraphNodesAndEdges(newData);
+        }
+    }
+
+    /*
+        Filtra el grafo por elementos
+     */
+    filterGraphByElement() {
+        // Lanzo un filtrado
+        this.filterGraphByTag();
     }
 }

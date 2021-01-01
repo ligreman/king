@@ -53,11 +53,11 @@
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'route.dialog.protocols' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['protocols'].join(', ')}}</p>
+                    <p class="margin-left-20-i">{{ (route['protocols'] || []).join(', ')}}</p>
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'route.dialog.methods' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['methods'].join(', ')}}</p>
+                    <p class="margin-left-20-i">{{ (route['methods'] || []).join(', ')}}</p>
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'route.dialog.redirect' | translate}}</p>
@@ -68,15 +68,15 @@
             <div fxLayout="row" class="margin-top-10-i">
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'route.dialog.hosts' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['hosts'].join(', ')}}</p>
+                    <p class="margin-left-20-i">{{ (route['hosts'] || []).join(', ')}}</p>
                 </div>
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'route.dialog.paths' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['paths'].join(', ')}}</p>
+                    <p class="margin-left-20-i">{{ (route['paths'] || []).join(', ')}}</p>
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'route.dialog.snis' | translate}}</p>
-                    <p class="margin-left-20-i">{{route['snis'].join(', ')}}</p>
+                    <p class="margin-left-20-i">{{ (route['snis'] || []).join(', ')}}</p>
                 </div>
             </div>
 
@@ -118,11 +118,11 @@
             <div fxLayout="row" class="margin-top-10-i">
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'route.dialog.sources' | translate}}</p>
-                    <p class="margin-left-20-i" *ngFor="let s of route['sources']">{{ s }}</p>
+                    <p class="margin-left-20-i" *ngFor="let s of route['sources']">{{ drawIpPort(s) }}</p>
                 </div>
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'route.dialog.destinations' | translate}}</p>
-                    <p class="margin-left-20-i" *ngFor="let d of route['destinations']">{{ d }}</p>
+                    <p class="margin-left-20-i" *ngFor="let d of route['destinations']">{{ drawIpPort(d) }}</p>
                 </div>
             </div>
         </mat-dialog-content>

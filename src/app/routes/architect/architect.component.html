@@ -5,15 +5,41 @@
         </p>
     </div>
     <div fxFlex="75" [fxShow]="!loading" class="graph-container">
+        <div id="graph-tools" fxLayout="row" fxLayoutAlign="space-between center">
+            <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">
+                <mat-form-field class="filter" color="accent" fxFlex="75">
+                    <mat-slide-toggle [checked]="netFilter.mode" (change)="netFilter.mode = !netFilter.mode" matPrefix class="margin-right-20">
+                        <span *ngIf="netFilter.mode">AND</span>
+                        <span *ngIf="!netFilter.mode">OR</span>
+                    </mat-slide-toggle>
+                    <mat-label>{{ 'architect.filter' | translate}}</mat-label>
+                    <input matInput type="text" [(ngModel)]="netFilter.tag" (keyup.enter)="filterGraphByTag()">
+                    <button mat-button matSuffix mat-icon-button color="accent" (click)="filterGraphByTag()">
+                        <mat-icon>search</mat-icon>
+                    </button>
+                    <button mat-button matSuffix mat-icon-button (click)="netFilter.tag=''; filterGraphByTag()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </mat-form-field>
+            </div>
+
+            <mat-form-field color="accent" fxFlex="30">
+                <mat-select [(ngModel)]="netFilter.element" (selectionChange)="filterGraphByElement()">
+                    <mat-option value="all">{{'architect.filter_element_all' | translate}}</mat-option>
+                    <mat-option value="mainonly">{{'architect.filter_element_mainonly' | translate}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <button mat-icon-button color="accent" (click)="fitNetwork()"
+                    matTooltip="{{'architect.center_network' | translate}}"
+                    matTooltipClass="tooltip-teal" [matTooltipShowDelay]="1000"
+                    matTooltipPosition="left">
+                <mat-icon>center_focus_strong</mat-icon>
+            </button>
+        </div>
         <div id="node-network"></div>
-        <button mat-icon-button color="accent" (click)="fitNetwork()" class="net-button"
-                matTooltip="{{'architect.center_network' | translate}}"
-                matTooltipClass="tooltip-teal" [matTooltipShowDelay]="1000"
-                matTooltipPosition="left">
-            <mat-icon>center_focus_strong</mat-icon>
-        </button>
     </div>
-    <div fxFlex="25">
+    <div fxFlex="25" id="graph-actions">
         <mat-list>
             <div mat-subheader class="subheader">{{'architect.global_actions' | translate}}</div>
             <mat-list-item>

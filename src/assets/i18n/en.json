@@ -146,7 +146,10 @@
         "local_actions_route": "Actions on route",
         "local_actions_upstream": "Actions on upstream",
         "local_actions_consumer": "Actions on consumer",
-        "center_network": "Adjust graph to fit all nodes"
+        "center_network": "Adjust graph to fit all nodes",
+        "filter": "filter by tags, separated by commas",
+        "filter_element_all": "Show all components",
+        "filter_element_mainonly": "Show only services, routes and upstreams"
     },
     "service": {
         "label": "Service",

@@ -54,7 +54,6 @@ export class DialogInfoRouteComponent implements OnInit {
     }
 
     drawHeaders(txt) {
-        console.log(txt);
         if (txt === null) {
             return '';
         }
@@ -65,22 +64,22 @@ export class DialogInfoRouteComponent implements OnInit {
         for (const i of d) {
             res.push(i.toUpperCase() + ': ' + txt[i]);
         }
-        console.log(res);
+
         return res;
+    }
+
+    drawIpPort(data) {
+        let txt = '';
+
+        if (data.ip) {
+            txt = data.ip;
+        }
+
+        if (data.port) {
+            txt += ':' + data.port;
+        }
+
+        return txt;
     }
 }
 
-/*
-
-a = {
-    'headers': {},
-
-    'sources': null,
-    'destinations': null,
-
-    'request_buffering': true,
-    'response_buffering': true,
-
-    'regex_priority': 0,
-};
-*/
