@@ -120,12 +120,14 @@ export class CustomValidators {
     }
 
     // Comprueba si es un host
-    static isHost(): ValidatorFn {
+    static isHost(allowEmpty?: boolean): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             let valid = true;
-
+            console.log(control.value);
             try {
-                Joi.assert(control.value, Joi.string().hostname());
+                if (allowEmpty && control.value !== '' && control.value !== null) {
+                    Joi.assert(control.value, Joi.string().hostname());
+                }
             } catch (e) {
                 valid = false;
             }

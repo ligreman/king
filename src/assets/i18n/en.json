@@ -147,7 +147,8 @@
         "local_actions_upstream": "Actions on upstream",
         "local_actions_consumer": "Actions on consumer",
         "center_network": "Adjust graph to fit all nodes",
-        "filter": "filter by tags, separated by commas",
+        "filter": "Filter by tags, separated by commas",
+        "filter_tooltip": "Filter",
         "filter_element_all": "Show all components",
         "filter_element_mainonly": "Show only services, routes and upstreams"
     },
@@ -273,9 +274,33 @@
             "hash_on_tooltip": "What to use as hashing input. Using none results in a weighted-round-robin scheme with no hashing",
             "hash_fallback": "Hash fallback",
             "hash_fallback_tooltip": "What to use as hashing input if the primary hash_on does not return a hash",
+            "hash_on_header": "Header on hash",
+            "hash_on_header_tooltip": "The header name to take the value from as hash input. Only required when Hash is set to 'header'",
+            "hash_fallback_header": "Header on fallback",
+            "hash_fallback_header_tooltip": "The header name to take the value from as hash input. Only required when Hash fallback is set to 'header'",
+            "hash_on_cookie": "Cookie name",
+            "hash_on_cookie_tooltip": "The cookie name to take the value from as hash input. Only required when Hash or Hash fallback is set to 'cookie'. If the specified cookie is not in the request, Kong will generate a value and set the cookie in the response",
+            "hash_on_cookie_path": "Cookie path",
+            "hash_on_cookie_path_tooltip": "The cookie path to set in the response headers. Only required when Hash or Hash fallback is set to 'cookie'",
             "certificate": "Client certificate",
             "certificate_example": "4e3ad2e4-0bc4-4638-8e34-c84a417ba39b",
-            "certificate_tooltip": "Certificate (UUID) to be used as client certificate while TLS handshaking to the upstream server"
+            "certificate_tooltip": "Certificate (UUID) to be used as client certificate while TLS handshaking to the upstream server",
+            "health": "Health check of the targets",
+            "health_active": "Active checks",
+            "health_pasive": "Pasive checks",
+            "host_tooltip": "The hostname to be used as Host header when proxying requests through Kong",
+            "slots": "Slots",
+            "slots_tooltip": "The number of slots in the loadbalancer algorithm",
+            "error": {
+                "host_format": "Must be a valid hostname",
+                "header_format": "Allowed numbers, uppercase and lowercase characters and - _",
+                "cookie_format": "All characters allowed but comma, semi-colon and white spaces",
+                "path_pattern": "Must start with /",
+                "hash_on_form": "When selecting 'header' as Hash value, the Hash header field is mandatory",
+                "hash_fallback_form": "When selecting 'header' as Fallback value, the Fallback header field is mandatory",
+                "hash_cookie_form": "When selecting 'cookie' as Hash or Fallback value, the Name and Cookie path fields are mandatory",
+                "slots_min_max": "Number between 10 and 65536"
+            }
         }
     },
     "consumer": {

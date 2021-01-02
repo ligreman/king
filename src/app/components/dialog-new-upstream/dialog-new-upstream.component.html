@@ -20,9 +20,9 @@
             <!--Nombre-->
             <div fxLayout="column" class="margin-bottom-10">
                 <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
-                    <mat-form-field fxFlex="50" color="accent" appearance="outline">
+                    <mat-form-field fxFlex="49" color="accent" appearance="outline">
                         <mat-label>{{'upstream.dialog.name' | translate}}</mat-label>
-                        <mat-select formControlName="name" cdkFocusInitial>
+                        <mat-select formControlName="name" cdkFocusInitial required>
                             <mat-option *ngFor="let srvs of servicesAvailable" value="{{srvs}}">{{srvs}}</mat-option>
                         </mat-select>
                         <mat-error *ngIf="nameField.invalid">
@@ -32,7 +32,7 @@
                     </mat-form-field>
 
 
-                    <mat-form-field fxFlex="45" color="accent" appearance="outline">
+                    <mat-form-field fxFlex="49" color="accent" appearance="outline">
                         <mat-chip-list #chipList aria-label="">
                             <mat-chip *ngFor="let tag of currentTags"
                                       removable="true" (removed)="removeTag(tag)">{{tag}}
@@ -49,17 +49,13 @@
                     </mat-form-field>
                 </div>
 
-
-                <!---->
+                <!--Algorithm-->
                 <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
-                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                    <mat-form-field fxFlex="24" color="accent" appearance="outline">
                         <mat-label>{{'upstream.dialog.algorithm' | translate}}</mat-label>
                         <mat-select formControlName="algorithm">
                             <mat-option *ngFor="let algos of validAlgorithms" value="{{algos}}">{{algos}}</mat-option>
                         </mat-select>
-                        <mat-error *ngIf="algorithmField.invalid">
-                            {{ 'error.field_required' | translate }}
-                        </mat-error>
                         <mat-hint>
                             <a class="link" target="_blank" href="https://docs.konghq.com/2.2.x/loadbalancing/">
                                 {{'upstream.dialog.algorithm_hint' | translate}}
@@ -67,7 +63,18 @@
                             </a>
                         </mat-hint>
                     </mat-form-field>
-                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                    <mat-form-field fxFlex="24" color="accent" appearance="outline">
+                        <mat-label>{{'upstream.dialog.slots' | translate}}</mat-label>
+                        <input type="number" aria-label="" matInput formControlName="slots"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.slots_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="slotsField.invalid">
+                            {{ 'upstream.dialog.error.slots_min_max' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="24" color="accent" appearance="outline">
                         <mat-label>{{'upstream.dialog.hash_on' | translate}}</mat-label>
                         <mat-select formControlName="hash_on">
                             <mat-option *ngFor="let hashon of validHash" value="{{hashon}}">{{hashon}}</mat-option>
@@ -75,11 +82,8 @@
                         <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_on_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
-                        <mat-error *ngIf="hashOnField.invalid">
-                            {{ 'error.field_required' | translate }}
-                        </mat-error>
                     </mat-form-field>
-                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                    <mat-form-field fxFlex="24" color="accent" appearance="outline">
                         <mat-label>{{'upstream.dialog.hash_fallback' | translate}}</mat-label>
                         <mat-select formControlName="hash_fallback">
                             <mat-option *ngFor="let hashfall of validHash" value="{{hashfall}}">{{hashfall}}</mat-option>
@@ -87,8 +91,81 @@
                         <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_fallback_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
-                        <mat-error *ngIf="hashFallbackField.invalid">
-                            {{ 'error.field_required' | translate }}
+                    </mat-form-field>
+                </div>
+
+                <!--Hash options-->
+                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
+                    <mat-form-field fxFlex="24" color="accent" appearance="outline">
+                        <mat-label>{{'upstream.dialog.hash_on_header' | translate}}</mat-label>
+                        <input type="text" aria-label="" matInput formControlName="hash_on_header"
+                               placeholder="Header-Name"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_on_header_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hashOnHeaderField.invalid">
+                            {{ 'upstream.dialog.error.header_format' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="24" color="accent" appearance="outline">
+                        <mat-label>{{'upstream.dialog.hash_fallback_header' | translate}}</mat-label>
+                        <input type="text" aria-label="" matInput formControlName="hash_fallback_header"
+                               placeholder="Header-Name"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_fallback_header_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hashFallbakHeaderField.invalid">
+                            {{ 'upstream.dialog.error.header_format' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="24" color="accent" appearance="outline">
+                        <mat-label>{{'upstream.dialog.hash_on_cookie' | translate}}</mat-label>
+                        <input type="text" aria-label="" matInput formControlName="hash_on_cookie"
+                               placeholder="Cookie-Name"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_on_cookie_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hashOnCookieField.invalid">
+                            {{ 'upstream.dialog.error.cookie_format' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="24" color="accent" appearance="outline">
+                        <mat-label>{{'upstream.dialog.hash_on_cookie_path' | translate}}</mat-label>
+                        <input type="text" aria-label="" matInput formControlName="hash_on_cookie_path"
+                               placeholder="/cookie_path"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_on_cookie_path_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hashOnCookiePathField.invalid">
+                            {{ 'upstream.dialog.error.path_pattern' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="space-between start">
+                    <!--Certificado cliente-->
+                    <mat-form-field fxFlex="49" color="accent" class="margin-bottom-10" appearance="outline">
+                        <mat-label>{{'service.dialog.certificate' | translate}}</mat-label>
+                        <mat-select formControlName="client_certificate" [disabled]="certificatesAvailable.length === 0">
+                            <mat-option value="{{cert}}" *ngFor="let cert of certificatesAvailable">{{cert}}</mat-option>
+                        </mat-select>
+                        <mat-icon matSuffix matTooltip="{{'service.dialog.certificate_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="49" color="accent" appearance="outline">
+                        <mat-label>{{'service.dialog.host' | translate}}</mat-label>
+                        <input type="text" aria-label="" matInput formControlName="host_header"
+                               placeholder="{{'service.dialog.host_example' | translate}}"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.host_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hostHeaderField.invalid">
+                            {{ 'upstream.dialog.error.host_format' | translate }}
                         </mat-error>
                     </mat-form-field>
                 </div>
@@ -101,12 +178,19 @@
                             <button mat-flat-button (click)="matExp.toggle(); $event.stopPropagation();" fxFlex="50" color="primary">
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
-                                {{'text.advanced_fields' | translate}}
+                                {{'upstream.dialog.health' | translate}}
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
                             </button>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
+
+                    <p>{{'upstream.dialog.health_active' | translate}}</p>
+                    <mat-divider></mat-divider>
+
+                    <p>{{'upstream.dialog.health_pasive' | translate}}</p>
+                    <mat-divider></mat-divider>
+
                     <!--
                                         <div fxLayout="row" fxLayoutAlign="space-between start">
                                             &lt;!&ndash;Reintentos&ndash;&gt;
@@ -218,9 +302,10 @@
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between start">
     <div>
-        <mat-error *ngIf="form.hasError('finalForm')">
-            {{ 'service.dialog.error.protocol_path_collision' | translate }}
-        </mat-error>
+        <mat-error *ngIf="form.hasError('hashOnForm')">{{ 'upstream.dialog.error.hash_on_form' | translate }}</mat-error>
+        <mat-error *ngIf="form.hasError('hashFallbackForm')">{{ 'upstream.dialog.error.hash_fallback_form' | translate }}</mat-error>
+        <mat-error *ngIf="form.hasError('hashCookieForm')">{{ 'upstream.dialog.error.hash_cookie_form' | translate }}</mat-error>
+        <mat-error *ngIf="form.hasError('finalForm')">{{ 'service.dialog.error.' | translate }}</mat-error>
     </div>
 
     <div>

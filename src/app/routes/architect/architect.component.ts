@@ -18,7 +18,7 @@ import { ToastService } from '../../services/toast.service';
     styleUrls: ['./architect.component.scss']
 })
 export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
-    loading = false;
+    loading = true;
     // Si tengo seleccionado un elemento del grafo
     selection: any = '';
     // First stabilization

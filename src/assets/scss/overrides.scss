@@ -10,6 +10,10 @@
 ::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
 }
 
+:focus {
+    outline: none !important;
+}
+
 .mat-chip.mat-primary {
     background: mat-color($mat-gray, 700) !important;
 }

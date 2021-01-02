@@ -148,6 +148,7 @@
         "local_actions_consumer": "Acciones sobre consumidor",
         "center_network": "Ajustar grafo para abarcar todos los nodos",
         "filter": "Filtrar por etiquetas, separadas por comas",
+        "filter_tooltip": "Filtrar",
         "filter_element_all": "Mostrar todos los elementos",
         "filter_element_mainonly": "Mostrar sólo servicios, rutas y upstreams"
     },
@@ -273,9 +274,33 @@
             "hash_on_tooltip": "Qué usar como hash para el balanceo de carga. El uso de 'none' da como resultado un algoritmo de round-robin ponderado sin hash",
             "hash_fallback": "Hash de fallback",
             "hash_fallback_tooltip": "Qué usar como hash si el hash_on primario no devuelve un hash",
+            "hash_on_header": "Cabecera de hash",
+            "hash_on_header_tooltip": "El nombre de la cabecera en el que viene el valor del Hash de balanceo. Sólo es obligatorio si se ha seleccionado 'header' como Hash",
+            "hash_fallback_header": "Cabecera de fallback",
+            "hash_fallback_header_tooltip": "El nombre de la cabecera en el que viene el valor del Hash de balanceo. Sólo es obligatorio si se ha seleccionado 'header' como fallback",
+            "hash_on_cookie": "Nombre de la Cookie",
+            "hash_on_cookie_tooltip": "El nombre de la Cookie de la que obtener el valor del Hash de balanceo. Sólo es obligatorio si el Hash o Hash fallback están configurados como 'cookie'. Si la cookie especificada no está en la petición, Kong generará un valor y establecerá la cookie en la respuesta",
+            "hash_on_cookie_path": "Ruta de la Cookie",
+            "hash_on_cookie_path_tooltip": "La ruta de la cookie que se establecerá en las cabeceras de respuesta. Sólo es obligatorio si el Hash o Hash fallback están configurados como 'cookie'",
             "certificate": "Certificado de cliente",
             "certificate_example": "4e3ad2e4-0bc4-4638-8e34-c84a417ba39b",
-            "certificate_tooltip": "Certificado de cliente (UUID) para la conexión TLS con el servidor upstream"
+            "certificate_tooltip": "Certificado de cliente (UUID) para la conexión TLS con el servidor upstream",
+            "health": "Comprobaciones de estado de los target",
+            "health_active": "Comprobaciones activas",
+            "health_pasive": "Comprobaciones pasivas",
+            "host_tooltip": "El nombre de host que se utilizará como cabecera Host al enviar solicitudes a través de Kong",
+            "slots": "Slots",
+            "slots_tooltip": "El número de slots en el algoritmo de balanceo de carga",
+            "error": {
+                "host_format": "Debe ser un hostname válido",
+                "header_format": "Admite mayúsculas, minúsculas, números y - _",
+                "cookie_format": "Admite todos los caracteres salvo coma, punto y coma y espacios",
+                "path_pattern": "Debe empezar por /",
+                "hash_on_form": "Al usar un valor 'header' como Hash, el campo Cabecera de hash es obligatorio",
+                "hash_fallback_form": "Al usar un valor 'header' como Fallback, el campo Cabecera de fallback es obligatorio",
+                "hash_cookie_form": "Al usar un valor 'cookie' como Hash o Fallback, los campos Nombre y Ruta de cookie son obligartorios",
+                "slots_min_max": "Número entre 10 y 65536"
+            }
         }
     },
     "consumer": {

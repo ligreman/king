@@ -43,7 +43,7 @@ export class DialogNewUpstreamComponent implements OnInit {
         hash_on_cookie_path: ['/', []],
         slots: [10000, [CustomValidators.isNumber(), Validators.min(10), Validators.max(65536)]],
 
-        host_header: ['', []],
+        host_header: ['', [CustomValidators.isHost(true)]],
         client_certificate: [''],
         tags: ['']
     }, {validator: FinalFormValidator});
@@ -148,10 +148,6 @@ export class DialogNewUpstreamComponent implements OnInit {
     }
 
     prepareDataForKong(body) {
-
-        // delete body.input_method;
-
-
         if (body.client_certificate === '' || body.client_certificate === null) {
             body.client_certificate = null;
         } else {
@@ -188,12 +184,25 @@ export class DialogNewUpstreamComponent implements OnInit {
 
     get algorithmField() { return this.form.get('algorithm'); }
 
+    get slotsField() { return this.form.get('slots'); }
+
     get hashOnField() { return this.form.get('hash_on'); }
+
+    get hashOnHeaderField() { return this.form.get('hash_on_header'); }
 
     get hashFallbackField() { return this.form.get('hash_fallback'); }
 
+    get hashFallbakHeaderField() { return this.form.get('hash_fallback_header'); }
+
+    get hashOnCookieField() { return this.form.get('hash_on_cookie'); }
+
+    get hashOnCookiePathField() { return this.form.get('hash_on_cookie_path'); }
+
+
     //////////////
 
+
+    get hostHeaderField() { return this.form.get('host_header'); }
 
     get clientCertificateField() { return this.form.get('client_certificate'); }
 
@@ -202,15 +211,24 @@ export class DialogNewUpstreamComponent implements OnInit {
 
 const FinalFormValidator: ValidatorFn = (fg: FormGroup) => {
     const hashOn = fg.get('hash_on').value;
+    const hashOnHeader = fg.get('hash_on_header').value;
     const hashFallback = fg.get('hash_fallback').value;
+    const hashFallbackHeader = fg.get('hash_fallback_header').value;
+    const hashOnCookie = fg.get('hash_on_cookie').value;
+    const hashOnCookiePath = fg.get('hash_on_cookie_path').value;
     let valid = true;
 
-    // Si no es http o https no puede llevar path
-    /*if (fg.get('input_method').value === 'complete' && proto !== 'http' && proto !== 'https') {
-        if (fg.get('path').value !== '' && fg.get('path').value !== null) {
-            valid = false;
-        }
-    }*/
+    // Dependiendo del hash on y fallback necesito unos campos u otros
+    if (hashOn === 'header' && (hashOnHeader === '' || hashOnHeader === null)) {
+        return {hashOnForm: hashOn};
+    }
+    if (hashFallback === 'header' && (hashFallbackHeader === '' || hashFallbackHeader === null)) {
+        return {hashFallbackForm: hashFallback};
+    }
+    if ((hashOn === 'cookie' || hashFallback === 'cookie') && (hashOnCookie === '' || hashOnCookie === null
+        || hashOnCookiePath === '' || hashOnCookiePath === null)) {
+        return {hashCookieForm: hashOn};
+    }
 
     return valid ? null : {finalForm: ''};
 };
