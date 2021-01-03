@@ -1,6 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import * as Joi from 'joi';
@@ -55,7 +55,7 @@ export class DialogNewRouteComponent implements OnInit {
         headers: [''],
         sources: [''],
         destinations: ['']
-    }, {validator: FinalFormValidator});
+    }, {validators: [FinalFormValidator()]});
 
     constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
 
@@ -457,36 +457,39 @@ export class DialogNewRouteComponent implements OnInit {
 /*
     Validación final del formulario
  */
-const FinalFormValidator: ValidatorFn = (fg: FormGroup) => {
-    const protos = fg.get('protocols').value;
-    let valid = true;
+function FinalFormValidator(): ValidatorFn {
+    return (fg: AbstractControl): ValidationErrors => {
 
-    // For http, at least one of methods, hosts, headers or paths;
-    if (protos.includes('http') && ((_isEmpty(fg.get('methods').value) && _isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value)))) {
-        valid = false;
-    }
-    // For https, at least one of methods, hosts, headers, paths or snis;
-    if (protos.includes('https') && ((_isEmpty(fg.get('methods').value) && _isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value)))) {
-        valid = false;
-    }
+        const protos = fg.get('protocols').value;
+        let valid = true;
 
-    // For tcp or udp, at least one of sources or destinations;
-    if ((protos.includes('tcp') || protos.includes('udp')) && ((_isEmpty(fg.get('sources').value) && _isEmpty(fg.get('destinations').value)) || (!_isEmpty(fg.get('methods').value) || !_isEmpty(fg.get('hosts_validation').value) || !_isEmpty(fg.get('headers').value) || !_isEmpty(fg.get('paths_validation').value)))) {
-        valid = false;
-    }
-    // For tls, at least one of sources, destinations or snis;
-    if (protos.includes('tls') && _isEmpty(fg.get('sources').value) && ((_isEmpty(fg.get('destinations').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('methods').value) || !_isEmpty(fg.get('hosts_validation').value) || !_isEmpty(fg.get('headers').value) || !_isEmpty(fg.get('paths_validation').value)))) {
-        valid = false;
-    }
+        // For http, at least one of methods, hosts, headers or paths;
+        if (protos.includes('http') && ((_isEmpty(fg.get('methods').value) && _isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value)))) {
+            valid = false;
+        }
+        // For https, at least one of methods, hosts, headers, paths or snis;
+        if (protos.includes('https') && ((_isEmpty(fg.get('methods').value) && _isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value)))) {
+            valid = false;
+        }
 
-    // For grpc, at least one of hosts, headers or paths;
-    if (protos.includes('grpc') && ((_isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value) || !_isEmpty(fg.get('methods').value)))) {
-        valid = false;
-    }
-    // For grpcs, at least one of hosts, headers, paths or snis
-    if (protos.includes('grpcs') && ((_isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value) || !_isEmpty(fg.get('methods').value)))) {
-        valid = false;
-    }
+        // For tcp or udp, at least one of sources or destinations;
+        if ((protos.includes('tcp') || protos.includes('udp')) && ((_isEmpty(fg.get('sources').value) && _isEmpty(fg.get('destinations').value)) || (!_isEmpty(fg.get('methods').value) || !_isEmpty(fg.get('hosts_validation').value) || !_isEmpty(fg.get('headers').value) || !_isEmpty(fg.get('paths_validation').value)))) {
+            valid = false;
+        }
+        // For tls, at least one of sources, destinations or snis;
+        if (protos.includes('tls') && _isEmpty(fg.get('sources').value) && ((_isEmpty(fg.get('destinations').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('methods').value) || !_isEmpty(fg.get('hosts_validation').value) || !_isEmpty(fg.get('headers').value) || !_isEmpty(fg.get('paths_validation').value)))) {
+            valid = false;
+        }
 
-    return valid ? null : {finalValidation: protos};
-};
+        // For grpc, at least one of hosts, headers or paths;
+        if (protos.includes('grpc') && ((_isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value) || !_isEmpty(fg.get('methods').value)))) {
+            valid = false;
+        }
+        // For grpcs, at least one of hosts, headers, paths or snis
+        if (protos.includes('grpcs') && ((_isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value) || !_isEmpty(fg.get('methods').value)))) {
+            valid = false;
+        }
+
+        return valid ? null : {finalValidation: protos};
+    };
+}

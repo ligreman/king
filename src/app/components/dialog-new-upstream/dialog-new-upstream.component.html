@@ -171,129 +171,73 @@
                 </div>
             </div>
 
-            <mat-accordion multi displayMode="flat" hideToggle>
-                <mat-expansion-panel #matExp disabled>
-                    <mat-expansion-panel-header class="margin-bottom-20-i">
-                        <mat-panel-description fxLayout="row" fxLayoutAlign="center start">
-                            <button mat-flat-button (click)="matExp.toggle(); $event.stopPropagation();" fxFlex="50" color="primary">
-                                <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
-                                <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
-                                {{'upstream.dialog.health' | translate}}
-                                <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
-                                <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
-                            </button>
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
+            <div formGroupName="healthchecks">
+                <mat-accordion multi displayMode="flat" hideToggle>
+                    <mat-expansion-panel #matExp disabled>
+                        <mat-expansion-panel-header class="margin-bottom-20-i">
+                            <mat-panel-description fxLayout="row" fxLayoutAlign="center start">
+                                <button mat-flat-button (click)="matExp.toggle(); $event.stopPropagation();" fxFlex="50" color="primary">
+                                    <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
+                                    <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
+                                    {{'upstream.dialog.health' | translate}}
+                                    <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
+                                    <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
+                                </button>
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
 
-                    <p>{{'upstream.dialog.health_active' | translate}}</p>
-                    <mat-divider></mat-divider>
+                        <p>{{'upstream.dialog.health_active' | translate}}</p>
+                        <!-- HEALTH ACTIVE -->
+                        <div formGroupName="active" class="padding-left-20 form-block">
+                            <div fxLayout="row" fxLayoutAlign="space-between start">
+                                <mat-form-field fxFlex="24" color="accent" class="margin-bottom-10" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.type_healthcheck' | translate}}</mat-label>
+                                    <mat-select formControlName="type">
+                                        <mat-option value="{{protos}}" *ngFor="let protos of validProtocols">{{protos}}</mat-option>
+                                    </mat-select>
+                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.type_healthcheck_tooltip' | translate}}"
+                                              matTooltipClass="tooltip-teal">info_outline
+                                    </mat-icon>
+                                </mat-form-field>
 
-                    <p>{{'upstream.dialog.health_pasive' | translate}}</p>
-                    <mat-divider></mat-divider>
+                                <mat-form-field fxFlex="36" color="accent" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.http_path' | translate}}</mat-label>
+                                    <input type="text" aria-label="" matInput formControlName="http_path"
+                                           placeholder="{{'service.dialog.path_example' | translate}}"/>
+                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.http_path_tooltip' | translate}}"
+                                              matTooltipClass="tooltip-teal">info_outline
+                                    </mat-icon>
+                                    <mat-error *ngIf="haHttpPathField.invalid">
+                                        {{ 'service.dialog.error.path_pattern' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
 
-                    <!--
-                                        <div fxLayout="row" fxLayoutAlign="space-between start">
-                                            &lt;!&ndash;Reintentos&ndash;&gt;
-                                            <mat-form-field fxFlex="23" color="accent" appearance="outline" class="margin-bottom-10">
-                                                <mat-label>{{'service.dialog.retries' | translate}}</mat-label>
-                                                <input type="number" aria-label="" matInput formControlName="retries"/>
-                                                <mat-error *ngIf="retriesField.invalid">
-                                                    {{ 'service.dialog.error.retries_min_max' | translate }}
-                                                </mat-error>
-                                            </mat-form-field>
+                                <div fxFlex="36" class="margin-top-15">
+                                    <mat-checkbox formControlName="https_verify_certificate"
+                                                  matTooltip="{{'upstream.dialog.https_verify_certificate_tooltip' | translate}}"
+                                                  matTooltipClass="tooltip-teal">
+                                        {{ 'upstream.dialog.https_verify_certificate' | translate}}
+                                    </mat-checkbox>
+                                </div>
+                            </div>
 
-                                            &lt;!&ndash;Timeout conexión&ndash;&gt;
-                                            <mat-form-field fxFlex="23" color="accent" appearance="outline">
-                                                <mat-label>{{'service.dialog.connect_timeout' | translate}}</mat-label>
-                                                <input type="number" aria-label="" matInput formControlName="connect_timeout"/>
-                                                <mat-icon matSuffix matTooltip="{{'service.dialog.connect_tooltip' | translate}}"
-                                                          matTooltipClass="tooltip-teal">info_outline
-                                                </mat-icon>
-                                                <mat-error *ngIf="connectTimeoutField.invalid">
-                                                    {{ 'service.dialog.error.timeout_min_max' | translate }}
-                                                </mat-error>
-                                            </mat-form-field>
+                            <p class="margin-top-10-i">{{'upstream.dialog.health_active' | translate}}</p>
+                            <div fxLayout="row" fxLayoutAlign="space-between start" formGroupName="healthy" class="padding-left-20 form-block">
+                                <!--    -->
+                            </div>
+                        </div>
 
-                                            &lt;!&ndash;Timeout escritura&ndash;&gt;
-                                            <mat-form-field fxFlex="23" color="accent" appearance="outline">
-                                                <mat-label>{{'service.dialog.write_timeout' | translate}}</mat-label>
-                                                <input type="number" aria-label="" matInput formControlName="write_timeout"/>
-                                                <mat-icon matSuffix matTooltip="{{'service.dialog.write_tooltip' | translate}}"
-                                                          matTooltipClass="tooltip-teal">info_outline
-                                                </mat-icon>
-                                                <mat-error *ngIf="writeTimeoutField.invalid">
-                                                    {{ 'service.dialog.error.timeout_min_max' | translate }}
-                                                </mat-error>
-                                            </mat-form-field>
+                        <p class="margin-top-20-i">{{'upstream.dialog.health_pasive' | translate}}</p>
+                        <div formGroupName="pasive" class="padding-left-20 form-block">
+                            <div fxLayout="row" fxLayoutAlign="space-between start">
+                                <!--    -->
+                            </div>
+                        </div>
 
-                                            &lt;!&ndash;Timeout lectura&ndash;&gt;
-                                            <mat-form-field fxFlex="23" color="accent" appearance="outline">
-                                                <mat-label>{{'service.dialog.read_timeout' | translate}}</mat-label>
-                                                <input type="number" aria-label="" matInput formControlName="read_timeout"/>
-                                                <mat-icon matSuffix matTooltip="{{'service.dialog.read_tooltip' | translate}}"
-                                                          matTooltipClass="tooltip-teal">info_outline
-                                                </mat-icon>
-                                                <mat-error *ngIf="readTimeoutField.invalid">
-                                                    {{ 'service.dialog.error.timeout_min_max' | translate }}
-                                                </mat-error>
-                                            </mat-form-field>
-                                        </div>
 
-                                        <div fxLayout="row" fxLayoutAlign="space-between start">
-                                            &lt;!&ndash;Certificado cliente&ndash;&gt;
-                                            <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
-                                                <mat-label>{{'service.dialog.certificate' | translate}}</mat-label>
-                                                <mat-select formControlName="client_certificate" [disabled]="certificatesAvailable.length === 0">
-                                                    <mat-option value="{{cert}}" *ngFor="let cert of certificatesAvailable">{{cert}}</mat-option>
-                                                </mat-select>
-                                                <mat-icon matSuffix matTooltip="{{'service.dialog.certificate_tooltip' | translate}}"
-                                                          matTooltipClass="tooltip-teal">info_outline
-                                                </mat-icon>
-                                            </mat-form-field>
-
-                                            &lt;!&ndash;TLS&ndash;&gt;
-                                            <mat-form-field fxFlex="20" color="accent" class="margin-bottom-10" appearance="outline">
-                                                <mat-label>{{'service.dialog.tls_verify' | translate}}</mat-label>
-                                                <mat-select formControlName="tls_verify">
-                                                    <mat-option value=""></mat-option>
-                                                    <mat-option value="true">true</mat-option>
-                                                    <mat-option value="false">false</mat-option>
-                                                </mat-select>
-                                                <mat-icon matSuffix matTooltip="{{'service.dialog.tls_verify_tooltip' | translate}}"
-                                                          matTooltipClass="tooltip-teal">info_outline
-                                                </mat-icon>
-                                            </mat-form-field>
-
-                                            &lt;!&ndash;TLS Depth&ndash;&gt;
-                                            <mat-form-field fxFlex="25" color="accent" class="margin-bottom-10" appearance="outline">
-                                                <mat-label>{{'service.dialog.tls_verify_depth' | translate}}</mat-label>
-                                                <input type="number" aria-label="" matInput formControlName="tls_verify_depth"/>
-                                                <mat-icon matSuffix matTooltip="{{'service.dialog.tls_verify_depth_tooltip' | translate}}"
-                                                          matTooltipClass="tooltip-teal">info_outline
-                                                </mat-icon>
-                                                <mat-error *ngIf="tlsVerifyDepthField.invalid">
-                                                    {{ 'service.dialog.error.tls_depth_min_max' | translate }}
-                                                </mat-error>
-                                            </mat-form-field>
-                                        </div>
-
-                                        <div fxLayout="row" fxLayoutAlign="space-between start">
-                                            &lt;!&ndash;CA Certificates&ndash;&gt;
-                                            <mat-form-field fxFlex="50" color="accent" class="margin-bottom-10" appearance="outline">
-                                                <mat-label>{{'service.dialog.ca_certificates' | translate}}</mat-label>
-                                                <textarea aria-label="" matInput formControlName="ca_certificates"
-                                                          placeholder="{{'service.dialog.ca_certificates_example' | translate}}"></textarea>
-                                                <mat-icon matSuffix matTooltip="{{'service.dialog.ca_certificates_tooltip' | translate}}"
-                                                          matTooltipClass="tooltip-teal">info_outline
-                                                </mat-icon>
-                                                <mat-error *ngIf="caCertificatesField.invalid">
-                                                    {{ 'service.dialog.error.ca_certificate_pattern' | translate }}
-                                                </mat-error>
-                                            </mat-form-field>
-                                        </div>
-                                        -->
-                </mat-expansion-panel>
-            </mat-accordion>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
         </form>
     </div>
 </mat-dialog-content>

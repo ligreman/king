@@ -1,3 +1,8 @@
 .mat-expansion-panel:not([class*="mat-elevation-z"]) {
     box-shadow: none;
 }
+
+.form-block {
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    margin-left: 20px;
+}

@@ -1,8 +1,9 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { startsWith as _startsWith } from 'lodash';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
@@ -42,11 +43,48 @@ export class DialogNewUpstreamComponent implements OnInit {
         // si hash_on o hash_fallback es cookie
         hash_on_cookie_path: ['/', []],
         slots: [10000, [CustomValidators.isNumber(), Validators.min(10), Validators.max(65536)]],
-
         host_header: ['', [CustomValidators.isHost(true)]],
         client_certificate: [''],
-        tags: ['']
-    }, {validator: FinalFormValidator});
+        tags: [''],
+        // HEALTHCHECKS
+        healthchecks: this.fb.group({
+            active: this.fb.group({
+                https_verify_certificate: [true, CustomValidators.isBoolean()],
+                http_path: ['/'],
+                timeout: [1, [CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]],
+                https_sni: [],
+                concurrency: [10, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
+                type: ['http', [CustomValidators.isOneOf(this.validProtocols)]],
+                healthy: this.fb.group({
+                    http_statuses: [[200, 302], [CustomValidators.isOneOf(this.validHttpStatuses)]],
+                    interval: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]],
+                    successes: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]]
+                }),
+                unhealthy: this.fb.group({
+                    http_statuses: [[429, 404, 500, 501, 502, 503, 504, 505], [CustomValidators.isOneOf(this.validHttpStatuses)]],
+                    tcp_failures: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
+                    timeouts: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
+                    http_failures: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
+                    interval: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]]
+                })
+            }),
+            pasive: this.fb.group({
+                type: ['http', [CustomValidators.isOneOf(this.validProtocols)]],
+                healthy: this.fb.group({
+                    http_statuses: [[200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308], [CustomValidators.isOneOf(this.validHttpStatuses)]],
+                    successes: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]]
+                }),
+                unhealthy: this.fb.group({
+                    http_failures: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
+                    http_statuses: [[429, 500, 503], [CustomValidators.isOneOf(this.validHttpStatuses)]],
+                    tcp_failures: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
+                    timeouts: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]]
+                })
+            }),
+            threshold: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(100)]]
+        })
+    }, {validators: [HashFormValidator()]});
+
 
     constructor(@Inject(MAT_DIALOG_DATA) public upstreamIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
 
@@ -101,6 +139,7 @@ export class DialogNewUpstreamComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
+        console.log('SUBMIT');
         return this.prepareDataForKong(this.form.value);
     }
 
@@ -173,7 +212,45 @@ export class DialogNewUpstreamComponent implements OnInit {
             body.host_header = null;
         }
 
-        return body;
+        // Health
+        /*body['healthchecks'] = {
+            'active': {
+                'https_verify_certificate': true,
+                'unhealthy': {
+                    'http_statuses': [429, 404, 500, 501, 502, 503, 504, 505],
+                    'tcp_failures': 0,
+                    'timeouts': 0,
+                    'http_failures': 0,
+                    'interval': 0
+                },
+                'http_path': '/',
+                'timeout': 1,
+                'healthy': {
+                    'http_statuses': [200, 302],
+                    'interval': 0,
+                    'successes': 0
+                },
+                'https_sni': 'example.com',
+                'concurrency': 10,
+                'type': 'http'
+            },
+            'passive': {
+                'unhealthy': {
+                    'http_failures': 0,
+                    'http_statuses': [429, 500, 503],
+                    'tcp_failures': 0,
+                    'timeouts': 0
+                },
+                'type': 'http',
+                'healthy': {
+                    'successes': 0,
+                    'http_statuses': [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
+                }
+            },
+            'threshold': 0
+        };*/
+
+        // return body;
     }
 
 
@@ -198,9 +275,9 @@ export class DialogNewUpstreamComponent implements OnInit {
 
     get hashOnCookiePathField() { return this.form.get('hash_on_cookie_path'); }
 
+    get haHttpsVerifyCertificateField() { return this.form.get('healthchecks.active.https_verify_certificate'); }
 
-    //////////////
-
+    get haHttpPathField() { return this.form.get('healthchecks.active.http_path'); }
 
     get hostHeaderField() { return this.form.get('host_header'); }
 
@@ -209,26 +286,29 @@ export class DialogNewUpstreamComponent implements OnInit {
     get tagsField() { return this.form.get('tags'); }
 }
 
-const FinalFormValidator: ValidatorFn = (fg: FormGroup) => {
-    const hashOn = fg.get('hash_on').value;
-    const hashOnHeader = fg.get('hash_on_header').value;
-    const hashFallback = fg.get('hash_fallback').value;
-    const hashFallbackHeader = fg.get('hash_fallback_header').value;
-    const hashOnCookie = fg.get('hash_on_cookie').value;
-    const hashOnCookiePath = fg.get('hash_on_cookie_path').value;
-    let valid = true;
 
-    // Dependiendo del hash on y fallback necesito unos campos u otros
-    if (hashOn === 'header' && (hashOnHeader === '' || hashOnHeader === null)) {
-        return {hashOnForm: hashOn};
-    }
-    if (hashFallback === 'header' && (hashFallbackHeader === '' || hashFallbackHeader === null)) {
-        return {hashFallbackForm: hashFallback};
-    }
-    if ((hashOn === 'cookie' || hashFallback === 'cookie') && (hashOnCookie === '' || hashOnCookie === null
-        || hashOnCookiePath === '' || hashOnCookiePath === null)) {
-        return {hashCookieForm: hashOn};
-    }
+function HashFormValidator(): ValidatorFn {
+    return (fg: AbstractControl): ValidationErrors => {
+        const hashOn = fg.get('hash_on').value;
+        const hashOnHeader = fg.get('hash_on_header').value;
+        const hashFallback = fg.get('hash_fallback').value;
+        const hashFallbackHeader = fg.get('hash_fallback_header').value;
+        const hashOnCookie = fg.get('hash_on_cookie').value;
+        const hashOnCookiePath = fg.get('hash_on_cookie_path').value;
+        let valid = true;
 
-    return valid ? null : {finalForm: ''};
-};
+        // Dependiendo del hash on y fallback necesito unos campos u otros
+        if (hashOn === 'header' && (hashOnHeader === '' || hashOnHeader === null)) {
+            return {hashOnForm: hashOn};
+        }
+        if (hashFallback === 'header' && (hashFallbackHeader === '' || hashFallbackHeader === null)) {
+            return {hashFallbackForm: hashFallback};
+        }
+        if ((hashOn === 'cookie' || hashFallback === 'cookie') && (hashOnCookie === '' || hashOnCookie === null
+            || hashOnCookiePath === '' || hashOnCookiePath === null || !_startsWith(hashOnCookiePath, '/'))) {
+            return {hashCookieForm: hashOn};
+        }
+
+        return valid ? null : {finalForm: ''};
+    };
+}

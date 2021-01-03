@@ -1,6 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ApiService } from '../../services/api.service';
@@ -39,7 +39,7 @@ export class DialogNewServiceComponent implements OnInit {
         tls_verify_depth: ['', [CustomValidators.isNumber(true), Validators.min(0), Validators.max(64)]],
         ca_certificates: [''],
         tags: ['']
-    }, {validator: ProtocolPathValidator});
+    }, {validators: [ProtocolPathValidator()]});
 
     constructor(@Inject(MAT_DIALOG_DATA) public serviceIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
 
@@ -246,16 +246,18 @@ export class DialogNewServiceComponent implements OnInit {
     get tagsField() { return this.form.get('tags'); }
 }
 
-const ProtocolPathValidator: ValidatorFn = (fg: FormGroup) => {
-    const proto = fg.get('protocol').value;
-    let valid = true;
+function ProtocolPathValidator(): ValidatorFn {
+    return (fg: AbstractControl): ValidationErrors => {
+        const proto = fg.get('protocol').value;
+        let valid = true;
 
-    // Si no es http o https no puede llevar path
-    if (fg.get('input_method').value === 'complete' && proto !== 'http' && proto !== 'https') {
-        if (fg.get('path').value !== '' && fg.get('path').value !== null) {
-            valid = false;
+        // Si no es http o https no puede llevar path
+        if (fg.get('input_method').value === 'complete' && proto !== 'http' && proto !== 'https') {
+            if (fg.get('path').value !== '' && fg.get('path').value !== null) {
+                valid = false;
+            }
         }
-    }
 
-    return valid ? null : {protocol: proto};
-};
+        return valid ? null : {protocol: proto};
+    };
+}
