@@ -52,16 +52,16 @@ export class DialogNewUpstreamComponent implements OnInit {
                 https_verify_certificate: [true, CustomValidators.isBoolean()],
                 http_path: ['/'],
                 timeout: [1, [CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]],
-                https_sni: [],
+                https_sni: [''],
                 concurrency: [10, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
                 type: ['http', [CustomValidators.isOneOf(this.validProtocols)]],
                 healthy: this.fb.group({
-                    http_statuses: [[200, 302], [CustomValidators.isOneOf(this.validHttpStatuses)]],
+                    http_statuses: [[200, 302], [CustomValidators.isArrayOfOneOf(this.validHttpStatuses)]],
                     interval: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]],
                     successes: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]]
                 }),
                 unhealthy: this.fb.group({
-                    http_statuses: [[429, 404, 500, 501, 502, 503, 504, 505], [CustomValidators.isOneOf(this.validHttpStatuses)]],
+                    http_statuses: [[429, 404, 500, 501, 502, 503, 504, 505], [CustomValidators.isArrayOfOneOf(this.validHttpStatuses)]],
                     tcp_failures: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
                     timeouts: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
                     http_failures: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
@@ -71,12 +71,12 @@ export class DialogNewUpstreamComponent implements OnInit {
             pasive: this.fb.group({
                 type: ['http', [CustomValidators.isOneOf(this.validProtocols)]],
                 healthy: this.fb.group({
-                    http_statuses: [[200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308], [CustomValidators.isOneOf(this.validHttpStatuses)]],
+                    http_statuses: [[200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308], [CustomValidators.isArrayOfOneOf(this.validHttpStatuses)]],
                     successes: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]]
                 }),
                 unhealthy: this.fb.group({
                     http_failures: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
-                    http_statuses: [[429, 500, 503], [CustomValidators.isOneOf(this.validHttpStatuses)]],
+                    http_statuses: [[429, 500, 503], [CustomValidators.isArrayOfOneOf(this.validHttpStatuses)]],
                     tcp_failures: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
                     timeouts: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]]
                 })
@@ -139,7 +139,6 @@ export class DialogNewUpstreamComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
-        console.log('SUBMIT');
         return this.prepareDataForKong(this.form.value);
     }
 
@@ -212,45 +211,7 @@ export class DialogNewUpstreamComponent implements OnInit {
             body.host_header = null;
         }
 
-        // Health
-        /*body['healthchecks'] = {
-            'active': {
-                'https_verify_certificate': true,
-                'unhealthy': {
-                    'http_statuses': [429, 404, 500, 501, 502, 503, 504, 505],
-                    'tcp_failures': 0,
-                    'timeouts': 0,
-                    'http_failures': 0,
-                    'interval': 0
-                },
-                'http_path': '/',
-                'timeout': 1,
-                'healthy': {
-                    'http_statuses': [200, 302],
-                    'interval': 0,
-                    'successes': 0
-                },
-                'https_sni': 'example.com',
-                'concurrency': 10,
-                'type': 'http'
-            },
-            'passive': {
-                'unhealthy': {
-                    'http_failures': 0,
-                    'http_statuses': [429, 500, 503],
-                    'tcp_failures': 0,
-                    'timeouts': 0
-                },
-                'type': 'http',
-                'healthy': {
-                    'successes': 0,
-                    'http_statuses': [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308]
-                }
-            },
-            'threshold': 0
-        };*/
-
-        // return body;
+        return body;
     }
 
 
@@ -279,6 +240,30 @@ export class DialogNewUpstreamComponent implements OnInit {
 
     get haHttpPathField() { return this.form.get('healthchecks.active.http_path'); }
 
+    get httpsSniField() { return this.form.get('healthchecks.active.https_sni'); }
+
+    get timeoutActiveField() { return this.form.get('healthchecks.active.timeout'); }
+
+    get concurrencyField() { return this.form.get('healthchecks.active.concurrency'); }
+
+    get httpStatusesAHField() { return this.form.get('healthchecks.active.healthy.http_statuses'); }
+
+    get successesAHField() { return this.form.get('healthchecks.active.healthy.successes'); }
+
+    get intervalAHField() { return this.form.get('healthchecks.active.healthy.interval'); }
+
+    get httpStatusesAUHField() { return this.form.get('healthchecks.active.unhealthy.http_statuses'); }
+
+    get httpFailuresAUHField() { return this.form.get('healthchecks.active.unhealthy.http_failures'); }
+
+    get tcpFailuresAUHField() { return this.form.get('healthchecks.active.unhealthy.tcp_failures'); }
+
+    get intervalAUHField() { return this.form.get('healthchecks.active.unhealthy.interval'); }
+
+    get timeoutsAUHField() { return this.form.get('healthchecks.active.unhealthy.timeouts'); }
+
+    get thresholdField() { return this.form.get('healthchecks.threshold'); }
+
     get hostHeaderField() { return this.form.get('host_header'); }
 
     get clientCertificateField() { return this.form.get('client_certificate'); }
@@ -296,19 +281,23 @@ function HashFormValidator(): ValidatorFn {
         const hashOnCookie = fg.get('hash_on_cookie').value;
         const hashOnCookiePath = fg.get('hash_on_cookie_path').value;
         let valid = true;
+        let error = null;
 
         // Dependiendo del hash on y fallback necesito unos campos u otros
         if (hashOn === 'header' && (hashOnHeader === '' || hashOnHeader === null)) {
-            return {hashOnForm: hashOn};
+            error = {hashOnForm: hashOn};
+            valid = false;
         }
         if (hashFallback === 'header' && (hashFallbackHeader === '' || hashFallbackHeader === null)) {
-            return {hashFallbackForm: hashFallback};
+            error = {hashFallbackForm: hashFallback};
+            valid = false;
         }
         if ((hashOn === 'cookie' || hashFallback === 'cookie') && (hashOnCookie === '' || hashOnCookie === null
             || hashOnCookiePath === '' || hashOnCookiePath === null || !_startsWith(hashOnCookiePath, '/'))) {
-            return {hashCookieForm: hashOn};
+            error = {hashCookieForm: hashOn};
+            valid = false;
         }
 
-        return valid ? null : {finalForm: ''};
+        return valid ? null : error;
     };
 }

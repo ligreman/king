@@ -186,6 +186,19 @@
                             </mat-panel-description>
                         </mat-expansion-panel-header>
 
+                        <div>
+                            <mat-form-field fxFlex="50" color="accent" appearance="outline">
+                                <mat-label>{{'upstream.dialog.threshold' | translate}}</mat-label>
+                                <input type="number" aria-label="" matInput formControlName="threshold"/>
+                                <mat-icon matSuffix matTooltip="{{'upstream.dialog.threshold_tooltip' | translate}}"
+                                          matTooltipClass="tooltip-teal">info_outline
+                                </mat-icon>
+                                <mat-error *ngIf="thresholdField.invalid">
+                                    {{ 'upstream.dialog.error.threshold_min_max' | translate }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+
                         <p>{{'upstream.dialog.health_active' | translate}}</p>
                         <!-- HEALTH ACTIVE -->
                         <div formGroupName="active" class="padding-left-20 form-block">
@@ -221,19 +234,224 @@
                                 </div>
                             </div>
 
-                            <p class="margin-top-10-i">{{'upstream.dialog.health_active' | translate}}</p>
+                            <div fxLayout="row" fxLayoutAlign="space-between start">
+                                <mat-form-field fxFlex="45" color="accent" class="margin-bottom-10" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.https_sni' | translate}}</mat-label>
+                                    <input type="text" matInput formControlName="https_sni"
+                                           placeholder="{{'route.dialog.hosts_example' | translate}}"/>
+                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.https_sni_tooltip' | translate}}"
+                                              matTooltipClass="tooltip-teal">info_outline
+                                    </mat-icon>
+                                    <mat-error *ngIf="httpsSniField.invalid">
+                                        {{ 'upstream.dialog.error.sni_format' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="25" color="accent" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.timeout' | translate}}</mat-label>
+                                    <input type="number" aria-label="" matInput formControlName="timeout"/>
+                                    <mat-error *ngIf="timeoutActiveField.invalid">
+                                        {{ 'upstream.dialog.error.timeout_min_max' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="25" color="accent" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.concurrency' | translate}}</mat-label>
+                                    <input type="number" aria-label="" matInput formControlName="concurrency"/>
+                                    <mat-error *ngIf="concurrencyField.invalid">
+                                        {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <p class="margin-top-10-i">{{'upstream.dialog.active_healthy' | translate}}</p>
                             <div fxLayout="row" fxLayoutAlign="space-between start" formGroupName="healthy" class="padding-left-20 form-block">
-                                <!--    -->
+                                <!--  HEALTHY  -->
+                                <mat-form-field fxFlex="45" color="accent" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.http_statuses' | translate}}</mat-label>
+                                    <mat-select formControlName="http_statuses" multiple>
+                                        <mat-option *ngFor="let stat of validHttpStatuses" [value]="stat">{{stat}}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="httpStatusesAHField.hasError('isArrayOfOneOf')">
+                                        {{ 'upstream.dialog.error.http_statuses' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="25" color="accent" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.interval' | translate}}</mat-label>
+                                    <input type="number" aria-label="" matInput formControlName="interval"/>
+                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.interval_tooltip' | translate}}"
+                                              matTooltipClass="tooltip-teal">info_outline
+                                    </mat-icon>
+                                    <mat-error *ngIf="intervalAHField.invalid">
+                                        {{ 'upstream.dialog.error.timeout_min_max' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="25" color="accent" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.successes' | translate}}</mat-label>
+                                    <input type="number" aria-label="" matInput formControlName="successes"/>
+                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.successes_tooltip' | translate}}"
+                                              matTooltipClass="tooltip-teal">info_outline
+                                    </mat-icon>
+                                    <mat-error *ngIf="successesAHField.invalid">
+                                        {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <p class="margin-top-10-i">{{'upstream.dialog.active_unhealthy' | translate}}</p>
+                            <div fxLayout="column" formGroupName="unhealthy" class="padding-left-20 form-block">
+                                <!--  UNHEALTHY  -->
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <mat-form-field fxFlex="65" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.http_statuses_unhealthy' | translate}}</mat-label>
+                                        <mat-select formControlName="http_statuses" multiple>
+                                            <mat-option *ngFor="let stat of validHttpStatuses" [value]="stat">{{stat}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="httpStatusesAUHField.hasError('isArrayOfOneOf')">
+                                            {{ 'upstream.dialog.error.http_statuses' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.interval' | translate}}</mat-label>
+                                        <input type="number" aria-label="" matInput formControlName="interval"/>
+                                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.interval_tooltip' | translate}}"
+                                                  matTooltipClass="tooltip-teal">info_outline
+                                        </mat-icon>
+                                        <mat-error *ngIf="intervalAUHField.invalid">
+                                            {{ 'upstream.dialog.error.timeout_min_max' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.http_failures' | translate}}</mat-label>
+                                        <input type="number" aria-label="" matInput formControlName="http_failures"/>
+                                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.http_failures_tooltip' | translate}}"
+                                                  matTooltipClass="tooltip-teal">info_outline
+                                        </mat-icon>
+                                        <mat-error *ngIf="httpFailuresAUHField.invalid">
+                                            {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.tcp_failures' | translate}}</mat-label>
+                                        <input type="number" aria-label="" matInput formControlName="tcp_failures"/>
+                                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.tcp_failures_tooltip' | translate}}"
+                                                  matTooltipClass="tooltip-teal">info_outline
+                                        </mat-icon>
+                                        <mat-error *ngIf="tcpFailuresAUHField.invalid">
+                                            {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.timeouts' | translate}}</mat-label>
+                                        <input type="number" aria-label="" matInput formControlName="timeouts"/>
+                                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.timeouts_tooltip' | translate}}"
+                                                  matTooltipClass="tooltip-teal">info_outline
+                                        </mat-icon>
+                                        <mat-error *ngIf="timeoutsAUHField.invalid">
+                                            {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
                             </div>
                         </div>
 
                         <p class="margin-top-20-i">{{'upstream.dialog.health_pasive' | translate}}</p>
                         <div formGroupName="pasive" class="padding-left-20 form-block">
+                            <!--  PASIVE  -->
                             <div fxLayout="row" fxLayoutAlign="space-between start">
-                                <!--    -->
+                                <mat-form-field fxFlex="24" color="accent" class="margin-bottom-10" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.type_healthcheck' | translate}}</mat-label>
+                                    <mat-select formControlName="type">
+                                        <mat-option value="{{protos}}" *ngFor="let protos of validProtocols">{{protos}}</mat-option>
+                                    </mat-select>
+                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.type_healthcheck_tooltip' | translate}}"
+                                              matTooltipClass="tooltip-teal">info_outline
+                                    </mat-icon>
+                                </mat-form-field>
+                            </div>
+
+                            <p class="margin-top-10-i">{{'upstream.dialog.active_healthy' | translate}}</p>
+                            <div fxLayout="row" fxLayoutAlign="space-between start" formGroupName="healthy" class="padding-left-20 form-block">
+                                <!--  HEALTHY  -->
+                                <mat-form-field fxFlex="65" color="accent" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.http_statuses' | translate}}</mat-label>
+                                    <mat-select formControlName="http_statuses" multiple>
+                                        <mat-option *ngFor="let stat of validHttpStatuses" [value]="stat">{{stat}}</mat-option>
+                                    </mat-select>
+                                    <mat-error *ngIf="httpStatusesAHField.hasError('isArrayOfOneOf')">
+                                        {{ 'upstream.dialog.error.http_statuses' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                                    <mat-label>{{'upstream.dialog.successes' | translate}}</mat-label>
+                                    <input type="number" aria-label="" matInput formControlName="successes"/>
+                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.successes_tooltip' | translate}}"
+                                              matTooltipClass="tooltip-teal">info_outline
+                                    </mat-icon>
+                                    <mat-error *ngIf="successesAHField.invalid">
+                                        {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <p class="margin-top-10-i">{{'upstream.dialog.active_unhealthy' | translate}}</p>
+                            <div fxLayout="column" formGroupName="unhealthy" class="padding-left-20 form-block">
+                                <!--  UNHEALTHY  -->
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <mat-form-field fxFlex="100" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.http_statuses_unhealthy' | translate}}</mat-label>
+                                        <mat-select formControlName="http_statuses" multiple>
+                                            <mat-option *ngFor="let stat of validHttpStatuses" [value]="stat">{{stat}}</mat-option>
+                                        </mat-select>
+                                        <mat-error *ngIf="httpStatusesAUHField.hasError('isArrayOfOneOf')">
+                                            {{ 'upstream.dialog.error.http_statuses' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
+                                <div fxLayout="row" fxLayoutAlign="space-between start">
+                                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.http_failures' | translate}}</mat-label>
+                                        <input type="number" aria-label="" matInput formControlName="http_failures"/>
+                                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.http_failures_tooltip' | translate}}"
+                                                  matTooltipClass="tooltip-teal">info_outline
+                                        </mat-icon>
+                                        <mat-error *ngIf="httpFailuresAUHField.invalid">
+                                            {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.tcp_failures' | translate}}</mat-label>
+                                        <input type="number" aria-label="" matInput formControlName="tcp_failures"/>
+                                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.tcp_failures_tooltip' | translate}}"
+                                                  matTooltipClass="tooltip-teal">info_outline
+                                        </mat-icon>
+                                        <mat-error *ngIf="tcpFailuresAUHField.invalid">
+                                            {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+
+                                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                                        <mat-label>{{'upstream.dialog.timeouts' | translate}}</mat-label>
+                                        <input type="number" aria-label="" matInput formControlName="timeouts"/>
+                                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.timeouts_tooltip' | translate}}"
+                                                  matTooltipClass="tooltip-teal">info_outline
+                                        </mat-icon>
+                                        <mat-error *ngIf="timeoutsAUHField.invalid">
+                                            {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                </div>
                             </div>
                         </div>
-
 
                     </mat-expansion-panel>
                 </mat-accordion>
@@ -249,7 +467,6 @@
         <mat-error *ngIf="form.hasError('hashOnForm')">{{ 'upstream.dialog.error.hash_on_form' | translate }}</mat-error>
         <mat-error *ngIf="form.hasError('hashFallbackForm')">{{ 'upstream.dialog.error.hash_fallback_form' | translate }}</mat-error>
         <mat-error *ngIf="form.hasError('hashCookieForm')">{{ 'upstream.dialog.error.hash_cookie_form' | translate }}</mat-error>
-        <mat-error *ngIf="form.hasError('finalForm')">{{ 'service.dialog.error.' | translate }}</mat-error>
     </div>
 
     <div>
