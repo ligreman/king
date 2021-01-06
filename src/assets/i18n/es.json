@@ -12,6 +12,7 @@
         "new_upstream": "Upstream creado",
         "new_consumer": "Consumidor creado",
         "new_plugin": "Plugin creado",
+        "new_target": "Target creado",
         "update_service": "Servicio actualizado",
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
@@ -19,7 +20,8 @@
         "delete_service": "Servicio {{extra}} eliminado",
         "delete_route": "Ruta {{extra}} eliminada",
         "delete_upstream": "Upstream {{extra}} eliminado",
-        "delete_consumer": "Consumidor {{extra}} eliminado"
+        "delete_consumer": "Consumidor {{extra}} eliminado",
+        "delete_target": "Target {{extra}} eliminado"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
@@ -341,7 +343,10 @@
         "add": "Añadir Plugin"
     },
     "target": {
-        "add": "Añadir Target"
+        "add": "Añadir Target",
+        "dialog": {
+            "create": "Crear un Target nuevo para el upstream {{up}}"
+        }
     },
     "element": {
         "text_search": "texto a buscar",

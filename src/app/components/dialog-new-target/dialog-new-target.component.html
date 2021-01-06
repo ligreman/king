@@ -1,0 +1,73 @@
+<h2 mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-5-i">
+    <span>{{'target.dialog.create' | translate:{up: upstreamId} }}</span>
+    <span><a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#add-target" target="_blank">
+    {{'text.documentation' | translate}}
+        <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
+</h2>
+
+<mat-divider class="margin-bottom-20-i"></mat-divider>
+
+<mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
+    <div fxFlex="90">
+        <form [formGroup]="form">
+            <div fxLayout="column" class="margin-bottom-10">
+                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
+                    <mat-form-field fxFlex="65" color="accent" appearance="outline">
+                        <mat-label>{{'target.dialog.target' | translate}}</mat-label>
+                        <input type="text" aria-label="" matInput formControlName="target" cdkFocusInitial required/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.target_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="targetField.invalid">
+                            {{ 'target.dialog.error.target_min_max' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                        <mat-label>{{'target.dialog.weight' | translate}}</mat-label>
+                        <input type="number" aria-label="" matInput formControlName="weight"/>
+                        <mat-icon matSuffix matTooltip="{{'target.dialog.weight_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="weightField.invalid">
+                            {{ 'target.dialog.error.weight_min_max' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
+                    <mat-form-field fxFlex="100" color="accent" appearance="outline">
+                        <mat-chip-list #chipList aria-label="">
+                            <mat-chip *ngFor="let tag of currentTags"
+                                      removable="true" (removed)="removeTag(tag)">{{tag}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip>
+                            <input placeholder="{{'service.dialog.tags' | translate}}"
+                                   formControlName="tags"
+                                   [matChipInputFor]="chipList"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   matChipInputAddOnBlur="true"
+                                   (matChipInputTokenEnd)="addTag($event)">
+                        </mat-chip-list>
+                        <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+                </div>
+            </div>
+        </form>
+    </div>
+</mat-dialog-content>
+
+<mat-divider class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between start">
+    <div></div>
+    <div>
+        <button mat-button mat-dialog-close="null" color="warn">{{'text.cancel' | translate}}</button>
+        <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
+        <button mat-flat-button [mat-dialog-close]="onSubmit()" color="accent"
+                [disabled]="form.invalid">
+            <span>{{'text.create' | translate}}</span>
+        </button>
+    </div>
+</mat-dialog-actions>
+

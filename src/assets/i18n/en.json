@@ -12,6 +12,7 @@
         "new_upstream": "Upstream created",
         "new_consumer": "Consumer created",
         "new_plugin": "Plugin created",
+        "new_target": "Target created",
         "update_service": "Service updated",
         "update_route": "Route updated",
         "update_upstream": "Upstream updated",
@@ -19,7 +20,8 @@
         "delete_service": "Service {{extra}} deleted",
         "delete_route": "Route {{extra}} deleted",
         "delete_upstream": "Upstream {{extra}} deleted",
-        "delete_consumer": "Consumer {{extra}} deleted"
+        "delete_consumer": "Consumer {{extra}} deleted",
+        "delete_target": "Target {{extra}} deleted"
     },
     "text": {
         "id_extra": "ID: {{extra}}",

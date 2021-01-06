@@ -118,7 +118,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     populateGraph() {
         this.loading = true;
         this.selection = '';
-        
+
         // Llamo al API por la información para pintar el grafo
         this.getGraphDataFromApi().subscribe(value => {
             this.dataApi = value;
@@ -372,6 +372,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     addEditPlugin(selected = null) {
         this.dialogHelper.addEditConsumer(selected)
+            .then(() => {
+                this.netFilter.tag = '';
+                this.netFilter.element = 'all';
+                this.populateGraph();
+            })
+            .catch(error => {});
+    }
+
+    /*
+        Añade un Target
+     */
+    addTarget(selected = null) {
+        this.dialogHelper.addTarget(selected)
             .then(() => {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';

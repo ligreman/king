@@ -8,6 +8,7 @@ import { DialogInfoUpstreamComponent } from '../components/dialog-info-upstream/
 import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewRouteComponent } from '../components/dialog-new-route/dialog-new-route.component';
 import { DialogNewServiceComponent } from '../components/dialog-new-service/dialog-new-service.component';
+import { DialogNewTargetComponent } from '../components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from '../components/dialog-new-upstream/dialog-new-upstream.component';
 import { ApiService } from './api.service';
 import { ToastService } from './toast.service';
@@ -200,6 +201,43 @@ export class DialogHelperService {
                             reject();
                         });
                     }
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
+    /*
+        Añade un target
+     */
+    addTarget(selectedUpstream) {
+        return new Promise((resolve, reject) => {
+            // Miro si me viene datos del seleccionado para entonces mostrar ventana de editar
+            let selectedUpstreamId = null;
+            if (selectedUpstream !== null) {
+                selectedUpstreamId = selectedUpstream.id;
+            } else {
+                reject();
+            }
+
+            const dialogRef = this.dialog.open(DialogNewTargetComponent, {
+                disableClose: true,
+                minWidth: '80vw',
+                minHeight: '50vh',
+                data: selectedUpstreamId
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== null && result !== 'null') {
+                    // llamo al API
+                    this.api.postNewTarget(result, selectedUpstreamId).subscribe(value => {
+                        this.toast.success('text.id_extra', 'success.new_target', {msgExtra: value['id']});
+                        resolve();
+                    }, error => {
+                        this.toast.error_general(error, {disableTimeOut: true});
+                        reject();
+                    });
+
                 } else {
                     reject();
                 }

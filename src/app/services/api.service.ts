@@ -134,6 +134,13 @@ export class ApiService {
     }
 
     /*
+        TARGET ENDPOINTS
+     */
+    public postNewTarget(body, upstreamId) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets', body).pipe(catchError(this.handleError));
+    }
+
+    /*
        CERTIFICATE ENDPOINTS
     */
     public getCertificates() {
