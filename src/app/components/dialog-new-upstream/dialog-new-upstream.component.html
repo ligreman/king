@@ -9,13 +9,18 @@
 <mat-divider class="margin-bottom-20-i"></mat-divider>
 
 <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
-    <div fxFlex="90" *ngIf="servicesAvailable.length === 0 && !editMode">
+    <div fxFlex="90" *ngIf="loading" class="loading-block">
+        <p fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+        </p>
+    </div>
+    <div fxFlex="90" *ngIf="!loading && servicesAvailable.length === 0 && !editMode">
         <p fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
             {{ 'upstream.dialog.no_upstream' | translate}}
         </p>
     </div>
 
-    <div fxFlex="90" *ngIf="servicesAvailable.length > 0 || editMode">
+    <div fxFlex="90" *ngIf="!loading && (servicesAvailable.length > 0 || editMode)">
         <form [formGroup]="form">
             <!--Nombre-->
             <div fxLayout="column" class="margin-bottom-10">
@@ -362,8 +367,8 @@
                             </div>
                         </div>
 
-                        <p class="margin-top-20-i">{{'upstream.dialog.health_pasive' | translate}}</p>
-                        <div formGroupName="pasive" class="padding-left-20 form-block">
+                        <p class="margin-top-20-i">{{'upstream.dialog.health_passive' | translate}}</p>
+                        <div formGroupName="passive" class="padding-left-20 form-block">
                             <!--  PASIVE  -->
                             <div fxLayout="row" fxLayoutAlign="space-between start">
                                 <mat-form-field fxFlex="24" color="accent" class="margin-bottom-10" appearance="outline">

@@ -287,7 +287,7 @@
             "certificate_tooltip": "Certificate (UUID) to be used as client certificate while TLS handshaking to the upstream server",
             "health": "Health check of the targets",
             "health_active": "Active health checks",
-            "health_pasive": "Pasive health checks (in proxied traffic)",
+            "health_passive": "Pasive health checks (in proxied traffic)",
             "active_healthy": "Healthy health checks",
             "active_unhealthy": "Unhealthy health checks",
             "host_tooltip": "The hostname to be used as Host header when proxying requests through Kong",

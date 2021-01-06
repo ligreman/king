@@ -16,6 +16,7 @@ import { CustomValidators } from '../../shared/custom-validators';
     styleUrls: ['./dialog-new-upstream.component.scss']
 })
 export class DialogNewUpstreamComponent implements OnInit {
+    loading = true;
     // Uso la variable para el estado del formulario
     formValid = false;
     validAlgorithms = ['consistent-hashing', 'least-connections', 'round-robin'];
@@ -68,7 +69,7 @@ export class DialogNewUpstreamComponent implements OnInit {
                     interval: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]]
                 })
             }),
-            pasive: this.fb.group({
+            passive: this.fb.group({
                 type: ['http', [CustomValidators.isOneOf(this.validProtocols)]],
                 healthy: this.fb.group({
                     http_statuses: [[200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308], [CustomValidators.isArrayOfOneOf(this.validHttpStatuses)]],
@@ -115,6 +116,8 @@ export class DialogNewUpstreamComponent implements OnInit {
             }
         }, error => {
             this.toast.error_general(error);
+        }, () => {
+            this.loading = false;
         });
 
         // Si viene un upstream para editar
@@ -209,6 +212,10 @@ export class DialogNewUpstreamComponent implements OnInit {
         }
         if (body.host_header === '' || body.host_header === null) {
             body.host_header = null;
+        }
+
+        if (body.healthchecks.active.https_sni === '' || body.healthchecks.active.https_sni === null) {
+            body.healthchecks.active.https_sni = null;
         }
 
         return body;

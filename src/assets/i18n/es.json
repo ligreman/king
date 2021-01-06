@@ -287,7 +287,7 @@
             "certificate_tooltip": "Certificado de cliente (UUID) para la conexión TLS con el servidor upstream",
             "health": "Comprobaciones de estado de salud de los target",
             "health_active": "Comprobaciones activas de salud",
-            "health_pasive": "Comprobaciones pasivas de salud (en tráfico a través de proxy)",
+            "health_passive": "Comprobaciones pasivas de salud (en tráfico a través de proxy)",
             "active_healthy": "Comprobaciones de estado de salud sano",
             "active_unhealthy": "Comprobaciones de estado de salud erróneo",
             "host_tooltip": "El nombre de host que se utilizará como cabecera Host al enviar solicitudes a través de Kong",

@@ -117,6 +117,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     populateGraph() {
         this.loading = true;
+        this.selection = '';
+        
         // Llamo al API por la información para pintar el grafo
         this.getGraphDataFromApi().subscribe(value => {
             this.dataApi = value;

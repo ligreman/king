@@ -60,10 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        //TODO remove
-        this.dialogHelper.addEditUpstream(null)
-            .then(() => { })
-            .catch(error => {});
+        
     }
 
     ngOnDestroy(): void {
