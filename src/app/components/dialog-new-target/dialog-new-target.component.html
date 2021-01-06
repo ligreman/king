@@ -12,18 +12,29 @@
         <form [formGroup]="form">
             <div fxLayout="column" class="margin-bottom-10">
                 <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
-                    <mat-form-field fxFlex="65" color="accent" appearance="outline">
+                    <mat-form-field fxFlex="55" color="accent" appearance="outline">
                         <mat-label>{{'target.dialog.target' | translate}}</mat-label>
-                        <input type="text" aria-label="" matInput formControlName="target" cdkFocusInitial required/>
-                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.target_tooltip' | translate}}"
+                        <input type="text" aria-label="" matInput formControlName="target" cdkFocusInitial required
+                               placeholder="{{ 'target.dialog.target_example' | translate}}"/>
+                        <mat-hint>{{ 'target.dialog.target_hint' | translate }}</mat-hint>
+                        <mat-icon matSuffix matTooltip="{{'target.dialog.target_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
                         <mat-error *ngIf="targetField.invalid">
-                            {{ 'target.dialog.error.target_min_max' | translate }}
+                            {{ 'target.dialog.error.target_format' | translate }}
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field fxFlex="30" color="accent" appearance="outline">
+                    <mat-form-field fxFlex="20" color="accent" appearance="outline">
+                        <mat-label>{{'service.dialog.port' | translate}}</mat-label>
+                        <input type="number" aria-label="" matInput formControlName="port" required
+                               placeholder="{{'service.dialog.port_example' | translate}}"/>
+                        <mat-error *ngIf="portField.invalid">
+                            {{ 'service.dialog.error.port_min_max' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="20" color="accent" appearance="outline">
                         <mat-label>{{'target.dialog.weight' | translate}}</mat-label>
                         <input type="number" aria-label="" matInput formControlName="weight"/>
                         <mat-icon matSuffix matTooltip="{{'target.dialog.weight_tooltip' | translate}}"
@@ -64,7 +75,7 @@
     <div>
         <button mat-button mat-dialog-close="null" color="warn">{{'text.cancel' | translate}}</button>
         <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
-        <button mat-flat-button [mat-dialog-close]="onSubmit()" color="accent"
+        <button mat-flat-button (click)="onSubmit()" color="accent"
                 [disabled]="form.invalid">
             <span>{{'text.create' | translate}}</span>
         </button>

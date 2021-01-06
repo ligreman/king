@@ -60,7 +60,9 @@
             "delete_upstream_title": "Delete upstream",
             "delete_upstream": "Do you want to delete this upstream?",
             "delete_consumer_title": "Delete consumer",
-            "delete_consumer": "Do you want to delete this consumer?"
+            "delete_consumer": "Do you want to delete this consumer?",
+            "delete_target_title": "Delete target",
+            "delete_target": "Do you want to delete this target?"
         },
         "copy_clipboard": "Download in JSON"
     },
@@ -148,6 +150,7 @@
         "local_actions_route": "Actions on route",
         "local_actions_upstream": "Actions on upstream",
         "local_actions_consumer": "Actions on consumer",
+        "local_actions_target": "Actions on target",
         "center_network": "Adjust graph to fit all nodes",
         "filter": "Filter by tags, separated by commas",
         "filter_tooltip": "Filter",
@@ -343,7 +346,20 @@
         "add": "Add Plugin"
     },
     "target": {
-        "add": "Add Target"
+        "add": "Add Target",
+        "dialog": {
+            "create": "Create a new Target for the upstream {{up}}",
+            "target": "Target address (ip or hostname)",
+            "target_tooltip": "The target address (ip or hostname). If the hostname resolves to an SRV record, the port value will be overridden by the value from the DNS record",
+            "target_hint": "(Host or IP)",
+            "target_example": "example.com",
+            "weight": "Weight",
+            "weight_tooltip": "The weight this target gets within the upstream loadbalancer (0-65535). If the hostname resolves to an SRV record, the weight value will be overridden by the value from the DNS record",
+            "error": {
+                "target_format": "The format is [Host or IP]:port",
+                "weight_min_max": "Number between 0 and 65535"
+            }
+        }
     },
     "element": {
         "text_search": "search text",

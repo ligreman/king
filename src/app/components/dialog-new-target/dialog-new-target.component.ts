@@ -2,7 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CustomValidators } from '../../shared/custom-validators';
 
 @Component({
@@ -18,10 +18,11 @@ export class DialogNewTargetComponent implements OnInit {
     form = this.fb.group({
         target: ['', [Validators.required, CustomValidators.isHost()]],
         weight: [10000, [CustomValidators.isNumber(), Validators.min(0), Validators.max(65536)]],
+        port: [8080, [Validators.required, CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]],
         tags: ['']
     });
 
-    constructor(@Inject(MAT_DIALOG_DATA) public upstreamId: any, private fb: FormBuilder) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public upstreamId: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewTargetComponent>) { }
 
     ngOnInit(): void {
     }
@@ -30,7 +31,7 @@ export class DialogNewTargetComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
-        return this.prepareDataForKong(this.form.value);
+        this.dialogRef.close(this.prepareDataForKong(this.form.value));
     }
 
     /*
@@ -58,6 +59,9 @@ export class DialogNewTargetComponent implements OnInit {
         }
     }
 
+    /*
+        Preparo los datos para enviarlos a KONG
+     */
     prepareDataForKong(body) {
         if (this.currentTags && this.currentTags.length > 0) {
             body.tags = this.currentTags;
@@ -65,10 +69,16 @@ export class DialogNewTargetComponent implements OnInit {
             body.tags = [];
         }
 
+        // Concateno el puerto
+        body.target = body.target + ':' + body.port;
+        delete body.port;
+        
         return body;
     }
 
     get targetField() { return this.form.get('target'); }
+
+    get portField() { return this.form.get('port'); }
 
     get weightField() { return this.form.get('weight'); }
 

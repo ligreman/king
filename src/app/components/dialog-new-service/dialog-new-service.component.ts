@@ -2,7 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
@@ -28,7 +28,7 @@ export class DialogNewServiceComponent implements OnInit {
         url: ['', [Validators.required, CustomValidators.isHostProtocolPort(this.validProtocols)]],
         protocol: ['', [Validators.required, CustomValidators.isProtocol(this.validProtocols)]],
         host: ['', [Validators.required, CustomValidators.isHost()]],
-        port: ['', [Validators.required, CustomValidators.isNumber(), Validators.min(1), Validators.max(65535)]],
+        port: ['', [Validators.required, CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]],
         path: ['', [Validators.pattern(/^\//)]],
         retries: [5, [CustomValidators.isNumber(), Validators.min(0), Validators.max(32767)]],
         connect_timeout: [60000, [CustomValidators.isNumber(), Validators.min(1), Validators.max(2147483646)]],
@@ -41,7 +41,8 @@ export class DialogNewServiceComponent implements OnInit {
         tags: ['']
     }, {validators: [ProtocolPathValidator()]});
 
-    constructor(@Inject(MAT_DIALOG_DATA) public serviceIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public serviceIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
+                public dialogRef: MatDialogRef<DialogNewServiceComponent>) { }
 
     ngOnInit(): void {
         // Recupero la lista de certificados
@@ -109,7 +110,7 @@ export class DialogNewServiceComponent implements OnInit {
         Submit del formulario
      */
     onSubmit() {
-        return this.prepareDataForKong(this.form.value);
+        this.dialogRef.close(this.prepareDataForKong(this.form.value));
     }
 
     /*

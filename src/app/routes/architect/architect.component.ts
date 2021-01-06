@@ -23,6 +23,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     selection: any = '';
     // First stabilization
     stabilized = false;
+    // Show the toolbar
+    showTools = false;
     // Grafo
     network;
     // Datos del API para pintar el grafo
@@ -30,7 +32,12 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     // Filtros del grafo
     netFilter = {tag: '', element: 'all', mode: true};
     // Posibles tipos de nodos que tienen acciones propias
-    groups = ['service', 'route', 'upstream', 'consumer'];
+    groupsInfo = ['service', 'route', 'upstream', 'consumer', 'target'];
+    groupsEdit = ['service', 'route', 'upstream', 'consumer'];
+    groupsDelete = ['service', 'route', 'upstream', 'consumer', 'target'];
+    groupsAddPlugin = ['service', 'route', 'upstream', 'consumer'];
+    groupsAddTarget = ['upstream'];
+    groupsAny = ['service', 'route', 'upstream', 'consumer', 'target'];
 
     // Datos del grafo
     data = {
@@ -91,7 +98,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (info.nodes.length > 0) {
                         this.selection = this.data.nodes.get(info.nodes[0]);
 
-                        if (this.groups.includes(this.selection.group)) {
+                        if (this.groupsInfo.includes(this.selection.group)) {
                             this.showInfo(this.selection);
                         }
                     } else {
@@ -108,6 +115,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
 
                 this.populateGraph();
+                this.showTools = true;
             }
         }, 1500);
     }
@@ -123,7 +131,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.getGraphDataFromApi().subscribe(value => {
             this.dataApi = value;
             // Ahora construyo los nodos y edges del grafo
-            this.createGraphNodesAndEdges(value);
+            this.createGraphNodesAndEdges(value).then(r => {
+                // Marco el grafo como estabilidazo y termino de cargarlo
+                this.stabilized = false;
+                this.loading = false;
+            });
         });
     }
 
@@ -145,7 +157,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     /*
         Calculo los datos de nodos y edges del grafo
      */
-    createGraphNodesAndEdges(data) {
+    async createGraphNodesAndEdges(data) {
         // Limpio el grafo
         this.data.nodes.clear();
         this.data.edges.clear();
@@ -171,20 +183,43 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             // Si el host de este servicio se corresponde con el name de un Upstream, edge
             const serviceUpstream = _filter(data.upstreams, {name: service.host});
             if (serviceUpstream.length > 0) {
-                serviceUpstream.forEach(up => {
+                for (const up of serviceUpstream) {
+                    // nodo del upstream
                     this.data.nodes.add({
                         id: up.id,
                         label: up.name,
-                        title: 'Upstream',
+                        title: 'Upstream: ' + up.id + '<br>' + this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm,
                         group: 'upstream',
                         data: up
                     });
+                    // Edge desde el servicio al upstream
                     this.data.edges.add({
                         from: service.id,
                         to: up.id,
                         width: 2
                     });
-                });
+
+                    // Busco los targets del upstream
+                    const targets = await this.api.getTargets(up.id).toPromise();
+
+                    // Por cada target creo un nodo
+                    targets['data'].forEach(target => {
+                        this.data.nodes.add({
+                            id: target.id,
+                            label: target.target,
+                            title: 'Target: ' + target.id + '<br>' + this.translate.instant('target.dialog.weight') + ': ' + target.weight,
+                            group: 'target',
+                            data: target
+                        });
+
+                        // Edge del upstream al target
+                        this.data.edges.add({
+                            from: up.id,
+                            to: target.id,
+                            width: 2
+                        });
+                    });
+                }
             }
             // Si el host no se corresponde con Upstreams, creo un nodo Host y edge hacia él
             else {
@@ -269,9 +304,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
             }
         });
-
-        this.stabilized = false;
-        this.loading = false;
     }
 
     fitNetwork() {

@@ -60,7 +60,9 @@
             "delete_upstream_title": "Eliminar upstream",
             "delete_upstream": "¿Deseas eliminar este upstream?",
             "delete_consumer_title": "Eliminar consumidor",
-            "delete_consumer": "¿Deseas eliminar este consumidor?"
+            "delete_consumer": "¿Deseas eliminar este consumidor?",
+            "delete_target_title": "Eliminar target",
+            "delete_target": "¿Deseas eliminar este target?"
         },
         "copy_clipboard": "Descargar en JSON"
     },
@@ -148,6 +150,7 @@
         "local_actions_route": "Acciones sobre ruta",
         "local_actions_upstream": "Acciones sobre upstream",
         "local_actions_consumer": "Acciones sobre consumidor",
+        "local_actions_target": "Acciones sobre target",
         "center_network": "Ajustar grafo para abarcar todos los nodos",
         "filter": "Filtrar por etiquetas, separadas por comas",
         "filter_tooltip": "Filtrar",
@@ -345,7 +348,17 @@
     "target": {
         "add": "Añadir Target",
         "dialog": {
-            "create": "Crear un Target nuevo para el upstream {{up}}"
+            "create": "Crear un Target nuevo para el upstream {{up}}",
+            "target": "Dirección de destino (ip o nombre de host)",
+            "target_tooltip": "La dirección de destino (ip o nombre de host). Si el nombre de host resuelve a un registro SRV, el valor del puerto será sobrescrito por el valor del registro DNS",
+            "target_hint": "(Host o IP)",
+            "target_example": "example.com",
+            "weight": "Peso",
+            "weight_tooltip": "El peso de este target dentro del balanceador de carga del upstream (0-65535). Si el nombre de host resuelve a un registro SRV, el valor del peso será sobrescrito por el valor del registro DNS",
+            "error": {
+                "target_format": "El formato es [Host o IP]:puerto",
+                "weight_min_max": "Número entre 0 y 65535"
+            }
         }
     },
     "element": {

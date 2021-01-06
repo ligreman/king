@@ -5,7 +5,7 @@
         </p>
     </div>
     <div fxFlex="75" [fxShow]="!loading" class="graph-container">
-        <div id="graph-tools" fxLayout="row" fxLayoutAlign="space-between center">
+        <div *ngIf="showTools" id="graph-tools" fxLayout="row" fxLayoutAlign="space-between center">
             <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">
                 <mat-form-field class="filter" color="accent" fxFlex="75">
                     <mat-slide-toggle [checked]="netFilter.mode" (change)="netFilter.mode = !netFilter.mode" matPrefix class="margin-right-20">
@@ -85,12 +85,12 @@
                 </div>
             </mat-list-item>
 
-            <mat-divider class="margin-top-10 margin-bottom-10" *ngIf="groups.includes(selection.group)"></mat-divider>
+            <mat-divider class="margin-top-10 margin-bottom-10" *ngIf="groupsAny.includes(selection.group)"></mat-divider>
 
-            <div mat-subheader class="subheader" *ngIf="groups.includes(selection.group)">
+            <div mat-subheader class="subheader" *ngIf="groupsAny.includes(selection.group)">
                 {{'architect.local_actions_' + selection.group | translate }}&nbsp;<span class="italic">{{ selection.label }}</span>
             </div>
-            <mat-list-item *ngIf="groups.includes(selection.group)">
+            <mat-list-item *ngIf="groupsInfo.includes(selection.group)">
                 <div mat-line>
                     <button mat-button (click)="showInfo(selection)">
                         <mat-icon>info</mat-icon>
@@ -98,14 +98,14 @@
                     </button>
                 </div>
             </mat-list-item>
-            <mat-list-item *ngIf="groups.includes(selection.group)">
+            <mat-list-item *ngIf="groupsEdit.includes(selection.group)">
                 <div mat-line>
                     <button mat-button color="accent" (click)="addEdit(selection, selection.group)">
                         <mat-icon>edit</mat-icon>
                         {{'text.edit' | translate}}</button>
                 </div>
             </mat-list-item>
-            <mat-list-item *ngIf="groups.includes(selection.group)">
+            <mat-list-item *ngIf="groupsDelete.includes(selection.group)">
                 <div mat-line>
                     <button mat-button color="warn" (click)="delete(selection)">
                         <mat-icon>delete</mat-icon>
@@ -113,7 +113,7 @@
                     </button>
                 </div>
             </mat-list-item>
-            <mat-list-item *ngIf="groups.includes(selection.group)">
+            <mat-list-item *ngIf="groupsAddPlugin.includes(selection.group)">
                 <div mat-line>
                     <button mat-button (click)="addEditPlugin(selection)">
                         <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
@@ -121,7 +121,7 @@
                     </button>
                 </div>
             </mat-list-item>
-            <mat-list-item *ngIf="selection.group === 'upstream'">
+            <mat-list-item *ngIf="groupsAddTarget.includes(selection.group)">
                 <div mat-line>
                     <button mat-button (click)="addTarget(selection)">
                         <mat-icon class="color-target">gps_fixed</mat-icon>&nbsp;

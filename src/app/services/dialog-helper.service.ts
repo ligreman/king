@@ -273,6 +273,10 @@ export class DialogHelperService {
                 opt.data = select.id;
                 component = DialogInfoConsumerComponent;
                 break;
+            case 'target':
+                opt.data = select.id;
+                component = DialogInfoConsumerComponent;
+                break;
         }
 
         this.dialog.open(component, opt);
@@ -303,6 +307,14 @@ export class DialogHelperService {
                         title: 'dialog.confirm.delete_consumer_title',
                         content: 'dialog.confirm.delete_consumer',
                         name: select.username,
+                        id: select.id
+                    };
+                    break;
+                case 'target':
+                    opt.data = {
+                        title: 'dialog.confirm.delete_target_title',
+                        content: 'dialog.confirm.delete_target',
+                        name: select.target,
                         id: select.id
                     };
                     break;
@@ -344,6 +356,15 @@ export class DialogHelperService {
                         case 'consumer':
                             this.api.deleteConsumer(select.id).subscribe(() => {
                                 this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.username});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
+                            break;
+                        case 'target':
+                            this.api.deleteTarget(select.id, select.upstream.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.target});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});

@@ -2,7 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { startsWith as _startsWith } from 'lodash';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -87,7 +87,8 @@ export class DialogNewUpstreamComponent implements OnInit {
     }, {validators: [HashFormValidator()]});
 
 
-    constructor(@Inject(MAT_DIALOG_DATA) public upstreamIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public upstreamIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
+                public dialogRef: MatDialogRef<DialogNewUpstreamComponent>) { }
 
     ngOnInit(): void {
         forkJoin([
@@ -142,7 +143,7 @@ export class DialogNewUpstreamComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
-        return this.prepareDataForKong(this.form.value);
+        this.dialogRef.close(this.prepareDataForKong(this.form.value));
     }
 
     /*

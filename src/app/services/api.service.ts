@@ -136,8 +136,16 @@ export class ApiService {
     /*
         TARGET ENDPOINTS
      */
+    public getTargets(upstreamId) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets?size=1000').pipe(catchError(this.handleError));
+    }
+
     public postNewTarget(body, upstreamId) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets', body).pipe(catchError(this.handleError));
+    }
+
+    public deleteTarget(id: string, upstreamId) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id).pipe(catchError(this.handleError));
     }
 
     /*

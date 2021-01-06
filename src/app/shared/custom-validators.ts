@@ -123,11 +123,16 @@ export class CustomValidators {
     static isHost(allowEmpty?: boolean): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             let valid = true;
-            
+
             try {
-                if (allowEmpty && control.value !== '' && control.value !== null) {
+                if (allowEmpty) {
+                    Joi.assert(control.value, Joi.string().hostname().allow(''));
+                } else {
                     Joi.assert(control.value, Joi.string().hostname());
                 }
+                // if (!allowEmpty || (allowEmpty && control.value !== '' && control.value !== null)) {
+                //     Joi.assert(control.value, Joi.string().hostname().allow(''));
+                // }
             } catch (e) {
                 valid = false;
             }

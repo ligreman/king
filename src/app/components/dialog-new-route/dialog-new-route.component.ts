@@ -2,7 +2,7 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Joi from 'joi';
 import { isEmpty as _isEmpty, size as _size } from 'lodash';
 import { ApiService } from '../../services/api.service';
@@ -57,7 +57,8 @@ export class DialogNewRouteComponent implements OnInit {
         destinations: ['']
     }, {validators: [FinalFormValidator()]});
 
-    constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
+                public dialogRef: MatDialogRef<DialogNewRouteComponent>) { }
 
     ngOnInit(): void {
         // Recupero la lista de servicios
@@ -89,7 +90,7 @@ export class DialogNewRouteComponent implements OnInit {
         Submit del formulario
      */
     onSubmit() {
-        return this.prepareDataForKong(this.form.value);
+        this.dialogRef.close(this.prepareDataForKong(this.form.value));
     }
 
     /*

@@ -229,7 +229,7 @@
     <div>
         <button mat-button mat-dialog-close="null" color="warn">{{'text.cancel' | translate}}</button>
         <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
-        <button mat-flat-button [mat-dialog-close]="onSubmit()" color="accent"
+        <button mat-flat-button (click)="onSubmit()" color="accent"
                 [disabled]="form.invalid">
             <span *ngIf="!editMode">{{'text.create' | translate}}</span>
             <span *ngIf="editMode">{{'text.edit' | translate}}</span>
