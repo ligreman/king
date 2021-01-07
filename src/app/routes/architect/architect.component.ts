@@ -80,10 +80,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     minVelocity: 1.2,
                     wind: {x: 1, y: 0}
                 },
-                height: '90%'
+                height: '80%'
             };
             if (reference) {
-                options.height = (reference.offsetHeight - 55) + 'px';
+                options.height = (reference.offsetHeight - 55 - 2) + 'px';
                 this.network = new Network(container, this.data, options);
 
                 this.network.on('click', info => {

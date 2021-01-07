@@ -27,78 +27,85 @@
             <div fxLayout="row">
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'text.name' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['name']}}</p>
+                    <p class="text margin-left-20-i">{{service['name']}}</p>
                 </div>
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'text.id' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['id']}}</p>
+                    <p class="text margin-left-20-i">{{service['id']}}</p>
                 </div>
             </div>
             <div fxLayout="row">
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'text.created_at' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['created_at'] * 1000 | date:'medium'}}</p>
+                    <p class="text margin-left-20-i">{{service['created_at'] * 1000 | date:'medium'}}</p>
                 </div>
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'text.updated_at' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['updated_at'] * 1000 | date:'medium'}}</p>
+                    <p class="text margin-left-20-i">{{service['updated_at'] * 1000 | date:'medium'}}</p>
                 </div>
             </div>
 
             <div fxLayout="row" class="margin-top-10-i">
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'service.dialog.protocol' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['protocol']}}</p>
+                    <p class="text margin-left-20-i">{{service['protocol']}}</p>
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'service.dialog.host' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['host']}}</p>
+                    <p class="text margin-left-20-i">{{service['host']}}</p>
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'service.dialog.port' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['port']}}</p>
+                    <p class="text margin-left-20-i">{{service['port']}}</p>
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'service.dialog.path' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['path']}}</p>
+                    <p class="text margin-left-20-i">{{service['path']}}</p>
                 </div>
             </div>
 
             <div fxLayout="row" class="margin-top-10-i">
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'service.dialog.retries' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['retries']}}</p>
+                    <p class="text margin-left-20-i">{{service['retries']}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'service.dialog.connect_timeout' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['connect_timeout']}}</p>
+                    <p class="title margin-0-i" matTooltip="{{'service.dialog.connect_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'service.dialog.connect_timeout' | translate}}</p>
+                    <p class="text margin-left-20-i">{{service['connect_timeout']}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'service.dialog.read_timeout' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['read_timeout']}}</p>
+                    <p class="title margin-0-i" matTooltip="{{'service.dialog.read_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'service.dialog.read_timeout' | translate}}</p>
+                    <p class="text margin-left-20-i">{{service['read_timeout']}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'service.dialog.write_timeout' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['write_timeout']}}</p>
+                    <p class="title margin-0-i" matTooltip="{{'service.dialog.write_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'service.dialog.write_timeout' | translate}}</p>
+                    <p class="text margin-left-20-i">{{service['write_timeout']}}</p>
                 </div>
             </div>
 
             <div fxLayout="row" class="margin-top-10-i">
                 <div fxFlex="50">
-                    <p class="title margin-0-i">{{'service.dialog.certificate' | translate}}</p>
-                    <p class="margin-left-20-i">{{service?.client_certificate?.id}}</p>
+                    <p class="title margin-0-i" matTooltip="{{'service.dialog.certificate_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'service.dialog.certificate' | translate}}</p>
+                    <p class="text margin-left-20-i">{{service?.client_certificate?.id}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'service.dialog.tls_verify' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['tls_verify']}}</p>
+                    <p class="title margin-0-i" matTooltip="{{'service.dialog.tls_verify_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'service.dialog.tls_verify' | translate}}</p>
+                    <p class="text margin-left-20-i">{{service['tls_verify']}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i">{{'service.dialog.tls_verify_depth' | translate}}</p>
-                    <p class="margin-left-20-i">{{service['tls_verify_depth']}}</p>
+                    <p class="title margin-0-i" matTooltip="{{'service.dialog.tls_verify_depth_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'service.dialog.tls_verify_depth' | translate}}</p>
+                    <p class="text margin-left-20-i">{{service['tls_verify_depth']}}</p>
                 </div>
             </div>
             <div fxLayout="row">
-                <p class="title">{{'service.dialog.ca_certificates' | translate}}</p>
+                <p class="title" matTooltip="{{'service.dialog.ca_certificates_tooltip' | translate}}"
+                   matTooltipClass="tooltip-teal">{{'service.dialog.ca_certificates' | translate}}</p>
                 <div>
                     <p *ngFor="let ca of service['ca_certificates']">{{ca}}</p>
                 </div>

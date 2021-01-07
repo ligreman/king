@@ -1,1 +1,242 @@
-<p>dialog-info-upstream works!</p>
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" fxFlex>
+        <span>{{'upstream.dialog.info' | translate}}</span>
+
+        <span fxFlexAlign="end">
+            <a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#upstream-object" target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button mat-icon-button (click)="downloadJson()"
+                    matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div fxFlex [fxShow]="loading" fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+        </p>
+    </div>
+
+    <div fxFlex>
+        <mat-dialog-content *ngIf="upstream && !loading" class="margin-0-i">
+            <div fxLayout="row">
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'text.name' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['name']}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.id' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['id']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'text.created_at' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['created_at'] * 1000 | date:'medium'}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'upstream.dialog.algorithm' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['algorithm']}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.certificate_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.certificate' | translate}}</p>
+                    <p class="text margin-left-20-i">{{ upstream?.client_certificate?.id }}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.slots_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.slots' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['slots']}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_on']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_header_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_header' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_on_header']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_cookie_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_cookie' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_on_cookie']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_cookie_path_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_cookie_path' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_on_cookie_path']}}</p>
+                </div>
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_fallback_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_fallback' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_fallback']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_fallback_header_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_fallback_header' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_fallback_header']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.host_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'service.dialog.host' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['host_header']}}</p>
+                </div>
+            </div>
+
+            <p class="margin-top-10-i">{{'upstream.dialog.health' | translate}}</p>
+            <div fxLayout="row" class="padding-left-20">
+                <div fxFlex="50">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.threshold_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.threshold' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.threshold}}</p>
+                </div>
+            </div>
+
+            <p class="margin-top-10-i margin-bottom-5-i padding-left-20">{{'upstream.dialog.health_active' | translate}}</p>
+            <mat-divider class="margin-bottom-10-i"></mat-divider>
+            <div fxLayout="row" class="padding-left-40">
+                <div fxFlex="33">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.type_healthcheck_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.type_healthcheck' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.type}}</p>
+                </div>
+                <div fxFlex="33">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.http_path_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.http_path' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.http_path}}</p>
+                </div>
+                <div fxFlex="33">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.https_verify_certificate_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.https_verify_certificate' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.https_verify_certificate}}</p>
+                </div>
+            </div>
+            <div fxLayout="row" class="padding-left-40">
+                <div fxFlex="33">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.https_sni_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.https_sni' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.https_sni}}</p>
+                </div>
+                <div fxFlex="33">
+                    <p class="title margin-0-i">{{'upstream.dialog.concurrency' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.concurrency}}</p>
+                </div>
+                <div fxFlex="33">
+                    <p class="title margin-0-i">{{'upstream.dialog.timeout' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.timeout}}</p>
+                </div>
+            </div>
+            <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_healthy' | translate}}</p>
+            <div fxLayout="row" class="padding-left-60">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'upstream.dialog.http_statuses' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.healthy?.http_statuses}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.successes_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.successes' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.healthy?.successes}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.interval_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.interval' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.healthy?.interval}}</p>
+                </div>
+            </div>
+            <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_unhealthy' | translate}}</p>
+            <div fxLayout="row" class="padding-left-60">
+                <div fxFlex="75">
+                    <p class="title margin-0-i">{{'upstream.dialog.http_statuses_unhealthy' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.http_statuses}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.interval_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.interval' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.interval}}</p>
+                </div>
+            </div>
+            <div fxLayout="row" class="padding-left-60">
+                <div fxFlex="33">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.http_failures_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.http_failures' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.http_failures}}</p>
+                </div>
+                <div fxFlex="33">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.tcp_failures_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.tcp_failures' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.tcp_failures}}</p>
+                </div>
+                <div fxFlex="33">
+                    <p class="title margin-0-i">{{'upstream.dialog.timeouts' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.timeouts}}</p>
+                </div>
+            </div>
+
+            <p class="margin-top-10-i margin-bottom-5-i padding-left-20">{{'upstream.dialog.health_passive' | translate}}</p>
+            <mat-divider class="margin-bottom-10-i"></mat-divider>
+            <div fxLayout="row" class="padding-left-40">
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'upstream.dialog.type_healthcheck' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.type}}</p>
+                </div>
+            </div>
+            <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_healthy' | translate}}</p>
+            <div fxLayout="row" class="padding-left-60">
+                <div fxFlex="75">
+                    <p class="title margin-0-i">{{'upstream.dialog.http_statuses' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.healthy?.http_statuses}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.successes_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.successes' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.healthy?.successes}}</p>
+                </div>
+            </div>
+            <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_unhealthy' | translate}}</p>
+            <div fxLayout="row" class="padding-left-60">
+                <div fxFlex="40">
+                    <p class="title margin-0-i">{{'upstream.dialog.http_statuses_unhealthy' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.unhealthy?.http_statuses}}</p>
+                </div>
+                <div fxFlex="20">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.http_failures_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.http_failures' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.unhealthy?.http_failures}}</p>
+                </div>
+                <div fxFlex="20">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.tcp_failures_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.tcp_failures' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.unhealthy?.tcp_failures}}</p>
+                </div>
+                <div fxFlex="20">
+                    <p class="title margin-0-i">{{'upstream.dialog.timeouts' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.unhealthy?.timeouts}}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider class="margin-bottom-10-i margin-top-10-i" *ngIf="!loading"></mat-divider>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between" fxFlex *ngIf="!loading">
+        <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="upstream">
+            <mat-chip *ngFor="let chip of upstream['tags']" color="primary">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <div><!-- leave empty --></div>
+        <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>
