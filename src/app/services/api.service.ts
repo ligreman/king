@@ -136,16 +136,24 @@ export class ApiService {
     /*
         TARGET ENDPOINTS
      */
-    public getTargets(upstreamId) {
+    public getTargets(upstreamId: string) {
         return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets?size=1000').pipe(catchError(this.handleError));
     }
 
-    public postNewTarget(body, upstreamId) {
+    public postNewTarget(body, upstreamId: string) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets', body).pipe(catchError(this.handleError));
     }
 
-    public deleteTarget(id: string, upstreamId) {
+    public deleteTarget(id: string, upstreamId: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id).pipe(catchError(this.handleError));
+    }
+
+    public postSetTargetHealthy(id: string, upstreamId: string) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/healthy', {}).pipe(catchError(this.handleError));
+    }
+
+    public postSetTargetUnhealthy(id: string, upstreamId: string) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets' + id + '/unhealthy', {}).pipe(catchError(this.handleError));
     }
 
     /*

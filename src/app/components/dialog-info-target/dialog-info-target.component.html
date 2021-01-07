@@ -1,0 +1,67 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" fxFlex>
+        <span>{{'target.dialog.info' | translate}}</span>
+
+        <span fxFlexAlign="end">
+            <a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#target-object" target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button mat-icon-button (click)="downloadJson()"
+                    matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div fxFlex [fxShow]="loading" fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+        </p>
+    </div>
+
+    <div fxFlex>
+        <mat-dialog-content *ngIf="target && !loading" class="margin-0-i">
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i" matTooltip="{{'target.dialog.target_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'target.dialog.target' | translate}}</p>
+                    <p class="text margin-left-20-i">{{target['target']}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.id' | translate}}</p>
+                    <p class="text margin-left-20-i">{{target['id']}}</p>
+                </div>
+
+            </div>
+
+            <div fxLayout="row" class="margin-top-10-i">
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'target.dialog.weight_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'target.dialog.weight' | translate}}</p>
+                    <p class="text margin-left-20-i">{{target['weight'] }}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'text.created_at' | translate}}</p>
+                    <p class="text margin-left-20-i">{{target['created_at'] * 1000 | date:'medium'}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'upstream.label' | translate}}</p>
+                    <p class="text margin-left-20-i">{{target?.upstream?.id }}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider class="margin-bottom-10-i margin-top-10-i" *ngIf="!loading"></mat-divider>
+
+    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between" fxFlex *ngIf="!loading">
+        <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="target">
+            <mat-chip *ngFor="let chip of target['tags']" color="primary">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <div><!-- leave empty --></div>
+        <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>

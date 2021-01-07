@@ -6,6 +6,7 @@ export interface DialogData {
     content: '';
     id: '';
     name: '';
+    delete: false;
 }
 
 @Component({

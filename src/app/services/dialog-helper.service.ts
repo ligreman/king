@@ -4,6 +4,7 @@ import { DialogConfirmComponent } from '../components/dialog-confirm/dialog-conf
 import { DialogInfoConsumerComponent } from '../components/dialog-info-consumer/dialog-info-consumer.component';
 import { DialogInfoRouteComponent } from '../components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from '../components/dialog-info-service/dialog-info-service.component';
+import { DialogInfoTargetComponent } from '../components/dialog-info-target/dialog-info-target.component';
 import { DialogInfoUpstreamComponent } from '../components/dialog-info-upstream/dialog-info-upstream.component';
 import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewRouteComponent } from '../components/dialog-new-route/dialog-new-route.component';
@@ -274,8 +275,8 @@ export class DialogHelperService {
                 component = DialogInfoConsumerComponent;
                 break;
             case 'target':
-                opt.data = select.id;
-                component = DialogInfoConsumerComponent;
+                opt.data = select.id + '#' + select.data.upstream.id;
+                component = DialogInfoTargetComponent;
                 break;
         }
 
@@ -299,7 +300,8 @@ export class DialogHelperService {
                         title: 'dialog.confirm.delete_' + group + '_title',
                         content: 'dialog.confirm.delete_' + group,
                         name: select.name,
-                        id: select.id
+                        id: select.id,
+                        delete: true
                     };
                     break;
                 case 'consumer':
@@ -307,7 +309,8 @@ export class DialogHelperService {
                         title: 'dialog.confirm.delete_consumer_title',
                         content: 'dialog.confirm.delete_consumer',
                         name: select.username,
-                        id: select.id
+                        id: select.id,
+                        delete: true
                     };
                     break;
                 case 'target':
@@ -315,7 +318,8 @@ export class DialogHelperService {
                         title: 'dialog.confirm.delete_target_title',
                         content: 'dialog.confirm.delete_target',
                         name: select.target,
-                        id: select.id
+                        id: select.id,
+                        delete: true
                     };
                     break;
             }
@@ -372,6 +376,29 @@ export class DialogHelperService {
                             });
                             break;
                     }
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
+    confirm(data) {
+        return new Promise((resolve, reject) => {
+            let opt = {
+                data: {
+                    id: data?.id || '',
+                    content: data?.content || '',
+                    title: data?.title || '',
+                    name: data?.name || '',
+                    delete: data?.delete
+                }
+            };
+
+            const dialogRef = this.dialog.open(DialogConfirmComponent, opt);
+            dialogRef.afterClosed().subscribe(result => {
+                if (result === 'true') {
+                    resolve();
                 } else {
                     reject();
                 }

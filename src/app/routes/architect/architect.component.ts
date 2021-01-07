@@ -37,6 +37,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     groupsDelete = ['service', 'route', 'upstream', 'consumer', 'target'];
     groupsAddPlugin = ['service', 'route', 'upstream', 'consumer'];
     groupsAddTarget = ['upstream'];
+    groupsHealth = ['target'];
     groupsAny = ['service', 'route', 'upstream', 'consumer', 'target'];
 
     // Datos del grafo
@@ -421,6 +422,52 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';
                 this.populateGraph();
+            })
+            .catch(error => {});
+    }
+
+    /*
+        Pone el target en estado sano
+     */
+    setTargetHealthy(selected = null) {
+        this.dialogHelper
+            .confirm({
+                title: this.translate.instant('target.set_healthy_title'),
+                name: selected.data.target,
+                id: selected.data.id,
+                content: this.translate.instant('target.set_healthy_content')
+            })
+            .then(() => {
+                // Ha aceptado el confirm, así que ejecuto
+                this.api.postSetTargetHealthy(selected.data.id, selected.data.upstream.id)
+                    .subscribe(value => {
+                        this.toast.success('success.healthy_target', '', {msgExtra: selected.data.id});
+                    }, error => {
+                        this.toast.error_general(error, {disableTimeOut: true});
+                    });
+            })
+            .catch(error => {});
+    }
+
+    /*
+        Pone el target en estado erróneo
+     */
+    setTargetUnhealthy(selected = null) {
+        this.dialogHelper
+            .confirm({
+                title: this.translate.instant('target.set_unhealthy_title'),
+                name: selected.data.target,
+                id: selected.data.id,
+                content: this.translate.instant('target.set_unhealthy_content')
+            })
+            .then(() => {
+                // Ha aceptado el confirm, así que ejecuto
+                this.api.postSetTargetUnhealthy(selected.data.id, selected.data.upstream.id)
+                    .subscribe(value => {
+                        this.toast.success('success.unhealthy_target', '', {msgExtra: selected.data.id});
+                    }, error => {
+                        this.toast.error_general(error, {disableTimeOut: true});
+                    });
             })
             .catch(error => {});
     }

@@ -38,6 +38,7 @@ import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confi
 import { DialogInfoConsumerComponent } from './components/dialog-info-consumer/dialog-info-consumer.component';
 import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
+import { DialogInfoTargetComponent } from './components/dialog-info-target/dialog-info-target.component';
 import { DialogInfoUpstreamComponent } from './components/dialog-info-upstream/dialog-info-upstream.component';
 import { DialogNewConsumerComponent } from './components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewPluginComponent } from './components/dialog-new-plugin/dialog-new-plugin.component';
@@ -81,7 +82,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogInfoRouteComponent,
         DialogInfoUpstreamComponent,
         DialogInfoConsumerComponent,
-        DialogNewTargetComponent
+        DialogNewTargetComponent,
+        DialogInfoTargetComponent
     ],
     imports: [
         BrowserModule,

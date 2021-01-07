@@ -129,6 +129,23 @@
                     </button>
                 </div>
             </mat-list-item>
+
+            <mat-list-item *ngIf="groupsHealth.includes(selection.group)">
+                <div mat-line>
+                    <button mat-button (click)="setTargetHealthy(selection)">
+                        <mat-icon class="color-target">power</mat-icon>&nbsp;
+                        {{'target.set_healthy' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item *ngIf="groupsHealth.includes(selection.group)">
+                <div mat-line>
+                    <button mat-button (click)="setTargetUnhealthy(selection)">
+                        <mat-icon class="color-target">power_off</mat-icon>&nbsp;
+                        {{'target.set_unhealthy' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
         </mat-list>
     </div>
 </div>

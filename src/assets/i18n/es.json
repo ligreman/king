@@ -21,7 +21,9 @@
         "delete_route": "Ruta {{extra}} eliminada",
         "delete_upstream": "Upstream {{extra}} eliminado",
         "delete_consumer": "Consumidor {{extra}} eliminado",
-        "delete_target": "Target {{extra}} eliminado"
+        "delete_target": "Target {{extra}} eliminado",
+        "healthy_target": "Target {{extra}} marcado sano",
+        "unhealthy_target": "Target {{extra}} marcado erróneo"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
@@ -347,8 +349,15 @@
     },
     "target": {
         "add": "Añadir Target",
+        "set_healthy": "Marcar como sano",
+        "set_unhealthy": "Marcar como erróneo",
+        "set_healthy_title": "Marcar target como sano",
+        "set_healthy_content": "Confirma que quieres marcar como sano el target.",
+        "set_unhealthy_title": "Marcar target como erróneo",
+        "set_unhealthy_content": "Confirma que quieres marcar como erróneo el target.",
         "dialog": {
             "create": "Crear un Target nuevo para el upstream {{up}}",
+            "info": "Información del Target",
             "target": "Dirección de destino (ip o nombre de host)",
             "target_tooltip": "La dirección de destino (ip o nombre de host). Si el nombre de host resuelve a un registro SRV, el valor del puerto será sobrescrito por el valor del registro DNS",
             "target_hint": "(Host o IP)",

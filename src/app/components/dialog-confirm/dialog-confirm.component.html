@@ -4,12 +4,13 @@
 
 <mat-dialog-content class="mat-typography">
     <p>{{ texts.content | translate}}</p>
-    <p>ID: {{texts.id}}</p>
+    <p *ngIf="texts.id">ID: {{texts.id}}</p>
 </mat-dialog-content>
 
 <mat-divider class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
 <mat-dialog-actions align="end">
     <button mat-flat-button mat-dialog-close="false" color="">{{'text.cancel' | translate}}</button>
-    <button mat-button mat-dialog-close="true" color="warn">{{'text.delete' | translate}}</button>
+    <button mat-button mat-dialog-close="true" *ngIf="texts.delete" color="warn">{{'text.delete' | translate}}</button>
+    <button mat-button mat-dialog-close="true" *ngIf="!texts.delete" color="accent">{{'text.accept' | translate}}</button>
 </mat-dialog-actions>
