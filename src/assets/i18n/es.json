@@ -13,15 +13,18 @@
         "new_consumer": "Consumidor creado",
         "new_plugin": "Plugin creado",
         "new_target": "Target creado",
+        "new_sni": "SNI creado",
         "update_service": "Servicio actualizado",
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
         "update_consumer": "Consumidor actualizado",
+        "update_sni": "SNI actualizado",
         "delete_service": "Servicio {{extra}} eliminado",
         "delete_route": "Ruta {{extra}} eliminada",
         "delete_upstream": "Upstream {{extra}} eliminado",
         "delete_consumer": "Consumidor {{extra}} eliminado",
         "delete_target": "Target {{extra}} eliminado",
+        "delete_sni": "SNI {{extra}} eliminado",
         "healthy_target": "Target {{extra}} marcado sano",
         "unhealthy_target": "Target {{extra}} marcado erróneo",
         "healthy_address": "Dirección {{extra}} marcada sana",
@@ -66,7 +69,9 @@
             "delete_consumer_title": "Eliminar consumidor",
             "delete_consumer": "¿Deseas eliminar este consumidor?",
             "delete_target_title": "Eliminar target",
-            "delete_target": "¿Deseas eliminar este target?"
+            "delete_target": "¿Deseas eliminar este target?",
+            "delete_sni_title": "Eliminar SNI",
+            "delete_sni": "¿Deseas eliminar este SNI?"
         },
         "copy_clipboard": "Descargar en JSON"
     },
@@ -163,6 +168,7 @@
     },
     "service": {
         "label": "Servicio",
+        "header": "Servicios",
         "add": "Añadir Servicio",
         "dialog": {
             "create": "Crear un Servicio nuevo",
@@ -215,6 +221,7 @@
     },
     "route": {
         "add": "Añadir Ruta",
+        "header": "Rutas",
         "label": "Ruta",
         "dialog": {
             "create": "Crear una Ruta nueva",
@@ -269,6 +276,7 @@
     },
     "upstream": {
         "add": "Añadir Upstream",
+        "header": "Upstreams",
         "label": "Upstream",
         "dialog": {
             "create": "Crear un Upstream nuevo",
@@ -352,6 +360,7 @@
     },
     "target": {
         "add": "Añadir Target",
+        "header": "Targets",
         "set_healthy": "Marcar como sano",
         "set_unhealthy": "Marcar como erróneo",
         "set_healthy_title": "Marcar target como sano",
@@ -386,8 +395,15 @@
     },
     "sni": {
         "add": "Añadir SNI",
+        "header": "SNIs",
         "dialog": {
-            "certificate": "Certificado de cliente"
+            "create": "Crear un SNI nuevo",
+            "edit": "Editar SNI",
+            "info": "Información del SNI",
+            "name": "Nombre",
+            "name_tooltip": "El nombre del SNI para asociar al certificado",
+            "certificate": "Certificado de cliente",
+            "certificate_tooltip": "El ID (UUID) del certificado con el que asociar el host del SNI. El certificado debe tener una clave privada válida asociada para ser utilizado por el objeto SNI"
         }
     },
     "element": {

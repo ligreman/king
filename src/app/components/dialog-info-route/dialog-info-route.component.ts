@@ -14,6 +14,7 @@ export class DialogInfoRouteComponent implements OnInit {
     route;
     services;
     loading = true;
+    sniList = {};
 
     constructor(@Inject(MAT_DIALOG_DATA) public routeId: string, private api: ApiService, private toast: ToastService) { }
 
@@ -30,6 +31,16 @@ export class DialogInfoRouteComponent implements OnInit {
                             this.toast.error_general(error);
                         }, () => {
                             this.loading = false;
+                        });
+
+                    // La lista de SNIs
+                    this.api.getSnis()
+                        .subscribe(snis => {
+                            for (let sni of snis['data']) {
+                                this.sniList[sni.id] = sni.name;
+                            }
+                        }, error => {
+                            this.toast.error_general(error);
                         });
                 },
                 error => {
@@ -80,6 +91,15 @@ export class DialogInfoRouteComponent implements OnInit {
         }
 
         return txt;
+    }
+
+    getSnis() {
+        let txt = [];
+        this.route.snis.forEach(sni => {
+            txt.push(this.sniList[sni]);
+        });
+
+        return txt.join(', ');
     }
 }
 

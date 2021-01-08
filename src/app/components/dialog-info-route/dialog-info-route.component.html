@@ -80,7 +80,7 @@
                 <div fxFlex="25">
                     <p class="title margin-0-i" matTooltip="{{'route.dialog.snis_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'route.dialog.snis' | translate}}</p>
-                    <p class="text margin-left-20-i">{{ (route['snis'] || []).join(', ')}}</p>
+                    <p class="text margin-left-20-i">{{ getSnis() }}</p>
                 </div>
             </div>
 

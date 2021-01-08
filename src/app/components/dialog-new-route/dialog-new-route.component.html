@@ -57,6 +57,7 @@
                         </mat-error>
                     </mat-form-field>
 
+
                     <!--Métodos-->
                     <mat-form-field fxFlex="45" color="accent" appearance="outline">
                         <mat-label>{{'route.dialog.methods' | translate}}</mat-label>
@@ -129,24 +130,15 @@
                         <mat-hint>{{'route.dialog.hosts_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
-                    <!--SNIS-->
+                    <!--SNIs-->
                     <mat-form-field fxFlex="45" color="accent" appearance="outline">
-                        <mat-chip-list #chipList4 aria-label="">
-                            <mat-chip *ngFor="let path of currentSnis"
-                                      removable="true" (removed)="removeSni(path)">{{path}}
-                                <mat-icon matChipRemove>cancel</mat-icon>
-                            </mat-chip>
-                            <input placeholder="{{'route.dialog.snis' | translate}}"
-                                   formControlName="snis"
-                                   [matChipInputFor]="chipList4"
-                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                   matChipInputAddOnBlur="true"
-                                   (matChipInputTokenEnd)="addSni($event)">
-                        </mat-chip-list>
+                        <mat-label>{{'route.dialog.snis' | translate}}</mat-label>
+                        <mat-select formControlName="snis" multiple>
+                            <mat-option *ngFor="let sni of snisAvailable" value="{{sni.id}}">{{sni.name}}</mat-option>
+                        </mat-select>
                         <mat-icon matSuffix matTooltip="{{'route.dialog.snis_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
-                        <mat-hint>{{'route.dialog.hosts_hint' | translate}}</mat-hint>
                     </mat-form-field>
                 </div>
 

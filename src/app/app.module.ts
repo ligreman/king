@@ -44,12 +44,13 @@ import { DialogNewConsumerComponent } from './components/dialog-new-consumer/dia
 import { DialogNewPluginComponent } from './components/dialog-new-plugin/dialog-new-plugin.component';
 import { DialogNewRouteComponent } from './components/dialog-new-route/dialog-new-route.component';
 import { DialogNewServiceComponent } from './components/dialog-new-service/dialog-new-service.component';
+import { DialogNewSniComponent } from './components/dialog-new-sni/dialog-new-sni.component';
 import { DialogNewTargetComponent } from './components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from './components/dialog-new-upstream/dialog-new-upstream.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
-import { CertificateCacertComponent } from './routes/certificate-cacert/certificate-cacert.component';
-import { CertificateCertComponent } from './routes/certificate-cert/certificate-cert.component';
-import { CertificateSniComponent } from './routes/certificate-sni/certificate-sni.component';
+import { CertificateCacertComponent } from './routes/certificates/certificate-cacert/certificate-cacert.component';
+import { CertificateCertComponent } from './routes/certificates/certificate-cert/certificate-cert.component';
+import { CertificateSniComponent } from './routes/certificates/certificate-sni/certificate-sni.component';
 import { ElementConsumerComponent } from './routes/elements/element-consumer/element-consumer.component';
 import { ElementRouteComponent } from './routes/elements/element-route/element-route.component';
 import { ElementServiceComponent } from './routes/elements/element-service/element-service.component';
@@ -89,7 +90,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogInfoTargetComponent,
         CertificateSniComponent,
         CertificateCacertComponent,
-        CertificateCertComponent
+        CertificateCertComponent,
+        DialogNewSniComponent
     ],
     imports: [
         BrowserModule,

@@ -3,9 +3,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { ApiService } from '../../services/api.service';
-import { DialogHelperService } from '../../services/dialog-helper.service';
-import { ToastService } from '../../services/toast.service';
+import { ApiService } from '../../../services/api.service';
+import { DialogHelperService } from '../../../services/dialog-helper.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
     selector: 'app-certificate-sni',
@@ -13,7 +13,7 @@ import { ToastService } from '../../services/toast.service';
     styleUrls: ['./certificate-sni.component.scss']
 })
 export class CertificateSniComponent implements OnInit, AfterViewInit {
-    displayedColumns: string[] = ['id', 'name', 'certificate', 'tags'];
+    displayedColumns: string[] = ['id', 'name', 'certificate', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -77,17 +77,10 @@ export class CertificateSniComponent implements OnInit, AfterViewInit {
     /*
         Añade un elemento nuevo
      */
-    addEdit(selected = null) {
-        /*this.dialogHelper.addEditSni(selected)
+    addEditSni(selected = null) {
+        this.dialogHelper.addEditSni(selected)
             .then(() => { this.reloadData(); })
-            .catch(error => {});*/
-    }
-
-    /*
-        Muestra la info del elemento seleccionado
-     */
-    showInfo(select) {
-        this.dialogHelper.showInfoElement(select, 'sni');
+            .catch(error => {});
     }
 
     /*

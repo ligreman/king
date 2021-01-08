@@ -1,8 +1,12 @@
 <mat-progress-bar mode="indeterminate" color="accent" [fxShow]="loading"></mat-progress-bar>
 <div class="progress-placeholder" [fxShow]="!loading"></div>
 
+<div fxLayout="row" fxLayoutAlign="center center" class="padding-top-20">
+    <h2 fxFlex="90" class="margin-0-i">{{ 'service.header' | translate}}</h2>
+</div>
+
 <div fxLayout="row" fxLayoutAlign="center start">
-    <div fxFlex="90" fxLayout="column" class="padding-top-20">
+    <div fxFlex="90" fxLayout="column">
         <div fxLayout="row" fxLayoutAlign="start end">
             <mat-form-field color="accent" fxFlex>
                 <mat-label>{{ 'text.search' | translate }}</mat-label>

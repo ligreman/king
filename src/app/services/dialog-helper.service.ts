@@ -9,6 +9,7 @@ import { DialogInfoUpstreamComponent } from '../components/dialog-info-upstream/
 import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewRouteComponent } from '../components/dialog-new-route/dialog-new-route.component';
 import { DialogNewServiceComponent } from '../components/dialog-new-service/dialog-new-service.component';
+import { DialogNewSniComponent } from '../components/dialog-new-sni/dialog-new-sni.component';
 import { DialogNewTargetComponent } from '../components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from '../components/dialog-new-upstream/dialog-new-upstream.component';
 import { ApiService } from './api.service';
@@ -210,6 +211,53 @@ export class DialogHelperService {
     }
 
     /*
+        Añade un sni
+     */
+    addEditSni(selected = null) {
+        return new Promise((resolve, reject) => {
+            // Miro si me viene datos del seleccionado para entonces mostrar ventana de editar
+            let selectedSniId = null;
+            if (selected !== null) {
+                selectedSniId = selected.id;
+            }
+
+            const dialogRef = this.dialog.open(DialogNewSniComponent, {
+                disableClose: true,
+                minWidth: '80vw',
+                minHeight: '50vh',
+                data: selectedSniId
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== null && result !== 'null') {
+                    // Si no venía selected, es que es nuevo
+                    if (selectedSniId === null) {
+                        // llamo al API
+                        this.api.postNewSni(result).subscribe(value => {
+                            this.toast.success('text.id_extra', 'success.new_sni', {msgExtra: value['id']});
+                            resolve();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                            reject();
+                        });
+                    }
+                    // Si venía es que es edición
+                    else {
+                        this.api.patchSni(selectedSniId, result).subscribe(value => {
+                            this.toast.success('text.id_extra', 'success.update_sni', {msgExtra: value['id']});
+                            resolve();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                            reject();
+                        });
+                    }
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
+    /*
         Añade un target
      */
     addTarget(selectedUpstream) {
@@ -296,6 +344,7 @@ export class DialogHelperService {
                 case 'service':
                 case 'route':
                 case 'upstream':
+                case 'sni':
                     opt.data = {
                         title: 'dialog.confirm.delete_' + group + '_title',
                         content: 'dialog.confirm.delete_' + group,
@@ -369,6 +418,15 @@ export class DialogHelperService {
                         case 'target':
                             this.api.deleteTarget(select.id, select.upstream.id).subscribe(() => {
                                 this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.target});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
+                            break;
+                        case 'sni':
+                            this.api.deleteSni(select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});

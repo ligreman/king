@@ -13,15 +13,18 @@
         "new_consumer": "Consumer created",
         "new_plugin": "Plugin created",
         "new_target": "Target created",
+        "new_sni": "SNI created",
         "update_service": "Service updated",
         "update_route": "Route updated",
         "update_upstream": "Upstream updated",
         "update_consumer": "Consumer updated",
+        "update_sni": "SNI updated",
         "delete_service": "Service {{extra}} deleted",
         "delete_route": "Route {{extra}} deleted",
         "delete_upstream": "Upstream {{extra}} deleted",
         "delete_consumer": "Consumer {{extra}} deleted",
         "delete_target": "Target {{extra}} deleted",
+        "delete_sni": "SNI {{extra}} deleted",
         "healthy_target": "Target {{extra}} set as healthy",
         "unhealthy_target": "Target {{extra}} set as unhealthy",
         "healthy_address": "Address {{extra}} set as healthy",
@@ -66,7 +69,9 @@
             "delete_consumer_title": "Delete consumer",
             "delete_consumer": "Do you want to delete this consumer?",
             "delete_target_title": "Delete target",
-            "delete_target": "Do you want to delete this target?"
+            "delete_target": "Do you want to delete this target?",
+            "delete_sni_title": "Delete SNI",
+            "delete_sni": "Do you want to delete this SNI?"
         },
         "copy_clipboard": "Download in JSON"
     },
@@ -163,6 +168,7 @@
     },
     "service": {
         "label": "Service",
+        "header": "Services",
         "add": "Add Service",
         "dialog": {
             "create": "Create a new Service",
@@ -171,7 +177,7 @@
             "name": "Name for the Service",
             "name_example": "my-service",
             "url": "Complete URL",
-            "url_hint": "Must include protocol, host, port and path if it´s needed",
+            "url_hint": "Must include protocol, host, port and path if it`s needed",
             "url_example": "https://example.com:80/api",
             "complete": "Different fields for each value",
             "protocol": "Protocol",
@@ -215,6 +221,7 @@
     },
     "route": {
         "add": "Add Route",
+        "header": "Routes",
         "label": "Route",
         "dialog": {
             "create": "Create a new Route",
@@ -269,6 +276,7 @@
     },
     "upstream": {
         "add": "Add Upstream",
+        "header": "Upstreams",
         "label": "Upstream",
         "dialog": {
             "create": "Create a new Upstream",
@@ -352,6 +360,7 @@
     },
     "target": {
         "add": "Add Target",
+        "header": "Targets",
         "set_healthy": "Set as healthy",
         "set_unhealthy": "Set as unhealthy",
         "set_healthy_title": "Set target as healthy",
@@ -362,7 +371,7 @@
         "health_HEALTHCHECKS_OFF": "Health checks disabled",
         "health_HEALTHY": "Healthy",
         "health_UNHEALTHY": "Unhealthy",
-        "info_health": "Target´s health status",
+        "info_health": "Target`s health status",
         "addresses_percent": "Addresses available percentage",
         "dialog": {
             "create": "Create a new Target for the upstream {{up}}",
@@ -386,8 +395,15 @@
     },
     "sni": {
         "add": "Add SNI",
+        "header": "SNIs",
         "dialog": {
-            "certificate": "Client certificate"
+            "create": "Create a new SNI",
+            "edit": "Edit SNI",
+            "info": "SNI`s information",
+            "name": "Name",
+            "name_tooltip": "The SNI name to associate with the given certificate",
+            "certificate": "Client certificate",
+            "certificate_tooltip": "The id (a UUID) of the certificate with which to associate the SNI hostname. The Certificate must have a valid private key associated with it to be used by the SNI object"
         }
     },
     "element": {

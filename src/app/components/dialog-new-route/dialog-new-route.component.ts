@@ -23,11 +23,12 @@ export class DialogNewRouteComponent implements OnInit {
     currentTags = [];
     currentHosts = [];
     currentPaths = [];
-    currentSnis = [];
     currentHeaders = {};
     currentSources = [];
     currentDestinations = [];
+
     servicesAvailable = [];
+    snisAvailable = [];
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -51,7 +52,6 @@ export class DialogNewRouteComponent implements OnInit {
 
         hosts_validation: [''],
         paths_validation: [''],
-        snis_validation: [''],
         headers: [''],
         sources: [''],
         destinations: ['']
@@ -66,6 +66,16 @@ export class DialogNewRouteComponent implements OnInit {
             .subscribe(services => {
                 for (let serv of services['data']) {
                     this.servicesAvailable.push({id: serv.id, name: serv.name});
+                }
+            }, error => {
+                this.toast.error_general(error);
+            });
+
+        // La lista de SNIs
+        this.api.getSnis()
+            .subscribe(snis => {
+                for (let sni of snis['data']) {
+                    this.snisAvailable.push({id: sni.id, name: sni.name});
                 }
             }, error => {
                 this.toast.error_general(error);
@@ -174,36 +184,6 @@ export class DialogNewRouteComponent implements OnInit {
             if (this.currentPaths.length === 0) {
                 // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
                 this.form.get('paths_validation').setValue(null);
-            }
-        }
-    }
-
-    /*
-        Gestión de snis
-     */
-    addSni(event: MatChipInputEvent): void {
-        const input = event.input;
-        const value = event.value.trim();
-
-        // Add
-        if ((value || '')) {
-            this.currentSnis.push(value);
-            this.form.get('snis_validation').setValue('true');
-
-            // Reset the input value
-            if (input) {
-                input.value = '';
-            }
-        }
-    }
-
-    removeSni(host): void {
-        const index = this.currentSnis.indexOf(host);
-        if (index >= 0) {
-            this.currentSnis.splice(index, 1);
-            if (this.currentSnis.length === 0) {
-                // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
-                this.form.get('snis_validation').setValue(null);
             }
         }
     }
@@ -331,15 +311,11 @@ export class DialogNewRouteComponent implements OnInit {
         this.currentPaths = route['paths'] || [];
         route['paths'] = [];
 
-        this.currentSnis = route['snis'] || [];
-        route['snis'] = [];
-
         this.currentHeaders = route['headers'] || [];
         this.currentSources = route['sources'] || [];
         this.currentDestinations = route['destinations'] || [];
 
         route['hosts_validation'] = '';
-        route['snis_validation'] = '';
         route['paths_validation'] = '';
 
         return route;
@@ -350,7 +326,6 @@ export class DialogNewRouteComponent implements OnInit {
         // El servicio hay que mandarlo así
         body.service = {id: this.serviceField.value};
         delete body.hosts_validation;
-        delete body.snis_validation;
         delete body.paths_validation;
 
         if (this.currentTags && this.currentTags.length > 0) {
@@ -369,12 +344,6 @@ export class DialogNewRouteComponent implements OnInit {
             body.paths = this.currentPaths;
         } else {
             body.paths = [];
-        }
-
-        if (this.currentSnis && this.currentSnis.length > 0) {
-            body.snis = this.currentSnis;
-        } else {
-            body.snis = [];
         }
 
         if (this.currentHeaders && Object.getOwnPropertyNames(this.currentHeaders).length > 0) {
@@ -469,7 +438,7 @@ function FinalFormValidator(): ValidatorFn {
             valid = false;
         }
         // For https, at least one of methods, hosts, headers, paths or snis;
-        if (protos.includes('https') && ((_isEmpty(fg.get('methods').value) && _isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value)))) {
+        if (protos.includes('https') && ((_isEmpty(fg.get('methods').value) && _isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value)))) {
             valid = false;
         }
 
@@ -478,7 +447,7 @@ function FinalFormValidator(): ValidatorFn {
             valid = false;
         }
         // For tls, at least one of sources, destinations or snis;
-        if (protos.includes('tls') && _isEmpty(fg.get('sources').value) && ((_isEmpty(fg.get('destinations').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('methods').value) || !_isEmpty(fg.get('hosts_validation').value) || !_isEmpty(fg.get('headers').value) || !_isEmpty(fg.get('paths_validation').value)))) {
+        if (protos.includes('tls') && _isEmpty(fg.get('sources').value) && ((_isEmpty(fg.get('destinations').value) && _isEmpty(fg.get('snis').value)) || (!_isEmpty(fg.get('methods').value) || !_isEmpty(fg.get('hosts_validation').value) || !_isEmpty(fg.get('headers').value) || !_isEmpty(fg.get('paths_validation').value)))) {
             valid = false;
         }
 
@@ -487,7 +456,7 @@ function FinalFormValidator(): ValidatorFn {
             valid = false;
         }
         // For grpcs, at least one of hosts, headers, paths or snis
-        if (protos.includes('grpcs') && ((_isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value) || !_isEmpty(fg.get('methods').value)))) {
+        if (protos.includes('grpcs') && ((_isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value) || !_isEmpty(fg.get('methods').value)))) {
             valid = false;
         }
 
