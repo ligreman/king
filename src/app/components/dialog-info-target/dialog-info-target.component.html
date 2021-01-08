@@ -52,6 +52,56 @@
                     <p class="text margin-left-20-i">{{target?.upstream?.id }}</p>
                 </div>
             </div>
+
+            <p class="margin-top-10-i">{{'target.info_health' | translate}}</p>
+            <div fxLayout="row" fxLayoutAlign="start center" class="padding-left-20">
+                <div fxFlex="25">
+                    <p class="text" matTooltip="{{target?.health}}"
+                       matTooltipClass="tooltip-teal">{{ 'target.health_' + target?.health | translate}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p>
+                        <button mat-icon-button matTooltip="{{'target.set_healthy' | translate}}"
+                                matTooltipClass="tooltip-teal" (click)="setTargetHealthy()">
+                            <mat-icon class="color-healthy">power</mat-icon>
+                        </button>
+                        <button mat-icon-button matTooltip="{{'target.set_unhealthy' | translate}}"
+                                matTooltipClass="tooltip-teal" (click)="setTargetUnhealthy()">
+                            <mat-icon class="color-unhealthy">power_off</mat-icon>
+                        </button>
+                    </p>
+                </div>
+                <div fxFlex="40">
+                    <mat-progress-bar mode="determinate" [value]="getWeigth()" color="{{getColorBar()}}"
+                                      matTooltip="{{'target.addresses_percent' | translate}}"
+                                      matTooltipClass="tooltip-teal"></mat-progress-bar>
+                </div>
+            </div>
+            <div class="padding-left-20">
+                <p class="title margin-0-i">{{'address.label' | translate}}</p>
+                <mat-list role="list">
+                    <mat-list-item role="listitem" *ngFor="let add of target.data.addresses">
+                        <div fxFlex fxLayout="row" fxLayoutAlign="start center">
+                            <div fxFlex="25"><p class="text monospace">{{ add.ip + ':' + add.port}}</p></div>
+                            <div fxFlex="25"><p class="text text-small">{{ 'target.dialog.weight' | translate }}: {{ add.weight }}</p></div>
+                            <div fxFlex="25" matTooltip="{{target?.health}}"
+                                 matTooltipClass="tooltip-teal"><p class="text text-small">{{ 'target.health_' + add.health | translate}}</p></div>
+                            <div fxFlex="25">
+                                <p>
+                                    <button mat-icon-button matTooltip="{{'target.set_healthy' | translate}}"
+                                            matTooltipClass="tooltip-teal" (click)="setAddressHealthy(add.ip, add.port)">
+                                        <mat-icon class="color-healthy">power</mat-icon>
+                                    </button>
+                                    <button mat-icon-button matTooltip="{{'target.set_unhealthy' | translate}}"
+                                            matTooltipClass="tooltip-teal" (click)="setAddressUnhealthy(add.ip, add.port)">
+                                        <mat-icon class="color-unhealthy">power_off</mat-icon>
+                                    </button>
+                                </p>
+                            </div>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </div>
         </mat-dialog-content>
     </div>
 

@@ -97,12 +97,17 @@
                 </div>
             </div>
 
-            <p class="margin-top-10-i">{{'upstream.dialog.health' | translate}}</p>
+            <p class="margin-top-10-i">{{'upstream.dialog.health_target' | translate}}</p>
             <div fxLayout="row" class="padding-left-20">
                 <div fxFlex="50">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.threshold_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.threshold' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.threshold}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'upstream.dialog.health' | translate}}</p>
+                    <p class="text margin-left-20-i" matTooltip="{{upstreamHealth?.data?.health}}"
+                       matTooltipClass="tooltip-teal">{{ 'target.health_' + upstreamHealth?.data?.health | translate}}</p>
                 </div>
             </div>
 

@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -95,6 +95,11 @@ export class ApiService {
     }
 
     public getUpstreamHealth(id: string) {
+        let params = new HttpParams().set('balancer_health', '1');
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id + '/health', {params: params}).pipe(catchError(this.handleError));
+    }
+
+    public getUpstreamTargetsHealth(id: string) {
         return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id + '/health').pipe(catchError(this.handleError));
     }
 
@@ -153,7 +158,15 @@ export class ApiService {
     }
 
     public postSetTargetUnhealthy(id: string, upstreamId: string) {
-        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets' + id + '/unhealthy', {}).pipe(catchError(this.handleError));
+        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/unhealthy', {}).pipe(catchError(this.handleError));
+    }
+
+    public postSetAddressHealthy(id: string, upstreamId: string, address: string) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/' + address + '/healthy', {}).pipe(catchError(this.handleError));
+    }
+
+    public postSetAddressUnhealthy(id: string, upstreamId: string, address: string) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/' + address + '/unhealthy', {}).pipe(catchError(this.handleError));
     }
 
     /*

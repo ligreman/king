@@ -23,7 +23,9 @@
         "delete_consumer": "Consumidor {{extra}} eliminado",
         "delete_target": "Target {{extra}} eliminado",
         "healthy_target": "Target {{extra}} marcado sano",
-        "unhealthy_target": "Target {{extra}} marcado erróneo"
+        "unhealthy_target": "Target {{extra}} marcado erróneo",
+        "healthy_address": "Dirección {{extra}} marcada sana",
+        "unhealthy_address": "Dirección {{extra}} marcada errónea"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
@@ -292,7 +294,8 @@
             "certificate": "Certificado de cliente",
             "certificate_example": "4e3ad2e4-0bc4-4638-8e34-c84a417ba39b",
             "certificate_tooltip": "Certificado de cliente (UUID) para la conexión TLS con el servidor upstream",
-            "health": "Comprobaciones de estado de salud de los target",
+            "health": "Salud del upstream",
+            "health_target": "Comprobaciones de estado de salud de los target",
             "health_active": "Comprobaciones activas de salud",
             "health_passive": "Comprobaciones pasivas de salud (en tráfico a través de proxy)",
             "health_healthy": "Comprobaciones de estado de salud sano",
@@ -352,9 +355,15 @@
         "set_healthy": "Marcar como sano",
         "set_unhealthy": "Marcar como erróneo",
         "set_healthy_title": "Marcar target como sano",
-        "set_healthy_content": "Confirma que quieres marcar como sano el target.",
+        "set_healthy_content": "Confirma que quieres marcarlo como sano.",
         "set_unhealthy_title": "Marcar target como erróneo",
-        "set_unhealthy_content": "Confirma que quieres marcar como erróneo el target.",
+        "set_unhealthy_content": "Confirma que quieres marcarlo como erróneo.",
+        "health_DNS_ERROR": "Error de DNS",
+        "health_HEALTHCHECKS_OFF": "Comprobaciones desactivadas",
+        "health_HEALTHY": "Sano",
+        "health_UNHEALTHY": "Erróneo",
+        "info_health": "Estado de salud del target",
+        "addresses_percent": "Porcentaje de direcciones disponibles",
         "dialog": {
             "create": "Crear un Target nuevo para el upstream {{up}}",
             "info": "Información del Target",
@@ -369,6 +378,11 @@
                 "weight_min_max": "Número entre 0 y 65535"
             }
         }
+    },
+    "address": {
+        "label": "Direcciones",
+        "set_healthy_title": "Marcar dirección como sana",
+        "set_unhealthy_title": "Marcar dirección como errónea"
     },
     "element": {
         "text_search": "texto a buscar",

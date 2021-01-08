@@ -11,6 +11,7 @@ import { ToastService } from '../../services/toast.service';
 })
 export class DialogInfoUpstreamComponent implements OnInit {
     upstream;
+    upstreamHealth;
     loading = true;
 
     constructor(@Inject(MAT_DIALOG_DATA) public upstreamId: string, private api: ApiService, private toast: ToastService) { }
@@ -20,6 +21,16 @@ export class DialogInfoUpstreamComponent implements OnInit {
         this.api.getUpstream(this.upstreamId)
             .subscribe(service => {
                 this.upstream = service;
+            }, error => {
+                this.toast.error_general(error);
+            }, () => {
+                this.loading = false;
+            });
+
+        // Estado salud del upstream
+        this.api.getUpstreamHealth(this.upstreamId)
+            .subscribe(h => {
+                this.upstreamHealth = h;
             }, error => {
                 this.toast.error_general(error);
             }, () => {

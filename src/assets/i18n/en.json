@@ -23,7 +23,9 @@
         "delete_consumer": "Consumer {{extra}} deleted",
         "delete_target": "Target {{extra}} deleted",
         "healthy_target": "Target {{extra}} set as healthy",
-        "unhealthy_target": "Target {{extra}} set as unhealthy"
+        "unhealthy_target": "Target {{extra}} set as unhealthy",
+        "healthy_address": "Address {{extra}} set as healthy",
+        "unhealthy_address": "Address {{extra}} set as unhealthy"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
@@ -292,7 +294,8 @@
             "certificate": "Client certificate",
             "certificate_example": "4e3ad2e4-0bc4-4638-8e34-c84a417ba39b",
             "certificate_tooltip": "Certificate (UUID) to be used as client certificate while TLS handshaking to the upstream server",
-            "health": "Health check of the targets",
+            "health": "Health of the upstream",
+            "health_target": "Health check of the targets",
             "health_active": "Active health checks",
             "health_passive": "Pasive health checks (in proxied traffic)",
             "health_healthy": "Healthy health checks",
@@ -352,9 +355,15 @@
         "set_healthy": "Set as healthy",
         "set_unhealthy": "Set as unhealthy",
         "set_healthy_title": "Set target as healthy",
-        "set_healthy_content": "Confirm that you want to set the target as healthy.",
+        "set_healthy_content": "Confirm that you want to set it as healthy.",
         "set_unhealthy_title": "Set target as unhealthy",
-        "set_unhealthy_content": "Confirm that you want to set the target as unhealthy.",
+        "set_unhealthy_content": "Confirm that you want to set it as unhealthy.",
+        "health_DNS_ERROR": "DNS error",
+        "health_HEALTHCHECKS_OFF": "Health checks disabled",
+        "health_HEALTHY": "Healthy",
+        "health_UNHEALTHY": "Unhealthy",
+        "info_health": "Target´s health status",
+        "addresses_percent": "Addresses available percentage",
         "dialog": {
             "create": "Create a new Target for the upstream {{up}}",
             "info": "Target`s information",
@@ -369,6 +378,11 @@
                 "weight_min_max": "Number between 0 and 65535"
             }
         }
+    },
+    "address": {
+        "label": "Addresses",
+        "set_healthy_title": "Set address as healthy",
+        "set_unhealthy_title": "Set address as unhealthy"
     },
     "element": {
         "text_search": "search text",

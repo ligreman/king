@@ -31,3 +31,11 @@
 .color-plugin {
     color: mat-color($mat-purple, 300) !important;
 }
+
+.color-healthy {
+    color: mat-color($mat-lime, 600) !important;
+}
+
+.color-unhealthy {
+    color: mat-color($mat-red, 600) !important;
+}
