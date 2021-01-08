@@ -1,0 +1,74 @@
+<mat-progress-bar mode="indeterminate" color="accent" [fxShow]="loading"></mat-progress-bar>
+<div class="progress-placeholder" [fxShow]="!loading"></div>
+
+<div fxLayout="row" fxLayoutAlign="center start">
+    <div fxFlex="90" fxLayout="column" class="padding-top-20">
+        <div fxLayout="row" fxLayoutAlign="start end">
+            <mat-form-field color="accent" fxFlex>
+                <mat-label>{{ 'text.search' | translate }}</mat-label>
+                <input matInput (keyup)="applyFilter()" placeholder="{{'element.text_search' | translate}}"
+                       #input [(ngModel)]="filter">
+                <button mat-button *ngIf="filter" matSuffix mat-icon-button (click)="filter=''; applyFilter()">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+            <button mat-icon-button (click)="addEdit()" color="accent" fxFlexOffset="5" matTooltip="{{'sni.add'| translate}}"
+                    matTooltipClass="tooltip-teal">
+                <mat-icon>add</mat-icon>
+            </button>
+            <button mat-icon-button (click)="reloadData()" color="accent" matTooltip="{{'element.reload' | translate}}"
+                    matTooltipClass="tooltip-teal">
+                <mat-icon>refresh</mat-icon>
+            </button>
+        </div>
+
+        <table mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear fxFlex>
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'text.id' | translate}}</th>
+                <td mat-cell *matCellDef="let row"><a mat-button color="accent" (click)="showInfo(row)" class="text-small">{{row.id}}</a></td>
+            </ng-container>
+
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'text.name' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{row.name}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="certificate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'sni.dialog.certificate' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{row.certificate?.id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="tags">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.dialog.tags' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{(row.tags && row.tags.length > 0) ? row.tags.join(', ') : ''}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef>{{'element.actions' | translate}}</th>
+                <td mat-cell *matCellDef="let row">
+                    <button mat-icon-button color="accent" (click)="addEdit(row)" matTooltip="{{'text.edit' | translate}}"
+                            matTooltipClass="tooltip-teal">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="delete(row)" matTooltip="{{'text.delete' | translate}}"
+                            matTooltipClass="tooltip-teal">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+                <td class="mat-cell" colspan="10" *ngIf="input.value === ''">{{'element.no_data' | translate}}</td>
+                <td class="mat-cell" colspan="10" *ngIf="input.value !== ''">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
+            </tr>
+        </table>
+
+        <mat-paginator color="accent" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+    </div>
+</div>

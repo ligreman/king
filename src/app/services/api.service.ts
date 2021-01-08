@@ -187,4 +187,27 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/ca_certificates?size=1000').pipe(catchError(this.handleError));
     }
 
+
+    /*
+       SNI ENDPOINTS
+    */
+    public getSnis() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/snis?size=1000').pipe(catchError(this.handleError));
+    }
+
+    public getSni(id: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/snis/' + id).pipe(catchError(this.handleError));
+    }
+
+    public postNewSni(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/snis', body).pipe(catchError(this.handleError));
+    }
+
+    public patchSni(id: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/snis/' + id, body).pipe(catchError(this.handleError));
+    }
+
+    public deleteSni(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/snis/' + id).pipe(catchError(this.handleError));
+    }
 }

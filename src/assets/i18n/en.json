@@ -384,9 +384,16 @@
         "set_healthy_title": "Set address as healthy",
         "set_unhealthy_title": "Set address as unhealthy"
     },
+    "sni": {
+        "add": "Add SNI",
+        "dialog": {
+            "certificate": "Client certificate"
+        }
+    },
     "element": {
         "text_search": "search text",
-        "no_data": "No data matching the filter",
+        "no_data": "There is no data",
+        "no_data_search": "No data matching the filter",
         "actions": "Actions",
         "reload": "Reload data",
         "ssl": "Certificates"

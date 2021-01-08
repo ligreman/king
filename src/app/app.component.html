@@ -39,15 +39,15 @@
             {{ 'header.menu.certs' | translate | uppercase }}
         </button>
         <mat-menu #menuC="matMenu">
-            <button mat-menu-item routerLinkActive="active-route">
+            <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-cert">
                 <mat-icon>https</mat-icon>
                 {{'header.menu.certificates' | translate}}
             </button>
-            <button mat-menu-item routerLinkActive="active-route">
+            <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-cacert">
                 <mat-icon>account_balance</mat-icon>
                 {{'header.menu.cacerts' | translate}}
             </button>
-            <button mat-menu-item routerLinkActive="active-route">
+            <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-sni">
                 <mat-icon>vpn_lock</mat-icon>
                 {{'header.menu.snis' | translate}}
             </button>

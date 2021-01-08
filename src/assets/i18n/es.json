@@ -384,9 +384,16 @@
         "set_healthy_title": "Marcar dirección como sana",
         "set_unhealthy_title": "Marcar dirección como errónea"
     },
+    "sni": {
+        "add": "Añadir SNI",
+        "dialog": {
+            "certificate": "Certificado de cliente"
+        }
+    },
     "element": {
         "text_search": "texto a buscar",
-        "no_data": "No hay resultados buscando por",
+        "no_data": "No hay resultados",
+        "no_data_search": "No hay resultados buscando por",
         "actions": "Acciones",
         "reload": "Recargar los datos",
         "ssl": "Certificados"

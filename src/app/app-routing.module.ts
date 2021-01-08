@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ConnectedGuard } from './guards/connected.guard';
 import { ArchitectComponent } from './routes/architect/architect.component';
+import { CertificateCacertComponent } from './routes/certificate-cacert/certificate-cacert.component';
+import { CertificateCertComponent } from './routes/certificate-cert/certificate-cert.component';
+import { CertificateSniComponent } from './routes/certificate-sni/certificate-sni.component';
 import { ElementConsumerComponent } from './routes/elements/element-consumer/element-consumer.component';
 import { ElementRouteComponent } from './routes/elements/element-route/element-route.component';
 import { ElementServiceComponent } from './routes/elements/element-service/element-service.component';
@@ -18,6 +21,9 @@ const routes: Routes = [
     {path: 'element-route', component: ElementRouteComponent, canActivate: [ConnectedGuard]},
     {path: 'element-upstream', component: ElementUpstreamComponent, canActivate: [ConnectedGuard]},
     {path: 'element-consumer', component: ElementConsumerComponent, canActivate: [ConnectedGuard]},
+    {path: 'certificate-cert', component: CertificateCertComponent, canActivate: [ConnectedGuard]},
+    {path: 'certificate-cacert', component: CertificateCacertComponent, canActivate: [ConnectedGuard]},
+    {path: 'certificate-sni', component: CertificateSniComponent, canActivate: [ConnectedGuard]},
     {
         path: '',
         redirectTo: '/landing',
