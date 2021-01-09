@@ -364,7 +364,18 @@
         }
     },
     "consumer": {
-        "add": "Add Consumer"
+        "add": "Add Consumer",
+        "header": "Consumers",
+        "dialog": {
+            "create": "Create a new Consumer",
+            "edit": "Edit Consumer",
+            "username": "Username",
+            "custom_id": "Custom ID",
+            "custom_id_tooltip": "Field for storing an existing unique ID for the Consumer, useful for mapping Kong with users in your existing database",
+            "error": {
+                "final_validation": "Must include username or custom ID"
+            }
+        }
     },
     "plugin": {
         "add": "Add Plugin"

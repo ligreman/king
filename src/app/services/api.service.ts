@@ -119,23 +119,23 @@ export class ApiService {
         CONSUMERS ENDPOINTS
      */
     public getConsumers() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/consumer?size=1000').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers?size=1000').pipe(catchError(this.handleError));
     }
 
     public getConsumer(id: string) {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/consumer/' + id).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers/' + id).pipe(catchError(this.handleError));
     }
 
     public postNewConsumer(body) {
-        return this.httpClient.post(this.globals.NODE_API_URL + '/consumer', body).pipe(catchError(this.handleError));
+        return this.httpClient.post(this.globals.NODE_API_URL + '/consumers', body).pipe(catchError(this.handleError));
     }
 
     public patchConsumer(id: string, body) {
-        return this.httpClient.patch(this.globals.NODE_API_URL + '/consumer/' + id, body).pipe(catchError(this.handleError));
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/consumers/' + id, body).pipe(catchError(this.handleError));
     }
 
     public deleteConsumer(id: string) {
-        return this.httpClient.delete(this.globals.NODE_API_URL + '/consumer/' + id).pipe(catchError(this.handleError));
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + id).pipe(catchError(this.handleError));
     }
 
     /*

@@ -455,7 +455,7 @@ export class DialogHelperService {
                     opt.data = {
                         title: 'dialog.confirm.delete_consumer_title',
                         content: 'dialog.confirm.delete_consumer',
-                        name: select.username,
+                        name: select.username || select.custom_id,
                         id: select.id,
                         delete: true
                     };
@@ -506,7 +506,7 @@ export class DialogHelperService {
                             break;
                         case 'consumer':
                             this.api.deleteConsumer(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.username});
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: (select.username || select.custom_id)});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});
