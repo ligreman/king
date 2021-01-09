@@ -185,13 +185,18 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             const serviceUpstream = _filter(data.upstreams, {name: service.host});
             if (serviceUpstream.length > 0) {
                 for (const up of serviceUpstream) {
+                    // Health del upstream
+                    const hu = await this.api.getUpstreamHealth(up.id).toPromise();
+                    const hc = this.getHealthData(hu['data'].health);
+
                     // nodo del upstream
                     this.data.nodes.add({
                         id: up.id,
                         label: up.name,
-                        title: 'Upstream: ' + up.id + '<br>' + this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm,
+                        title: 'Upstream: ' + up.id + '<br>' + this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm + '<br>' + hc['label'],
                         group: 'upstream',
-                        data: up
+                        data: up,
+                        font: hc['color']
                     });
                     // Edge desde el servicio al upstream
                     this.data.edges.add({
@@ -204,13 +209,24 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     const targets = await this.api.getTargets(up.id).toPromise();
 
                     // Por cada target creo un nodo
-                    targets['data'].forEach(target => {
+                    for (const target of targets['data']) {
+                        // Health del upstream
+                        const ht = await this.api.getUpstreamTargetsHealth(up.id).toPromise();
+                        let htc = {};
+                        // Busco el target concreto
+                        ht['data'].forEach(tg => {
+                            if (tg.id === target.id) {
+                                htc = this.getHealthData(tg.health);
+                            }
+                        });
+
                         this.data.nodes.add({
                             id: target.id,
                             label: target.target,
-                            title: 'Target: ' + target.id + '<br>' + this.translate.instant('target.dialog.weight') + ': ' + target.weight,
+                            title: 'Target: ' + target.id + '<br>' + this.translate.instant('target.dialog.weight') + ': ' + target.weight + '<br>' + htc['label'],
                             group: 'target',
-                            data: target
+                            data: target,
+                            font: htc['color']
                         });
 
                         // Edge del upstream al target
@@ -219,7 +235,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                             to: target.id,
                             width: 2
                         });
-                    });
+                    }
                 }
             }
             // Si el host no se corresponde con Upstreams, creo un nodo Host y edge hacia él
@@ -542,4 +558,23 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         // Lanzo un filtrado
         this.filterGraphByTag();
     }
+
+    getHealthData(health) {
+        let data = {};
+
+        switch (health) {
+            case 'DNS_ERROR':
+            case 'UNHEALTHY':
+                data['color'] = {color: '#E53935'};
+                break;
+            case 'HEALTHY':
+                data['color'] = {color: '#C0CA33'};
+                break;
+        }
+
+        data['label'] = this.translate.instant('text.health') + ': ' + this.translate.instant('target.health_' + health);
+
+        return data;
+    }
+
 }

@@ -14,17 +14,23 @@
         "new_plugin": "Plugin created",
         "new_target": "Target created",
         "new_sni": "SNI created",
+        "new_cert": "Certificate created",
+        "new_cacert": "CA certificate created",
         "update_service": "Service updated",
         "update_route": "Route updated",
         "update_upstream": "Upstream updated",
         "update_consumer": "Consumer updated",
         "update_sni": "SNI updated",
+        "update_cert": "Certificate updated",
+        "update_cacert": "CA certificate updated",
         "delete_service": "Service {{extra}} deleted",
         "delete_route": "Route {{extra}} deleted",
         "delete_upstream": "Upstream {{extra}} deleted",
         "delete_consumer": "Consumer {{extra}} deleted",
         "delete_target": "Target {{extra}} deleted",
         "delete_sni": "SNI {{extra}} deleted",
+        "delete_cert": "Certificate {{extra}} deleted",
+        "delete_cacert": "CA certificate {{extra}} deleted",
         "healthy_target": "Target {{extra}} set as healthy",
         "unhealthy_target": "Target {{extra}} set as unhealthy",
         "healthy_address": "Address {{extra}} set as healthy",
@@ -48,7 +54,8 @@
         "updated_at": "Updated at",
         "tags": "Tags",
         "true": "Yes",
-        "false": "No"
+        "false": "No",
+        "health": "Health"
     },
     "pagination": {
         "itemsPerPageLabel": "Items per page:",
@@ -71,7 +78,11 @@
             "delete_target_title": "Delete target",
             "delete_target": "Do you want to delete this target?",
             "delete_sni_title": "Delete SNI",
-            "delete_sni": "Do you want to delete this SNI?"
+            "delete_sni": "Do you want to delete this SNI?",
+            "delete_cert_title": "Delete certificate",
+            "delete_cert": "Do you want to delete this certificate? This will also delete the SNIs associated with it",
+            "delete_cacert_title": "Delete CA certificate",
+            "delete_cacert": "Do you want to delete this CA certificate?"
         },
         "copy_clipboard": "Download in JSON"
     },
@@ -404,6 +415,17 @@
             "name_tooltip": "The SNI name to associate with the given certificate",
             "certificate": "Client certificate",
             "certificate_tooltip": "The id (a UUID) of the certificate with which to associate the SNI hostname. The Certificate must have a valid private key associated with it to be used by the SNI object"
+        }
+    },
+    "cert": {
+        "add": "Add Certificate",
+        "header": "Certificates",
+        "dialog": {
+            "create": "Create a new Certificate",
+            "edit": "Edit Certificate",
+            "certificate": "Public certificate (PEM)",
+            "key": "Private key (PEM)",
+            "snis": "SNIs"
         }
     },
     "element": {

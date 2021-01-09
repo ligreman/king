@@ -176,8 +176,20 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/certificates?size=1000').pipe(catchError(this.handleError));
     }
 
+    public getCertificate(certId: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/certificates/' + certId).pipe(catchError(this.handleError));
+    }
+
     public postNewCertificate(body) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/certificates', body).pipe(catchError(this.handleError));
+    }
+
+    public patchCertificate(certId: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/certificates/' + certId, body).pipe(catchError(this.handleError));
+    }
+
+    public deleteCertificate(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/certificates/' + id).pipe(catchError(this.handleError));
     }
 
     /*
@@ -185,6 +197,22 @@ export class ApiService {
     */
     public getCACertificates() {
         return this.httpClient.get(this.globals.NODE_API_URL + '/ca_certificates?size=1000').pipe(catchError(this.handleError));
+    }
+
+    public getCACertificate(certId: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/ca_certificates/' + certId).pipe(catchError(this.handleError));
+    }
+
+    public postNewCACertificate(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/ca_certificates', body).pipe(catchError(this.handleError));
+    }
+
+    public patchCACertificate(certId: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/ca_certificates/' + certId, body).pipe(catchError(this.handleError));
+    }
+
+    public deleteCACertificate(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/ca_certificates/' + id).pipe(catchError(this.handleError));
     }
 
 

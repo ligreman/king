@@ -39,6 +39,10 @@
     white-space: pre-line !important;
 }
 
+.mat-tooltip.tooltip-wide {
+    max-width: 500px !important;
+}
+
 .mat-button-toggle {
     background-color: mat-color($mat-gray, 900);
 

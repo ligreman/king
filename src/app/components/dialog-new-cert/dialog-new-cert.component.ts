@@ -6,54 +6,45 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 
+
 @Component({
-    selector: 'app-dialog-new-sni',
-    templateUrl: './dialog-new-sni.component.html',
-    styleUrls: ['./dialog-new-sni.component.scss']
+    selector: 'app-dialog-new-cert',
+    templateUrl: './dialog-new-cert.component.html',
+    styleUrls: ['./dialog-new-cert.component.scss']
 })
-export class DialogNewSniComponent implements OnInit {
+export class DialogNewCertComponent implements OnInit {
     formValid = false;
     editMode = false;
-    currentTags = [];
-    certificatesAvailable = [];
     loading = true;
+    currentTags = [];
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
-        name: ['', [Validators.required]],
-        certificate: this.fb.group({
-            id: ['', [Validators.required]]
-        }),
+        cert: ['', [Validators.required, Validators.pattern(/^(-----BEGIN CERTIFICATE-----)(\r\n|\r|\n|.)*(-----END CERTIFICATE-----)(\r\n|\r|\n)?$/)]],
+        key: ['', [Validators.required, Validators.pattern(/^(-----BEGIN RSA PRIVATE KEY-----)(\r\n|\r|\n|.)*(-----END RSA PRIVATE KEY-----)(\r\n|\r|\n)?$/)]],
         tags: ['']
     });
 
-    constructor(@Inject(MAT_DIALOG_DATA) public sniIdEdit: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewSniComponent>,
+    constructor(@Inject(MAT_DIALOG_DATA) public certId: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewCertComponent>,
                 private api: ApiService, private toast: ToastService) { }
 
     ngOnInit(): void {
-        this.api.getCertificates()
-            .subscribe(certs => {
-                for (let cert of certs['data']) {
-                    this.certificatesAvailable.push(cert.id);
-                }
-            }, error => {
-                this.toast.error_general(error);
-            }, () => {
-                this.loading = false;
-            });
-
-        // Si viene un servicio para editar
-        if (this.sniIdEdit !== null) {
+        // Si viene  para editar
+        if (this.certId !== null) {
             this.editMode = true;
 
             // Rescato la info del servicio del api
-            this.api.getSni(this.sniIdEdit)
-                .subscribe(route => {
+            this.api.getCertificate(this.certId)
+                .subscribe(cert => {
                     // Relleno el formuarlio
-                    this.form.setValue(this.prepareDataForForm(route));
+                    this.form.setValue(this.prepareDataForForm(cert));
                 }, error => {
                     this.toast.error_general(error);
+                }, () => {
+                    this.loading = false;
                 });
+        } else {
+            this.loading = false;
         }
     }
 
@@ -105,19 +96,20 @@ export class DialogNewSniComponent implements OnInit {
     /*
         Preparo los datos
      */
-    prepareDataForForm(sni) {
-        delete sni['id'];
-        delete sni['created_at'];
-        delete sni['updated_at'];
+    prepareDataForForm(cert) {
+        delete cert['id'];
+        delete cert['created_at'];
+        delete cert['updated_at'];
+        delete cert['snis'];
 
         // Cambios especiales para representarlos en el formulario
-        this.currentTags = sni['tags'] || [];
-        sni['tags'] = [];
+        this.currentTags = cert['tags'] || [];
+        cert['tags'] = [];
 
-        return sni;
+        return cert;
     }
 
-    get nameField() { return this.form.get('name'); }
+    get certField() { return this.form.get('cert'); }
 
-    get certificateField() { return this.form.get('certificate.id'); }
+    get keyField() { return this.form.get('key'); }
 }

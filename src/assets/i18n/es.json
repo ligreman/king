@@ -14,17 +14,23 @@
         "new_plugin": "Plugin creado",
         "new_target": "Target creado",
         "new_sni": "SNI creado",
+        "new_cert": "Certificado creado",
+        "new_cacert": "Certificado de CA creado",
         "update_service": "Servicio actualizado",
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
         "update_consumer": "Consumidor actualizado",
         "update_sni": "SNI actualizado",
+        "update_cert": "Certificado actualizado",
+        "update_cacert": "Certificado de CA actualizado",
         "delete_service": "Servicio {{extra}} eliminado",
         "delete_route": "Ruta {{extra}} eliminada",
         "delete_upstream": "Upstream {{extra}} eliminado",
         "delete_consumer": "Consumidor {{extra}} eliminado",
         "delete_target": "Target {{extra}} eliminado",
         "delete_sni": "SNI {{extra}} eliminado",
+        "delete_cert": "Certificado {{extra}} eliminado",
+        "delete_cacert": "Certificado de CA {{extra}} eliminado",
         "healthy_target": "Target {{extra}} marcado sano",
         "unhealthy_target": "Target {{extra}} marcado erróneo",
         "healthy_address": "Dirección {{extra}} marcada sana",
@@ -48,7 +54,8 @@
         "updated_at": "Actualizado el",
         "tags": "Etiquetas",
         "true": "Sí",
-        "false": "No"
+        "false": "No",
+        "health": "Salud"
     },
     "pagination": {
         "itemsPerPageLabel": "Elementos por página:",
@@ -71,7 +78,11 @@
             "delete_target_title": "Eliminar target",
             "delete_target": "¿Deseas eliminar este target?",
             "delete_sni_title": "Eliminar SNI",
-            "delete_sni": "¿Deseas eliminar este SNI?"
+            "delete_sni": "¿Deseas eliminar este SNI?",
+            "delete_cert_title": "Eliminar certificado",
+            "delete_cert": "¿Deseas eliminar este certificado? Esto eliminará también los SNIs asociados al mismo",
+            "delete_cacert_title": "Eliminar certificado de CA",
+            "delete_cacert": "¿Deseas eliminar este certificado de CA?"
         },
         "copy_clipboard": "Descargar en JSON"
     },
@@ -404,6 +415,17 @@
             "name_tooltip": "El nombre del SNI para asociar al certificado",
             "certificate": "Certificado de cliente",
             "certificate_tooltip": "El ID (UUID) del certificado con el que asociar el host del SNI. El certificado debe tener una clave privada válida asociada para ser utilizado por el objeto SNI"
+        }
+    },
+    "cert": {
+        "add": "Añadir Certificado",
+        "header": "Certificados",
+        "dialog": {
+            "create": "Crear un Certificado nuevo",
+            "edit": "Editar Certificado",
+            "certificate": "Certificado público (PEM)",
+            "key": "Clave privada (PEM)",
+            "snis": "SNIs"
         }
     },
     "element": {

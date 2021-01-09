@@ -6,6 +6,8 @@ import { DialogInfoRouteComponent } from '../components/dialog-info-route/dialog
 import { DialogInfoServiceComponent } from '../components/dialog-info-service/dialog-info-service.component';
 import { DialogInfoTargetComponent } from '../components/dialog-info-target/dialog-info-target.component';
 import { DialogInfoUpstreamComponent } from '../components/dialog-info-upstream/dialog-info-upstream.component';
+import { DialogNewCacertComponent } from '../components/dialog-new-cacert/dialog-new-cacert.component';
+import { DialogNewCertComponent } from '../components/dialog-new-cert/dialog-new-cert.component';
 import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewRouteComponent } from '../components/dialog-new-route/dialog-new-route.component';
 import { DialogNewServiceComponent } from '../components/dialog-new-service/dialog-new-service.component';
@@ -258,6 +260,100 @@ export class DialogHelperService {
     }
 
     /*
+        Añade un cert
+     */
+    addEditCert(selected = null) {
+        return new Promise((resolve, reject) => {
+            // Miro si me viene datos del seleccionado para entonces mostrar ventana de editar
+            let selectedCertId = null;
+            if (selected !== null) {
+                selectedCertId = selected.id;
+            }
+
+            const dialogRef = this.dialog.open(DialogNewCertComponent, {
+                disableClose: true,
+                minWidth: '80vw',
+                minHeight: '50vh',
+                data: selectedCertId
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== null && result !== 'null') {
+                    // Si no venía selected, es que es nuevo
+                    if (selectedCertId === null) {
+                        // llamo al API
+                        this.api.postNewCertificate(result).subscribe(value => {
+                            this.toast.success('text.id_extra', 'success.new_cert', {msgExtra: value['id']});
+                            resolve();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                            reject();
+                        });
+                    }
+                    // Si venía es que es edición
+                    else {
+                        this.api.patchCertificate(selectedCertId, result).subscribe(value => {
+                            this.toast.success('text.id_extra', 'success.update_cert', {msgExtra: value['id']});
+                            resolve();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                            reject();
+                        });
+                    }
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
+    /*
+        Añade un cacert
+     */
+    addEditCACert(selected = null) {
+        return new Promise((resolve, reject) => {
+            // Miro si me viene datos del seleccionado para entonces mostrar ventana de editar
+            let selectedCACertId = null;
+            if (selected !== null) {
+                selectedCACertId = selected.id;
+            }
+
+            const dialogRef = this.dialog.open(DialogNewCacertComponent, {
+                disableClose: true,
+                minWidth: '80vw',
+                minHeight: '50vh',
+                data: selectedCACertId
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== null && result !== 'null') {
+                    // Si no venía selected, es que es nuevo
+                    if (selectedCACertId === null) {
+                        // llamo al API
+                        this.api.postNewCACertificate(result).subscribe(value => {
+                            this.toast.success('text.id_extra', 'success.new_cacert', {msgExtra: value['id']});
+                            resolve();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                            reject();
+                        });
+                    }
+                    // Si venía es que es edición
+                    else {
+                        this.api.patchCACertificate(selectedCACertId, result).subscribe(value => {
+                            this.toast.success('text.id_extra', 'success.update_cacert', {msgExtra: value['id']});
+                            resolve();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                            reject();
+                        });
+                    }
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
+    /*
         Añade un target
      */
     addTarget(selectedUpstream) {
@@ -345,10 +441,12 @@ export class DialogHelperService {
                 case 'route':
                 case 'upstream':
                 case 'sni':
+                case 'cert':
+                case 'cacert':
                     opt.data = {
                         title: 'dialog.confirm.delete_' + group + '_title',
                         content: 'dialog.confirm.delete_' + group,
-                        name: select.name,
+                        name: select.name || select.id,
                         id: select.id,
                         delete: true
                     };
@@ -426,6 +524,24 @@ export class DialogHelperService {
                             break;
                         case 'sni':
                             this.api.deleteSni(select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
+                            break;
+                        case 'cert':
+                            this.api.deleteCertificate(select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
+                            break;
+                        case 'cacert':
+                            this.api.deleteCACertificate(select.id).subscribe(() => {
                                 this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                 resolve();
                             }, error => {
