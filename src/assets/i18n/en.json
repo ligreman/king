@@ -423,9 +423,23 @@
         "dialog": {
             "create": "Create a new Certificate",
             "edit": "Edit Certificate",
-            "certificate": "Public certificate (PEM)",
+            "certificate": "Public Certificate (PEM)",
             "key": "Private key (PEM)",
             "snis": "SNIs"
+        }
+    },
+    "cacert": {
+        "add": "Add CA Certificate",
+        "header": "CA Certificates",
+        "dialog": {
+            "create": "Create a new CA Certificate",
+            "edit": "Edit CA Certificate",
+            "certificate": "Public CA Certificate (PEM)",
+            "key": "Private key (PEM)",
+            "digest": "SHA256 hash",
+            "error": {
+                "digest": "Must be a SHA256 hash"
+            }
         }
     },
     "element": {

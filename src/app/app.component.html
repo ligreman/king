@@ -30,26 +30,26 @@
                 {{ 'header.menu.consumers' | translate | uppercase }}
             </button>
         </mat-menu>
-        <button mat-button color="accent" routerLink="/plugins" [ngClass]="isCertificateRouteActive()" [disabled]="!isConnectedToNode()">
+        <button mat-button color="accent" routerLink="/plugins" [disabled]="!isConnectedToNode()">
             <mat-icon>settings_input_component</mat-icon>
             {{ 'header.menu.plugins' | translate | uppercase }}
         </button>
-        <button mat-button [matMenuTriggerFor]="menuC" [disabled]="!isConnectedToNode()" color="accent">
+        <button mat-button [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()" [disabled]="!isConnectedToNode()" color="accent">
             <mat-icon>security</mat-icon>
             {{ 'header.menu.certs' | translate | uppercase }}
         </button>
         <mat-menu #menuC="matMenu">
             <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-cert">
                 <mat-icon>https</mat-icon>
-                {{'header.menu.certificates' | translate}}
+                {{'header.menu.certificates' | translate | uppercase}}
             </button>
             <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-cacert">
                 <mat-icon>account_balance</mat-icon>
-                {{'header.menu.cacerts' | translate}}
+                {{'header.menu.cacerts' | translate | uppercase}}
             </button>
             <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-sni">
                 <mat-icon>vpn_lock</mat-icon>
-                {{'header.menu.snis' | translate}}
+                {{'header.menu.snis' | translate | uppercase}}
             </button>
         </mat-menu>
     </div>

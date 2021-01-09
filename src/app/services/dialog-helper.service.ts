@@ -533,7 +533,7 @@ export class DialogHelperService {
                             break;
                         case 'cert':
                             this.api.deleteCertificate(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});
@@ -542,7 +542,7 @@ export class DialogHelperService {
                             break;
                         case 'cacert':
                             this.api.deleteCACertificate(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});

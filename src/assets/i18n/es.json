@@ -428,6 +428,19 @@
             "snis": "SNIs"
         }
     },
+    "cacert": {
+        "add": "Añadir Certificado de CA",
+        "header": "Certificados de CA",
+        "dialog": {
+            "create": "Crear un Certificado de CA nuevo",
+            "edit": "Editar Certificado de CA",
+            "certificate": "Certificado público de CA (PEM)",
+            "digest": "Hash SHA256",
+            "error": {
+                "digest": "Ha de ser un hash SHA256"
+            }
+        }
+    },
     "element": {
         "text_search": "texto a buscar",
         "no_data": "No hay resultados",

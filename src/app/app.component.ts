@@ -60,7 +60,7 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        
+
     }
 
     ngOnDestroy(): void {
@@ -177,7 +177,11 @@ export class AppComponent implements OnInit, OnDestroy {
         Comprueba si estamos en la ruta de certificados
      */
     isCertificateRouteActive() {
-        return '';
+        if (this.route.url === '/certificate-sni' || this.route.url === '/certificate-cert' || this.route.url === '/certificate-cacert') {
+            return 'active-route';
+        } else {
+            return '';
+        }
     }
 
     // GETTERS

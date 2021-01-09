@@ -61,6 +61,25 @@ export class CustomValidators {
         };
     }
 
+    // Comprueba si es un boolean
+    static isSHA256(allowEmpty?: boolean): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            let valid = true;
+
+            try {
+                if (allowEmpty) {
+                    Joi.assert(control.value, Joi.string().hex().length(64).allow(null, ''));
+                } else {
+                    Joi.assert(control.value, Joi.string().hex().length(64));
+                }
+            } catch (e) {
+                valid = false;
+            }
+
+            return valid ? null : {isSHA256: {value: control.value}};
+        };
+    }
+
     // Comprueba si es un nombre alphanum
     static isAlphaNum(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {

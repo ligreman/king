@@ -23,7 +23,6 @@
                     <mat-form-field fxFlex="48" color="accent" appearance="outline">
                         <mat-label>{{'cert.dialog.certificate' | translate}}</mat-label>
                         <textarea matInput placeholder="-----BEGIN CERTIFICATE-----..." formControlName="cert" cdkFocusInitial required></textarea>
-                        <mat-hint></mat-hint>
                         <mat-error *ngIf="certField.invalid">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
@@ -32,7 +31,6 @@
                     <mat-form-field fxFlex="48" color="accent" appearance="outline">
                         <mat-label>{{'cert.dialog.key' | translate}}</mat-label>
                         <textarea matInput placeholder="-----BEGIN RSA PRIVATE KEY-----..." formControlName="key" required></textarea>
-                        <mat-hint></mat-hint>
                         <mat-error *ngIf="keyField.invalid">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
