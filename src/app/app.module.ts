@@ -36,6 +36,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
 import { DialogInfoConsumerComponent } from './components/dialog-info-consumer/dialog-info-consumer.component';
+import { DialogInfoPluginComponent } from './components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
 import { DialogInfoTargetComponent } from './components/dialog-info-target/dialog-info-target.component';
@@ -60,6 +61,7 @@ import { ElementUpstreamComponent } from './routes/elements/element-upstream/ele
 import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
+import { PluginListComponent } from './routes/plugins/plugin-list/plugin-list.component';
 import { MatPaginatorIntlSpanish } from './shared/spanish-paginator-intl';
 
 // AoT requires an exported function for factories
@@ -95,7 +97,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         CertificateCertComponent,
         DialogNewSniComponent,
         DialogNewCertComponent,
-        DialogNewCacertComponent
+        DialogNewCacertComponent,
+        PluginListComponent,
+        DialogInfoPluginComponent
     ],
     imports: [
         BrowserModule,

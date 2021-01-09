@@ -12,6 +12,7 @@ import { ElementUpstreamComponent } from './routes/elements/element-upstream/ele
 import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
+import { PluginListComponent } from './routes/plugins/plugin-list/plugin-list.component';
 
 const routes: Routes = [
     {path: 'landing', component: LandingComponent},
@@ -21,6 +22,7 @@ const routes: Routes = [
     {path: 'element-route', component: ElementRouteComponent, canActivate: [ConnectedGuard]},
     {path: 'element-upstream', component: ElementUpstreamComponent, canActivate: [ConnectedGuard]},
     {path: 'element-consumer', component: ElementConsumerComponent, canActivate: [ConnectedGuard]},
+    {path: 'plugin-list', component: PluginListComponent, canActivate: [ConnectedGuard]},
     {path: 'certificate-cert', component: CertificateCertComponent, canActivate: [ConnectedGuard]},
     {path: 'certificate-cacert', component: CertificateCacertComponent, canActivate: [ConnectedGuard]},
     {path: 'certificate-sni', component: CertificateSniComponent, canActivate: [ConnectedGuard]},

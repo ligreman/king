@@ -20,6 +20,7 @@
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
         "update_consumer": "Consumidor actualizado",
+        "update_plugin": "Plugin actualizado",
         "update_sni": "SNI actualizado",
         "update_cert": "Certificado actualizado",
         "update_cacert": "Certificado de CA actualizado",
@@ -27,6 +28,7 @@
         "delete_route": "Ruta {{extra}} eliminada",
         "delete_upstream": "Upstream {{extra}} eliminado",
         "delete_consumer": "Consumidor {{extra}} eliminado",
+        "delete_plugin": "Plugin {{extra}} eliminado",
         "delete_target": "Target {{extra}} eliminado",
         "delete_sni": "SNI {{extra}} eliminado",
         "delete_cert": "Certificado {{extra}} eliminado",
@@ -55,7 +57,8 @@
         "tags": "Etiquetas",
         "true": "Sí",
         "false": "No",
-        "health": "Salud"
+        "health": "Salud",
+        "enabled": "Habilitado"
     },
     "pagination": {
         "itemsPerPageLabel": "Elementos por página:",
@@ -379,7 +382,14 @@
         }
     },
     "plugin": {
-        "add": "Añadir Plugin"
+        "add": "Añadir Plugin",
+        "config": "Configuración del Plugin",
+        "label": "Plugin",
+        "header": "Plugins",
+        "dialog": {
+            "create": "Crear un Plugin nuevo",
+            "edit": "Editar Plugin"
+        }
     },
     "target": {
         "add": "Añadir Target",

@@ -2,7 +2,7 @@
 <div class="progress-placeholder" [fxShow]="!loading"></div>
 
 <div fxLayout="row" fxLayoutAlign="center center" class="padding-top-20">
-    <h2 fxFlex="90" class="margin-0-i">{{ 'cacert.header' | translate}}</h2>
+    <h2 fxFlex="90" class="margin-0-i">{{ 'plugin.header' | translate}}</h2>
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center start">
@@ -16,7 +16,7 @@
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <button mat-icon-button (click)="addEditCert()" color="accent" fxFlexOffset="5" matTooltip="{{'cacert.add'| translate}}"
+            <button mat-icon-button (click)="addEditPlugin()" color="accent" fxFlexOffset="5" matTooltip="{{'plugin.add'| translate}}"
                     matTooltipClass="tooltip-teal">
                 <mat-icon>add</mat-icon>
             </button>
@@ -26,29 +26,44 @@
             </button>
         </div>
 
-        <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear fxFlex>
-            <!-- ID Column -->
-            <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'text.id' | translate}}</th>
-                <td mat-cell *matCellDef="let row" class="text-small">{{row.id}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="certificate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'cacert.dialog.certificate' | translate}}</th>
-                <td mat-cell *matCellDef="let row" matTooltip="{{row.cert}}"
-                    matTooltipClass="tooltip-teal tooltip-wide tooltip-multi">
-                    {{row.cert.replace('-----BEGIN CERTIFICATE-----', '') | slice:0:30}}...
+        <table mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear fxFlex>
+            <ng-container matColumnDef="enabled">
+                <th mat-header-cell *matHeaderCellDef>{{'text.enabled' | translate}}</th>
+                <td mat-cell *matCellDef="let row">
+                    <mat-slide-toggle [checked]="row.enabled"></mat-slide-toggle>
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="digest">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'cacert.dialog.digest' | translate}}</th>
-                <td mat-cell *matCellDef="let row" class="text-small">{{row.cert_digest}}</td>
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'text.id' | translate}}</th>
+                <td mat-cell *matCellDef="let row"><a mat-button color="accent" (click)="showInfo(row)" class="text-small">{{row.id}}</a></td>
             </ng-container>
 
-            <ng-container matColumnDef="snis">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'cacert.dialog.snis' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{(row.snis || []).join(', ')}}</td>
+            <!-- Name Column -->
+            <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'text.name' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{row.name}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="route">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'route.label' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{row.route}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="service">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.label' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{row.service}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="consumer">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'consumer.label' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{row.consumer}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="protocols">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'route.dialog.protocols' | translate}}</th>
+                <td mat-cell *matCellDef="let row">{{row.protocols.join(', ')}}</td>
             </ng-container>
 
             <ng-container matColumnDef="tags">
@@ -59,7 +74,11 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef>{{'element.actions' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
-                    <button mat-icon-button color="accent" (click)="addEditCert(row)" matTooltip="{{'text.edit' | translate}}"
+                    <button mat-icon-button (click)="addEditPlugin(row)" matTooltip="{{'plugin.config' | translate}}"
+                            matTooltipClass="tooltip-teal">
+                        <mat-icon>settings</mat-icon>
+                    </button>
+                    <button mat-icon-button color="accent" (click)="addEditPlugin(row)" matTooltip="{{'text.edit' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>edit</mat-icon>
                     </button>
@@ -75,8 +94,7 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="10" *ngIf="input.value === ''">{{'element.no_data' | translate}}</td>
-                <td class="mat-cell" colspan="10" *ngIf="input.value !== ''">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
+                <td class="mat-cell" colspan="9">{{'element.no_data' | translate}} "{{input.value}}"</td>
             </tr>
         </table>
 

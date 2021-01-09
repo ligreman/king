@@ -29,8 +29,6 @@ export class ApiService {
      */
     public getNodeInformation() {
         return this.httpClient.get(this.globals.NODE_API_URL + '/').pipe(catchError(this.handleError));
-        //  const options = { params: new HttpParams({fromString: "_page=1&_limit=20"}) };
-        //     return this.httpClient.get(this.REST_API_SERVER, options).pipe(retry(3), catchError(this.handleError));
     }
 
     public getNodeStatus() {
@@ -237,5 +235,28 @@ export class ApiService {
 
     public deleteSni(id: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/snis/' + id).pipe(catchError(this.handleError));
+    }
+
+    /*
+        PLUGIN ENDPOINTS
+     */
+    public getPlugins() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins?size=1000').pipe(catchError(this.handleError));
+    }
+
+    public getPlugin(id: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins/' + id).pipe(catchError(this.handleError));
+    }
+
+    public postNewPlugin(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/plugins', body).pipe(catchError(this.handleError));
+    }
+
+    public patchPlugin(id: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/plugins/' + id, body).pipe(catchError(this.handleError));
+    }
+
+    public deletePlugin(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/plugins/' + id).pipe(catchError(this.handleError));
     }
 }

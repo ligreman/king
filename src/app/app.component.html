@@ -30,7 +30,7 @@
                 {{ 'header.menu.consumers' | translate | uppercase }}
             </button>
         </mat-menu>
-        <button mat-button color="accent" routerLink="/plugins" [disabled]="!isConnectedToNode()">
+        <button mat-button color="accent" routerLinkActive="active-route" routerLink="/plugin-list" [disabled]="!isConnectedToNode()">
             <mat-icon>settings_input_component</mat-icon>
             {{ 'header.menu.plugins' | translate | uppercase }}
         </button>

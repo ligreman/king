@@ -8,6 +8,7 @@ import { DialogInfoUpstreamComponent } from '../components/dialog-info-upstream/
 import { DialogNewCacertComponent } from '../components/dialog-new-cacert/dialog-new-cacert.component';
 import { DialogNewCertComponent } from '../components/dialog-new-cert/dialog-new-cert.component';
 import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
+import { DialogNewPluginComponent } from '../components/dialog-new-plugin/dialog-new-plugin.component';
 import { DialogNewRouteComponent } from '../components/dialog-new-route/dialog-new-route.component';
 import { DialogNewServiceComponent } from '../components/dialog-new-service/dialog-new-service.component';
 import { DialogNewSniComponent } from '../components/dialog-new-sni/dialog-new-sni.component';
@@ -355,12 +356,12 @@ export class DialogHelperService {
     /*
         Añade un target
      */
-    addTarget(selectedUpstream) {
+    addTarget(selectedTarget) {
         return new Promise((resolve, reject) => {
             // Miro si me viene datos del seleccionado para entonces mostrar ventana de editar
-            let selectedUpstreamId = null;
-            if (selectedUpstream !== null) {
-                selectedUpstreamId = selectedUpstream.id;
+            let selectedTargetId = null;
+            if (selectedTarget !== null) {
+                selectedTargetId = selectedTarget.id;
             } else {
                 reject();
             }
@@ -369,12 +370,12 @@ export class DialogHelperService {
                 disableClose: true,
                 minWidth: '80vw',
                 minHeight: '50vh',
-                data: selectedUpstreamId
+                data: selectedTargetId
             });
             dialogRef.afterClosed().subscribe(result => {
                 if (result !== null && result !== 'null') {
                     // llamo al API
-                    this.api.postNewTarget(result, selectedUpstreamId).subscribe(value => {
+                    this.api.postNewTarget(result, selectedTargetId).subscribe(value => {
                         this.toast.success('text.id_extra', 'success.new_target', {msgExtra: value['id']});
                         resolve();
                     }, error => {
@@ -388,6 +389,54 @@ export class DialogHelperService {
             });
         });
     }
+
+    /*
+        Añade un plugin
+     */
+    addEditPlugin(selected = null) {
+        return new Promise((resolve, reject) => {
+            // Miro si me viene datos del seleccionado para entonces mostrar ventana de editar
+            let selectedPluginId = null;
+            if (selected !== null) {
+                selectedPluginId = selected.id;
+            }
+
+            const dialogRef = this.dialog.open(DialogNewPluginComponent, {
+                disableClose: true,
+                minWidth: '80vw',
+                minHeight: '50vh',
+                data: selectedPluginId
+            });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result !== null && result !== 'null') {
+                    // Si no venía selected, es que es nuevo
+                    if (selectedPluginId === null) {
+                        // llamo al API
+                        this.api.postNewPlugin(result).subscribe(value => {
+                            this.toast.success('text.id_extra', 'success.new_plugin', {msgExtra: value['id']});
+                            resolve();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                            reject();
+                        });
+                    }
+                    // Si venía es que es edición
+                    else {
+                        this.api.patchPlugin(selectedPluginId, result).subscribe(value => {
+                            this.toast.success('text.id_extra', 'success.update_plugin', {msgExtra: value['id']});
+                            resolve();
+                        }, error => {
+                            this.toast.error_general(error, {disableTimeOut: true});
+                            reject();
+                        });
+                    }
+                } else {
+                    reject();
+                }
+            });
+        });
+    }
+
 
     /*
         Muestra la info del elemento seleccionado

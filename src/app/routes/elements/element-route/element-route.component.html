@@ -46,12 +46,12 @@
 
             <ng-container matColumnDef="protocols">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'route.dialog.protocols' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.protocols.join(', ')}}</td>
+                <td mat-cell *matCellDef="let row">{{(row.protocols || []).join(', ')}}</td>
             </ng-container>
 
             <ng-container matColumnDef="methods">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'route.dialog.methods' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{(row.methods && row.methods.length > 0) ? row.methods.join(', ') : ''}}</td>
+                <td mat-cell *matCellDef="let row">{{(row.methods || []).join(', ')}}</td>
             </ng-container>
 
             <ng-container matColumnDef="hosts">
@@ -76,7 +76,7 @@
 
             <ng-container matColumnDef="tags">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.dialog.tags' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{(row.tags && row.tags.length > 0) ? row.tags.join(', ') : ''}}</td>
+                <td mat-cell *matCellDef="let row">{{(row.tags || []).join(', ')}}</td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
