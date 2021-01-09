@@ -365,6 +365,7 @@
     },
     "consumer": {
         "add": "Añadir Consumidor",
+        "label": "Consumidor",
         "header": "Consumidores",
         "dialog": {
             "create": "Crear un Consumidor nuevo",

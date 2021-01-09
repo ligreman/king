@@ -88,7 +88,7 @@
             <mat-divider class="margin-top-10 margin-bottom-10" *ngIf="groupsAny.includes(selection.group)"></mat-divider>
 
             <div mat-subheader class="subheader" *ngIf="groupsAny.includes(selection.group)">
-                {{'architect.local_actions_' + selection.group | translate }}&nbsp;<span class="italic">{{ selection.label }}</span>
+                {{'architect.local_actions_' + selection.group | translate }}:&nbsp;<span class="italic">{{ selection.label }}</span>
             </div>
             <mat-list-item *ngIf="groupsInfo.includes(selection.group)">
                 <div mat-line>

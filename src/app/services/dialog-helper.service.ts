@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from '../components/dialog-confirm/dialog-confirm.component';
-import { DialogInfoConsumerComponent } from '../components/dialog-info-consumer/dialog-info-consumer.component';
 import { DialogInfoRouteComponent } from '../components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from '../components/dialog-info-service/dialog-info-service.component';
 import { DialogInfoTargetComponent } from '../components/dialog-info-target/dialog-info-target.component';
@@ -413,10 +412,6 @@ export class DialogHelperService {
             case 'upstream':
                 opt.data = select.id;
                 component = DialogInfoUpstreamComponent;
-                break;
-            case 'consumer':
-                opt.data = select.id;
-                component = DialogInfoConsumerComponent;
                 break;
             case 'target':
                 opt.data = select.id + '#' + select.data.upstream.id;

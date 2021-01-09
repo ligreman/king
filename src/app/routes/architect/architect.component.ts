@@ -32,10 +32,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     // Filtros del grafo
     netFilter = {tag: '', element: 'all', mode: true};
     // Posibles tipos de nodos que tienen acciones propias
-    groupsInfo = ['service', 'route', 'upstream', 'consumer', 'target'];
+    groupsInfo = ['service', 'route', 'upstream', 'target'];
     groupsEdit = ['service', 'route', 'upstream', 'consumer'];
     groupsDelete = ['service', 'route', 'upstream', 'consumer', 'target'];
-    groupsAddPlugin = ['service', 'route', 'upstream', 'consumer'];
+    groupsAddPlugin = ['service', 'route', 'consumer'];
     groupsAddTarget = ['upstream'];
     groupsHealth = ['target'];
     groupsAny = ['service', 'route', 'upstream', 'consumer', 'target'];
@@ -148,10 +148,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         return forkJoin([
             this.api.getServices(),
             this.api.getRoutes(),
-            this.api.getUpstreams()
-        ]).pipe(map(([services, routes, upstreams]) => {
+            this.api.getUpstreams(),
+            this.api.getConsumers()
+        ]).pipe(map(([services, routes, upstreams, consumers]) => {
             // forkJoin returns an array of values, here we map those values to an object
-            return {services: services['data'], routes: routes['data'], upstreams: upstreams['data']};
+            return {services: services['data'], routes: routes['data'], upstreams: upstreams['data'], consumers: consumers['data']};
         }));
     }
 
@@ -303,6 +304,25 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
 
+        // Creo los nodos de consumidores
+        for (let consumer of data.consumers) {
+            let extrasC = [''];
+            if (consumer.username) {
+                extrasC.push(this.translate.instant('consumer.dialog.username') + ': ' + consumer.username);
+            }
+            if (consumer.custom_id) {
+                extrasC.push(this.translate.instant('consumer.dialog.custom_id') + ': ' + consumer.custom_id);
+            }
+
+            // Nodos de consumidor
+            this.data.nodes.add({
+                id: consumer.id,
+                label: consumer.username || consumer.custom_id,
+                title: this.translate.instant('consumer.label') + ': ' + consumer.id + extrasC.join('<br>'),
+                group: 'consumer',
+                data: consumer
+            });
+        }
         // TODO completar con consumidores, plugins...
 
         // Ahora voy a enganchar al center los nodos que hayan quedado sueltos
@@ -492,20 +512,24 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Muestra la info del elemento seleccionado
      */
     showInfo(select) {
-        this.dialogHelper.showInfoElement(select, select.group);
+        if (this.groupsInfo.includes(select.group)) {
+            this.dialogHelper.showInfoElement(select, select.group);
+        }
     }
 
     /*
         Borra el elemento seleccionado
      */
     delete(select) {
-        this.dialogHelper.deleteElement(select.data, select.group)
-            .then(() => {
-                this.netFilter.tag = '';
-                this.netFilter.element = 'all';
-                this.populateGraph();
-            })
-            .catch(error => {});
+        if (this.groupsDelete.includes(select.group)) {
+            this.dialogHelper.deleteElement(select.data, select.group)
+                .then(() => {
+                    this.netFilter.tag = '';
+                    this.netFilter.element = 'all';
+                    this.populateGraph();
+                })
+                .catch(error => {});
+        }
     }
 
     /*
