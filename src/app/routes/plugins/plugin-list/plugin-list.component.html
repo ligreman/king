@@ -20,7 +20,7 @@
                     matTooltipClass="tooltip-teal">
                 <mat-icon>add</mat-icon>
             </button>
-            <button mat-icon-button (click)="reloadData()" color="accent" matTooltip="{{'element.reload' | translate}}"
+            <button mat-icon-button (click)="reloadData(false)" color="accent" matTooltip="{{'element.reload' | translate}}"
                     matTooltipClass="tooltip-teal">
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -30,7 +30,7 @@
             <ng-container matColumnDef="enabled">
                 <th mat-header-cell *matHeaderCellDef>{{'text.enabled' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
-                    <mat-slide-toggle [checked]="row.enabled"></mat-slide-toggle>
+                    <mat-slide-toggle [(ngModel)]="row.enabled" (change)="changeEnabled(row)"></mat-slide-toggle>
                 </td>
             </ng-container>
 
@@ -48,17 +48,17 @@
 
             <ng-container matColumnDef="route">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'route.label' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.route}}</td>
+                <td mat-cell *matCellDef="let row">{{routes[row.route]}}</td>
             </ng-container>
 
             <ng-container matColumnDef="service">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.label' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.service}}</td>
+                <td mat-cell *matCellDef="let row">{{services[row.service]}}</td>
             </ng-container>
 
             <ng-container matColumnDef="consumer">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'consumer.label' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.consumer}}</td>
+                <td mat-cell *matCellDef="let row">{{consumers[row.consumer]}}</td>
             </ng-container>
 
             <ng-container matColumnDef="protocols">
@@ -74,7 +74,7 @@
             <ng-container matColumnDef="actions">
                 <th mat-header-cell *matHeaderCellDef>{{'element.actions' | translate}}</th>
                 <td mat-cell *matCellDef="let row">
-                    <button mat-icon-button (click)="addEditPlugin(row)" matTooltip="{{'plugin.config' | translate}}"
+                    <button mat-icon-button (click)="infoPluginConfig(row)" matTooltip="{{'plugin.config' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>settings</mat-icon>
                     </button>

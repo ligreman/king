@@ -30,12 +30,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
-import { DialogInfoConsumerComponent } from './components/dialog-info-consumer/dialog-info-consumer.component';
+import { DialogInfoPluginConfigComponent } from './components/dialog-info-plugin-config/dialog-info-plugin-config.component';
 import { DialogInfoPluginComponent } from './components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
@@ -89,7 +90,6 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogNewPluginComponent,
         DialogInfoRouteComponent,
         DialogInfoUpstreamComponent,
-        DialogInfoConsumerComponent,
         DialogNewTargetComponent,
         DialogInfoTargetComponent,
         CertificateSniComponent,
@@ -99,7 +99,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogNewCertComponent,
         DialogNewCacertComponent,
         PluginListComponent,
-        DialogInfoPluginComponent
+        DialogInfoPluginComponent,
+        DialogInfoPluginConfigComponent
     ],
     imports: [
         BrowserModule,
@@ -133,6 +134,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         NgxChartsModule,
         ReactiveFormsModule,
         FormsModule,
+        NgxJsonViewerModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

@@ -36,7 +36,9 @@
         "healthy_target": "Target {{extra}} set as healthy",
         "unhealthy_target": "Target {{extra}} set as unhealthy",
         "healthy_address": "Address {{extra}} set as healthy",
-        "unhealthy_address": "Address {{extra}} set as unhealthy"
+        "unhealthy_address": "Address {{extra}} set as unhealthy",
+        "enabled_plugin": "Plugin {{extra}} enabled",
+        "disabled_plugin": "Plugin {{extra}} disabled"
     },
     "text": {
         "id_extra": "ID: {{extra}}",
@@ -85,7 +87,11 @@
             "delete_cert_title": "Delete certificate",
             "delete_cert": "Do you want to delete this certificate? This will also delete the SNIs associated with it",
             "delete_cacert_title": "Delete CA certificate",
-            "delete_cacert": "Do you want to delete this CA certificate?"
+            "delete_cacert": "Do you want to delete this CA certificate?",
+            "enable_plugin_title": "Enable plugin",
+            "enable_plugin": "Do you want to enable this plugin?",
+            "disable_plugin_title": "Disable plugin",
+            "disable_plugin": "Do you want to disable this plugin"
         },
         "copy_clipboard": "Download in JSON"
     },
@@ -388,7 +394,17 @@
         "header": "Plugins",
         "dialog": {
             "create": "Create a new Plugin",
-            "edit": "Edit Plugin"
+            "edit": "Edit Plugin",
+            "info": "Plugin´s information",
+            "name": "Name of the Plugin",
+            "enable": "Enable plugin",
+            "plugin_link": "Check the plugin´s documentation",
+            "config": "Plugin´s configuration JSON",
+            "protocols": "Protocols",
+            "protocols_tooltip": "A list of the request protocols that will trigger this plugin",
+            "route_tooltip": "If set, the plugin will only activate when receiving requests via the specified route. Leave unset for the plugin to activate regardless of the Route being used",
+            "service_tooltip": "If set, the plugin will only activate when receiving requests via one of the routes belonging to the specified Service. Leave unset for the plugin to activate regardless of the Service being matched",
+            "consumer_tooltip": "If set, the plugin will activate only for requests where the specified consumer has been authenticated (note that some plugins can not be restricted to consumers this way). Leave unset for the plugin to activate regardless of the authenticated Consumer"
         }
     },
     "target": {

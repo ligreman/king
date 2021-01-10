@@ -228,3 +228,23 @@
         color: $color-text-med;
     }
 }
+
+/*
+    JSON FORMATTER
+ */
+.segment-key {
+    color: #f5f5f5 !important;
+}
+
+.segment-type-null > .segment-main > .segment-value {
+    background-color: transparent !important;
+    color: mat-color($mat-blue, 400) !important;
+}
+
+.segment-type-boolean > .segment-main > .segment-value {
+    color: mat-color($mat-purple, 300) !important;
+}
+
+.segment-type-number > .segment-main > .segment-value {
+    color: mat-color($mat-cyan, 400) !important;
+}

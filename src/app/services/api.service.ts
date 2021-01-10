@@ -248,11 +248,22 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/plugins/' + id).pipe(catchError(this.handleError));
     }
 
+    public getPluginsEnabled() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins/enabled?size=1000').pipe(catchError(this.handleError));
+    }
+
     public postNewPlugin(body) {
         return this.httpClient.post(this.globals.NODE_API_URL + '/plugins', body).pipe(catchError(this.handleError));
     }
 
     public patchPlugin(id: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/plugins/' + id, body).pipe(catchError(this.handleError));
+    }
+
+    public enablePlugin(id: string, enable: boolean) {
+        const body = {
+            enabled: enable
+        };
         return this.httpClient.patch(this.globals.NODE_API_URL + '/plugins/' + id, body).pipe(catchError(this.handleError));
     }
 
