@@ -3,6 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { get as _get, isArray as _isArray, set as _set, unset as _unset } from 'lodash';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
@@ -26,6 +27,7 @@ export class DialogNewPluginComponent implements OnInit {
     consumersList;
     pluginsList;
     pluginForm = [];
+    arrayFields = [];
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
@@ -87,8 +89,14 @@ export class DialogNewPluginComponent implements OnInit {
             // Rescato la info del servicio del api
             this.api.getPlugin(this.pluginIdEdit)
                 .subscribe(plugin => {
-                    // Relleno el formuarlio
-                    this.form.setValue(this.prepareDataForForm(plugin));
+                    // Primero he de disparar el evento de cambio de schema para que cargue los campos de formulario
+                    this.nameField.setValue(plugin['name']);
+                    this.pluginChange();
+
+                    // Ahora ya relleno el formulario, en el siguiente loop de angular para que ya esté cargado el modelo
+                    setTimeout(() => {
+                        this.form.setValue(this.prepareDataForForm(plugin));
+                    }, 0);
                 }, error => {
                     this.toast.error_general(error);
                 });
@@ -139,6 +147,18 @@ export class DialogNewPluginComponent implements OnInit {
         this.currentTags = plugin['tags'] || [];
         plugin['tags'] = [];
 
+        // Campos array
+        this.arrayFields.forEach(field => {
+            // Cojo el array de valores
+            const fValue = _get(plugin, field, null);
+
+            if (fValue !== null && _isArray(fValue)) {
+                _set(plugin, field, fValue.join('\n'));
+            } else {
+                _unset(plugin, field);
+            }
+        });
+
         return plugin;
     }
 
@@ -160,7 +180,17 @@ export class DialogNewPluginComponent implements OnInit {
             body.consumer = null;
         }
 
-        console.log(body);
+        // Campos array
+        this.arrayFields.forEach(field => {
+            const fValue = _get(body, field);
+
+            if (fValue === '' || fValue === null) {
+                _set(body, field, null);
+            } else {
+                _set(body, field, fValue.split('\n'));
+            }
+        });
+
         return body;
     }
 
@@ -172,10 +202,11 @@ export class DialogNewPluginComponent implements OnInit {
         this.api.getPluginSchema(this.nameField.value)
             .subscribe(value => {
                 const pluginSchemaFields = this.parseSchema(value);
+                this.arrayFields = [];
                 this.form.get('config').reset();
 
-                const data = this.generateFormFields(pluginSchemaFields);
-                console.log(data);
+                const data = this.generateFormFields(pluginSchemaFields, 'config');
+                // console.log(data);
 
                 // this.form.removeControl('config');
                 // this.form.addControl('config', data.dConfig);
@@ -222,7 +253,7 @@ export class DialogNewPluginComponent implements OnInit {
             });
     }
 
-    generateFormFields(schema) {
+    generateFormFields(schema, currentGroup) {
         // Genero el formulario dinámico
         let dConfig = this.fb.group({});
         let formFields = [];
@@ -241,7 +272,6 @@ export class DialogNewPluginComponent implements OnInit {
                     let validators = [];
                     let tipo = value.type;
                     let opts = null;
-                    console.log(value.default);
 
                     // Requerido
                     if (value.required) {
@@ -346,8 +376,7 @@ export class DialogNewPluginComponent implements OnInit {
                         opts = value.elements.one_of;
                     } else {
                         // Es un array de strings (no hay de otro tipo)
-                        // TODO  guardar en variable de padre un array de los campos que son de este tipo, para postprocesarlos
-                        // TODO  Al enviar el form o al cargarlo, convertir textarea en array de lineas
+                        this.arrayFields.push(currentGroup + '.' + field);
                     }
 
                     dConfig.addControl(field, this.fb.control(value.default || null, validators));
@@ -363,7 +392,7 @@ export class DialogNewPluginComponent implements OnInit {
                 // Record -> Anidado
                 if (value.type === 'record') {
                     // Llamada recursiva
-                    const newData = this.generateFormFields(value.fields);
+                    const newData = this.generateFormFields(value.fields, currentGroup + '.' + field);
 
                     // Añado el grupo anidado
                     dConfig.addControl(field, newData.dConfig);
