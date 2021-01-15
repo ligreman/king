@@ -32,16 +32,20 @@ export class DialogNewPluginComponent implements OnInit {
 
     form = this.fb.group({
         name: ['', [Validators.required]],
-        route: [''],
-        service: [''],
-        consumer: [''],
+        route: this.fb.group({
+            id: []
+        }),
+        service: this.fb.group({
+            id: []
+        }),
+        consumer: this.fb.group({
+            id: []
+        }),
         protocols: ['', [Validators.required, CustomValidators.isArrayOfOneOf(this.validProtocols)]],
         enabled: [true, [CustomValidators.isBoolean(true)]],
         config: this.fb.group({}),
         tags: ['']
     });
-
-    // }, {validators: [FinalFormValidator()]});
 
     constructor(@Inject(MAT_DIALOG_DATA) public pluginIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
                 public dialogRef: MatDialogRef<DialogNewPluginComponent>) { }
@@ -51,11 +55,11 @@ export class DialogNewPluginComponent implements OnInit {
      */
     get nameField() { return this.form.get('name'); }
 
-    get serviceField() { return this.form.get('service'); }
+    get serviceField() { return this.form.get('service.id'); }
 
-    get routeField() { return this.form.get('route'); }
+    get routeField() { return this.form.get('route.id'); }
 
-    get consumerField() { return this.form.get('consumer'); }
+    get consumerField() { return this.form.get('consumer.id'); }
 
     get protocolsField() { return this.form.get('protocols'); }
 
@@ -107,7 +111,25 @@ export class DialogNewPluginComponent implements OnInit {
         Submit del formulario
      */
     onSubmit() {
-        this.dialogRef.close(this.prepareDataForKong(this.form.value));
+        const body = this.prepareDataForKong(this.form.value);
+        if (!this.editMode) {
+            // llamo al API
+            this.api.postNewPlugin(body).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_plugin', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
+        // Si es que es edición
+        else {
+            this.api.patchPlugin(this.pluginIdEdit, body).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.update_plugin', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
     }
 
     /*
@@ -206,50 +228,12 @@ export class DialogNewPluginComponent implements OnInit {
                 this.form.get('config').reset();
 
                 const data = this.generateFormFields(pluginSchemaFields, 'config');
-                // console.log(data);
 
-                // this.form.removeControl('config');
-                // this.form.addControl('config', data.dConfig);
                 this.form.setControl('config', data.dConfig);
                 this.form.get('config').clearValidators();
 
                 // Los campos para el HTML
                 this.pluginForm = data.formFields;
-
-                // Actualizo la lista de formulario
-
-                /*this.pluginSchemaFields.forEach(element => {
-                    const keys = Object.getOwnPropertyNames(element);
-                    const field = keys[0];
-                    console.log(keys);
-                    console.log(field);
-
-                    if (element.hasOwnProperty(field)) {
-                        const value = element[field];
-                        console.log(value);
-                        // Strings
-                        if (value.type === 'string') {
-                            let validators = [];
-
-                            // Si tiene match es RegExp
-                            if (value.match) {
-                                validators.push(Validators.pattern(new RegExp(value.match)));
-                            }
-                            // Requerido
-                            if (value.required) {
-                                validators.push(Validators.required);
-                            }
-
-                            dinamicConfig.addControl(field, this.fb.control(value.default || null, validators));
-                            this.pluginForm.push({
-                                field: field,
-                                type: value.type,
-                                required: value.required || false
-                            });
-                        }
-                    }
-                });*/
-
             });
     }
 

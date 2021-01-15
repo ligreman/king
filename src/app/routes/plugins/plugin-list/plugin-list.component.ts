@@ -99,7 +99,7 @@ export class PluginListComponent implements OnInit {
         Añade un elemento nuevo
      */
     addEditPlugin(selected = null) {
-        this.dialogHelper.addEditPlugin(selected)
+        this.dialogHelper.addEdit(selected, 'plugin')
             .then(() => { this.reloadData(false); })
             .catch(error => {});
     }

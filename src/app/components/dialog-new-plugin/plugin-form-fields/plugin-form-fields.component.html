@@ -39,16 +39,6 @@
             </div>
 
             <ng-container *ngIf="field.type === 'array'">
-                <!--<div *ngFor="let num of arrayNum(getCount(group + '.' + field.field))">
-                    <mat-form-field appearance="outline" color="accent" fxFlex="75">
-                        <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
-                        <input [formControl]="getField(field.field)"
-                               [required]="field.required" matInput name="{{group + '.' + field.field}}[]" type="array"/>
-                        <button (click)="addCount(group + '.' + field.field)" color="accent" mat-icon-button matSuffix>
-                            <mat-icon>add</mat-icon>
-                        </button>
-                    </mat-form-field>
-                </div>-->
                 <mat-form-field appearance="outline" color="accent" fxFlex="100">
                     <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
                     <textarea [formControl]="getField(field.field)" [required]="field.required" matInput></textarea>

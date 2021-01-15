@@ -390,46 +390,54 @@ export class DialogHelperService {
         });
     }
 
-    /*
-        Añade un plugin
-     */
-    addEditPlugin(selected = null) {
+    addEdit(selected, group) {
         return new Promise((resolve, reject) => {
-            // Miro si me viene datos del seleccionado para entonces mostrar ventana de editar
-            let selectedPluginId = null;
+            let selectedId = null;
             if (selected !== null) {
-                selectedPluginId = selected.id;
+                selectedId = selected.id;
             }
 
-            const dialogRef = this.dialog.open(DialogNewPluginComponent, {
+            let component;
+
+            switch (group) {
+                case 'service':
+                    component = DialogNewServiceComponent;
+                    break;
+                case 'route':
+                    component = DialogNewRouteComponent;
+                    break;
+                case 'upstream':
+                    component = DialogNewUpstreamComponent;
+                    break;
+                case 'consumer':
+                    component = DialogNewConsumerComponent;
+                    break;
+                case 'sni':
+                    component = DialogNewSniComponent;
+                    break;
+                case 'cert':
+                    component = DialogNewCertComponent;
+                    break;
+                case 'cacert':
+                    component = DialogNewCacertComponent;
+                    break;
+                case 'target':
+                    component = DialogNewTargetComponent;
+                    break;
+                case 'plugin':
+                    component = DialogNewPluginComponent;
+                    break;
+            }
+
+            const dialogRef = this.dialog.open(component, {
                 disableClose: true,
                 minWidth: '80vw',
                 minHeight: '50vh',
-                data: selectedPluginId
+                data: selectedId
             });
             dialogRef.afterClosed().subscribe(result => {
                 if (result !== null && result !== 'null') {
-                    // Si no venía selected, es que es nuevo
-                    if (selectedPluginId === null) {
-                        // llamo al API
-                        this.api.postNewPlugin(result).subscribe(value => {
-                            this.toast.success('text.id_extra', 'success.new_plugin', {msgExtra: value['id']});
-                            resolve();
-                        }, error => {
-                            this.toast.error_general(error, {disableTimeOut: true});
-                            reject();
-                        });
-                    }
-                    // Si venía es que es edición
-                    else {
-                        this.api.patchPlugin(selectedPluginId, result).subscribe(value => {
-                            this.toast.success('text.id_extra', 'success.update_plugin', {msgExtra: value['id']});
-                            resolve();
-                        }, error => {
-                            this.toast.error_general(error, {disableTimeOut: true});
-                            reject();
-                        });
-                    }
+                    resolve();
                 } else {
                     reject();
                 }
