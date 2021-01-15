@@ -7,7 +7,6 @@ import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DialogConfirmComponent } from '../../../components/dialog-confirm/dialog-confirm.component';
-import { DialogInfoPluginConfigComponent } from '../../../components/dialog-info-plugin-config/dialog-info-plugin-config.component';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
@@ -118,14 +117,6 @@ export class PluginListComponent implements OnInit {
         this.dialogHelper.deleteElement(select, 'plugin')
             .then(() => { this.reloadData(false); })
             .catch(error => {});
-    }
-
-    infoPluginConfig(row) {
-        this.dialog.open(DialogInfoPluginConfigComponent, {
-            height: '600px',
-            width: '900px',
-            data: row
-        });
     }
 
     /*

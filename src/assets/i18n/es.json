@@ -401,6 +401,7 @@
             "name": "Nombre del Plugin",
             "info": "Información del Plugin",
             "enable": "Activar plugin",
+            "enabled": "Activado",
             "plugin_link": "Consulta la documentación del plugin",
             "config": "Configuración del plugin",
             "protocols": "Protocolos",

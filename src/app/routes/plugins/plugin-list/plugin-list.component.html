@@ -74,10 +74,6 @@
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="infoPluginConfig(row)" mat-icon-button matTooltip="{{'plugin.config' | translate}}"
-                            matTooltipClass="tooltip-teal">
-                        <mat-icon>settings</mat-icon>
-                    </button>
                     <button (click)="addEditPlugin(row)" color="accent" mat-icon-button matTooltip="{{'text.edit' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>edit</mat-icon>

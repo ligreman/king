@@ -1,1 +1,150 @@
-<p>dialog-info-plugin works!</p>
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+        <span>{{'plugin.dialog.info' | translate}}</span>
+
+        <span fxFlexAlign="end">
+            <a href="https://docs.konghq.com/2.2.x/admin-api/#plugin-object" mat-button target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button (click)="downloadJson()" mat-icon-button
+                    matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        </p>
+    </div>
+
+    <div fxFlex>
+        <mat-dialog-content *ngIf="plugin && !loading" class="margin-0-i">
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.name' | translate}}</p>
+                    <p class="text margin-left-20-i">{{plugin['name']}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.id' | translate}}</p>
+                    <p class="text margin-left-20-i">{{plugin['id']}}</p>
+                </div>
+            </div>
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.created_at' | translate}}</p>
+                    <p class="text margin-left-20-i">{{plugin['created_at'] * 1000 | date:'medium'}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'plugin.dialog.enabled' | translate}}</p>
+                    <p class="text margin-left-20-i">{{plugin['enabled']}}</p>
+                </div>
+            </div>
+
+            <div class="margin-top-10-i" fxLayout="row">
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matSuffix matTooltip="{{'plugin.dialog.protocols_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'plugin.dialog.protocols' | translate}}</p>
+                    <p class="text margin-left-20-i">{{ (plugin['protocols'] || []).join(', ') }}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matSuffix matTooltip="{{'plugin.dialog.route_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'route.label' | translate}}</p>
+                    <p class="text margin-left-20-i" matTooltip="{{ route.id }}" matTooltipClass="tooltip-teal">{{ route.name }}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'plugin.dialog.service_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'service.label' | translate}}</p>
+                    <p class="text margin-left-20-i" matTooltip="{{ service.id }}" matTooltipClass="tooltip-teal">{{ service.name }}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'plugin.dialog.consumer_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'consumer.label' | translate}}</p>
+                    <p class="text margin-left-20-i" matTooltip="{{ consumer.id }}" matTooltipClass="tooltip-teal">{{ consumer.name }}</p>
+                </div>
+            </div>
+
+            <div class="margin-top-10-i" fxLayout="row">
+                <div fxFlex="100">
+                    <div fxLayout="row" fxLayoutAlign="space-between center">
+                        <p class="title margin-0-i">{{'plugin.dialog.config' | translate}}</p>
+                        <a color="accent" href="https://docs.konghq.com/hub/kong-inc/{{plugin['name']}}" mat-button target="_blank">
+                            {{ 'plugin.dialog.plugin_link' | translate }}
+                            <mat-icon class="mini-icon">open_in_new</mat-icon>
+                        </a>
+                    </div>
+
+                    <div class="padding-left-20">
+                        <ngx-json-viewer *ngIf="!isEmpty()" [json]="plugin['config']"></ngx-json-viewer>
+                        <p *ngIf="isEmpty()">{{ "{ }" }}</p>
+                    </div>
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <mat-chip-list *ngIf="plugin" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
+            <mat-chip *ngFor="let chip of plugin['tags']" color="primary">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <div><!-- leave empty --></div>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>
+
+<!--
+
+
+{
+    "config": {
+        "api_uri": "https:\/\/acme-v02.api.letsencrypt.org\/directory",
+        "storage": "shm",
+        "storage_config": {
+            "redis": {
+                "auth": null,
+                "port": null,
+                "database": null,
+                "host": null
+            },
+            "shm": {
+                "shm_name": "kong"
+            },
+            "vault": {
+                "host": null,
+                "port": null,
+                "token": null,
+                "timeout": null,
+                "https": null,
+                "tls_server_name": null,
+                "kv_path": null,
+                "tls_verify": true
+            },
+            "kong": {},
+            "consul": {
+                "host": null,
+                "port": null,
+                "token": null,
+                "timeout": null,
+                "https": null,
+                "kv_path": null
+            }
+        },
+        "cert_type": "rsa",
+        "tos_accepted": null,
+        "fail_backoff_minutes": 5,
+        "domains": [
+            "f2.cop",
+            "333.com"
+        ],
+        "renew_threshold_days": 14,
+        "account_email": "as222@cmcm.com"
+    }
+}
+
+-->

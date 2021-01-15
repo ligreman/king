@@ -32,7 +32,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     // Filtros del grafo
     netFilter = {tag: '', element: 'all', mode: true};
     // Posibles tipos de nodos que tienen acciones propias
-    groupsInfo = ['service', 'route', 'upstream', 'target'];
+    groupsInfo = ['service', 'route', 'upstream', 'target', 'plugin'];
     groupsEdit = ['service', 'route', 'upstream', 'consumer', 'plugin'];
     groupsDelete = ['service', 'route', 'upstream', 'consumer', 'target', 'plugin'];
     // groupsAddPlugin = ['service', 'route', 'consumer'];

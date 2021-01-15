@@ -36,7 +36,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
-import { DialogInfoPluginConfigComponent } from './components/dialog-info-plugin-config/dialog-info-plugin-config.component';
 import { DialogInfoPluginComponent } from './components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
@@ -101,7 +100,6 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogNewCacertComponent,
         PluginListComponent,
         DialogInfoPluginComponent,
-        DialogInfoPluginConfigComponent,
         PluginFormFieldsComponent
     ],
     imports: [
