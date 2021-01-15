@@ -185,7 +185,7 @@ export class DialogNewPluginComponent implements OnInit {
                 _unset(plugin, field);
             }
         });
-        console.log(plugin);
+
         return plugin;
     }
 
@@ -256,8 +256,6 @@ export class DialogNewPluginComponent implements OnInit {
         schema.forEach(element => {
             const keys = Object.getOwnPropertyNames(element);
             const field = keys[0];
-            // console.log(keys);
-            // console.log(field);
 
             if (element.hasOwnProperty(field)) {
                 const value = element[field];

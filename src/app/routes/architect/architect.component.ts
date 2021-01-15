@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { filter as _filter, uniq as _uniq } from 'lodash';
+import { cloneDeep as _cloneDeep, filter as _filter, uniq as _uniq } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -275,7 +275,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 extras.push(this.translate.instant('route.dialog.headers') + ': ' + JSON.stringify(route.headers));
             }
 
-
             // Nodos de ruta
             this.data.nodes.add({
                 id: route.id,
@@ -374,6 +373,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 edgesTos.push(edge.from);
             }
         });
+
         this.data.nodes.forEach(node => {
             // Si el nodo no tiene un edge que vaya a él (un to), pues lo engancho con el centro
             if (!edgesTos.includes(node.id)) {
@@ -580,20 +580,22 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     filterGraphByTag() {
         const tags = this.netFilter.tag;
+        let newData;
 
         if (tags === '') {
-            this.createGraphNodesAndEdges(this.dataApi);
+            newData = _cloneDeep(this.dataApi);
         } else {
             let theTags = tags.split(',');
             theTags = theTags.map(value => value.trim());
-
-            let newData = {services: [], routes: [], upstreams: []};
+            newData = {services: [], routes: [], upstreams: [], plugins: [], consumers: []};
 
             // AND
             if (this.netFilter.mode) {
                 newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: theTags}));
                 newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: theTags}));
                 newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: theTags}));
+                newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: theTags}));
+                newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: theTags}));
             }
             // OR
             else {
@@ -601,29 +603,27 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: [tag]}));
                     newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: [tag]}));
                     newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: [tag]}));
+                    newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: [tag]}));
+                    newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: [tag]}));
                 });
 
                 // Elimino duplicados
                 newData.services = _uniq(newData.services);
                 newData.routes = _uniq(newData.routes);
                 newData.upstreams = _uniq(newData.upstreams);
+                newData.consumers = _uniq(newData.consumers);
+                newData.plugins = _uniq(newData.plugins);
             }
-
-            // Filtro de elementos a mostrar
-            if (this.netFilter.element === 'mainonly') {
-                // TODO delete de data.consumers y plugins... solo dejar services, routes y upstreams
-            }
-
-            this.createGraphNodesAndEdges(newData);
         }
-    }
 
-    /*
-        Filtra el grafo por elementos
-     */
-    filterGraphByElement() {
-        // Lanzo un filtrado
-        this.filterGraphByTag();
+        // Filtro de elementos a mostrar
+        if (this.netFilter.element === 'mainonly') {
+            // Elimino consumers y plugins
+            newData.consumers = [];
+            newData.plugins = [];
+        }
+
+        this.createGraphNodesAndEdges(newData);
     }
 
     getHealthData(health) {

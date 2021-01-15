@@ -21,7 +21,7 @@
             </div>
 
             <mat-form-field color="accent" fxFlex="30">
-                <mat-select (selectionChange)="filterGraphByElement()" [(ngModel)]="netFilter.element">
+                <mat-select (selectionChange)="filterGraphByTag()" [(ngModel)]="netFilter.element">
                     <mat-option value="all">{{'architect.filter_element_all' | translate}}</mat-option>
                     <mat-option value="mainonly">{{'architect.filter_element_mainonly' | translate}}</mat-option>
                 </mat-select>
