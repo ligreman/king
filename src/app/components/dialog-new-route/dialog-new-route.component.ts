@@ -60,6 +60,39 @@ export class DialogNewRouteComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
                 public dialogRef: MatDialogRef<DialogNewRouteComponent>) { }
 
+    /*
+        Getters de campos del formulario
+     */
+    get nameField() { return this.form.get('name'); }
+
+    get serviceField() { return this.form.get('service'); }
+
+    get protocolsField() { return this.form.get('protocols'); }
+
+    get hostsField() { return this.form.get('hosts'); }
+
+    get methodsField() { return this.form.get('methods'); }
+
+    get pathsField() { return this.form.get('paths'); }
+
+    get httpsRedirectStatusCodeField() { return this.form.get('https_redirect_status_code'); }
+
+    get snisField() { return this.form.get('snis'); }
+
+    get regexPriorityField() { return this.form.get('regex_priority'); }
+
+    get pathHandlingField() { return this.form.get('path_handling'); }
+
+    get stripPathField() { return this.form.get('strip_path'); }
+
+    get preserveHostField() { return this.form.get('preserve_host'); }
+
+    get requestBufferingField() { return this.form.get('request_buffering'); }
+
+    get responseBufferingField() { return this.form.get('response_buffering'); }
+
+    get tagsField() { return this.form.get('tags'); }
+
     ngOnInit(): void {
         // Recupero la lista de servicios
         this.api.getServices()
@@ -100,7 +133,25 @@ export class DialogNewRouteComponent implements OnInit {
         Submit del formulario
      */
     onSubmit() {
-        this.dialogRef.close(this.prepareDataForKong(this.form.value));
+        const result = this.prepareDataForKong(this.form.value);
+        if (!this.editMode) {
+            // llamo al API
+            this.api.postNewRoute(result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_route', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
+        // Si venía es que es edición
+        else {
+            this.api.patchRoute(this.routeIdEdit, result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.update_route', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
     }
 
     /*
@@ -389,39 +440,6 @@ export class DialogNewRouteComponent implements OnInit {
 
         return body;
     }
-
-    /*
-        Getters de campos del formulario
-     */
-    get nameField() { return this.form.get('name'); }
-
-    get serviceField() { return this.form.get('service'); }
-
-    get protocolsField() { return this.form.get('protocols'); }
-
-    get hostsField() { return this.form.get('hosts'); }
-
-    get methodsField() { return this.form.get('methods'); }
-
-    get pathsField() { return this.form.get('paths'); }
-
-    get httpsRedirectStatusCodeField() { return this.form.get('https_redirect_status_code'); }
-
-    get snisField() { return this.form.get('snis'); }
-
-    get regexPriorityField() { return this.form.get('regex_priority'); }
-
-    get pathHandlingField() { return this.form.get('path_handling'); }
-
-    get stripPathField() { return this.form.get('strip_path'); }
-
-    get preserveHostField() { return this.form.get('preserve_host'); }
-
-    get requestBufferingField() { return this.form.get('request_buffering'); }
-
-    get responseBufferingField() { return this.form.get('response_buffering'); }
-
-    get tagsField() { return this.form.get('tags'); }
 }
 
 /*

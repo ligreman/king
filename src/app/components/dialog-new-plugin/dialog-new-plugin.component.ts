@@ -111,10 +111,10 @@ export class DialogNewPluginComponent implements OnInit {
         Submit del formulario
      */
     onSubmit() {
-        const body = this.prepareDataForKong(this.form.value);
+        const result = this.prepareDataForKong(this.form.value);
         if (!this.editMode) {
             // llamo al API
-            this.api.postNewPlugin(body).subscribe(value => {
+            this.api.postNewPlugin(result).subscribe(value => {
                 this.toast.success('text.id_extra', 'success.new_plugin', {msgExtra: value['id']});
                 this.dialogRef.close(true);
             }, error => {
@@ -123,7 +123,7 @@ export class DialogNewPluginComponent implements OnInit {
         }
         // Si es que es edición
         else {
-            this.api.patchPlugin(this.pluginIdEdit, body).subscribe(value => {
+            this.api.patchPlugin(this.pluginIdEdit, result).subscribe(value => {
                 this.toast.success('text.id_extra', 'success.update_plugin', {msgExtra: value['id']});
                 this.dialogRef.close(true);
             }, error => {

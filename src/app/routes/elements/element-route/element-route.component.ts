@@ -79,7 +79,7 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
         Añade un servicio nuevo
      */
     addEdit(selected = null) {
-        this.dialogHelper.addEditRoute(selected)
+        this.dialogHelper.addEdit(selected, 'route')
             .then(() => { this.reloadData(); })
             .catch(error => {});
     }

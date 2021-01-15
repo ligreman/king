@@ -26,16 +26,20 @@ export class DialogNewConsumerComponent implements OnInit {
         tags: ['']
     }, {validators: [FinalFormValidator()]});
 
-    constructor(@Inject(MAT_DIALOG_DATA) public consumerId: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewConsumerComponent>,
+    constructor(@Inject(MAT_DIALOG_DATA) public consumerIdEdit: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewConsumerComponent>,
                 private api: ApiService, private toast: ToastService) { }
+
+    get usernameField() { return this.form.get('username'); }
+
+    get customField() { return this.form.get('custom_id'); }
 
     ngOnInit(): void {
         // Si viene  para editar
-        if (this.consumerId !== null) {
+        if (this.consumerIdEdit !== null) {
             this.editMode = true;
 
             // Rescato la info  del api
-            this.api.getConsumer(this.consumerId)
+            this.api.getConsumer(this.consumerIdEdit)
                 .subscribe(consumer => {
                     // Relleno el formuarlio
                     this.form.setValue(this.prepareDataForForm(consumer));
@@ -53,6 +57,25 @@ export class DialogNewConsumerComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
+        const result = this.prepareDataForKong(this.form.value);
+        if (!this.editMode) {
+            // llamo al API
+            this.api.postNewConsumer(result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_consumer', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
+        // Si venía es que es edición
+        else {
+            this.api.patchConsumer(this.consumerIdEdit, result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.update_consumer', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
         this.dialogRef.close(this.prepareDataForKong(this.form.value));
     }
 
@@ -116,10 +139,6 @@ export class DialogNewConsumerComponent implements OnInit {
 
         return consumer;
     }
-
-    get usernameField() { return this.form.get('username'); }
-
-    get customField() { return this.form.get('custom_id'); }
 }
 
 

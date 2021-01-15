@@ -65,7 +65,7 @@ export class CertificateCertComponent implements OnInit {
         Añade un elemento nuevo
      */
     addEditCert(selected = null) {
-        this.dialogHelper.addEditCert(selected)
+        this.dialogHelper.addEdit(selected, 'cert')
             .then(() => { this.reloadData(); })
             .catch(error => {});
     }

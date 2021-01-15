@@ -90,6 +90,61 @@ export class DialogNewUpstreamComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public upstreamIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
                 public dialogRef: MatDialogRef<DialogNewUpstreamComponent>) { }
 
+    /*
+        Getters de campos del formulario
+     */
+    get nameField() { return this.form.get('name'); }
+
+    get algorithmField() { return this.form.get('algorithm'); }
+
+    get slotsField() { return this.form.get('slots'); }
+
+    get hashOnField() { return this.form.get('hash_on'); }
+
+    get hashOnHeaderField() { return this.form.get('hash_on_header'); }
+
+    get hashFallbackField() { return this.form.get('hash_fallback'); }
+
+    get hashFallbakHeaderField() { return this.form.get('hash_fallback_header'); }
+
+    get hashOnCookieField() { return this.form.get('hash_on_cookie'); }
+
+    get hashOnCookiePathField() { return this.form.get('hash_on_cookie_path'); }
+
+    get haHttpsVerifyCertificateField() { return this.form.get('healthchecks.active.https_verify_certificate'); }
+
+    get haHttpPathField() { return this.form.get('healthchecks.active.http_path'); }
+
+    get httpsSniField() { return this.form.get('healthchecks.active.https_sni'); }
+
+    get timeoutActiveField() { return this.form.get('healthchecks.active.timeout'); }
+
+    get concurrencyField() { return this.form.get('healthchecks.active.concurrency'); }
+
+    get httpStatusesAHField() { return this.form.get('healthchecks.active.healthy.http_statuses'); }
+
+    get successesAHField() { return this.form.get('healthchecks.active.healthy.successes'); }
+
+    get intervalAHField() { return this.form.get('healthchecks.active.healthy.interval'); }
+
+    get httpStatusesAUHField() { return this.form.get('healthchecks.active.unhealthy.http_statuses'); }
+
+    get httpFailuresAUHField() { return this.form.get('healthchecks.active.unhealthy.http_failures'); }
+
+    get tcpFailuresAUHField() { return this.form.get('healthchecks.active.unhealthy.tcp_failures'); }
+
+    get intervalAUHField() { return this.form.get('healthchecks.active.unhealthy.interval'); }
+
+    get timeoutsAUHField() { return this.form.get('healthchecks.active.unhealthy.timeouts'); }
+
+    get thresholdField() { return this.form.get('healthchecks.threshold'); }
+
+    get hostHeaderField() { return this.form.get('host_header'); }
+
+    get clientCertificateField() { return this.form.get('client_certificate'); }
+
+    get tagsField() { return this.form.get('tags'); }
+
     ngOnInit(): void {
         forkJoin([
             this.api.getServices(),
@@ -143,7 +198,25 @@ export class DialogNewUpstreamComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
-        this.dialogRef.close(this.prepareDataForKong(this.form.value));
+        const result = this.prepareDataForKong(this.form.value);
+        if (!this.editMode) {
+            // llamo al API
+            this.api.postNewUpstream(result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_upstream', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
+        // Si venía es que es edición
+        else {
+            this.api.patchUpstream(this.upstreamIdEdit, result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.update_upstream', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
     }
 
     /*
@@ -221,62 +294,6 @@ export class DialogNewUpstreamComponent implements OnInit {
 
         return body;
     }
-
-
-    /*
-        Getters de campos del formulario
-     */
-    get nameField() { return this.form.get('name'); }
-
-    get algorithmField() { return this.form.get('algorithm'); }
-
-    get slotsField() { return this.form.get('slots'); }
-
-    get hashOnField() { return this.form.get('hash_on'); }
-
-    get hashOnHeaderField() { return this.form.get('hash_on_header'); }
-
-    get hashFallbackField() { return this.form.get('hash_fallback'); }
-
-    get hashFallbakHeaderField() { return this.form.get('hash_fallback_header'); }
-
-    get hashOnCookieField() { return this.form.get('hash_on_cookie'); }
-
-    get hashOnCookiePathField() { return this.form.get('hash_on_cookie_path'); }
-
-    get haHttpsVerifyCertificateField() { return this.form.get('healthchecks.active.https_verify_certificate'); }
-
-    get haHttpPathField() { return this.form.get('healthchecks.active.http_path'); }
-
-    get httpsSniField() { return this.form.get('healthchecks.active.https_sni'); }
-
-    get timeoutActiveField() { return this.form.get('healthchecks.active.timeout'); }
-
-    get concurrencyField() { return this.form.get('healthchecks.active.concurrency'); }
-
-    get httpStatusesAHField() { return this.form.get('healthchecks.active.healthy.http_statuses'); }
-
-    get successesAHField() { return this.form.get('healthchecks.active.healthy.successes'); }
-
-    get intervalAHField() { return this.form.get('healthchecks.active.healthy.interval'); }
-
-    get httpStatusesAUHField() { return this.form.get('healthchecks.active.unhealthy.http_statuses'); }
-
-    get httpFailuresAUHField() { return this.form.get('healthchecks.active.unhealthy.http_failures'); }
-
-    get tcpFailuresAUHField() { return this.form.get('healthchecks.active.unhealthy.tcp_failures'); }
-
-    get intervalAUHField() { return this.form.get('healthchecks.active.unhealthy.interval'); }
-
-    get timeoutsAUHField() { return this.form.get('healthchecks.active.unhealthy.timeouts'); }
-
-    get thresholdField() { return this.form.get('healthchecks.threshold'); }
-
-    get hostHeaderField() { return this.form.get('host_header'); }
-
-    get clientCertificateField() { return this.form.get('client_certificate'); }
-
-    get tagsField() { return this.form.get('tags'); }
 }
 
 

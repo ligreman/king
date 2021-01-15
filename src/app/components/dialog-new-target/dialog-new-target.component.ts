@@ -3,6 +3,8 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ApiService } from '../../services/api.service';
+import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
 @Component({
@@ -22,7 +24,14 @@ export class DialogNewTargetComponent implements OnInit {
         tags: ['']
     });
 
-    constructor(@Inject(MAT_DIALOG_DATA) public upstreamId: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewTargetComponent>) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public upstreamId: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewTargetComponent>,
+                private api: ApiService, private toast: ToastService) { }
+
+    get targetField() { return this.form.get('target'); }
+
+    get portField() { return this.form.get('port'); }
+
+    get weightField() { return this.form.get('weight'); }
 
     ngOnInit(): void {
     }
@@ -31,7 +40,15 @@ export class DialogNewTargetComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
-        this.dialogRef.close(this.prepareDataForKong(this.form.value));
+        const result = this.prepareDataForKong(this.form.value);
+
+        // llamo al API
+        this.api.postNewTarget(result, this.upstreamId).subscribe(value => {
+            this.toast.success('text.id_extra', 'success.new_target', {msgExtra: value['id']});
+            this.dialogRef.close(true);
+        }, error => {
+            this.toast.error_general(error, {disableTimeOut: true});
+        });
     }
 
     /*
@@ -72,14 +89,8 @@ export class DialogNewTargetComponent implements OnInit {
         // Concateno el puerto
         body.target = body.target + ':' + body.port;
         delete body.port;
-        
+
         return body;
     }
-
-    get targetField() { return this.form.get('target'); }
-
-    get portField() { return this.form.get('port'); }
-
-    get weightField() { return this.form.get('weight'); }
 
 }

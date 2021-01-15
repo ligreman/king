@@ -75,7 +75,7 @@ export class ElementServiceComponent implements OnInit, AfterViewInit {
         Añade un servicio nuevo
      */
     addEdit(selected = null) {
-        this.dialogHelper.addEditService(selected)
+        this.dialogHelper.addEdit(selected, 'service')
             .then(() => { this.reloadData(); })
             .catch(error => {});
     }

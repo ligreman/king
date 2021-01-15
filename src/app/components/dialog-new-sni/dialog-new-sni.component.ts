@@ -30,6 +30,10 @@ export class DialogNewSniComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public sniIdEdit: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewSniComponent>,
                 private api: ApiService, private toast: ToastService) { }
 
+    get nameField() { return this.form.get('name'); }
+
+    get certificateField() { return this.form.get('certificate.id'); }
+
     ngOnInit(): void {
         this.api.getCertificates()
             .subscribe(certs => {
@@ -61,7 +65,25 @@ export class DialogNewSniComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
-        this.dialogRef.close(this.prepareDataForKong(this.form.value));
+        const result = this.prepareDataForKong(this.form.value);
+        if (!this.editMode) {
+            // llamo al API
+            this.api.postNewSni(result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_sni', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
+        // Si venía es que es edición
+        else {
+            this.api.patchSni(this.sniIdEdit, result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.update_sni', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
     }
 
     /*
@@ -116,8 +138,4 @@ export class DialogNewSniComponent implements OnInit {
 
         return sni;
     }
-
-    get nameField() { return this.form.get('name'); }
-
-    get certificateField() { return this.form.get('certificate.id'); }
 }

@@ -44,6 +44,41 @@ export class DialogNewServiceComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public serviceIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
                 public dialogRef: MatDialogRef<DialogNewServiceComponent>) { }
 
+    /*
+        Getters de campos del formulario
+     */
+    get nameField() { return this.form.get('name'); }
+
+    get inputMethodField() { return this.form.get('input_method'); }
+
+    get urlField() { return this.form.get('url'); }
+
+    get protocolField() { return this.form.get('protocol'); }
+
+    get hostField() { return this.form.get('host'); }
+
+    get portField() { return this.form.get('port'); }
+
+    get pathField() { return this.form.get('path'); }
+
+    get retriesField() { return this.form.get('retries'); }
+
+    get connectTimeoutField() { return this.form.get('connect_timeout'); }
+
+    get writeTimeoutField() { return this.form.get('write_timeout'); }
+
+    get readTimeoutField() { return this.form.get('read_timeout'); }
+
+    get clientCertificateField() { return this.form.get('client_certificate'); }
+
+    get tlsVerifyField() { return this.form.get('tls_verify'); }
+
+    get tlsVerifyDepthField() { return this.form.get('tls_verify_depth'); }
+
+    get caCertificatesField() { return this.form.get('ca_certificates'); }
+
+    get tagsField() { return this.form.get('tags'); }
+
     ngOnInit(): void {
         // Recupero la lista de certificados
         this.api.getCertificates()
@@ -110,7 +145,26 @@ export class DialogNewServiceComponent implements OnInit {
         Submit del formulario
      */
     onSubmit() {
-        this.dialogRef.close(this.prepareDataForKong(this.form.value));
+        const result = this.prepareDataForKong(this.form.value);
+        // Si no venía selected, es que es nuevo servicio
+        if (!this.editMode) {
+            // llamo al API
+            this.api.postNewService(result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
+        // Si venía es que es edición
+        else {
+            this.api.patchService(this.serviceIdEdit, result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.update_service', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
     }
 
     /*
@@ -209,42 +263,6 @@ export class DialogNewServiceComponent implements OnInit {
 
         return body;
     }
-
-
-    /*
-        Getters de campos del formulario
-     */
-    get nameField() { return this.form.get('name'); }
-
-    get inputMethodField() { return this.form.get('input_method'); }
-
-    get urlField() { return this.form.get('url'); }
-
-    get protocolField() { return this.form.get('protocol'); }
-
-    get hostField() { return this.form.get('host'); }
-
-    get portField() { return this.form.get('port'); }
-
-    get pathField() { return this.form.get('path'); }
-
-    get retriesField() { return this.form.get('retries'); }
-
-    get connectTimeoutField() { return this.form.get('connect_timeout'); }
-
-    get writeTimeoutField() { return this.form.get('write_timeout'); }
-
-    get readTimeoutField() { return this.form.get('read_timeout'); }
-
-    get clientCertificateField() { return this.form.get('client_certificate'); }
-
-    get tlsVerifyField() { return this.form.get('tls_verify'); }
-
-    get tlsVerifyDepthField() { return this.form.get('tls_verify_depth'); }
-
-    get caCertificatesField() { return this.form.get('ca_certificates'); }
-
-    get tagsField() { return this.form.get('tags'); }
 }
 
 function ProtocolPathValidator(): ValidatorFn {

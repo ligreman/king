@@ -78,7 +78,7 @@ export class CertificateSniComponent implements OnInit, AfterViewInit {
         Añade un elemento nuevo
      */
     addEditSni(selected = null) {
-        this.dialogHelper.addEditSni(selected)
+        this.dialogHelper.addEdit(selected, 'sni')
             .then(() => { this.reloadData(); })
             .catch(error => {});
     }

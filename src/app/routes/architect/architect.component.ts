@@ -388,7 +388,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade un servicio nuevo
      */
     addEditService(selected = null) {
-        this.dialogHelper.addEditService(selected)
+        this.dialogHelper.addEdit(selected, 'service')
             .then(() => {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';
@@ -401,7 +401,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade una ruta nueva
      */
     addEditRoute(selected = null) {
-        this.dialogHelper.addEditRoute(selected)
+        this.dialogHelper.addEdit(selected, 'route')
             .then(() => {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';
@@ -414,7 +414,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade un upstream nuevo
      */
     addEditUpstream(selected = null) {
-        this.dialogHelper.addEditUpstream(selected)
+        this.dialogHelper.addEdit(selected, 'upstream')
             .then(() => {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';
@@ -427,7 +427,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade un consumidor nuevo
      */
     addEditConsumer(selected = null) {
-        this.dialogHelper.addEditConsumer(selected)
+        this.dialogHelper.addEdit(selected, 'consumer')
             .then(() => {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';
@@ -440,7 +440,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade un Plugin
      */
     addEditPlugin(selected = null) {
-        this.dialogHelper.addEditConsumer(selected)
+        this.dialogHelper.addEdit(selected, 'consumer')
             .then(() => {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';
@@ -453,7 +453,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade un Target
      */
     addTarget(selected = null) {
-        this.dialogHelper.addTarget(selected)
+        this.dialogHelper.addEdit(selected, 'target')
             .then(() => {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';

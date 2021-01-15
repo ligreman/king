@@ -65,7 +65,7 @@ export class ElementConsumerComponent implements OnInit {
         Añade un elemento nuevo
      */
     addEditConsumer(selected = null) {
-        this.dialogHelper.addEditConsumer(selected)
+        this.dialogHelper.addEdit(selected, 'consumer')
             .then(() => { this.reloadData(); })
             .catch(error => {});
     }

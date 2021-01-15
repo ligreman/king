@@ -25,16 +25,20 @@ export class DialogNewCacertComponent implements OnInit {
         tags: ['']
     });
 
-    constructor(@Inject(MAT_DIALOG_DATA) public certId: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewCacertComponent>,
+    constructor(@Inject(MAT_DIALOG_DATA) public cacertIdEdit: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewCacertComponent>,
                 private api: ApiService, private toast: ToastService) { }
+
+    get certField() { return this.form.get('cert'); }
+
+    get digestField() { return this.form.get('cert_digest'); }
 
     ngOnInit(): void {
         // Si viene  para editar
-        if (this.certId !== null) {
+        if (this.cacertIdEdit !== null) {
             this.editMode = true;
 
             // Rescato la info del servicio del api
-            this.api.getCACertificate(this.certId)
+            this.api.getCACertificate(this.cacertIdEdit)
                 .subscribe(cert => {
                     // Relleno el formuarlio
                     this.form.setValue(this.prepareDataForForm(cert));
@@ -52,7 +56,25 @@ export class DialogNewCacertComponent implements OnInit {
       Submit del formulario
    */
     onSubmit() {
-        this.dialogRef.close(this.prepareDataForKong(this.form.value));
+        const result = this.prepareDataForKong(this.form.value);
+        if (!this.editMode) {
+            // llamo al API
+            this.api.postNewCACertificate(result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.new_cacert', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
+        // Si venía es que es edición
+        else {
+            this.api.patchCACertificate(this.cacertIdEdit, result).subscribe(value => {
+                this.toast.success('text.id_extra', 'success.update_cacert', {msgExtra: value['id']});
+                this.dialogRef.close(true);
+            }, error => {
+                this.toast.error_general(error, {disableTimeOut: true});
+            });
+        }
     }
 
     /*
@@ -111,8 +133,4 @@ export class DialogNewCacertComponent implements OnInit {
 
         return cert;
     }
-
-    get certField() { return this.form.get('cert'); }
-
-    get digestField() { return this.form.get('cert_digest'); }
 }
