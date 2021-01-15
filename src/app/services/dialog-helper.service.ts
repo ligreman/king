@@ -513,6 +513,15 @@ export class DialogHelperService {
                         delete: true
                     };
                     break;
+                case 'plugin':
+                    opt.data = {
+                        title: 'dialog.confirm.delete_plugin_title',
+                        content: 'dialog.confirm.delete_plugin',
+                        name: select.name,
+                        id: select.id,
+                        delete: true
+                    };
+                    break;
             }
 
             const dialogRef = this.dialog.open(DialogConfirmComponent, opt);
@@ -586,6 +595,15 @@ export class DialogHelperService {
                             break;
                         case 'cacert':
                             this.api.deleteCACertificate(select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
+                            break;
+                        case 'plugin':
+                            this.api.deletePlugin(select.id).subscribe(() => {
                                 this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
                                 resolve();
                             }, error => {

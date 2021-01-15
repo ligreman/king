@@ -88,6 +88,8 @@
             "delete_cert": "¿Deseas eliminar este certificado? Esto eliminará también los SNIs asociados al mismo",
             "delete_cacert_title": "Eliminar certificado de CA",
             "delete_cacert": "¿Deseas eliminar este certificado de CA?",
+            "delete_plugin_title": "Eliminar plugin",
+            "delete_plugin": "¿Deseas eliminar este plugin?",
             "enable_plugin_title": "Activar plugin",
             "enable_plugin": "¿Deseas activar este plugin?",
             "disable_plugin_title": "Desactivar plugin",
