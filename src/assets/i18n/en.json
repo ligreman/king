@@ -182,6 +182,7 @@
         "local_actions_upstream": "Actions on upstream",
         "local_actions_consumer": "Actions on consumer",
         "local_actions_target": "Actions on target",
+        "local_actions_plugin": "Actions on plugin",
         "center_network": "Adjust graph to fit all nodes",
         "filter": "Filter by tags, separated by commas",
         "filter_tooltip": "Filter",

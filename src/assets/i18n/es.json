@@ -182,6 +182,7 @@
         "local_actions_upstream": "Acciones sobre upstream",
         "local_actions_consumer": "Acciones sobre consumidor",
         "local_actions_target": "Acciones sobre target",
+        "local_actions_plugin": "Acciones sobre plugin",
         "center_network": "Ajustar grafo para abarcar todos los nodos",
         "filter": "Filtrar por etiquetas, separadas por comas",
         "filter_tooltip": "Filtrar",

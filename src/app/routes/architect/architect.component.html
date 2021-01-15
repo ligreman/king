@@ -1,40 +1,40 @@
-<div id="net-reference" fxLayout="row" fxFlexFill>
-    <div fxFlex="75" [fxShow]="loading" fxLayoutAlign="center center">
+<div fxFlexFill fxLayout="row" id="net-reference">
+    <div [fxShow]="loading" fxFlex="75" fxLayoutAlign="center center">
         <p fxFlex="50">
-            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
     </div>
-    <div fxFlex="75" [fxShow]="!loading" class="graph-container">
-        <div *ngIf="showTools" id="graph-tools" fxLayout="row" fxLayoutAlign="space-between center">
+    <div [fxShow]="!loading" class="graph-container" fxFlex="75">
+        <div *ngIf="showTools" fxLayout="row" fxLayoutAlign="space-between center" id="graph-tools">
             <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">
                 <mat-form-field class="filter" color="accent" fxFlex="75">
-                    <mat-slide-toggle [checked]="netFilter.mode" (change)="netFilter.mode = !netFilter.mode" matPrefix class="margin-right-20">
+                    <mat-slide-toggle (change)="netFilter.mode = !netFilter.mode" [checked]="netFilter.mode" class="margin-right-20" matPrefix>
                         <span *ngIf="netFilter.mode">AND</span>
                         <span *ngIf="!netFilter.mode">OR</span>
                     </mat-slide-toggle>
                     <mat-label>{{ 'architect.filter' | translate}}</mat-label>
-                    <input matInput type="text" [(ngModel)]="netFilter.tag" (keyup.enter)="filterGraphByTag()">
-                    <button matSuffix mat-icon-button (click)="netFilter.tag=''; filterGraphByTag()">
+                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput type="text">
+                    <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
                         <mat-icon>close</mat-icon>
                     </button>
                 </mat-form-field>
             </div>
 
             <mat-form-field color="accent" fxFlex="30">
-                <mat-select [(ngModel)]="netFilter.element" (selectionChange)="filterGraphByElement()">
+                <mat-select (selectionChange)="filterGraphByElement()" [(ngModel)]="netFilter.element">
                     <mat-option value="all">{{'architect.filter_element_all' | translate}}</mat-option>
                     <mat-option value="mainonly">{{'architect.filter_element_mainonly' | translate}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <button mat-stroked-button color="accent" (click)="filterGraphByTag()"
+            <button (click)="filterGraphByTag()" color="accent" mat-stroked-button
                     matTooltip="{{'architect.filter_tooltip' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>search</mat-icon>
             </button>
 
-            <button mat-icon-button color="accent" (click)="fitNetwork()"
-                    matTooltip="{{'architect.center_network' | translate}}"
-                    matTooltipClass="tooltip-teal" [matTooltipShowDelay]="1000"
+            <button (click)="fitNetwork()" [matTooltipShowDelay]="1000" color="accent"
+                    mat-icon-button
+                    matTooltip="{{'architect.center_network' | translate}}" matTooltipClass="tooltip-teal"
                     matTooltipPosition="left">
                 <mat-icon>center_focus_strong</mat-icon>
             </button>
@@ -43,10 +43,10 @@
     </div>
     <div fxFlex="25" id="graph-actions">
         <mat-list>
-            <div mat-subheader class="subheader">{{'architect.global_actions' | translate}}</div>
+            <div class="subheader" mat-subheader>{{'architect.global_actions' | translate}}</div>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addEdit(null, 'service')">
+                    <button (click)="addEdit(null, 'service')" mat-button>
                         <mat-icon class="color-service">memory</mat-icon>&nbsp;
                         {{'service.add' | translate}}
                     </button>
@@ -54,7 +54,7 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addEdit(null, 'route')">
+                    <button (click)="addEdit(null, 'route')" mat-button>
                         <mat-icon class="color-route">timeline</mat-icon>&nbsp;
                         {{'route.add' | translate}}
                     </button>
@@ -62,7 +62,7 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addEdit(null, 'upstream')">
+                    <button (click)="addEdit(null, 'upstream')" mat-button>
                         <mat-icon class="color-upstream">share</mat-icon>&nbsp;
                         {{'upstream.add' | translate}}
                     </button>
@@ -70,7 +70,7 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addEdit(null, 'consumer')">
+                    <button (click)="addEdit(null, 'consumer')" mat-button>
                         <mat-icon class="color-consumer">shopping_cart</mat-icon>&nbsp;
                         {{'consumer.add' | translate}}
                     </button>
@@ -78,21 +78,21 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button mat-button (click)="addEdit(null, 'plugin')">
+                    <button (click)="addEdit(null, 'plugin')" mat-button>
                         <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
                         {{'plugin.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
 
-            <mat-divider class="margin-top-10 margin-bottom-10" *ngIf="groupsAny.includes(selection.group)"></mat-divider>
+            <mat-divider *ngIf="groupsAll.includes(selection.group)" class="margin-top-10 margin-bottom-10"></mat-divider>
 
-            <div mat-subheader class="subheader" *ngIf="groupsAny.includes(selection.group)">
+            <div *ngIf="groupsAll.includes(selection.group)" class="subheader" mat-subheader>
                 {{'architect.local_actions_' + selection.group | translate }}:&nbsp;<span class="italic">{{ selection.label }}</span>
             </div>
             <mat-list-item *ngIf="groupsInfo.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button (click)="showInfo(selection)">
+                    <button (click)="showInfo(selection)" mat-button>
                         <mat-icon>info</mat-icon>
                         {{'text.info' | translate}}
                     </button>
@@ -100,14 +100,14 @@
             </mat-list-item>
             <mat-list-item *ngIf="groupsEdit.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button color="accent" (click)="addEdit(selection, selection.group)">
+                    <button (click)="addEdit(selection, selection.group)" color="accent" mat-button>
                         <mat-icon>edit</mat-icon>
                         {{'text.edit' | translate}}</button>
                 </div>
             </mat-list-item>
             <mat-list-item *ngIf="groupsDelete.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button color="warn" (click)="delete(selection)">
+                    <button (click)="delete(selection)" color="warn" mat-button>
                         <mat-icon>delete</mat-icon>
                         {{'text.delete' | translate}}
                     </button>
@@ -115,7 +115,7 @@
             </mat-list-item>
             <mat-list-item *ngIf="groupsAddPlugin.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button (click)="addEditPlugin(selection)">
+                    <button (click)="addEditPlugin(selection)" mat-button>
                         <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
                         {{'plugin.add' | translate}}
                     </button>
@@ -123,7 +123,7 @@
             </mat-list-item>
             <mat-list-item *ngIf="groupsAddTarget.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button (click)="addTarget(selection)">
+                    <button (click)="addTarget(selection)" mat-button>
                         <mat-icon class="color-target">gps_fixed</mat-icon>&nbsp;
                         {{'target.add' | translate}}
                     </button>
@@ -132,7 +132,7 @@
 
             <mat-list-item *ngIf="groupsHealth.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button (click)="setTargetHealthy(selection)">
+                    <button (click)="setTargetHealthy(selection)" mat-button>
                         <mat-icon class="color-healthy">power</mat-icon>&nbsp;
                         {{'target.set_healthy' | translate}}
                     </button>
@@ -140,7 +140,7 @@
             </mat-list-item>
             <mat-list-item *ngIf="groupsHealth.includes(selection.group)">
                 <div mat-line>
-                    <button mat-button (click)="setTargetUnhealthy(selection)">
+                    <button (click)="setTargetUnhealthy(selection)" mat-button>
                         <mat-icon class="color-unhealthy">power_off</mat-icon>&nbsp;
                         {{'target.set_unhealthy' | translate}}
                     </button>

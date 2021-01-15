@@ -33,12 +33,13 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     netFilter = {tag: '', element: 'all', mode: true};
     // Posibles tipos de nodos que tienen acciones propias
     groupsInfo = ['service', 'route', 'upstream', 'target'];
-    groupsEdit = ['service', 'route', 'upstream', 'consumer'];
-    groupsDelete = ['service', 'route', 'upstream', 'consumer', 'target'];
-    groupsAddPlugin = ['service', 'route', 'consumer'];
+    groupsEdit = ['service', 'route', 'upstream', 'consumer', 'plugin'];
+    groupsDelete = ['service', 'route', 'upstream', 'consumer', 'target', 'plugin'];
+    // groupsAddPlugin = ['service', 'route', 'consumer'];
+    groupsAddPlugin = [];
     groupsAddTarget = ['upstream'];
     groupsHealth = ['target'];
-    groupsAny = ['service', 'route', 'upstream', 'consumer', 'target'];
+    groupsAll = ['service', 'route', 'upstream', 'consumer', 'target', 'plugin'];
 
     // Datos del grafo
     data = {
@@ -149,10 +150,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             this.api.getServices(),
             this.api.getRoutes(),
             this.api.getUpstreams(),
-            this.api.getConsumers()
-        ]).pipe(map(([services, routes, upstreams, consumers]) => {
+            this.api.getConsumers(),
+            this.api.getPlugins()
+        ]).pipe(map(([services, routes, upstreams, consumers, plugins]) => {
             // forkJoin returns an array of values, here we map those values to an object
-            return {services: services['data'], routes: routes['data'], upstreams: upstreams['data'], consumers: consumers['data']};
+            return {services: services['data'], routes: routes['data'], upstreams: upstreams['data'], consumers: consumers['data'], plugins: plugins['data']};
         }));
     }
 
@@ -323,13 +325,54 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 data: consumer
             });
         }
-        // TODO completar con consumidores, plugins...
+
+        // Creo los nodos de plugin
+        for (let plugin of data.plugins) {
+            let extrasC = [''];
+            let pluginEdges = [];
+
+            if (plugin.route && plugin.route.id) {
+                extrasC.push(this.translate.instant('route.label') + ': ' + plugin.route.id);
+                pluginEdges.push(plugin.route.id);
+            }
+            if (plugin.service && plugin.service.id) {
+                extrasC.push(this.translate.instant('service.label') + ': ' + plugin.service.id);
+                pluginEdges.push(plugin.service.id);
+            }
+            if (plugin.consumer && plugin.consumer.id) {
+                extrasC.push(this.translate.instant('consumer.label') + ': ' + plugin.consumer.id);
+                pluginEdges.push(plugin.consumer.id);
+            }
+
+            // Nodos de plugin
+            this.data.nodes.add({
+                id: plugin.id,
+                label: plugin.name,
+                title: this.translate.instant('plugin.label') + ': ' + plugin.id + extrasC.join('<br>'),
+                group: 'plugin',
+                data: plugin
+            });
+
+            // Si el plugin tiene establecido el campo route, service o consumer, creo los edges para enlazar
+            pluginEdges.forEach(edge => {
+                this.data.edges.add({
+                    from: plugin.id,
+                    to: edge,
+                    data: 'plugin'
+                });
+            });
+        }
 
         // Ahora voy a enganchar al center los nodos que hayan quedado sueltos
         // Recojo todos los ids de edges
         let edgesTos = ['center'];
         this.data.edges.forEach(edge => {
             edgesTos.push(edge.to);
+
+            // Caso particular para los plugin, si están enganchados a algo no necesitan to, así que añado los from en este caso
+            if (edge.data && edge.data === 'plugin') {
+                edgesTos.push(edge.from);
+            }
         });
         this.data.nodes.forEach(node => {
             // Si el nodo no tiene un edge que vaya a él (un to), pues lo engancho con el centro
@@ -440,7 +483,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Añade un Plugin
      */
     addEditPlugin(selected = null) {
-        this.dialogHelper.addEdit(selected, 'consumer')
+        this.dialogHelper.addEdit(selected, 'plugin')
             .then(() => {
                 this.netFilter.tag = '';
                 this.netFilter.element = 'all';

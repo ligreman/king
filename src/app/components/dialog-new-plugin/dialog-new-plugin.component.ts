@@ -95,12 +95,7 @@ export class DialogNewPluginComponent implements OnInit {
                 .subscribe(plugin => {
                     // Primero he de disparar el evento de cambio de schema para que cargue los campos de formulario
                     this.nameField.setValue(plugin['name']);
-                    this.pluginChange();
-
-                    // Ahora ya relleno el formulario, en el siguiente loop de angular para que ya esté cargado el modelo
-                    setTimeout(() => {
-                        this.form.setValue(this.prepareDataForForm(plugin));
-                    }, 0);
+                    this.pluginChange(plugin);
                 }, error => {
                     this.toast.error_general(error);
                 });
@@ -169,6 +164,16 @@ export class DialogNewPluginComponent implements OnInit {
         this.currentTags = plugin['tags'] || [];
         plugin['tags'] = [];
 
+        if (plugin['route'] === null) {
+            plugin['route'] = {id: null};
+        }
+        if (plugin['service'] === null) {
+            plugin['service'] = {id: null};
+        }
+        if (plugin['consumer'] === null) {
+            plugin['consumer'] = {id: null};
+        }
+
         // Campos array
         this.arrayFields.forEach(field => {
             // Cojo el array de valores
@@ -180,7 +185,7 @@ export class DialogNewPluginComponent implements OnInit {
                 _unset(plugin, field);
             }
         });
-
+        console.log(plugin);
         return plugin;
     }
 
@@ -219,7 +224,7 @@ export class DialogNewPluginComponent implements OnInit {
     /*
         Al cambiar el nombre del plugin
      */
-    pluginChange() {
+    pluginChange(updateFormData = null) {
         // Obtengo el schema del plugin
         this.api.getPluginSchema(this.nameField.value)
             .subscribe(value => {
@@ -234,6 +239,12 @@ export class DialogNewPluginComponent implements OnInit {
 
                 // Los campos para el HTML
                 this.pluginForm = data.formFields;
+
+                if (updateFormData !== null) {
+                    setTimeout(() => {
+                        this.form.setValue(this.prepareDataForForm(updateFormData));
+                    }, 0);
+                }
             });
     }
 
