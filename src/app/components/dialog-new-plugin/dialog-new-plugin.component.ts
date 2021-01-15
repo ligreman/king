@@ -17,23 +17,25 @@ import { CustomValidators } from '../../shared/custom-validators';
 export class DialogNewPluginComponent implements OnInit {
     // Uso la variable para el estado del formulario
     formValid = false;
-    validProtocols = ['http', 'https', 'tcp', 'tls', 'udp', 'grpc', 'grpcs'];
+    defaultProtocols = ['http', 'https', 'tcp', 'tls', 'udp', 'grpc', 'grpcs'];
+    validProtocols = this.defaultProtocols;
     currentTags = [];
     editMode = false;
     servicesList;
     routesList;
     consumersList;
     pluginsList;
+    pluginForm = [];
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
-        name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\-._~]+$/)]],
+        name: ['', [Validators.required]],
         route: [''],
         service: [''],
         consumer: [''],
         protocols: ['', [Validators.required, CustomValidators.isArrayOfOneOf(this.validProtocols)]],
         enabled: [true, [CustomValidators.isBoolean(true)]],
-        config: ['', []],
+        config: this.fb.group({}),
         tags: ['']
     });
 
@@ -41,6 +43,25 @@ export class DialogNewPluginComponent implements OnInit {
 
     constructor(@Inject(MAT_DIALOG_DATA) public pluginIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
                 public dialogRef: MatDialogRef<DialogNewPluginComponent>) { }
+
+    /*
+        Getters de campos del formulario
+     */
+    get nameField() { return this.form.get('name'); }
+
+    get serviceField() { return this.form.get('service'); }
+
+    get routeField() { return this.form.get('route'); }
+
+    get consumerField() { return this.form.get('consumer'); }
+
+    get protocolsField() { return this.form.get('protocols'); }
+
+    get enabledField() { return this.form.get('enabled'); }
+
+    get configField() { return this.form.get('config'); }
+
+    get tagsField() { return this.form.get('tags'); }
 
     ngOnInit(): void {
         // Recojo del api los datos
@@ -129,26 +150,261 @@ export class DialogNewPluginComponent implements OnInit {
             body.tags = [];
         }
 
+        if (this.routeField.value === '' || this.routeField.value === null) {
+            body.route = null;
+        }
+        if (this.serviceField.value === '' || this.serviceField.value === null) {
+            body.service = null;
+        }
+        if (this.consumerField.value === '' || this.consumerField.value === null) {
+            body.consumer = null;
+        }
+
+        console.log(body);
         return body;
     }
 
     /*
-        Getters de campos del formulario
+        Al cambiar el nombre del plugin
      */
-    get nameField() { return this.form.get('name'); }
+    pluginChange() {
+        // Obtengo el schema del plugin
+        this.api.getPluginSchema(this.nameField.value)
+            .subscribe(value => {
+                const pluginSchemaFields = this.parseSchema(value);
+                this.form.get('config').reset();
 
-    get serviceField() { return this.form.get('service'); }
+                const data = this.generateFormFields(pluginSchemaFields);
+                console.log(data);
 
-    get routeField() { return this.form.get('route'); }
+                // this.form.removeControl('config');
+                // this.form.addControl('config', data.dConfig);
+                this.form.setControl('config', data.dConfig);
+                this.form.get('config').clearValidators();
 
-    get consumerField() { return this.form.get('consumer'); }
+                // Los campos para el HTML
+                this.pluginForm = data.formFields;
 
-    get protocolsField() { return this.form.get('protocols'); }
+                // Actualizo la lista de formulario
 
-    get enabledField() { return this.form.get('enabled'); }
+                /*this.pluginSchemaFields.forEach(element => {
+                    const keys = Object.getOwnPropertyNames(element);
+                    const field = keys[0];
+                    console.log(keys);
+                    console.log(field);
 
-    get configField() { return this.form.get('config'); }
+                    if (element.hasOwnProperty(field)) {
+                        const value = element[field];
+                        console.log(value);
+                        // Strings
+                        if (value.type === 'string') {
+                            let validators = [];
 
-    get tagsField() { return this.form.get('tags'); }
+                            // Si tiene match es RegExp
+                            if (value.match) {
+                                validators.push(Validators.pattern(new RegExp(value.match)));
+                            }
+                            // Requerido
+                            if (value.required) {
+                                validators.push(Validators.required);
+                            }
+
+                            dinamicConfig.addControl(field, this.fb.control(value.default || null, validators));
+                            this.pluginForm.push({
+                                field: field,
+                                type: value.type,
+                                required: value.required || false
+                            });
+                        }
+                    }
+                });*/
+
+            });
+    }
+
+    generateFormFields(schema) {
+        // Genero el formulario dinámico
+        let dConfig = this.fb.group({});
+        let formFields = [];
+
+        schema.forEach(element => {
+            const keys = Object.getOwnPropertyNames(element);
+            const field = keys[0];
+            // console.log(keys);
+            // console.log(field);
+
+            if (element.hasOwnProperty(field)) {
+                const value = element[field];
+
+                // Strings
+                if (value.type === 'string') {
+                    let validators = [];
+                    let tipo = value.type;
+                    let opts = null;
+                    console.log(value.default);
+
+                    // Requerido
+                    if (value.required) {
+                        validators.push(Validators.required);
+                    }
+
+                    // Min len
+                    if (value.len_min) {
+                        validators.push(Validators.minLength(value.len_min));
+                    }
+
+                    // Max len
+                    if (value.len_max) {
+                        validators.push(Validators.maxLength(value.len_max));
+                    }
+
+                    // Si tiene one_of es un select
+                    if (value.one_of) {
+                        tipo = 'select';
+                        opts = value.one_of;
+                    }
+
+                    dConfig.addControl(field, this.fb.control(value.default || null, validators));
+                    formFields.push({
+                        field: field,
+                        type: tipo,
+                        required: value.required || false,
+                        options: opts,
+                        multi: false
+                    });
+                }
+
+                // Numbers
+                if (value.type === 'number' || value.type === 'integer') {
+                    let validators = [];
+                    let hint = [null, null];
+
+                    // Requerido
+                    if (value.required) {
+                        validators.push(Validators.required);
+                    }
+
+                    // gt
+                    if (value.gt) {
+                        validators.push(Validators.min(value.gt));
+                        hint[0] = value.gt;
+                    }
+
+                    // lt
+                    if (value.lt) {
+                        validators.push(Validators.max(value.lt));
+                        hint[1] = value.lt;
+                    }
+
+                    // Between
+                    if (value.between) {
+                        validators.push(Validators.min(value.between[0]));
+                        validators.push(Validators.max(value.between[1]));
+                        hint = value.between;
+                    }
+
+                    dConfig.addControl(field, this.fb.control(value.default || null, validators));
+                    formFields.push({
+                        field: field,
+                        type: 'number',
+                        required: value.required || false,
+                        hint: hint
+                    });
+                }
+
+                // Boolean
+                if (value.type === 'boolean') {
+                    let validators = [];
+
+                    // Requerido
+                    if (value.required) {
+                        validators.push(Validators.required);
+                    }
+
+                    dConfig.addControl(field, this.fb.control(value.default || null, validators));
+                    formFields.push({
+                        field: field,
+                        type: 'boolean',
+                        required: value.required || false
+                    });
+                }
+
+                // Sets y arrays
+                if (value.type === 'set' || value.type === 'array') {
+                    let validators = [];
+                    let tipo = 'array';
+                    let opts = [];
+
+                    // Requerido
+                    if (value.required) {
+                        validators.push(Validators.required);
+                    }
+
+                    // Si tiene one_of es un select
+                    if (value.elements && value.elements.one_of) {
+                        tipo = 'select';
+                        opts = value.elements.one_of;
+                    } else {
+                        // Es un array de strings (no hay de otro tipo)
+                        // TODO  guardar en variable de padre un array de los campos que son de este tipo, para postprocesarlos
+                        // TODO  Al enviar el form o al cargarlo, convertir textarea en array de lineas
+                    }
+
+                    dConfig.addControl(field, this.fb.control(value.default || null, validators));
+                    formFields.push({
+                        field: field,
+                        type: tipo,
+                        required: value.required || false,
+                        options: opts,
+                        multi: true
+                    });
+                }
+
+                // Record -> Anidado
+                if (value.type === 'record') {
+                    // Llamada recursiva
+                    const newData = this.generateFormFields(value.fields);
+
+                    // Añado el grupo anidado
+                    dConfig.addControl(field, newData.dConfig);
+                    // Para el HTML
+                    formFields.push({
+                        field: field,
+                        child_fields: newData.formFields,
+                        type: value.type
+                    });
+                }
+            }
+        });
+
+        return {dConfig, formFields};
+    }
+
+    parseSchema(schema) {
+        let res = [];
+        this.serviceField.enable();
+        this.routeField.enable();
+        this.consumerField.enable();
+        this.validProtocols = this.defaultProtocols;
+
+        schema.fields.forEach(field => {
+            if (field['protocols'] && field['protocols']['elements'] && field['protocols']['elements']['one_of']) {
+                this.validProtocols = field['protocols']['elements']['one_of'];
+            }
+            if (field['service'] && field['service']['eq'] === null) {
+                this.serviceField.disable();
+            }
+            if (field['route'] && field['route']['eq'] === null) {
+                this.routeField.disable();
+            }
+            if (field['consumer'] && field['consumer']['eq'] === null) {
+                this.consumerField.disable();
+            }
+            if (field['config']) {
+                res = field['config'].fields;
+            }
+        });
+
+        return res;
+    }
 }
-

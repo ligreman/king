@@ -46,6 +46,7 @@ import { DialogNewCacertComponent } from './components/dialog-new-cacert/dialog-
 import { DialogNewCertComponent } from './components/dialog-new-cert/dialog-new-cert.component';
 import { DialogNewConsumerComponent } from './components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewPluginComponent } from './components/dialog-new-plugin/dialog-new-plugin.component';
+import { PluginFormFieldsComponent } from './components/dialog-new-plugin/plugin-form-fields/plugin-form-fields.component';
 import { DialogNewRouteComponent } from './components/dialog-new-route/dialog-new-route.component';
 import { DialogNewServiceComponent } from './components/dialog-new-service/dialog-new-service.component';
 import { DialogNewSniComponent } from './components/dialog-new-sni/dialog-new-sni.component';
@@ -100,7 +101,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogNewCacertComponent,
         PluginListComponent,
         DialogInfoPluginComponent,
-        DialogInfoPluginConfigComponent
+        DialogInfoPluginConfigComponent,
+        PluginFormFieldsComponent
     ],
     imports: [
         BrowserModule,

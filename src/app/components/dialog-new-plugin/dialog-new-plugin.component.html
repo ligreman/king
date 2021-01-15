@@ -17,7 +17,7 @@
                     <!--Name-->
                     <mat-form-field appearance="outline" color="accent" fxFlex="35">
                         <mat-label>{{'plugin.dialog.name' | translate}}</mat-label>
-                        <mat-select cdkFocusInitial formControlName="name" required>
+                        <mat-select (selectionChange)="pluginChange()" cdkFocusInitial formControlName="name" required>
                             <mat-option *ngFor="let plugin of pluginsList" value="{{plugin}}">{{plugin}}</mat-option>
                         </mat-select>
                         <mat-error *ngIf="nameField.hasError('required')">
@@ -88,7 +88,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                <div class="margin-bottom-20-i" fxLayout="row" fxLayoutAlign="space-between start">
                     <mat-form-field appearance="outline" color="accent" fxFlex="100">
                         <mat-chip-list #chipList aria-label="">
                             <mat-chip (removed)="removeTag(tag)"
@@ -106,21 +106,60 @@
                     </mat-form-field>
                 </div>
 
-                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
-                    <mat-form-field fxFlex="100" color="accent" appearance="outline">
-                        <mat-label>{{'plugin.dialog.config' | translate}}</mat-label>
-                        <textarea matInput placeholder="{ ... }" formControlName="config"></textarea>
-                        <mat-hint *ngIf="nameField.value !== ''">
-                            <a class="link" href="https://docs.konghq.com/hub/kong-inc/{{nameField.value}}" target="_blank">
-                                {{'plugin.dialog.plugin_link' | translate}}
-                                <mat-icon class="link">open_in_new</mat-icon>
-                            </a>
-                        </mat-hint>
-                        <mat-error *ngIf="configField.invalid">
-                            {{ 'error.field_required' | translate }}
-                        </mat-error>
-                    </mat-form-field>
-                </div>
+                <!--<div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start" formGroupName="config">-->
+                <!-- <mat-form-field fxFlex="100" color="accent" appearance="outline">
+                     <mat-label>{{'plugin.dialog.config' | translate}}</mat-label>
+                     <textarea matInput placeholder="{ ... }" formControlName="config"></textarea>
+                     <mat-hint *ngIf="nameField.value !== ''">
+                         <a class="link" href="https://docs.konghq.com/hub/kong-inc/{{nameField.value}}" target="_blank">
+                             {{'plugin.dialog.plugin_link' | translate}}
+                             <mat-icon class="link">open_in_new</mat-icon>
+                         </a>
+                     </mat-hint>
+                     <mat-error *ngIf="configField.invalid">
+                         {{ 'error.field_required' | translate }}
+                     </mat-error>
+                 </mat-form-field>-->
+
+                <!--<mat-form-field fxFlex="100" color="accent" appearance="outline" *ngFor="let field of pluginForm">
+                    <mat-label>{{'plugin.dialog.' + field | translate}}</mat-label>
+                    <input *ngIf="field.type === 'string'" type="text" matInput [formControlName]="field.field" [required]="field.required"/>
+                </mat-form-field>-->
+                <!--</div>-->
+
+                <!--<p>Config </p>-->
+                <!--<div fxLayout="column" class="margin-bottom-10">-->
+                <!-- formGroupName="config"-->
+                <!--<ng-container *ngTemplateOutlet="tmpfields;context:{fields:pluginForm}"></ng-container>-->
+                <!--<ng-container *ngFor="let field of pluginForm">-->
+                <app-plugin-form-fields [fields]="pluginForm" [parentForm]="form" [plugin]="nameField.value"
+                                        currentGroup="config" group="config"></app-plugin-form-fields>
+                <!--</ng-container>-->
+                <!--</div>-->
+
+                <!-- TEMPLATES -->
+                <ng-template #tmpfields let-formFields="fields">
+                    <ng-container *ngFor="let field of formFields">
+                        <!--<app-plugin-form-fields [field]="field"></app-plugin-form-fields>-->
+
+                        <!--<mat-form-field fxFlex="100" color="accent" appearance="outline" *ngIf="field.type === 'string'">
+                            <mat-label>{{'plugin.dialog.' + field.field | translate}}</mat-label>
+                            <input type="text" matInput [formControlName]="field.field" [required]="field.required"/>
+                        </mat-form-field>
+
+                        <mat-form-field fxFlex="100" color="accent" appearance="outline" *ngIf="field.type === 'number' || field.type === 'integer'">
+                            <mat-label>{{'plugin.dialog.' + field.field | translate}}</mat-label>
+                            <input type="number" matInput [formControlName]="field.field" [required]="field.required"/>
+                        </mat-form-field>
+
+                        <ng-container *ngIf="field.type === 'record'">
+                            <p>El hijo {{field.field}}</p>
+                            <div [formGroupName]="field.field">
+                                <p *ngFor="let p of field.child_fields">{{p.field}}</p>
+                            </div>
+                        </ng-container>-->
+                    </ng-container>
+                </ng-template>
             </div>
         </form>
     </div>

@@ -270,4 +270,8 @@ export class ApiService {
     public deletePlugin(id: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/plugins/' + id).pipe(catchError(this.handleError));
     }
+
+    public getPluginSchema(plugin: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/schemas/plugins/' + plugin).pipe(catchError(this.handleError));
+    }
 }

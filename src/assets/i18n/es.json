@@ -399,12 +399,15 @@
             "info": "Información del Plugin",
             "enable": "Activar plugin",
             "plugin_link": "Consulta la documentación del plugin",
-            "config": "JSON de configuración del plugin",
+            "config": "Configuración del plugin",
             "protocols": "Protocolos",
             "protocols_tooltip": "Una lista de los protocolos de peticiones que activarán este plugin",
             "route_tooltip": "Si está configurado, el plugin solo se activará cuando reciba peticiones a través de la Ruta especificada. Dejarlo vacío hará que el plugin se active independientemente de la ruta que se esté utilizando.",
             "service_tooltip": "Si está configurado, el plugin solo se activará al recibir peticiones a través de una de las rutas que pertenecen al Servicio especificado. Dejarlo vacío hará que el plugin se active independientemente del servicio que coincida.",
-            "consumer_tooltip": "Si está configurado, el plugin se activará solo para peticiones en las que se haya autenticado el consumidor especificado (tenga en cuenta que algunos plugins no se pueden restringir a los consumidores de esta manera). Dejarlo vacío hará que el plugin se active independientemente del consumidor autenticado."
+            "consumer_tooltip": "Si está configurado, el plugin se activará solo para peticiones en las que se haya autenticado el consumidor especificado (tenga en cuenta que algunos plugins no se pueden restringir a los consumidores de esta manera). Dejarlo vacío hará que el plugin se active independientemente del consumidor autenticado.",
+            "min": "Número mayor de {{min}}",
+            "max": "Número menor de {{max}}",
+            "min_max": "Número entre {{min}} y {{max}}"
         }
     },
     "target": {
