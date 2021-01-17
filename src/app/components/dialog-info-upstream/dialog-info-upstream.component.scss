@@ -5,6 +5,19 @@
     color: mat-color($mat-blue-gray, 300);
 }
 
-p.text {
+p.text, div.text {
     font-weight: lighter;
+}
+
+.mat-list-base {
+    padding: 0 !important;
+}
+
+.mat-list-base .mat-list-item {
+    font-size: inherit !important;
+    height: 36px !important;
+}
+
+.padding-left-24 {
+    padding-left: 24px !important;
 }

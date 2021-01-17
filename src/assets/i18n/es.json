@@ -301,6 +301,7 @@
         "add": "Añadir Upstream",
         "header": "Upstreams",
         "label": "Upstream",
+        "targets": "Targets del upstream",
         "dialog": {
             "create": "Crear un Upstream nuevo",
             "edit": "Editar Upstream",

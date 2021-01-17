@@ -31,18 +31,7 @@ export class ElementServiceComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.api.getServices()
-            .subscribe(value => {
-                    this.dataSource = new MatTableDataSource(value['data']);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                },
-                error => {
-                    this.toast.error('error.node_connection');
-                    this.route.navigate(['/landing']);
-                }, () => {
-                    this.loading = false;
-                });
+        this.reloadData();
     }
 
     reloadData() {

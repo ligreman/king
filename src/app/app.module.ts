@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -121,6 +122,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         MatExpansionModule,
         MatChipsModule,
         MatToolbarModule,
+        MatBadgeModule,
         MatListModule,
         MatIconModule,
         MatAutocompleteModule,

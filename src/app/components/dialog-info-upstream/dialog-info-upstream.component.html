@@ -1,13 +1,13 @@
 <div fxLayout="column" fxLayoutAlign="start stretch">
-    <h2 class="margin-bottom-5-i" mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" fxFlex>
+    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
         <span>{{'upstream.dialog.info' | translate}}</span>
 
         <span fxFlexAlign="end">
-            <a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#upstream-object" target="_blank">
+            <a href="https://docs.konghq.com/2.2.x/admin-api/#upstream-object" mat-button target="_blank">
                 {{'text.documentation' | translate}}
                 <mat-icon class="mini-icon">open_in_new</mat-icon>
             </a>
-            <button mat-icon-button (click)="downloadJson()"
+            <button (click)="downloadJson()" mat-icon-button
                     matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>content_copy</mat-icon>
             </button>
@@ -16,9 +16,9 @@
 
     <mat-divider class="margin-bottom-20-i"></mat-divider>
 
-    <div fxFlex [fxShow]="loading" fxLayoutAlign="center center">
+    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
         <p fxFlex="50">
-            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
     </div>
 
@@ -39,7 +39,7 @@
                 </div>
             </div>
 
-            <div fxLayout="row" class="margin-top-10-i">
+            <div class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'upstream.dialog.algorithm' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream['algorithm']}}</p>
@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <div fxLayout="row" class="margin-top-10-i">
+            <div class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="25">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on' | translate}}</p>
@@ -79,7 +79,7 @@
                 </div>
             </div>
 
-            <div fxLayout="row" class="margin-top-10-i">
+            <div class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="25">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_fallback_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_fallback' | translate}}</p>
@@ -98,7 +98,7 @@
             </div>
 
             <p class="margin-top-10-i">{{'upstream.dialog.health_target' | translate}}</p>
-            <div fxLayout="row" class="padding-left-20">
+            <div class="padding-left-20" fxLayout="row">
                 <div fxFlex="50">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.threshold_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.threshold' | translate}}</p>
@@ -111,9 +111,50 @@
                 </div>
             </div>
 
+            <!-- TARGETS -->
+            <p class="margin-top-10-i margin-bottom-10-i padding-left-20" fxLayout="row" fxLayoutAlign="space-between center">
+                <span>{{'upstream.targets' | translate}}</span>
+                <button (click)="addTarget()" color="accent" mat-button>
+                    <mat-icon>add</mat-icon>&nbsp;
+                    {{ 'target.add' | translate }}
+                </button>
+            </p>
+            <mat-divider class="margin-bottom-10-i"></mat-divider>
+            <div class="padding-left-24" fxLayout="row">
+                <div fxFlex="100">
+                    <mat-list role="list">
+                        <mat-list-item *ngFor="let t of targets" role="listitem">
+                            <div fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
+                                <div class="text" fxFlex="25"><a (click)="showTargetInfo(t)" class="text-small" color="accent" mat-button>{{ t.target }}</a>
+                                </div>
+                                <div class="text" fxFlex="25" matTooltip="{{'target.dialog.weight_tooltip' | translate}}"
+                                     matTooltipClass="tooltip-teal">{{ 'target.dialog.weight' | translate }}: {{t.weight}}
+                                </div>
+                                <div class="text" fxFlex="25">{{ 'target.health_' + t?.health | translate}}</div>
+                                <div fxFlex="25">
+                                    <button (click)="setTargetHealthy(t)" mat-icon-button
+                                            matTooltip="{{'target.set_healthy_title' | translate}}" matTooltipClass="tooltip-teal">
+                                        <mat-icon class="color-healthy">power</mat-icon>
+                                    </button>
+                                    <button (click)="setTargetUnhealthy(t)" mat-icon-button
+                                            matTooltip="{{'target.set_unhealthy_title' | translate}}" matTooltipClass="tooltip-teal">
+                                        <mat-icon class="color-unhealthy">power_off</mat-icon>
+                                    </button>
+                                    <button (click)="deleteTarget(t)" color="warn" mat-icon-button
+                                            matTooltip="{{'dialog.confirm.delete_target_title' | translate}}" matTooltipClass="tooltip-teal">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
+                            </div>
+                        </mat-list-item>
+                    </mat-list>
+
+                </div>
+            </div>
+
             <p class="margin-top-10-i margin-bottom-5-i padding-left-20">{{'upstream.dialog.health_active' | translate}}</p>
             <mat-divider class="margin-bottom-10-i"></mat-divider>
-            <div fxLayout="row" class="padding-left-40">
+            <div class="padding-left-40" fxLayout="row">
                 <div fxFlex="33">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.type_healthcheck_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.type_healthcheck' | translate}}</p>
@@ -130,7 +171,7 @@
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.https_verify_certificate}}</p>
                 </div>
             </div>
-            <div fxLayout="row" class="padding-left-40">
+            <div class="padding-left-40" fxLayout="row">
                 <div fxFlex="33">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.https_sni_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.https_sni' | translate}}</p>
@@ -146,7 +187,7 @@
                 </div>
             </div>
             <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_healthy' | translate}}</p>
-            <div fxLayout="row" class="padding-left-60">
+            <div class="padding-left-60" fxLayout="row">
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'upstream.dialog.http_statuses' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.healthy?.http_statuses}}</p>
@@ -163,7 +204,7 @@
                 </div>
             </div>
             <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_unhealthy' | translate}}</p>
-            <div fxLayout="row" class="padding-left-60">
+            <div class="padding-left-60" fxLayout="row">
                 <div fxFlex="75">
                     <p class="title margin-0-i">{{'upstream.dialog.http_statuses_unhealthy' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.http_statuses}}</p>
@@ -174,7 +215,7 @@
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.interval}}</p>
                 </div>
             </div>
-            <div fxLayout="row" class="padding-left-60">
+            <div class="padding-left-60" fxLayout="row">
                 <div fxFlex="33">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.http_failures_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.http_failures' | translate}}</p>
@@ -193,14 +234,14 @@
 
             <p class="margin-top-10-i margin-bottom-5-i padding-left-20">{{'upstream.dialog.health_passive' | translate}}</p>
             <mat-divider class="margin-bottom-10-i"></mat-divider>
-            <div fxLayout="row" class="padding-left-40">
+            <div class="padding-left-40" fxLayout="row">
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'upstream.dialog.type_healthcheck' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.type}}</p>
                 </div>
             </div>
             <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_healthy' | translate}}</p>
-            <div fxLayout="row" class="padding-left-60">
+            <div class="padding-left-60" fxLayout="row">
                 <div fxFlex="75">
                     <p class="title margin-0-i">{{'upstream.dialog.http_statuses' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.healthy?.http_statuses}}</p>
@@ -212,7 +253,7 @@
                 </div>
             </div>
             <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_unhealthy' | translate}}</p>
-            <div fxLayout="row" class="padding-left-60">
+            <div class="padding-left-60" fxLayout="row">
                 <div fxFlex="40">
                     <p class="title margin-0-i">{{'upstream.dialog.http_statuses_unhealthy' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.passive?.unhealthy?.http_statuses}}</p>
@@ -235,13 +276,13 @@
         </mat-dialog-content>
     </div>
 
-    <mat-divider class="margin-bottom-10-i margin-top-10-i" *ngIf="!loading"></mat-divider>
+    <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between" fxFlex *ngIf="!loading">
-        <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="upstream">
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <mat-chip-list *ngIf="upstream" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip *ngFor="let chip of upstream['tags']" color="primary">{{chip}}</mat-chip>
         </mat-chip-list>
         <div><!-- leave empty --></div>
-        <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>
 </div>

@@ -1,8 +1,8 @@
-<mat-progress-bar mode="indeterminate" color="accent" [fxShow]="loading"></mat-progress-bar>
-<div class="progress-placeholder" [fxShow]="!loading"></div>
+<mat-progress-bar [fxShow]="loading" color="accent" mode="indeterminate"></mat-progress-bar>
+<div [fxShow]="!loading" class="progress-placeholder"></div>
 
-<div fxLayout="row" fxLayoutAlign="center center" class="padding-top-20">
-    <h2 fxFlex="90" class="margin-0-i">{{ 'service.header' | translate}}</h2>
+<div class="padding-top-20" fxLayout="row" fxLayoutAlign="center center">
+    <h2 class="margin-0-i" fxFlex="90">{{ 'service.header' | translate}}</h2>
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center start">
@@ -10,99 +10,100 @@
         <div fxLayout="row" fxLayoutAlign="start end">
             <mat-form-field color="accent" fxFlex>
                 <mat-label>{{ 'text.search' | translate }}</mat-label>
-                <input matInput (keyup)="applyFilter()" placeholder="{{'element.text_search' | translate}}"
-                       #input [(ngModel)]="filter">
-                <button mat-button *ngIf="filter" matSuffix mat-icon-button (click)="filter=''; applyFilter()">
+                <input #input (keyup)="applyFilter()" [(ngModel)]="filter"
+                       matInput placeholder="{{'element.text_search' | translate}}">
+                <button (click)="filter=''; applyFilter()" *ngIf="filter" mat-button mat-icon-button matSuffix>
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <button mat-icon-button (click)="addEdit()" color="accent" fxFlexOffset="5" matTooltip="{{'service.add'| translate}}"
+            <button (click)="addEdit()" color="accent" fxFlexOffset="5" mat-icon-button matTooltip="{{'service.add'| translate}}"
                     matTooltipClass="tooltip-teal">
                 <mat-icon>add</mat-icon>
             </button>
-            <button mat-icon-button (click)="reloadData()" color="accent" matTooltip="{{'element.reload' | translate}}"
+            <button (click)="reloadData()" color="accent" mat-icon-button matTooltip="{{'element.reload' | translate}}"
                     matTooltipClass="tooltip-teal">
                 <mat-icon>refresh</mat-icon>
             </button>
         </div>
 
-        <table mat-table [dataSource]="dataSource" matSort matSortActive="name" matSortDirection="asc" matSortDisableClear fxFlex>
+        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="name" matSortDirection="asc" matSortDisableClear>
             <!-- ID Column -->
             <ng-container matColumnDef="id">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'text.id' | translate}}</th>
-                <td mat-cell *matCellDef="let row"><a mat-button color="accent" (click)="showInfo(row)" class="text-small">{{row.id}}</a></td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.id' | translate}}</th>
+                <td *matCellDef="let row" mat-cell><a (click)="showInfo(row)" class="text-small" color="accent" mat-button>{{row.id}}</a></td>
             </ng-container>
 
             <!-- Name Column -->
             <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'text.name' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.name}}</td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.name' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>{{row.name}}</td>
             </ng-container>
 
             <ng-container matColumnDef="protocol">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.dialog.protocol' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.protocol}}</td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'service.dialog.protocol' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>{{row.protocol}}</td>
             </ng-container>
 
             <ng-container matColumnDef="host">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.dialog.host' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.host}}</td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'service.dialog.host' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>{{row.host}}</td>
             </ng-container>
 
             <ng-container matColumnDef="port">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.dialog.port' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.port}}</td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'service.dialog.port' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>{{row.port}}</td>
             </ng-container>
 
             <ng-container matColumnDef="path">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.dialog.path' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{row.path}}</td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'service.dialog.path' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>{{row.path}}</td>
             </ng-container>
 
             <ng-container matColumnDef="tags">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'service.dialog.tags' | translate}}</th>
-                <td mat-cell *matCellDef="let row">{{(row.tags || []).join(', ')}}</td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'service.dialog.tags' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>{{(row.tags || []).join(', ')}}</td>
             </ng-container>
 
             <ng-container matColumnDef="ssl">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'element.ssl' | translate}}</th>
-                <td mat-cell *matCellDef="let row" class="cell-ssl">
-                    <span matTooltip="{{'service.dialog.tls_verify' | translate}}" matTooltipClass="tooltip-teal"
-                          [fxShow]="row.tls_verify === null">TLS</span>
-                    <span matTooltip="{{'service.dialog.tls_verify' | translate}}" matTooltipClass="tooltip-teal"
-                          [fxShow]="row.tls_verify === true" class="on">TLS</span>
-                    <span matTooltip="{{'service.dialog.tls_verify' | translate}}" matTooltipClass="tooltip-teal"
-                          [fxShow]="row.tls_verify === false" class="off">TLS</span>
-                    <span matTooltip="{{'service.dialog.certificate' | translate}}" matTooltipClass="tooltip-teal"
-                          [ngClass]="(row.client_certificate && row.client_certificate.id) ? 'on' : ''">CERT</span>
-                    <span matTooltip="{{'service.dialog.ca_certificates' | translate}}" matTooltipClass="tooltip-teal"
-                          [ngClass]="(row.ca_certificates && row.ca_certificates.length>0) ? 'on' : ''">CACERT</span>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'element.ssl' | translate}}</th>
+                <td *matCellDef="let row" class="cell-ssl" mat-cell>
+                    <span [fxShow]="row.tls_verify === null" matTooltip="{{'service.dialog.tls_verify' | translate}}"
+                          matTooltipClass="tooltip-teal">TLS</span>
+                    <span [fxShow]="row.tls_verify === true" class="on"
+                          matTooltip="{{'service.dialog.tls_verify' | translate}}" matTooltipClass="tooltip-teal">TLS</span>
+                    <span [fxShow]="row.tls_verify === false" class="off"
+                          matTooltip="{{'service.dialog.tls_verify' | translate}}" matTooltipClass="tooltip-teal">TLS</span>
+                    <span [ngClass]="(row.client_certificate && row.client_certificate.id) ? 'on' : ''" matTooltip="{{'service.dialog.certificate' | translate}}"
+                          matTooltipClass="tooltip-teal">CERT</span>
+                    <span [ngClass]="(row.ca_certificates && row.ca_certificates.length>0) ? 'on' : ''" matTooltip="{{'service.dialog.ca_certificates' | translate}}"
+                          matTooltipClass="tooltip-teal">CACERT</span>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>{{'element.actions' | translate}}</th>
-                <td mat-cell *matCellDef="let row">
-                    <button mat-icon-button color="accent" (click)="addEdit(row)" matTooltip="{{'text.edit' | translate}}"
+                <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>
+                    <button (click)="addEdit(row)" color="accent" mat-icon-button matTooltip="{{'text.edit' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button mat-icon-button color="warn" (click)="delete(row)" matTooltip="{{'text.delete' | translate}}"
+                    <button (click)="delete(row)" color="warn" mat-icon-button matTooltip="{{'text.delete' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>delete</mat-icon>
                     </button>
                 </td>
             </ng-container>
 
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+            <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
 
             <!-- Row shown when there is no matching data. -->
-            <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="9">{{'element.no_data' | translate}} "{{input.value}}"</td>
+            <tr *matNoDataRow class="mat-row">
+                <td *ngIf="input.value === ''" class="mat-cell" colspan="9">{{'element.no_data' | translate}}</td>
+                <td *ngIf="input.value !== ''" class="mat-cell" colspan="9">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
             </tr>
         </table>
 
-        <mat-paginator color="accent" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[10, 25, 100]" color="accent"></mat-paginator>
     </div>
 </div>
