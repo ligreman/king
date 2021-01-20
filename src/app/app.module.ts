@@ -36,6 +36,7 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { DialogAboutComponent } from './components/dialog-about/dialog-about.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
 import { DialogInfoPluginComponent } from './components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
@@ -52,6 +53,7 @@ import { DialogNewServiceComponent } from './components/dialog-new-service/dialo
 import { DialogNewSniComponent } from './components/dialog-new-sni/dialog-new-sni.component';
 import { DialogNewTargetComponent } from './components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from './components/dialog-new-upstream/dialog-new-upstream.component';
+import { ManualContentComponent } from './components/manual-content/manual-content.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
 import { CertificateCacertComponent } from './routes/certificates/certificate-cacert/certificate-cacert.component';
 import { CertificateCertComponent } from './routes/certificates/certificate-cert/certificate-cert.component';
@@ -101,7 +103,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogNewCacertComponent,
         PluginListComponent,
         DialogInfoPluginComponent,
-        PluginFormFieldsComponent
+        PluginFormFieldsComponent,
+        DialogAboutComponent,
+        ManualContentComponent
     ],
     imports: [
         BrowserModule,

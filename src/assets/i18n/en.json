@@ -95,7 +95,13 @@
             "disable_plugin_title": "Disable plugin",
             "disable_plugin": "Do you want to disable this plugin"
         },
-        "copy_clipboard": "Download in JSON"
+        "copy_clipboard": "Download in JSON",
+        "about": {
+            "title": "About King",
+            "developer": "King is developed by",
+            "github": "You can find the project in",
+            "page": "Project page"
+        }
     },
     "header": {
         "menu": {

@@ -1,0 +1,23 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" mat-dialog-title>
+        <span>{{'dialog.about.title' | translate}}</span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div fxFlex>
+        <mat-dialog-content class="margin-0-i">
+            <p>{{'dialog.about.developer' | translate}} <a href="http://ligresoftware.ligreman.com/">LigreSoftware</a>.</p>
+            <p>{{'dialog.about.github' | translate}} <a href="https://github.com/ligreman/king">GitHub</a>.</p>
+            <p>{{'dialog.about.page' | translate}}: <a href="https://ligreman.github.io/king/">King for Kong</a>.</p>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+    <mat-dialog-actions fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <div><!-- leave empty --></div>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>
+

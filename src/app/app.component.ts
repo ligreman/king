@@ -1,10 +1,11 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { DialogAboutComponent } from './components/dialog-about/dialog-about.component';
 import { ApiService } from './services/api.service';
-import { DialogHelperService } from './services/dialog-helper.service';
 import { GlobalsService } from './services/globals.service';
 import { NodeService } from './services/node.service';
 import { ToastService } from './services/toast.service';
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
     constructor(private translate: TranslateService, private api: ApiService, private globals: GlobalsService, private fb: FormBuilder,
-                private toast: ToastService, private route: Router, private nodeWatcher: NodeService, private dialogHelper: DialogHelperService) {
+                private toast: ToastService, private route: Router, private nodeWatcher: NodeService, private dialog: MatDialog) {
         // Cargo del localStorage el idioma
         const language = localStorage.getItem('language');
         if (language == 'es' || language == 'en') {
@@ -58,6 +59,9 @@ export class AppComponent implements OnInit, OnDestroy {
             this.globals.NODE_API_URL = last;
         }
     }
+
+    // GETTERS
+    get nodeField() { return this.formNodes.get('node'); }
 
     ngOnInit(): void {
 
@@ -184,9 +188,6 @@ export class AppComponent implements OnInit, OnDestroy {
         }
     }
 
-    // GETTERS
-    get nodeField() { return this.formNodes.get('node'); }
-
     /*
         Prevent backspace navigate back in browser
      */
@@ -218,6 +219,10 @@ export class AppComponent implements OnInit, OnDestroy {
                 return false;
             }
         }
+    }
+
+    showAbout() {
+        this.dialog.open(DialogAboutComponent, {});
     }
 }
 

@@ -1,0 +1,32 @@
+
+div.manual-block {
+    padding: 1rem 2rem;
+}
+
+.manual-btn-top {
+    position: sticky;
+    left: 93%;
+    bottom: 2%;
+}
+
+.manual-block a {
+    color: #6495ed;
+}
+
+.manual-block a:hover {
+    color: #81a6e9;
+    cursor: pointer;
+}
+
+.manual-block ol {
+    counter-reset: item;
+}
+
+.manual-block li {
+    display: block;
+}
+
+.manual-block li:before {
+    content: counters(item, ".") " ";
+    counter-increment: item;
+}

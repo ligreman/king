@@ -1,53 +1,53 @@
 <mat-toolbar color="primary" id="header-container">
-    <img class="logo" src="assets/img/logo.svg" alt="" matTooltip="ROAR!" matTooltipClass="tooltip-teal" matTooltipShowDelay="2000"/>
+    <img alt="" class="logo" matTooltip="ROAR!" matTooltipClass="tooltip-teal" matTooltipShowDelay="2000" src="assets/img/logo.svg"/>
 
     <div [fxFlexOffset]="1"><a class="title" routerLink="/node-information">King for Kong</a></div>
 
     <div>
-        <button mat-button color="accent" [fxFlexOffset]="2" routerLink="/architect" routerLinkActive="active-route" [disabled]="!isConnectedToNode()">
+        <button [disabled]="!isConnectedToNode()" [fxFlexOffset]="2" color="accent" mat-button routerLink="/architect" routerLinkActive="active-route">
             <mat-icon>architecture</mat-icon>
             {{ 'header.menu.graph' | translate | uppercase }}
         </button>
-        <button mat-button [matMenuTriggerFor]="menuE" [ngClass]="isElementRouteActive()" [disabled]="!isConnectedToNode()" color="accent">
+        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuE" [ngClass]="isElementRouteActive()" color="accent" mat-button>
             <mat-icon>category</mat-icon>
             {{ 'header.menu.elements' | translate | uppercase }}
         </button>
         <mat-menu #menuE="matMenu">
-            <button mat-menu-item routerLinkActive="active-route" routerLink="/element-service">
+            <button mat-menu-item routerLink="/element-service" routerLinkActive="active-route">
                 <mat-icon class="color-service">memory</mat-icon>
                 {{ 'header.menu.services' | translate | uppercase }}
             </button>
-            <button mat-menu-item routerLinkActive="active-route" routerLink="/element-route">
+            <button mat-menu-item routerLink="/element-route" routerLinkActive="active-route">
                 <mat-icon class="color-route">timeline</mat-icon>
                 {{ 'header.menu.routes' | translate | uppercase }}
             </button>
-            <button mat-menu-item routerLinkActive="active-route" routerLink="/element-upstream">
+            <button mat-menu-item routerLink="/element-upstream" routerLinkActive="active-route">
                 <mat-icon class="color-upstream">share</mat-icon>
                 {{ 'header.menu.upstreams' | translate | uppercase }}
             </button>
-            <button mat-menu-item routerLinkActive="active-route" routerLink="/element-consumer">
+            <button mat-menu-item routerLink="/element-consumer" routerLinkActive="active-route">
                 <mat-icon class="color-consumer">shopping_cart</mat-icon>
                 {{ 'header.menu.consumers' | translate | uppercase }}
             </button>
         </mat-menu>
-        <button mat-button color="accent" routerLinkActive="active-route" routerLink="/plugin-list" [disabled]="!isConnectedToNode()">
+        <button [disabled]="!isConnectedToNode()" color="accent" mat-button routerLink="/plugin-list" routerLinkActive="active-route">
             <mat-icon>settings_input_component</mat-icon>
             {{ 'header.menu.plugins' | translate | uppercase }}
         </button>
-        <button mat-button [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()" [disabled]="!isConnectedToNode()" color="accent">
+        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()" color="accent" mat-button>
             <mat-icon>security</mat-icon>
             {{ 'header.menu.certs' | translate | uppercase }}
         </button>
         <mat-menu #menuC="matMenu">
-            <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-cert">
+            <button mat-menu-item routerLink="/certificate-cert" routerLinkActive="active-route">
                 <mat-icon>https</mat-icon>
                 {{'header.menu.certificates' | translate | uppercase}}
             </button>
-            <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-cacert">
+            <button mat-menu-item routerLink="/certificate-cacert" routerLinkActive="active-route">
                 <mat-icon>account_balance</mat-icon>
                 {{'header.menu.cacerts' | translate | uppercase}}
             </button>
-            <button mat-menu-item routerLinkActive="active-route" routerLink="/certificate-sni">
+            <button mat-menu-item routerLink="/certificate-sni" routerLinkActive="active-route">
                 <mat-icon>vpn_lock</mat-icon>
                 {{'header.menu.snis' | translate | uppercase}}
             </button>
@@ -58,13 +58,13 @@
 
     <form [formGroup]="formNodes" fxFlex.gt-md="25" fxFlex.lt-lg="40">
         <mat-form-field class="small-font" color="accent" fxFlex>
-            <input type="text" aria-label="" matInput
-                   placeholder="{{'header.menu.kong_node' | translate}}"
+            <input [matAutocomplete]="auto" [matTooltipShowDelay]="1000" aria-label=""
                    formControlName="node"
-                   [matAutocomplete]="auto"
+                   matInput
                    matTooltip="{{'header.menu.kong_node_tooltip' | translate}}"
                    matTooltipClass="tooltip-teal"
-                   [matTooltipShowDelay]="1000"/>
+                   placeholder="{{'header.menu.kong_node' | translate}}"
+                   type="text"/>
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of node_list" [value]="option" class="small-font">
                     {{option}}
@@ -74,10 +74,10 @@
                 <div *ngIf="nodeField.errors.required">{{ 'header.menu.error_node_field' | translate }}</div>
             </mat-error>
         </mat-form-field>
-        <button mat-icon-button (click)="connectToNode()" color="accent"
+        <button (click)="connectToNode()" [matTooltipShowDelay]="1000" color="accent"
+                mat-icon-button
                 matTooltip="{{'header.menu.kong_node_button_tooltip' | translate}}"
-                matTooltipClass="tooltip-teal"
-                [matTooltipShowDelay]="1000">
+                matTooltipClass="tooltip-teal">
             <mat-icon>play_arrow</mat-icon>
         </button>
     </form>
@@ -85,85 +85,41 @@
 
 <router-outlet></router-outlet>
 
-<footer id="footer-container" fxLayout="row" fxLayoutAlign="space-between center">
+<footer fxLayout="row" fxLayoutAlign="space-between center" id="footer-container">
     <div>
-        <mat-button-toggle-group aria-label="" [formControl]="lang">
+        <mat-button-toggle-group [formControl]="lang" aria-label="">
             <mat-button-toggle (click)="changeLang('en')" value="en">english</mat-button-toggle>
             <mat-button-toggle (click)="changeLang('es')" value="es">español</mat-button-toggle>
         </mat-button-toggle-group>
     </div>
     <div>
-        <button mat-button>
+        <button (click)="showAbout()" mat-button>
             <mat-icon>not_listed_location</mat-icon>
             {{'footer.about' | translate}}
         </button>
-        <button mat-button (click)="toggleManual()">
+        <button (click)="toggleManual()" mat-button>
             <mat-icon>import_contacts</mat-icon>
             {{'footer.manual' | translate}}
         </button>
     </div>
     <a href="https://github.com/ligreman/king" mat-icon-button matTooltip="https://github.com/ligreman/king" matTooltipPosition="left" target="_blank">
-        <img src="assets/img/github.png" alt="GitHub"/>
+        <img alt="GitHub" src="assets/img/github.png"/>
     </a>
 </footer>
 
-<div id="manual-container" [fxShow]="openedManual" [ngStyle]="{'height.px': manualStyles.height, 'top.px': manualStyles.top}"
-     [ngClass]="{'showing': showManualText}">
+<div [fxShow]="openedManual" [ngClass]="{'showing': showManualText}" [ngStyle]="{'height.px': manualStyles.height, 'top.px': manualStyles.top}"
+     id="manual-container">
     <div class="manual-text" id="manual-text">
         <mat-toolbar color="accent" fxLayout="row" fxLayoutAlign="space-between center">
-            <span id="mSummary" #mSummary>{{ 'manual.title' | translate}}</span>
-            <button mat-icon-button (click)="toggleManual()">
+            <span #mSummary id="mSummary">{{ 'manual.title' | translate}}</span>
+            <button (click)="toggleManual()" mat-icon-button>
                 <mat-icon>clear</mat-icon>
             </button>
         </mat-toolbar>
 
-        <div class="manual-block">
-            <ol class="padding-0">
-                <li><a (click)="scrollTo(mOne)">Introducción al manual</a></li>
-                <li>two
-                    <ol>
-                        <li>two.one</li>
-                        <li>two.two</li>
-                        <li>two.three</li>
-                    </ol>
-                </li>
-                <li>three
-                    <ol>
-                        <li>three.one</li>
-                        <li>three.two
-                            <ol>
-                                <li>three.two.one</li>
-                                <li>three.two.two</li>
-                            </ol>
-                        </li>
-                    </ol>
-                </li>
-                <li>four</li>
-            </ol>
-        </div>
-        <div class="manual-block" id="mOne" #mOne>
-            <h2>1. Pepeppepepepepeppe</h2>
-            <section>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <p>Pepeppepepepepeppe</p>
-                <a (click)="scrollTo(mSummary)">Up</a>
-            </section>
-        </div>
-        <button mat-icon-button color="primary" (click)="scrollTo(mSummary)" class="manual-btn-top">
+        <app-manual-content [summary]="mSummary"></app-manual-content>
+
+        <button (click)="scrollTo(mSummary)" class="manual-btn-top" color="primary" mat-icon-button>
             <mat-icon>vertical_align_top</mat-icon>
         </button>
     </div>

@@ -47,36 +47,10 @@
     transition: 0.5s;
 }
 
-#manual-container div.manual-block {
-    padding: 1rem 2rem;
-}
-
 #manual-container .manual-btn-top {
     position: sticky;
     left: 93%;
     bottom: 2%;
-}
-
-#manual-container .manual-block a {
-    color: #6495ed;
-}
-
-#manual-container .manual-block a:hover {
-    color: #81a6e9;
-    cursor: pointer;
-}
-
-#manual-container .manual-block ol {
-    counter-reset: item;
-}
-
-#manual-container .manual-block li {
-    display: block;
-}
-
-#manual-container .manual-block li:before {
-    content: counters(item, ".") " ";
-    counter-increment: item;
 }
 
 #manual-container section {
