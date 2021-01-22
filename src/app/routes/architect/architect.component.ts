@@ -167,9 +167,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.data.edges.clear();
 
         // Genero el nodo central del grafo
+        const element = generateElement([this.translate.instant('text.kong_node'), this.globals.NODE_API_URL]);
         this.data.nodes.add({
             id: 'center',
-            title: this.translate.instant('text.kong_node') + '<br>' + this.globals.NODE_API_URL,
+            title: element,
             group: 'kong'
         });
 
@@ -193,10 +194,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     const hc = this.getHealthData(hu['data'].health);
 
                     // nodo del upstream
+                    const element = generateElement(['Upstream: ' + up.id, this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm, hc['label']]);
                     this.data.nodes.add({
                         id: up.id,
                         label: up.name,
-                        title: 'Upstream: ' + up.id + '<br>' + this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm + '<br>' + hc['label'],
+                        title: element,
                         group: 'upstream',
                         data: up,
                         font: hc['color']
@@ -223,10 +225,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                             }
                         });
 
+                        const element = generateElement(['Target: ' + target.id, this.translate.instant('target.dialog.weight') + ': ' + target.weight, htc['label']]);
                         this.data.nodes.add({
                             id: target.id,
                             label: target.target,
-                            title: 'Target: ' + target.id + '<br>' + this.translate.instant('target.dialog.weight') + ': ' + target.weight + '<br>' + htc['label'],
+                            title: element,
                             group: 'target',
                             data: target,
                             font: htc['color']
@@ -260,7 +263,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Recorro las rutas creando los nodos de rutas
         for (let route of data.routes) {
-            let extras = [''];
+            let extras = [this.translate.instant('route.label') + ': ' + route.id];
 
             if (route.methods) {
                 extras.push(this.translate.instant('route.dialog.methods') + ': ' + route.methods.join(', '));
@@ -276,10 +279,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             // Nodos de ruta
+            const element = generateElement(extras);
             this.data.nodes.add({
                 id: route.id,
                 label: route.name + '\n[' + route.protocols.join(', ') + ']',
-                title: this.translate.instant('route.label') + ': ' + route.id + extras.join('<br>'),
+                title: element,
                 group: 'route',
                 data: route
             });
@@ -307,7 +311,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Creo los nodos de consumidores
         for (let consumer of data.consumers) {
-            let extrasC = [''];
+            let extrasC = [this.translate.instant('consumer.label') + ': ' + consumer.id];
             if (consumer.username) {
                 extrasC.push(this.translate.instant('consumer.dialog.username') + ': ' + consumer.username);
             }
@@ -316,10 +320,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             // Nodos de consumidor
+            const element = generateElement(extrasC);
             this.data.nodes.add({
                 id: consumer.id,
                 label: consumer.username || consumer.custom_id,
-                title: this.translate.instant('consumer.label') + ': ' + consumer.id + extrasC.join('<br>'),
+                title: element,
                 group: 'consumer',
                 data: consumer
             });
@@ -327,7 +332,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Creo los nodos de plugin
         for (let plugin of data.plugins) {
-            let extrasC = [''];
+            let extrasC = [this.translate.instant('plugin.label') + ': ' + plugin.id];
             let pluginEdges = [];
 
             if (plugin.route && plugin.route.id) {
@@ -344,10 +349,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             // Nodos de plugin
+            const element = generateElement(extrasC);
             this.data.nodes.add({
                 id: plugin.id,
                 label: plugin.name,
-                title: this.translate.instant('plugin.label') + ': ' + plugin.id + extrasC.join('<br>'),
+                title: element,
                 group: 'plugin',
                 data: plugin
             });
@@ -644,4 +650,17 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         return data;
     }
 
+}
+
+function generateElement(arrayOfP) {
+    const element = document.createElement('div');
+
+    arrayOfP.forEach(text => {
+        const p = document.createElement('p');
+        p.appendChild(document.createTextNode(text));
+        p.setAttribute('style', 'margin:0 !important');
+        element.appendChild(p);
+    });
+
+    return element;
 }
