@@ -487,6 +487,7 @@
             "create": "Crear un Certificado de CA nuevo",
             "edit": "Editar Certificado de CA",
             "certificate": "Certificado público de CA (PEM)",
+            "key": "Clave privada (PEM)",
             "digest": "Hash SHA256",
             "error": {
                 "digest": "Ha de ser un hash SHA256"
