@@ -419,6 +419,10 @@ export class DialogNewRouteComponent implements OnInit {
             body.methods = [];
         }
 
+        if (_isEmpty(body.snis)) {
+            body.snis = null;
+        }
+
         // Si es http o https no admite sources y destionations
         if (body.protocols.includes('http') || body.protocols.includes('https')) {
             delete body.sources;

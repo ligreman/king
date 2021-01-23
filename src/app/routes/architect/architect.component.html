@@ -32,6 +32,13 @@
                 <mat-icon>search</mat-icon>
             </button>
 
+            <button (click)="populateGraph()" [matTooltipShowDelay]="1000" color="accent"
+                    mat-icon-button
+                    matTooltip="{{'architect.refresh' | translate}}" matTooltipClass="tooltip-teal"
+                    matTooltipPosition="left">
+                <mat-icon>refresh</mat-icon>
+            </button>
+
             <button (click)="fitNetwork()" [matTooltipShowDelay]="1000" color="accent"
                     mat-icon-button
                     matTooltip="{{'architect.center_network' | translate}}" matTooltipClass="tooltip-teal"

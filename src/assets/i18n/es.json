@@ -131,9 +131,6 @@
         "title": "Introduce la dirección y puerto del API de administración de un nodo de Kong, y pulsa la flecha para conectar",
         "subtitle": "Si ya has conectado con algún nodo previamente lo verás en el desplegable"
     },
-    "manual": {
-        "title": "Manual de usuario"
-    },
     "information": {
         "node": "Información del nodo de Kong",
         "database": "Base de datos",
@@ -190,6 +187,7 @@
         "local_actions_target": "Acciones sobre target",
         "local_actions_plugin": "Acciones sobre plugin",
         "center_network": "Ajustar grafo para abarcar todos los nodos",
+        "refresh": "Refrescar grafo",
         "filter": "Filtrar por etiquetas, separadas por comas",
         "filter_tooltip": "Filtrar",
         "filter_element_all": "Mostrar todos los elementos",
@@ -501,5 +499,11 @@
         "actions": "Acciones",
         "reload": "Recargar los datos",
         "ssl": "Certificados"
+    },
+    "manual": {
+        "title": "Manual de usuario",
+        "chapter1": {
+            "title": ""
+        }
     }
 }

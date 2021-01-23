@@ -39,8 +39,7 @@ export class DialogInfoUpstreamComponent implements OnInit {
         // Datos del upstream
         this.upstream = await this.api.getUpstream(this.upstreamId).toPromise();
         // Salud del upstream
-        const h = await this.api.getUpstreamHealth(this.upstreamId).toPromise();
-        this.upstreamHealth = h['data']['health'];
+        this.upstreamHealth = await this.api.getUpstreamHealth(this.upstreamId).toPromise();
         // Salud de los targets y su info
         const t = await this.api.getUpstreamTargetsHealth(this.upstreamId).toPromise();
         this.targets = t['data'];

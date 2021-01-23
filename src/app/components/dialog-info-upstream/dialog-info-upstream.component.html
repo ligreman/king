@@ -130,7 +130,8 @@
                                 <div class="text" fxFlex="25" matTooltip="{{'target.dialog.weight_tooltip' | translate}}"
                                      matTooltipClass="tooltip-teal">{{ 'target.dialog.weight' | translate }}: {{t.weight}}
                                 </div>
-                                <div class="text" fxFlex="25">{{ 'target.health_' + t?.health | translate}}</div>
+                                <div class="text" fxFlex="25" matTooltip="{{t?.health}}"
+                                     matTooltipClass="tooltip-teal">{{ 'target.health_' + t?.health | translate}}</div>
                                 <div fxFlex="25">
                                     <button (click)="setTargetHealthy(t)" mat-icon-button
                                             matTooltip="{{'target.set_healthy_title' | translate}}" matTooltipClass="tooltip-teal">

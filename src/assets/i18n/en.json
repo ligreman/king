@@ -131,9 +131,6 @@
         "title": "Type here the address and port of the administration API of a Kong node, and click on the arrow to connect",
         "subtitle": "If you have connected with a node previously you will see it in the selector"
     },
-    "manual": {
-        "title": "User manual"
-    },
     "information": {
         "node": "Kong node information",
         "database": "Database",
@@ -190,6 +187,7 @@
         "local_actions_target": "Actions on target",
         "local_actions_plugin": "Actions on plugin",
         "center_network": "Adjust graph to fit all nodes",
+        "refresh": "Refresh graph",
         "filter": "Filter by tags, separated by commas",
         "filter_tooltip": "Filter",
         "filter_element_all": "Show all components",
@@ -501,5 +499,11 @@
         "actions": "Actions",
         "reload": "Reload data",
         "ssl": "Certificates"
+    },
+    "manual": {
+        "title": "User manual",
+        "chapter1": {
+            "title": ""
+        }
     }
 }
