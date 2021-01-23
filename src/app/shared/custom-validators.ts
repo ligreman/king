@@ -149,9 +149,6 @@ export class CustomValidators {
                 } else {
                     Joi.assert(control.value, Joi.string().hostname());
                 }
-                // if (!allowEmpty || (allowEmpty && control.value !== '' && control.value !== null)) {
-                //     Joi.assert(control.value, Joi.string().hostname().allow(''));
-                // }
             } catch (e) {
                 valid = false;
             }

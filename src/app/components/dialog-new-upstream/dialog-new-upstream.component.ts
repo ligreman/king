@@ -256,6 +256,10 @@ export class DialogNewUpstreamComponent implements OnInit {
             upstream['client_certificate'] = '';
         }
 
+        if (upstream['host_header'] === '' || upstream['host_header'] === null) {
+            upstream['host_header'] = '';
+        }
+
         this.currentTags = upstream['tags'] || [];
         upstream['tags'] = [];
 
