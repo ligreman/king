@@ -306,6 +306,8 @@
         "header": "Upstreams",
         "label": "Upstream",
         "targets": "Upstream´s targets",
+        "health_active_on": "Enabled",
+        "health_active_off": "Disabled",
         "dialog": {
             "create": "Create a new Upstream",
             "edit": "Edit Upstream",

@@ -306,6 +306,8 @@
         "header": "Upstreams",
         "label": "Upstream",
         "targets": "Targets del upstream",
+        "health_active_on": "Activadas",
+        "health_active_off": "Desactivadas",
         "dialog": {
             "create": "Crear un Upstream nuevo",
             "edit": "Editar Upstream",
@@ -333,7 +335,7 @@
             "health": "Salud del upstream",
             "health_target": "Comprobaciones de estado de salud de los target",
             "health_active": "Comprobaciones activas de salud",
-            "health_passive": "Comprobaciones pasivas de salud (en tráfico a través de proxy)",
+            "health_passive": "Comprobaciones pasivas de salud (según el tráfico a través del API Gateway)",
             "health_healthy": "Comprobaciones de estado de salud sano",
             "health_unhealthy": "Comprobaciones de estado de salud erróneo",
             "host_tooltip": "El nombre de host que se utilizará como cabecera Host al enviar solicitudes a través de Kong.",
