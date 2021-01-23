@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { cloneDeep as _cloneDeep, filter as _filter, uniq as _uniq } from 'lodash';
+import { cloneDeep as _cloneDeep, filter as _filter, isEmpty as _isEmpty, uniq as _uniq } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -201,7 +201,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                         title: element,
                         group: 'upstream',
                         data: up,
-                        font: hc['color']
+                        font: {color: hc['color']}
                     });
                     // Edge desde el servicio al upstream
                     this.data.edges.add({
@@ -232,7 +232,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                             title: element,
                             group: 'target',
                             data: target,
-                            font: htc['color']
+                            font: {color: htc['color']}
                         });
 
                         // Edge del upstream al target
@@ -265,16 +265,16 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         for (let route of data.routes) {
             let extras = [this.translate.instant('route.label') + ': ' + route.id];
 
-            if (route.methods) {
+            if (!_isEmpty(route.methods)) {
                 extras.push(this.translate.instant('route.dialog.methods') + ': ' + route.methods.join(', '));
             }
-            if (route.hosts) {
+            if (!_isEmpty(route.hosts)) {
                 extras.push(this.translate.instant('route.dialog.hosts') + ': ' + route.hosts.join(', '));
             }
-            if (route.paths) {
+            if (!_isEmpty(route.paths)) {
                 extras.push(this.translate.instant('route.dialog.paths') + ': ' + route.paths.join(', '));
             }
-            if (route.headers) {
+            if (!_isEmpty(route.headers)) {
                 extras.push(this.translate.instant('route.dialog.headers') + ': ' + JSON.stringify(route.headers));
             }
 
@@ -312,10 +312,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         // Creo los nodos de consumidores
         for (let consumer of data.consumers) {
             let extrasC = [this.translate.instant('consumer.label') + ': ' + consumer.id];
-            if (consumer.username) {
+            if (!_isEmpty(consumer.username)) {
                 extrasC.push(this.translate.instant('consumer.dialog.username') + ': ' + consumer.username);
             }
-            if (consumer.custom_id) {
+            if (!_isEmpty(consumer.custom_id)) {
                 extrasC.push(this.translate.instant('consumer.dialog.custom_id') + ': ' + consumer.custom_id);
             }
 
@@ -335,18 +335,21 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             let extrasC = [this.translate.instant('plugin.label') + ': ' + plugin.id];
             let pluginEdges = [];
 
-            if (plugin.route && plugin.route.id) {
+            if (plugin.route && !_isEmpty(plugin.route.id)) {
                 extrasC.push(this.translate.instant('route.label') + ': ' + plugin.route.id);
                 pluginEdges.push(plugin.route.id);
             }
-            if (plugin.service && plugin.service.id) {
+            if (plugin.service && !_isEmpty(plugin.service.id)) {
                 extrasC.push(this.translate.instant('service.label') + ': ' + plugin.service.id);
                 pluginEdges.push(plugin.service.id);
             }
-            if (plugin.consumer && plugin.consumer.id) {
+            if (plugin.consumer && !_isEmpty(plugin.consumer.id)) {
                 extrasC.push(this.translate.instant('consumer.label') + ': ' + plugin.consumer.id);
                 pluginEdges.push(plugin.consumer.id);
             }
+
+            // Plugin activo?
+            const color = plugin.enabled ? '#C0CA33' : '#E53935';
 
             // Nodos de plugin
             const element = generateElement(extrasC);
@@ -355,7 +358,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 label: plugin.name,
                 title: element,
                 group: 'plugin',
-                data: plugin
+                data: plugin,
+                font: {color: color}
             });
 
             // Si el plugin tiene establecido el campo route, service o consumer, creo los edges para enlazar
@@ -638,10 +642,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         switch (health) {
             case 'DNS_ERROR':
             case 'UNHEALTHY':
-                data['color'] = {color: '#E53935'};
+                data['color'] = '#E53935';
                 break;
             case 'HEALTHY':
-                data['color'] = {color: '#C0CA33'};
+                data['color'] = '#C0CA33';
                 break;
         }
 

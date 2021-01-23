@@ -95,9 +95,12 @@ export class DialogInfoRouteComponent implements OnInit {
 
     getSnis() {
         let txt = [];
-        this.route.snis.forEach(sni => {
-            txt.push(this.sniList[sni]);
-        });
+
+        if (this.route.snis) {
+            this.route.snis.forEach(sni => {
+                txt.push(this.sniList[sni]);
+            });
+        }
 
         return txt.join(', ');
     }
