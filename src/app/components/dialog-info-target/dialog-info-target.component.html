@@ -1,13 +1,13 @@
 <div fxLayout="column" fxLayoutAlign="start stretch">
-    <h2 class="margin-bottom-5-i" mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" fxFlex>
+    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
         <span>{{'target.dialog.info' | translate}}</span>
 
         <span fxFlexAlign="end">
-            <a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#target-object" target="_blank">
+            <a href="https://docs.konghq.com/2.2.x/admin-api/#target-object" mat-button target="_blank">
                 {{'text.documentation' | translate}}
                 <mat-icon class="mini-icon">open_in_new</mat-icon>
             </a>
-            <button mat-icon-button (click)="downloadJson()"
+            <button (click)="downloadJson()" mat-icon-button
                     matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>content_copy</mat-icon>
             </button>
@@ -16,9 +16,9 @@
 
     <mat-divider class="margin-bottom-20-i"></mat-divider>
 
-    <div fxFlex [fxShow]="loading" fxLayoutAlign="center center">
+    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
         <p fxFlex="50">
-            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
     </div>
 
@@ -37,7 +37,7 @@
 
             </div>
 
-            <div fxLayout="row" class="margin-top-10-i">
+            <div class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="25">
                     <p class="title margin-0-i" matTooltip="{{'target.dialog.weight_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'target.dialog.weight' | translate}}</p>
@@ -54,46 +54,49 @@
             </div>
 
             <p class="margin-top-10-i">{{'target.info_health' | translate}}</p>
-            <div fxLayout="row" fxLayoutAlign="start center" class="padding-left-20">
+            <div class="padding-left-20" fxLayout="row" fxLayoutAlign="start center">
                 <div fxFlex="25">
                     <p class="text" matTooltip="{{target?.health}}"
-                       matTooltipClass="tooltip-teal">{{ 'target.health_' + target?.health | translate}}</p>
+                       matTooltipClass="tooltip-teal">
+                        <span [className]="getColor(target?.health)">{{ 'target.health_' + target?.health | translate}}</span>
+                    </p>
                 </div>
                 <div fxFlex="25">
                     <p>
-                        <button mat-icon-button matTooltip="{{'target.set_healthy' | translate}}"
-                                matTooltipClass="tooltip-teal" (click)="setTargetHealthy()">
+                        <button (click)="setTargetHealthy()" mat-icon-button
+                                matTooltip="{{'target.set_healthy' | translate}}" matTooltipClass="tooltip-teal">
                             <mat-icon class="color-healthy">power</mat-icon>
                         </button>
-                        <button mat-icon-button matTooltip="{{'target.set_unhealthy' | translate}}"
-                                matTooltipClass="tooltip-teal" (click)="setTargetUnhealthy()">
+                        <button (click)="setTargetUnhealthy()" mat-icon-button
+                                matTooltip="{{'target.set_unhealthy' | translate}}" matTooltipClass="tooltip-teal">
                             <mat-icon class="color-unhealthy">power_off</mat-icon>
                         </button>
                     </p>
                 </div>
                 <div fxFlex="40">
-                    <mat-progress-bar mode="determinate" [value]="getWeigth()" color="{{getColorBar()}}"
-                                      matTooltip="{{'target.addresses_percent' | translate}}"
-                                      matTooltipClass="tooltip-teal"></mat-progress-bar>
+                    <mat-progress-bar [value]="getWeigth()" color="{{getColor(target?.health)}}" matTooltip="{{'target.addresses_percent' | translate}}"
+                                      matTooltipClass="tooltip-teal"
+                                      mode="determinate"></mat-progress-bar>
                 </div>
             </div>
             <div class="padding-left-20">
                 <p class="title margin-0-i">{{'address.label' | translate}}</p>
                 <mat-list role="list">
-                    <mat-list-item role="listitem" *ngFor="let add of target.data.addresses">
+                    <mat-list-item *ngFor="let add of target.data.addresses" role="listitem">
                         <div fxFlex fxLayout="row" fxLayoutAlign="start center">
                             <div fxFlex="25"><p class="text monospace">{{ add.ip + ':' + add.port}}</p></div>
                             <div fxFlex="25"><p class="text text-small">{{ 'target.dialog.weight' | translate }}: {{ add.weight }}</p></div>
-                            <div fxFlex="25" matTooltip="{{target?.health}}"
-                                 matTooltipClass="tooltip-teal"><p class="text text-small">{{ 'target.health_' + add.health | translate}}</p></div>
+                            <div fxFlex="25" matTooltip="{{target?.health}}" matTooltipClass="tooltip-teal"><p class="text text-small">
+                                <span [className]="getColor(target?.health)">{{ 'target.health_' + add.health | translate}}</span>
+                            </p></div>
                             <div fxFlex="25">
                                 <p>
-                                    <button mat-icon-button matTooltip="{{'target.set_healthy' | translate}}"
-                                            matTooltipClass="tooltip-teal" (click)="setAddressHealthy(add.ip, add.port)">
+                                    <button (click)="setAddressHealthy(add.ip, add.port)" mat-icon-button
+                                            matTooltip="{{'target.set_healthy' | translate}}" matTooltipClass="tooltip-teal">
                                         <mat-icon class="color-healthy">power</mat-icon>
                                     </button>
-                                    <button mat-icon-button matTooltip="{{'target.set_unhealthy' | translate}}"
-                                            matTooltipClass="tooltip-teal" (click)="setAddressUnhealthy(add.ip, add.port)">
+                                    <button (click)="setAddressUnhealthy(add.ip, add.port)" mat-icon-button
+                                            matTooltip="{{'target.set_unhealthy' | translate}}" matTooltipClass="tooltip-teal">
                                         <mat-icon class="color-unhealthy">power_off</mat-icon>
                                     </button>
                                 </p>
@@ -105,13 +108,13 @@
         </mat-dialog-content>
     </div>
 
-    <mat-divider class="margin-bottom-10-i margin-top-10-i" *ngIf="!loading"></mat-divider>
+    <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between" fxFlex *ngIf="!loading">
-        <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="target">
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <mat-chip-list *ngIf="target" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip *ngFor="let chip of target['tags']" color="primary">{{chip}}</mat-chip>
         </mat-chip-list>
         <div><!-- leave empty --></div>
-        <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>
 </div>

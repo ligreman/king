@@ -54,10 +54,13 @@ export class DialogInfoTargetComponent implements OnInit {
         return ((this.target['data']['weight'].available * 100) / this.target['data']['weight'].total);
     }
 
-    getColorBar() {
+    /*
+        Calculates color
+     */
+    getColor(health) {
         let color = 'primary';
 
-        switch (this.target.health) {
+        switch (health) {
             case 'DNS_ERROR':
             case 'UNHEALTHY':
                 color = 'warn';

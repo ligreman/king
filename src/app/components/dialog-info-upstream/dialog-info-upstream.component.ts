@@ -14,6 +14,7 @@ import { ToastService } from '../../services/toast.service';
 export class DialogInfoUpstreamComponent implements OnInit {
     upstream;
     upstreamHealth;
+    upstreamBar = {ok: 0, off: 0, color: 'primary'};
     targets;
     loading = true;
 
@@ -43,6 +44,26 @@ export class DialogInfoUpstreamComponent implements OnInit {
         // Salud de los targets y su info
         const t = await this.api.getUpstreamTargetsHealth(this.upstreamId).toPromise();
         this.targets = t['data'];
+
+        // Calculo el porcentaje de health del upstream según sus targets
+        let total = 0, ok = 0, off = 0;
+        this.targets.forEach(tg => {
+            total += tg.weight;
+            if (tg.health === 'HEALTHY') {
+                ok += tg.weight;
+                // Lo sumo al off también para la barra
+                off += tg.weight;
+            } else if (tg.health === 'HEALTHCHECKS_OFF') {
+                off += tg.weight;
+            }
+        });
+
+        // Calculo los porcentajes
+        this.upstreamBar.ok = (ok * 100) / total;
+        this.upstreamBar.off = (off * 100) / total;
+
+        // colores
+        this.upstreamBar.color = this.getColor(this.upstreamHealth['data']['health']);
     }
 
     downloadJson() {
@@ -53,6 +74,24 @@ export class DialogInfoUpstreamComponent implements OnInit {
     showTargetInfo(target) {
         target['data'] = {upstream: target['upstream']};
         this.dialogHelper.showInfoElement(target, 'target');
+    }
+
+    /*
+        Calculates color
+     */
+    getColor(health) {
+        let color = 'primary';
+
+        switch (health) {
+            case 'DNS_ERROR':
+            case 'UNHEALTHY':
+                color = 'warn';
+                break;
+            case 'HEALTHY':
+                color = 'accent';
+        }
+
+        return color;
     }
 
     /*

@@ -98,16 +98,26 @@
             </div>
 
             <p class="margin-top-10-i">{{'upstream.dialog.health_target' | translate}}</p>
-            <div class="padding-left-20" fxLayout="row">
-                <div fxFlex="50">
+            <div class="padding-left-20" fxLayout="row" fxLayoutAlign="start center">
+                <div fxFlex="40">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.threshold_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.threshold' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.threshold}}</p>
                 </div>
-                <div fxFlex="50">
+                <div fxFlex="30">
                     <p class="title margin-0-i">{{'upstream.dialog.health' | translate}}</p>
                     <p class="text margin-left-20-i" matTooltip="{{upstreamHealth?.data?.health}}"
-                       matTooltipClass="tooltip-teal">{{ 'target.health_' + upstreamHealth?.data?.health | translate}}</p>
+                       matTooltipClass="tooltip-teal">
+                        <span [className]="getColor(upstreamHealth?.data?.health)">{{ 'target.health_' + upstreamHealth?.data?.health | translate}}</span>
+                    </p>
+                </div>
+                <div fxFlex="30">
+                    <mat-progress-bar
+                            [bufferValue]="upstreamBar.off"
+                            [color]="upstreamBar.color"
+                            [value]="upstreamBar.ok"
+                            mode="buffer">
+                    </mat-progress-bar>
                 </div>
             </div>
 
@@ -131,7 +141,9 @@
                                      matTooltipClass="tooltip-teal">{{ 'target.dialog.weight' | translate }}: {{t.weight}}
                                 </div>
                                 <div class="text" fxFlex="25" matTooltip="{{t?.health}}"
-                                     matTooltipClass="tooltip-teal">{{ 'target.health_' + t?.health | translate}}</div>
+                                     matTooltipClass="tooltip-teal">
+                                    <span [className]="getColor(t?.health)">{{ 'target.health_' + t?.health | translate}}</span>
+                                </div>
                                 <div fxFlex="25">
                                     <button (click)="setTargetHealthy(t)" mat-icon-button
                                             matTooltip="{{'target.set_healthy_title' | translate}}" matTooltipClass="tooltip-teal">
