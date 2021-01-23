@@ -165,7 +165,7 @@
                 </div>
             </div>
 
-            <p class="margin-top-10-i margin-bottom-5-i padding-left-20" fxLayout="row" fxLayoutAlign="space-between center">
+            <p class="margin-top-20-i margin-bottom-5-i padding-left-20" fxLayout="row" fxLayoutAlign="space-between center">
                 <span>{{'upstream.dialog.health_active' | translate}}</span>
                 <span *ngIf="upstream?.healthchecks?.active?.healthy?.interval > 0" class="accent">{{'upstream.health_active_on' | translate}}</span>
                 <span *ngIf="upstream?.healthchecks?.active?.healthy?.interval === 0" class="warn">{{'upstream.health_active_off' | translate}}</span>
@@ -233,23 +233,23 @@
                 </div>
             </div>
             <div class="padding-left-60" fxLayout="row">
-                <div fxFlex="33">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'upstream.dialog.timeouts' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.timeouts}}</p>
+                </div>
+                <div fxFlex="25">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.http_failures_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.http_failures' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.http_failures}}</p>
                 </div>
-                <div fxFlex="33">
+                <div fxFlex="25">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.tcp_failures_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.tcp_failures' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.tcp_failures}}</p>
                 </div>
-                <div fxFlex="33">
-                    <p class="title margin-0-i">{{'upstream.dialog.timeouts' | translate}}</p>
-                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.unhealthy?.timeouts}}</p>
-                </div>
             </div>
 
-            <p class="margin-top-10-i margin-bottom-5-i padding-left-20">{{'upstream.dialog.health_passive' | translate}}</p>
+            <p class="margin-top-20-i margin-bottom-5-i padding-left-20">{{'upstream.dialog.health_passive' | translate}}</p>
             <mat-divider class="margin-bottom-10-i"></mat-divider>
             <div class="padding-left-40" fxLayout="row">
                 <div fxFlex="25">
