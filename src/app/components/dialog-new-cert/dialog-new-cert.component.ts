@@ -18,10 +18,9 @@ export class DialogNewCertComponent implements OnInit {
     loading = true;
     currentTags = [];
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
-
     form = this.fb.group({
-        cert: ['', [Validators.required, Validators.pattern(/^(-----BEGIN CERTIFICATE-----)(\r\n|\r|\n|.)*(-----END CERTIFICATE-----)(\r\n|\r|\n)?$/)]],
-        key: ['', [Validators.required, Validators.pattern(/^(-----BEGIN RSA PRIVATE KEY-----)(\r\n|\r|\n|.)*(-----END RSA PRIVATE KEY-----)(\r\n|\r|\n)?$/)]],
+        cert: ['', [Validators.required, Validators.pattern(/^(-----BEGIN CERTIFICATE-----)([\r\n]|.)*(-----END CERTIFICATE-----)([\r\n])?$/)]],
+        key: ['', [Validators.required, Validators.pattern(/^(-----BEGIN RSA PRIVATE KEY-----)([\r\n]|.)*(-----END RSA PRIVATE KEY-----)([\r\n])?$/)]],
         tags: ['']
     });
 

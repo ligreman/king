@@ -20,7 +20,7 @@ export class DialogNewCacertComponent implements OnInit {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
-        cert: ['', [Validators.required, Validators.pattern(/^(-----BEGIN CERTIFICATE-----)(\r\n|\r|\n|.)*(-----END CERTIFICATE-----)(\r\n|\r|\n)?$/)]],
+        cert: ['', [Validators.required, Validators.pattern(/^(-----BEGIN CERTIFICATE-----)([\r\n]|.)*(-----END CERTIFICATE-----)([\r\n])?$/)]],
         cert_digest: ['', [CustomValidators.isSHA256(true)]],
         tags: ['']
     });
