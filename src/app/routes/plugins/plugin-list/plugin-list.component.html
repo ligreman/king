@@ -90,7 +90,8 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
-                <td class="mat-cell" colspan="9">{{'element.no_data' | translate}} "{{input.value}}"</td>
+                <td *ngIf="input.value === ''" class="mat-cell" colspan="9">{{'element.no_data' | translate}}</td>
+                <td *ngIf="input.value !== ''" class="mat-cell" colspan="9">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
             </tr>
         </table>
 

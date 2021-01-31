@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { get as _get, isArray as _isArray, set as _set, unset as _unset } from 'lodash';
+import { get as _get, isArray as _isArray, set as _set } from 'lodash';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
@@ -182,7 +182,7 @@ export class DialogNewPluginComponent implements OnInit {
             if (fValue !== null && _isArray(fValue)) {
                 _set(plugin, field, fValue.join('\n'));
             } else {
-                _unset(plugin, field);
+                _set(plugin, field, null);
             }
         });
 
@@ -211,7 +211,7 @@ export class DialogNewPluginComponent implements OnInit {
         this.arrayFields.forEach(field => {
             const fValue = _get(body, field);
 
-            if (fValue === '' || fValue === null) {
+            if (fValue === '' || fValue === null || (_isArray(fValue) && fValue.length === 0)) {
                 _set(body, field, null);
             } else {
                 _set(body, field, fValue.split('\n'));
