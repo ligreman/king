@@ -21,6 +21,7 @@ export class ElementConsumerComponent implements OnInit {
     data;
     loading = false;
     filter = '';
+    enabledPlugins = [];
 
     constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
     }
@@ -29,15 +30,23 @@ export class ElementConsumerComponent implements OnInit {
         // Aquí para que no error de ExpressionChangedAfterItHasBeenCheckedError
         this.loading = true;
         this.getConsumers();
+        this.getNodeInformation();
     }
 
+    /**
+     * Recarga los datos de consumidores
+     */
     reloadData() {
         this.loading = true;
         this.filter = '';
 
         this.getConsumers();
+        this.getNodeInformation();
     }
 
+    /**
+     * Obtiene los consumidores
+     */
     getConsumers() {
         this.api.getConsumers()
             .subscribe(value => {
@@ -52,6 +61,22 @@ export class ElementConsumerComponent implements OnInit {
                 });
     }
 
+    /**
+     * Obtiene la información del nodo
+     */
+    getNodeInformation() {
+        this.api.getNodeInformation()
+            .subscribe(res => {
+                // Recojo los plugins activos para habilitar las secciones
+                this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+            }, error => {
+                this.toast.error('error.node_connection');
+            });
+    }
+
+    /**
+     * Aplica los filtros en los datos de la tabla
+     */
     applyFilter() {
         const filterValue = this.filter;
         this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -61,8 +86,9 @@ export class ElementConsumerComponent implements OnInit {
         }
     }
 
-    /*
-        Añade un elemento nuevo
+    /**
+     * Añade un elemento nuevo
+     * @param selected Elemento a editar, o null si es nuevo
      */
     addEditConsumer(selected = null) {
         this.dialogHelper.addEdit(selected, 'consumer')
@@ -70,12 +96,21 @@ export class ElementConsumerComponent implements OnInit {
             .catch(error => {});
     }
 
-    /*
-        Borra el elemento seleccionado
+    /**
+     * Borra el elemento seleccionado
+     * @param select Elemento a borrar
      */
     delete(select) {
         this.dialogHelper.deleteElement(select, 'consumer')
             .then(() => { this.reloadData(); })
             .catch(error => {});
+    }
+
+    /**
+     * Comprueba que un plugin esté activo
+     * @param plugin Nombre del plugin
+     */
+    isPluginActive(plugin) {
+        return this.enabledPlugins.includes(plugin);
     }
 }

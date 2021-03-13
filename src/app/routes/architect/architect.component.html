@@ -103,6 +103,20 @@
                     </button>
                 </div>
             </mat-list-item>
+
+            <!-- Botones específicos de ciertos plugins -->
+
+            <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('acl')">
+                <div mat-line>
+                    <button (click)="showInfo(selection)" mat-button>
+                        <mat-icon>people</mat-icon>
+                        {{'text.acl' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+
+            <!---->
+
             <mat-list-item *ngIf="groupsEdit.includes(selection.group)">
                 <div mat-line>
                     <button (click)="addEdit(selection, selection.group)" color="accent" mat-button>

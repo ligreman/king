@@ -29,6 +29,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     network;
     // Datos del API para pintar el grafo
     dataApi;
+    // Plugins activos
+    enabledPlugins = [];
     // Filtros del grafo
     netFilter = {tag: '', element: 'all', mode: true};
     // Posibles tipos de nodos que tienen acciones propias
@@ -56,6 +58,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.api.getNodeStatus()
             .subscribe(value => {
                     this.loading = true;
+
+                    this.getNodeInformation();
                 },
                 error => {
                     this.toast.error('error.node_connection');
@@ -156,6 +160,27 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             // forkJoin returns an array of values, here we map those values to an object
             return {services: services['data'], routes: routes['data'], upstreams: upstreams['data'], consumers: consumers['data'], plugins: plugins['data']};
         }));
+    }
+
+    /**
+     * Obtiene la información del nodo
+     */
+    getNodeInformation() {
+        this.api.getNodeInformation()
+            .subscribe(res => {
+                // Recojo los plugins activos para habilitar las secciones
+                this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+            }, error => {
+                this.toast.error('error.node_connection');
+            });
+    }
+
+    /**
+     * Comprueba que un plugin esté activo
+     * @param plugin Nombre del plugin
+     */
+    isPluginActive(plugin) {
+        return this.enabledPlugins.includes(plugin);
     }
 
     /*

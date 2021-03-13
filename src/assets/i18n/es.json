@@ -116,6 +116,7 @@
             "certificates": "Certificados",
             "cacerts": "Certificados de CA",
             "snis": "SNIs",
+            "acl": "Control de acceso",
             "kong_node": "API de administración de un nodo de Kong",
             "kong_node_tooltip": "Introduce la URL y puerto",
             "kong_node_button_tooltip": "Conectar",

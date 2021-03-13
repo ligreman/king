@@ -21,6 +21,7 @@ export class AppComponent implements OnInit, OnDestroy {
     openedManual = false;
     showManualText = false;
     manualStyles = {'height': 0, 'top': 0};
+    enabledPlugins = [];
 
     formNodes = this.fb.group({
         node: ['', Validators.required]
@@ -99,6 +100,9 @@ export class AppComponent implements OnInit, OnDestroy {
                 // Aviso del cambio de nodo
                 this.nodeWatcher.changeNode(node);
 
+                // Recojo los plugins activos para habilitar las secciones
+                this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+
                 // Voy a la página de información de nodos
                 this.route.navigate(['/node-information']);
             }, error => {
@@ -170,7 +174,7 @@ export class AppComponent implements OnInit, OnDestroy {
         Comprueba si estamos en la ruta de elementos
      */
     isElementRouteActive() {
-        if (this.route.url === '/element-service' || this.route.url === '/element-route' || this.route.url === '/element-upstream' || this.route.url === '/element-consumer') {
+        if (this.route.url === '/element-service' || this.route.url === '/element-route' || this.route.url === '/element-upstream') {
             return 'active-route';
         } else {
             return '';
@@ -186,6 +190,25 @@ export class AppComponent implements OnInit, OnDestroy {
         } else {
             return '';
         }
+    }
+
+    /**
+     * Comprueba si estamos en la ruta de control de acceso
+     */
+    isAccessControlRouteActive() {
+        if (this.route.url === '/element-consumer' || this.route.url === '/' || this.route.url === '/') {
+            return 'active-route';
+        } else {
+            return '';
+        }
+    }
+
+    /**
+     * Comprueba que un plugin esté activo
+     * @param plugin Nombre del plugin
+     */
+    isPluginActive(plugin) {
+        return this.enabledPlugins.includes(plugin);
     }
 
     /*

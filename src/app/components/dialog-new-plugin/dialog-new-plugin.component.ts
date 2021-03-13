@@ -260,6 +260,11 @@ export class DialogNewPluginComponent implements OnInit {
             if (element.hasOwnProperty(field)) {
                 const value = element[field];
 
+                // Valor por defecto
+                if (value.default !== true && value.default !== false) {
+                    value.default = null;
+                }
+
                 // Strings
                 if (value.type === 'string') {
                     let validators = [];
@@ -287,7 +292,7 @@ export class DialogNewPluginComponent implements OnInit {
                         opts = value.one_of;
                     }
 
-                    dConfig.addControl(field, this.fb.control(value.default || null, validators));
+                    dConfig.addControl(field, this.fb.control(value.default, validators));
                     formFields.push({
                         field: field,
                         type: tipo,
@@ -326,7 +331,7 @@ export class DialogNewPluginComponent implements OnInit {
                         hint = value.between;
                     }
 
-                    dConfig.addControl(field, this.fb.control(value.default || null, validators));
+                    dConfig.addControl(field, this.fb.control(value.default, validators));
                     formFields.push({
                         field: field,
                         type: 'number',
@@ -341,10 +346,11 @@ export class DialogNewPluginComponent implements OnInit {
 
                     // Requerido
                     if (value.required) {
-                        validators.push(Validators.required);
+                        // validators.push(Validators.required);
+                        validators.push(CustomValidators.isBoolean());
                     }
 
-                    dConfig.addControl(field, this.fb.control(value.default || null, validators));
+                    dConfig.addControl(field, this.fb.control(value.default, validators));
                     formFields.push({
                         field: field,
                         type: 'boolean',
@@ -372,7 +378,7 @@ export class DialogNewPluginComponent implements OnInit {
                         this.arrayFields.push(currentGroup + '.' + field);
                     }
 
-                    dConfig.addControl(field, this.fb.control(value.default || null, validators));
+                    dConfig.addControl(field, this.fb.control(value.default, validators));
                     formFields.push({
                         field: field,
                         type: tipo,

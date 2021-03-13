@@ -274,4 +274,23 @@ export class ApiService {
     public getPluginSchema(plugin: string) {
         return this.httpClient.get(this.globals.NODE_API_URL + '/schemas/plugins/' + plugin).pipe(catchError(this.handleError));
     }
+
+    /*
+        ACL PLUGIN
+     */
+    public getAcls() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/acls?size=1000').pipe(catchError(this.handleError));
+    }
+
+    public getConsumerAcls(consumer: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers/' + consumer + '/acls?size=1000').pipe(catchError(this.handleError));
+    }
+
+    public postConsumerAcl(consumer: string, body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/consumers/' + consumer + '/acls', body).pipe(catchError(this.handleError));
+    }
+
+    public getAclConsumer(aclId) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/acls/' + aclId + '/consumer').pipe(catchError(this.handleError));
+    }
 }

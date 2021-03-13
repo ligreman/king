@@ -27,3 +27,7 @@
 #graph-actions {
     border-left: 1px solid #292929;
 }
+
+div#node-network:focus {
+    outline: none !important;
+}

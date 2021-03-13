@@ -25,15 +25,29 @@
                 <mat-icon class="color-upstream">share</mat-icon>
                 {{ 'header.menu.upstreams' | translate | uppercase }}
             </button>
-            <button mat-menu-item routerLink="/element-consumer" routerLinkActive="active-route">
-                <mat-icon class="color-consumer">shopping_cart</mat-icon>
-                {{ 'header.menu.consumers' | translate | uppercase }}
-            </button>
         </mat-menu>
         <button [disabled]="!isConnectedToNode()" color="accent" mat-button routerLink="/plugin-list" routerLinkActive="active-route">
             <mat-icon>settings_input_component</mat-icon>
             {{ 'header.menu.plugins' | translate | uppercase }}
         </button>
+        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuD" [ngClass]="isAccessControlRouteActive()" color="accent" mat-button>
+            <mat-icon>fingerprint</mat-icon>
+            {{ 'header.menu.acl' | translate | uppercase }}
+        </button>
+        <mat-menu #menuD="matMenu">
+            <button mat-menu-item routerLink="/element-consumer" routerLinkActive="active-route">
+                <mat-icon class="color-consumer">shopping_cart</mat-icon>
+                {{ 'header.menu.consumers' | translate | uppercase }}
+            </button>
+            <button mat-menu-item routerLink="/" routerLinkActive="active-route">
+                <mat-icon></mat-icon>
+                {{'header.menu.' | translate | uppercase}}
+            </button>
+            <button mat-menu-item routerLink="/" routerLinkActive="active-route">
+                <mat-icon></mat-icon>
+                {{'header.menu.' | translate | uppercase}}
+            </button>
+        </mat-menu>
         <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()" color="accent" mat-button>
             <mat-icon>security</mat-icon>
             {{ 'header.menu.certs' | translate | uppercase }}
@@ -52,6 +66,7 @@
                 {{'header.menu.snis' | translate | uppercase}}
             </button>
         </mat-menu>
+
     </div>
 
     <span fxFlex></span>
