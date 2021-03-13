@@ -8,12 +8,12 @@ import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
-    selector: 'app-element-consumer',
-    templateUrl: './element-consumer.component.html',
-    styleUrls: ['./element-consumer.component.scss']
+    selector: 'app-access-acls',
+    templateUrl: './access-acls.component.html',
+    styleUrls: ['./access-acls.component.scss']
 })
-export class ElementConsumerComponent implements OnInit {
-    displayedColumns: string[] = ['id', 'username', 'custom_id', 'tags', 'actions'];
+export class AccessAclsComponent implements OnInit {
+    displayedColumns: string[] = ['id', 'group', 'consumer', 'created_at', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -21,7 +21,7 @@ export class ElementConsumerComponent implements OnInit {
     data;
     loading = false;
     filter = '';
-    enabledPlugins = [];
+    consumers = {};
 
     constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
     }
@@ -29,8 +29,8 @@ export class ElementConsumerComponent implements OnInit {
     ngOnInit(): void {
         // Aquí para que no error de ExpressionChangedAfterItHasBeenCheckedError
         this.loading = true;
+        this.getAcls();
         this.getConsumers();
-        this.getNodeInformation();
     }
 
     /**
@@ -40,15 +40,15 @@ export class ElementConsumerComponent implements OnInit {
         this.loading = true;
         this.filter = '';
 
+        this.getAcls();
         this.getConsumers();
-        this.getNodeInformation();
     }
 
     /**
-     * Obtiene los consumidores
+     * Obtiene los acl
      */
-    getConsumers() {
-        this.api.getConsumers()
+    getAcls() {
+        this.api.getAcls()
             .subscribe(value => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
@@ -64,11 +64,13 @@ export class ElementConsumerComponent implements OnInit {
     /**
      * Obtiene la información del nodo
      */
-    getNodeInformation() {
-        this.api.getNodeInformation()
+    getConsumers() {
+        this.api.getConsumers()
             .subscribe(res => {
-                // Recojo los plugins activos para habilitar las secciones
-                this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+                // Recojo los consumidores
+                res['data'].forEach(consumer => {
+                    this.consumers[consumer.id] = consumer.username;
+                });
             }, error => {
                 this.toast.error('error.node_connection');
             });
@@ -87,30 +89,13 @@ export class ElementConsumerComponent implements OnInit {
     }
 
     /**
-     * Añade un elemento nuevo
-     * @param selected Elemento a editar, o null si es nuevo
-     */
-    addEditConsumer(selected = null) {
-        this.dialogHelper.addEdit(selected, 'consumer')
-            .then(() => { this.reloadData(); })
-            .catch(error => {});
-    }
-
-    /**
      * Borra el elemento seleccionado
      * @param select Elemento a borrar
      */
     delete(select) {
-        this.dialogHelper.deleteElement(select, 'consumer')
+        this.dialogHelper.deleteElement({id: select.id, consumer: select.consumer.id, name: select.group + ' -> ' + this.consumers[select.consumer.id]}, 'acl')
             .then(() => { this.reloadData(); })
             .catch(error => {});
     }
 
-    /**
-     * Comprueba que un plugin esté activo
-     * @param plugin Nombre del plugin
-     */
-    isPluginActive(plugin) {
-        return this.enabledPlugins.includes(plugin);
-    }
 }

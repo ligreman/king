@@ -65,14 +65,23 @@ export class AppComponent implements OnInit, OnDestroy {
     get nodeField() { return this.formNodes.get('node'); }
 
     ngOnInit(): void {
-
+        // Si ya estoy conectado al nodo previamente, recojo la info del mismo
+        if (this.isConnectedToNode()) {
+            this.api.getNodeInformation()
+                .subscribe(res => {
+                    // Recojo los plugins activos para habilitar las secciones
+                    this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+                }, error => {
+                    this.toast.error('error.node_connection');
+                });
+        }
     }
 
     ngOnDestroy(): void {
     }
 
-    /*
-        Conecta al nodo de Kong, pidiendo su información básica
+    /**
+     Conecta al nodo de Kong, pidiendo su información básica
      */
     connectToNode() {
         if (this.formNodes.invalid) {
@@ -110,8 +119,8 @@ export class AppComponent implements OnInit, OnDestroy {
             });
     }
 
-    /*
-        Cambia el idioma
+    /**
+     Cambia el idioma
      */
     changeLang(newLang: string) {
         this.lang.setValue(newLang);
@@ -119,8 +128,8 @@ export class AppComponent implements OnInit, OnDestroy {
         localStorage.setItem('language', this.lang.value);
     }
 
-    /*
-        Muestra u oculta el manual de usuario
+    /**
+     Muestra u oculta el manual de usuario
      */
     toggleManual() {
         // Si voy a mostrar el manual
@@ -156,22 +165,22 @@ export class AppComponent implements OnInit, OnDestroy {
         }
     }
 
-    /*
-        Scroll hacia un elemento
+    /**
+     Scroll hacia un elemento
      */
     scrollTo(element) {
         element.scrollIntoView();
     }
 
-    /*
-        Comprueba si estamos conectados a un nodo o no
+    /**
+     Comprueba si estamos conectados a un nodo o no
      */
     isConnectedToNode() {
         return this.globals.NODE_API_URL !== '';
     }
 
-    /*
-        Comprueba si estamos en la ruta de elementos
+    /**
+     Comprueba si estamos en la ruta de elementos
      */
     isElementRouteActive() {
         if (this.route.url === '/element-service' || this.route.url === '/element-route' || this.route.url === '/element-upstream') {
@@ -181,8 +190,8 @@ export class AppComponent implements OnInit, OnDestroy {
         }
     }
 
-    /*
-        Comprueba si estamos en la ruta de certificados
+    /**
+     Comprueba si estamos en la ruta de certificados
      */
     isCertificateRouteActive() {
         if (this.route.url === '/certificate-sni' || this.route.url === '/certificate-cert' || this.route.url === '/certificate-cacert') {
@@ -196,7 +205,7 @@ export class AppComponent implements OnInit, OnDestroy {
      * Comprueba si estamos en la ruta de control de acceso
      */
     isAccessControlRouteActive() {
-        if (this.route.url === '/element-consumer' || this.route.url === '/' || this.route.url === '/') {
+        if (this.route.url === '/element-consumer' || this.route.url === '/access-acls' || this.route.url === '/') {
             return 'active-route';
         } else {
             return '';

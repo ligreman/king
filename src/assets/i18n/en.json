@@ -16,6 +16,7 @@
         "new_sni": "SNI created",
         "new_cert": "Certificate created",
         "new_cacert": "CA certificate created",
+        "new_acl": "ACL created",
         "update_service": "Service updated",
         "update_route": "Route updated",
         "update_upstream": "Upstream updated",
@@ -33,6 +34,7 @@
         "delete_sni": "SNI {{extra}} deleted",
         "delete_cert": "Certificate {{extra}} deleted",
         "delete_cacert": "CA certificate {{extra}} deleted",
+        "delete_acl": "ACL {{extra}} deleted",
         "healthy_target": "Target {{extra}} set as healthy",
         "unhealthy_target": "Target {{extra}} set as unhealthy",
         "healthy_address": "Address {{extra}} set as healthy",
@@ -90,6 +92,8 @@
             "delete_cacert": "Do you want to delete this CA certificate?",
             "delete_plugin_title": "Delete plugin",
             "delete_plugin": "Do you want to delete this plugin?",
+            "delete_acl_title": "Delete ACL",
+            "delete_acl": "Do you want to delete this ACL?",
             "enable_plugin_title": "Enable plugin",
             "enable_plugin": "Do you want to enable this plugin?",
             "disable_plugin_title": "Disable plugin",
@@ -117,6 +121,7 @@
             "cacerts": "CA certificates",
             "snis": "SNIs",
             "acl": "Access control",
+            "acls": "ACL groups",
             "kong_node": "Kong node admin API",
             "kong_node_tooltip": "Type in the URL and port",
             "kong_node_button_tooltip": "Connect",
@@ -492,6 +497,18 @@
             "digest": "SHA256 hash",
             "error": {
                 "digest": "Must be a SHA256 hash"
+            }
+        }
+    },
+    "acl": {
+        "add": "Add ACL",
+        "header": "ACLs",
+        "dialog": {
+            "info": "Consumer`s ACLs",
+            "groups": "ACL groups assigned to the consumer",
+            "add_group": "Group to add",
+            "group": "Group",
+            "error": {
             }
         }
     },

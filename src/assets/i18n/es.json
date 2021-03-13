@@ -16,6 +16,7 @@
         "new_sni": "SNI creado",
         "new_cert": "Certificado creado",
         "new_cacert": "Certificado de CA creado",
+        "new_acl": "ACL creado",
         "update_service": "Servicio actualizado",
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
@@ -33,6 +34,7 @@
         "delete_sni": "SNI {{extra}} eliminado",
         "delete_cert": "Certificado {{extra}} eliminado",
         "delete_cacert": "Certificado de CA {{extra}} eliminado",
+        "delete_acl": "ACL {{extra}} eliminado",
         "healthy_target": "Target {{extra}} marcado sano",
         "unhealthy_target": "Target {{extra}} marcado erróneo",
         "healthy_address": "Dirección {{extra}} marcada sana",
@@ -90,6 +92,8 @@
             "delete_cacert": "¿Deseas eliminar este certificado de CA?",
             "delete_plugin_title": "Eliminar plugin",
             "delete_plugin": "¿Deseas eliminar este plugin?",
+            "delete_acl_title": "Eliminar ACL",
+            "delete_acl": "¿Deseas eliminar este ACL?",
             "enable_plugin_title": "Activar plugin",
             "enable_plugin": "¿Deseas activar este plugin?",
             "disable_plugin_title": "Desactivar plugin",
@@ -117,6 +121,7 @@
             "cacerts": "Certificados de CA",
             "snis": "SNIs",
             "acl": "Control de acceso",
+            "acls": "Grupos ACL",
             "kong_node": "API de administración de un nodo de Kong",
             "kong_node_tooltip": "Introduce la URL y puerto",
             "kong_node_button_tooltip": "Conectar",
@@ -492,6 +497,18 @@
             "digest": "Hash SHA256",
             "error": {
                 "digest": "Ha de ser un hash SHA256"
+            }
+        }
+    },
+    "acl": {
+        "add": "Añadir ACL",
+        "header": "ACLs",
+        "dialog": {
+            "info": "ACLs del consumidor",
+            "groups": "Grupos ACL asignados al consumidor",
+            "add_group": "Grupo a añadir",
+            "group": "Grupo",
+            "error": {
             }
         }
     },

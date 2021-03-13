@@ -293,4 +293,8 @@ export class ApiService {
     public getAclConsumer(aclId) {
         return this.httpClient.get(this.globals.NODE_API_URL + '/acls/' + aclId + '/consumer').pipe(catchError(this.handleError));
     }
+
+    public deleteConsumerAcl(consumer: string, acl: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + consumer + '/acls/' + acl).pipe(catchError(this.handleError));
+    }
 }

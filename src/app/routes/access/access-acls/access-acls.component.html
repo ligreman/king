@@ -2,7 +2,7 @@
 <div [fxShow]="!loading" class="progress-placeholder"></div>
 
 <div class="padding-top-20" fxLayout="row" fxLayoutAlign="center center">
-    <h2 class="margin-0-i" fxFlex="90">{{ 'consumer.header' | translate}}</h2>
+    <h2 class="margin-0-i" fxFlex="90">{{ 'acl.header' | translate}}</h2>
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center start">
@@ -33,14 +33,20 @@
                 <td *matCellDef="let row" class="text-small" mat-cell>{{row.id}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="username">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.dialog.username' | translate}}</th>
-                <td *matCellDef="let row" class="text-small" mat-cell>{{row.username}}</td>
+            <ng-container matColumnDef="group">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'acl.dialog.group' | translate}}</th>
+                <td *matCellDef="let row" class="text-small" mat-cell>{{row.group}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="custom_id">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.dialog.custom_id' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{row.custom_id}}</td>
+            <ng-container matColumnDef="consumer">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.label' | translate}}</th>
+                <td *matCellDef="let row" class="text-small" mat-cell matTooltip="{{row.consumer.id}}"
+                    matTooltipClass="tooltip-teal">{{consumers[row.consumer.id]}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="created_at">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.created_at' | translate}}</th>
+                <td *matCellDef="let row" class="small-font" mat-cell>{{ (row.created_at * 1000) | date:'medium'}}</td>
             </ng-container>
 
             <ng-container matColumnDef="tags">
@@ -51,15 +57,6 @@
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="addEditConsumer(row)" [disabled]="!isPluginActive('acl')" mat-icon-button
-                            matTooltip="{{'text.edit' | translate}}"
-                            matTooltipClass="tooltip-teal">
-                        <mat-icon>people</mat-icon>
-                    </button>
-                    <button (click)="addEditConsumer(row)" color="accent" mat-icon-button matTooltip="{{'text.edit' | translate}}"
-                            matTooltipClass="tooltip-teal">
-                        <mat-icon>edit</mat-icon>
-                    </button>
                     <button (click)="delete(row)" color="warn" mat-icon-button matTooltip="{{'text.delete' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>delete</mat-icon>

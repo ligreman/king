@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ConnectedGuard } from './guards/connected.guard';
+import { AccessAclsComponent } from './routes/access/access-acls/access-acls.component';
+import { ElementConsumerComponent } from './routes/access/element-consumer/element-consumer.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
 import { CertificateCacertComponent } from './routes/certificates/certificate-cacert/certificate-cacert.component';
 import { CertificateCertComponent } from './routes/certificates/certificate-cert/certificate-cert.component';
 import { CertificateSniComponent } from './routes/certificates/certificate-sni/certificate-sni.component';
-import { ElementConsumerComponent } from './routes/elements/element-consumer/element-consumer.component';
 import { ElementRouteComponent } from './routes/elements/element-route/element-route.component';
 import { ElementServiceComponent } from './routes/elements/element-service/element-service.component';
 import { ElementUpstreamComponent } from './routes/elements/element-upstream/element-upstream.component';
@@ -22,6 +23,7 @@ const routes: Routes = [
     {path: 'element-route', component: ElementRouteComponent, canActivate: [ConnectedGuard]},
     {path: 'element-upstream', component: ElementUpstreamComponent, canActivate: [ConnectedGuard]},
     {path: 'element-consumer', component: ElementConsumerComponent, canActivate: [ConnectedGuard]},
+    {path: 'access-acls', component: AccessAclsComponent, canActivate: [ConnectedGuard]},
     {path: 'plugin-list', component: PluginListComponent, canActivate: [ConnectedGuard]},
     {path: 'certificate-cert', component: CertificateCertComponent, canActivate: [ConnectedGuard]},
     {path: 'certificate-cacert', component: CertificateCacertComponent, canActivate: [ConnectedGuard]},

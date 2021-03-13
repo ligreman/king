@@ -39,9 +39,9 @@
                 <mat-icon class="color-consumer">shopping_cart</mat-icon>
                 {{ 'header.menu.consumers' | translate | uppercase }}
             </button>
-            <button mat-menu-item routerLink="/" routerLinkActive="active-route">
-                <mat-icon></mat-icon>
-                {{'header.menu.' | translate | uppercase}}
+            <button [disabled]="!isPluginActive('acl')" mat-menu-item routerLink="/access-acls" routerLinkActive="active-route">
+                <mat-icon>people</mat-icon>
+                {{'header.menu.acls' | translate | uppercase}}
             </button>
             <button mat-menu-item routerLink="/" routerLinkActive="active-route">
                 <mat-icon></mat-icon>

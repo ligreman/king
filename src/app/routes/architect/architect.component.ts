@@ -590,7 +590,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Muestra la info del elemento seleccionado
      */
     showInfo(select) {
-        if (this.groupsInfo.includes(select.group)) {
+        if (this.groupsInfo.includes(select.group) || select.group === 'acl') {
             this.dialogHelper.showInfoElement(select, select.group);
         }
     }

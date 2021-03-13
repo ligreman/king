@@ -38,6 +38,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DialogAboutComponent } from './components/dialog-about/dialog-about.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
+import { DialogInfoAclComponent } from './components/dialog-info-acl/dialog-info-acl.component';
 import { DialogInfoPluginComponent } from './components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
@@ -54,11 +55,12 @@ import { DialogNewSniComponent } from './components/dialog-new-sni/dialog-new-sn
 import { DialogNewTargetComponent } from './components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from './components/dialog-new-upstream/dialog-new-upstream.component';
 import { ManualContentComponent } from './components/manual-content/manual-content.component';
+import { AccessAclsComponent } from './routes/access/access-acls/access-acls.component';
+import { ElementConsumerComponent } from './routes/access/element-consumer/element-consumer.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
 import { CertificateCacertComponent } from './routes/certificates/certificate-cacert/certificate-cacert.component';
 import { CertificateCertComponent } from './routes/certificates/certificate-cert/certificate-cert.component';
 import { CertificateSniComponent } from './routes/certificates/certificate-sni/certificate-sni.component';
-import { ElementConsumerComponent } from './routes/elements/element-consumer/element-consumer.component';
 import { ElementRouteComponent } from './routes/elements/element-route/element-route.component';
 import { ElementServiceComponent } from './routes/elements/element-service/element-service.component';
 import { ElementUpstreamComponent } from './routes/elements/element-upstream/element-upstream.component';
@@ -105,7 +107,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogInfoPluginComponent,
         PluginFormFieldsComponent,
         DialogAboutComponent,
-        ManualContentComponent
+        ManualContentComponent,
+        DialogInfoAclComponent,
+        AccessAclsComponent
     ],
     imports: [
         BrowserModule,

@@ -108,9 +108,9 @@
 
             <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('acl')">
                 <div mat-line>
-                    <button (click)="showInfo(selection)" mat-button>
+                    <button (click)="showInfo({id: selection.id, group: 'acl'})" mat-button>
                         <mat-icon>people</mat-icon>
-                        {{'text.acl' | translate}}
+                        {{'acl.dialog.info' | translate}}
                     </button>
                 </div>
             </mat-list-item>

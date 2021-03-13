@@ -1,0 +1,73 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+        <span>{{'acl.dialog.info' | translate}}</span>
+
+        <span fxFlexAlign="end">
+            <a href="https://docs.konghq.com/hub/kong-inc/acl/" mat-button target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button (click)="downloadJson()" mat-icon-button
+                    matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>content_copy</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        </p>
+    </div>
+
+    <div fxFlex>
+        <mat-dialog-content *ngIf="acls && !loading" class="margin-0-i">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div>{{'acl.dialog.groups' | translate}}: {{consumerId}}</div>
+
+                <div>
+                    <mat-form-field>
+                        <mat-label>{{ 'acl.dialog.add_group' | translate}}</mat-label>
+                        <input [(ngModel)]="group" matInput type="text">
+                        <button (click)="group=''" *ngIf="group" mat-button mat-icon-button matSuffix>
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+
+                    <button (click)="addAclToConsumer()" color="accent" mat-icon-button matTooltip="{{'acl.add' | translate}}"
+                            matTooltipClass="tooltip-teal">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div fxLayout="row">
+                <div>
+                    <mat-list>
+                        <mat-list-item *ngFor="let acl of acls">
+                            <mat-icon mat-list-icon>people</mat-icon>
+                            <div mat-line>{{acl.group}}</div>
+                            <div class="text-small" mat-line>{{ (acl.created_at * 1000) | date:'medium'}}</div>
+                            <button (click)="deleteAcl(acl.id)" class="margin-left-20-i" color="warn" mat-button mat-icon-button
+                                    matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </mat-list-item>
+                    </mat-list>
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <mat-chip-list *ngIf="acls" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
+            <mat-chip *ngFor="let chip of acls['tags']" color="primary">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <div><!-- leave empty --></div>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>
