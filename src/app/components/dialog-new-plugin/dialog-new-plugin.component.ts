@@ -260,11 +260,6 @@ export class DialogNewPluginComponent implements OnInit {
             if (element.hasOwnProperty(field)) {
                 const value = element[field];
 
-                // Valor por defecto
-                if (value.default !== true && value.default !== false) {
-                    value.default = null;
-                }
-
                 // Strings
                 if (value.type === 'string') {
                     let validators = [];

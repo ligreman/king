@@ -65,16 +65,6 @@ export class AppComponent implements OnInit, OnDestroy {
     get nodeField() { return this.formNodes.get('node'); }
 
     ngOnInit(): void {
-        // Si ya estoy conectado al nodo previamente, recojo la info del mismo
-        if (this.isConnectedToNode()) {
-            this.api.getNodeInformation()
-                .subscribe(res => {
-                    // Recojo los plugins activos para habilitar las secciones
-                    this.enabledPlugins = res['plugins']['enabled_in_cluster'];
-                }, error => {
-                    this.toast.error('error.node_connection');
-                });
-        }
     }
 
     ngOnDestroy(): void {
