@@ -28,7 +28,7 @@ export class DialogHelperService {
 
 
     addEdit(selected, group) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let selectedId = null;
             if (selected !== null) {
                 selectedId = selected.id;
@@ -128,7 +128,7 @@ export class DialogHelperService {
         Borra el elemento seleccionado
      */
     deleteElement(select, group) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let opt = {
                 data: {}
             };
@@ -292,7 +292,7 @@ export class DialogHelperService {
     }
 
     confirm(data) {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             let opt = {
                 data: {
                     id: data?.id || '',
