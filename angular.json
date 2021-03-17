@@ -26,13 +26,23 @@
                         "assets": [
                             "src/favicon.ico",
                             "src/.htaccess",
-                            "src/assets"
+                            "src/assets/i18n",
+                            "src/assets/img",
+                            {
+                                "glob": "**/*",
+                                "input": "src/assets/fonts",
+                                "output": "/"
+                            }
                         ],
                         "styles": [
                             "src/styles.scss",
                             "node_modules/ngx-toastr/toastr.css"
                         ],
-                        "scripts": []
+                        "scripts": [],
+                        "allowedCommonJsDependencies": [
+                            "lodash",
+                            "file-saver"
+                        ]
                     },
                     "configurations": {
                         "production": {
@@ -41,6 +51,12 @@
                                     "replace": "src/environments/environment.ts",
                                     "with": "src/environments/environment.prod.ts"
                                 }
+                            ],
+                            "assets": [
+                                "src/favicon.ico",
+                                "src/.htaccess",
+                                "src/assets/i18n",
+                                "src/assets/img"
                             ],
                             "optimization": true,
                             "outputHashing": "all",
