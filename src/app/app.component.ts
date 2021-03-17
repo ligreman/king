@@ -134,7 +134,7 @@ export class AppComponent implements OnInit, OnDestroy {
             const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
             // if any scroll is attempted, set this to the previous value
-            window.onscroll = function () {
+            window.onscroll = () => {
                 window.scrollTo(scrollLeft, scrollTop);
             };
 
@@ -146,7 +146,7 @@ export class AppComponent implements OnInit, OnDestroy {
             this.showManualText = false;
 
             // Reset scroll
-            window.onscroll = function () {};
+            window.onscroll = () => {};
 
             // Animation for manual close
             setTimeout(() => {
@@ -218,9 +218,9 @@ export class AppComponent implements OnInit, OnDestroy {
         if (evt.key === 'Backspace') {
             let doPrevent = true;
             const types = ['text', 'password', 'file', 'search', 'email', 'number', 'date', 'color', 'datetime', 'datetime-local', 'month', 'range', 'search', 'tel', 'time', 'url', 'week'];
-            const target = (<HTMLInputElement>evt.target);
+            const target = (evt.target as HTMLInputElement);
 
-            const disabled = target.disabled || (<HTMLInputElement>event.target).readOnly;
+            const disabled = target.disabled || (event.target as HTMLInputElement).readOnly;
             if (!disabled) {
                 if (target.isContentEditable) {
                     doPrevent = false;
