@@ -1,13 +1,13 @@
 <div fxLayout="column" fxLayoutAlign="start stretch">
-    <h2 class="margin-bottom-5-i" mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" fxFlex>
+    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
         <span>{{'service.dialog.info' | translate}}</span>
 
         <span fxFlexAlign="end">
-            <a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#service-object" target="_blank">
+            <a href="https://docs.konghq.com/2.2.x/admin-api/#service-object" mat-button rel="noopener noreferrer" target="_blank">
                 {{'text.documentation' | translate}}
                 <mat-icon class="mini-icon">open_in_new</mat-icon>
             </a>
-            <button mat-icon-button (click)="downloadJson()"
+            <button (click)="downloadJson()" mat-icon-button
                     matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>content_copy</mat-icon>
             </button>
@@ -16,9 +16,9 @@
 
     <mat-divider class="margin-bottom-20-i"></mat-divider>
 
-    <div fxFlex [fxShow]="loading" fxLayoutAlign="center center">
+    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
         <p fxFlex="50">
-            <mat-progress-bar mode="indeterminate" color="accent"></mat-progress-bar>
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
     </div>
 
@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <div fxLayout="row" class="margin-top-10-i">
+            <div class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'service.dialog.protocol' | translate}}</p>
                     <p class="text margin-left-20-i">{{service['protocol']}}</p>
@@ -64,7 +64,7 @@
                 </div>
             </div>
 
-            <div fxLayout="row" class="margin-top-10-i">
+            <div class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'service.dialog.retries' | translate}}</p>
                     <p class="text margin-left-20-i">{{service['retries']}}</p>
@@ -86,7 +86,7 @@
                 </div>
             </div>
 
-            <div fxLayout="row" class="margin-top-10-i">
+            <div class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="50">
                     <p class="title margin-0-i" matTooltip="{{'service.dialog.certificate_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'service.dialog.certificate' | translate}}</p>
@@ -113,13 +113,13 @@
         </mat-dialog-content>
     </div>
 
-    <mat-divider class="margin-bottom-10-i margin-top-10-i" *ngIf="!loading"></mat-divider>
+    <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between" fxFlex *ngIf="!loading">
-        <mat-chip-list matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal" *ngIf="service">
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <mat-chip-list *ngIf="service" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip *ngFor="let chip of service['tags']" color="primary">{{chip}}</mat-chip>
         </mat-chip-list>
         <div><!-- leave empty --></div>
-        <button mat-flat-button mat-dialog-close="null" color="accent" cdkFocusInitial>{{'text.accept' | translate}}</button>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>
 </div>

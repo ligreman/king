@@ -1,6 +1,6 @@
-<h2 mat-dialog-title fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-5-i">
+<h2 class="margin-bottom-5-i" fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
     <span>{{'target.dialog.create' | translate:{up: upstreamId} }}</span>
-    <span><a mat-button href="https://docs.konghq.com/2.2.x/admin-api/#add-target" target="_blank">
+    <span><a href="https://docs.konghq.com/2.2.x/admin-api/#add-target" mat-button rel="noopener noreferrer" target="_blank">
     {{'text.documentation' | translate}}
         <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
 </h2>
@@ -10,12 +10,12 @@
 <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="90">
         <form [formGroup]="form">
-            <div fxLayout="column" class="margin-bottom-10">
-                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
-                    <mat-form-field fxFlex="55" color="accent" appearance="outline">
+            <div class="margin-bottom-10" fxLayout="column">
+                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="55">
                         <mat-label>{{'target.dialog.target' | translate}}</mat-label>
-                        <input type="text" aria-label="" matInput formControlName="target" cdkFocusInitial required
-                               placeholder="{{ 'target.dialog.target_example' | translate}}"/>
+                        <input aria-label="" cdkFocusInitial formControlName="target" matInput placeholder="{{ 'target.dialog.target_example' | translate}}" required
+                               type="text"/>
                         <mat-hint>{{ 'target.dialog.target_hint' | translate }}</mat-hint>
                         <mat-icon matSuffix matTooltip="{{'target.dialog.target_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
@@ -25,18 +25,18 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field fxFlex="20" color="accent" appearance="outline">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="20">
                         <mat-label>{{'service.dialog.port' | translate}}</mat-label>
-                        <input type="number" aria-label="" matInput formControlName="port" required
-                               placeholder="{{'service.dialog.port_example' | translate}}"/>
+                        <input aria-label="" formControlName="port" matInput placeholder="{{'service.dialog.port_example' | translate}}" required
+                               type="number"/>
                         <mat-error *ngIf="portField.invalid">
                             {{ 'service.dialog.error.port_min_max' | translate }}
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field fxFlex="20" color="accent" appearance="outline">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="20">
                         <mat-label>{{'target.dialog.weight' | translate}}</mat-label>
-                        <input type="number" aria-label="" matInput formControlName="weight"/>
+                        <input aria-label="" formControlName="weight" matInput type="number"/>
                         <mat-icon matSuffix matTooltip="{{'target.dialog.weight_tooltip' | translate}}"
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
@@ -46,19 +46,19 @@
                     </mat-form-field>
                 </div>
 
-                <div fxLayout="row" fxLayoutAlign="space-between start" class="margin-bottom-10">
-                    <mat-form-field fxFlex="100" color="accent" appearance="outline">
+                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="100">
                         <mat-chip-list #chipList aria-label="">
-                            <mat-chip *ngFor="let tag of currentTags"
-                                      removable="true" (removed)="removeTag(tag)">{{tag}}
+                            <mat-chip (removed)="removeTag(tag)"
+                                      *ngFor="let tag of currentTags" removable="true">{{tag}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
-                            <input placeholder="{{'service.dialog.tags' | translate}}"
-                                   formControlName="tags"
+                            <input (matChipInputTokenEnd)="addTag($event)"
                                    [matChipInputFor]="chipList"
                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   formControlName="tags"
                                    matChipInputAddOnBlur="true"
-                                   (matChipInputTokenEnd)="addTag($event)">
+                                   placeholder="{{'service.dialog.tags' | translate}}">
                         </mat-chip-list>
                         <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
                     </mat-form-field>
@@ -73,10 +73,10 @@
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between start">
     <div></div>
     <div>
-        <button mat-button mat-dialog-close="null" color="warn">{{'text.cancel' | translate}}</button>
+        <button color="warn" mat-button mat-dialog-close="null">{{'text.cancel' | translate}}</button>
         <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
-        <button mat-flat-button (click)="onSubmit()" color="accent"
-                [disabled]="form.invalid">
+        <button (click)="onSubmit()" [disabled]="form.invalid" color="accent"
+                mat-flat-button>
             <span>{{'text.create' | translate}}</span>
         </button>
     </div>

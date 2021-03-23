@@ -41,5 +41,5 @@ describe('DialogNewServiceComponent', () => {
         fixture.detectChanges();
     });
 
-/*
+
 });
