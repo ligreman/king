@@ -47,7 +47,7 @@ export class DialogInfoTargetComponent implements OnInit {
 
     downloadJson() {
         const blob = new Blob([JSON.stringify(this.target, null, 2)], {type: 'text/json'});
-        saveAs(blob, 'service_' + this.targetId + '.json');
+        saveAs(blob, 'target_' + this.targetId + '.json');
     }
 
     getWeigth() {

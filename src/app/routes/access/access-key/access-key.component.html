@@ -2,7 +2,7 @@
 <div [fxShow]="!loading" class="progress-placeholder"></div>
 
 <div class="padding-top-20" fxLayout="row" fxLayoutAlign="center center">
-    <h2 class="margin-0-i" fxFlex="90">{{ 'consumer.header' | translate}}</h2>
+    <h2 class="margin-0-i" fxFlex="90">{{ 'apikey.header' | translate}}</h2>
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center start">
@@ -16,31 +16,38 @@
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <button (click)="addEditConsumer()" color="accent" fxFlexOffset="5" mat-icon-button matTooltip="{{'consumer.add'| translate}}"
-                    matTooltipClass="tooltip-teal">
-                <mat-icon>add</mat-icon>
-            </button>
             <button (click)="reloadData()" color="accent" mat-icon-button matTooltip="{{'element.reload' | translate}}"
                     matTooltipClass="tooltip-teal">
                 <mat-icon>refresh</mat-icon>
             </button>
         </div>
 
-        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="username" matSortDirection="asc" matSortDisableClear>
+        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="consumer" matSortDirection="asc" matSortDisableClear>
             <!-- ID Column -->
             <ng-container matColumnDef="id">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.id' | translate}}</th>
                 <td *matCellDef="let row" class="text-small" mat-cell>{{row.id}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="username">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.dialog.username' | translate}}</th>
-                <td *matCellDef="let row" class="text-small" mat-cell>{{row.username}}</td>
+            <ng-container matColumnDef="key">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'apikey.dialog.key' | translate}}</th>
+                <td *matCellDef="let row" class="text-small" mat-cell>{{row.key}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="custom_id">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.dialog.custom_id' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{row.custom_id}}</td>
+            <ng-container matColumnDef="consumer">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.label' | translate}}</th>
+                <td *matCellDef="let row" class="text-small" mat-cell matTooltip="{{row.consumer.id}}"
+                    matTooltipClass="tooltip-teal">{{consumers[row.consumer.id]}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="created_at">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.created_at' | translate}}</th>
+                <td *matCellDef="let row" class="small-font" mat-cell>{{ (row.created_at * 1000) | date:'medium'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="ttl">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.created_at' | translate}}</th>
+                <td *matCellDef="let row" class="small-font" mat-cell>{{ (row.ttl * 1000) | date:'medium'}}</td>
             </ng-container>
 
             <ng-container matColumnDef="tags">
@@ -51,20 +58,6 @@
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="infoAcls(row)" [disabled]="!isPluginActive('acl')" mat-icon-button
-                            matTooltip="{{'acl.dialog.info' | translate}}"
-                            matTooltipClass="tooltip-teal">
-                        <mat-icon>people</mat-icon>
-                    </button>
-                    <button (click)="infoApiKeys(row)" [disabled]="!isPluginActive('key-auth')" mat-icon-button
-                            matTooltip="{{'apikey.dialog.info' | translate}}"
-                            matTooltipClass="tooltip-teal">
-                        <mat-icon>vpn_key</mat-icon>
-                    </button>
-                    <button (click)="addEditConsumer(row)" color="accent" mat-icon-button matTooltip="{{'text.edit' | translate}}"
-                            matTooltipClass="tooltip-teal">
-                        <mat-icon>edit</mat-icon>
-                    </button>
                     <button (click)="delete(row)" color="warn" mat-icon-button matTooltip="{{'text.delete' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>delete</mat-icon>
@@ -77,11 +70,13 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
-                <td *ngIf="input.value === ''" class="mat-cell" colspan="5">{{'element.no_data' | translate}}</td>
-                <td *ngIf="input.value !== ''" class="mat-cell" colspan="5">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
+                <td *ngIf="input.value === ''" class="mat-cell" colspan="6">{{'element.no_data' | translate}}</td>
+                <td *ngIf="input.value !== ''" class="mat-cell" colspan="6">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
             </tr>
         </table>
 
         <mat-paginator [pageSizeOptions]="[10, 25, 100]" color="accent"></mat-paginator>
+
+        <div class="margin-top-10" fxLayout="row" fxLayoutAlign="end center"><p>{{ "apikey.explanation" | translate}}</p></div>
     </div>
 </div>

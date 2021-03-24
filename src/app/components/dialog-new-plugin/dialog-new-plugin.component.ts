@@ -213,8 +213,10 @@ export class DialogNewPluginComponent implements OnInit {
 
             if (fValue === '' || fValue === null || (_isArray(fValue) && fValue.length === 0)) {
                 _set(body, field, null);
-            } else {
+            } else if (!_isArray(fValue)) {
                 _set(body, field, fValue.split('\n'));
+            } else {
+                _set(body, field, fValue);
             }
         });
 

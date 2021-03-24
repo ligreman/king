@@ -22,7 +22,7 @@
             </button>
         </div>
 
-        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="username" matSortDirection="asc" matSortDisableClear>
+        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="group" matSortDirection="asc" matSortDisableClear>
             <!-- ID Column -->
             <ng-container matColumnDef="id">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.id' | translate}}</th>
@@ -65,11 +65,13 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
-                <td *ngIf="input.value === ''" class="mat-cell" colspan="5">{{'element.no_data' | translate}}</td>
-                <td *ngIf="input.value !== ''" class="mat-cell" colspan="5">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
+                <td *ngIf="input.value === ''" class="mat-cell" colspan="6">{{'element.no_data' | translate}}</td>
+                <td *ngIf="input.value !== ''" class="mat-cell" colspan="6">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
             </tr>
         </table>
 
         <mat-paginator [pageSizeOptions]="[10, 25, 100]" color="accent"></mat-paginator>
+
+        <div class="margin-top-10" fxLayout="row" fxLayoutAlign="end center"><p>{{ "acl.explanation" | translate}}</p></div>
     </div>
 </div>

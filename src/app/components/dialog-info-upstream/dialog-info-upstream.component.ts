@@ -68,7 +68,7 @@ export class DialogInfoUpstreamComponent implements OnInit {
 
     downloadJson() {
         const blob = new Blob([JSON.stringify(this.upstream, null, 2)], {type: 'text/json'});
-        saveAs(blob, 'service_' + this.upstreamId + '.json');
+        saveAs(blob, 'upstream_' + this.upstreamId + '.json');
     }
 
     showTargetInfo(target) {

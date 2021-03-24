@@ -39,6 +39,7 @@ import { AppComponent } from './app.component';
 import { DialogAboutComponent } from './components/dialog-about/dialog-about.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
 import { DialogInfoAclComponent } from './components/dialog-info-acl/dialog-info-acl.component';
+import { DialogInfoKeyComponent } from './components/dialog-info-key/dialog-info-key.component';
 import { DialogInfoPluginComponent } from './components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
@@ -56,6 +57,7 @@ import { DialogNewTargetComponent } from './components/dialog-new-target/dialog-
 import { DialogNewUpstreamComponent } from './components/dialog-new-upstream/dialog-new-upstream.component';
 import { ManualContentComponent } from './components/manual-content/manual-content.component';
 import { AccessAclsComponent } from './routes/access/access-acls/access-acls.component';
+import { AccessKeyComponent } from './routes/access/access-key/access-key.component';
 import { ElementConsumerComponent } from './routes/access/element-consumer/element-consumer.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
 import { CertificateCacertComponent } from './routes/certificates/certificate-cacert/certificate-cacert.component';
@@ -109,7 +111,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogAboutComponent,
         ManualContentComponent,
         DialogInfoAclComponent,
-        AccessAclsComponent
+        AccessAclsComponent,
+        AccessKeyComponent,
+        DialogInfoKeyComponent
     ],
     imports: [
         BrowserModule,

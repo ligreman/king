@@ -297,4 +297,24 @@ export class ApiService {
     public deleteConsumerAcl(consumer: string, acl: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + consumer + '/acls/' + acl).pipe(catchError(this.handleError));
     }
+
+    /*
+        API KEY PLUGIN
+     */
+    public getApiKeys() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/key-auths?size=1000').pipe(catchError(this.handleError));
+    }
+
+
+    public getConsumerApiKeys(consumer: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers/' + consumer + '/key-auth').pipe(catchError(this.handleError));
+    }
+
+    public postConsumerApiKey(consumer: string, body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/consumers/' + consumer + '/key-auth', body).pipe(catchError(this.handleError));
+    }
+
+    public deleteConsumerApiKey(consumer: string, key: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + consumer + '/key-auth/' + key).pipe(catchError(this.handleError));
+    }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from '../components/dialog-confirm/dialog-confirm.component';
 import { DialogInfoAclComponent } from '../components/dialog-info-acl/dialog-info-acl.component';
+import { DialogInfoKeyComponent } from '../components/dialog-info-key/dialog-info-key.component';
 import { DialogInfoPluginComponent } from '../components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from '../components/dialog-info-route/dialog-info-route.component';
 import { DialogInfoServiceComponent } from '../components/dialog-info-service/dialog-info-service.component';
@@ -119,6 +120,10 @@ export class DialogHelperService {
                 opt.data = select.id;
                 component = DialogInfoAclComponent;
                 break;
+            case 'key':
+                opt.data = select.id;
+                component = DialogInfoKeyComponent;
+                break;
         }
 
         this.dialog.open(component, opt);
@@ -179,7 +184,17 @@ export class DialogHelperService {
                     opt.data = {
                         title: 'dialog.confirm.delete_acl_title',
                         content: 'dialog.confirm.delete_acl',
-                        name: select.name,
+                        name: select.consumer,
+                        consumer: select.consumer,
+                        id: select.id,
+                        delete: true
+                    };
+                    break;
+                case 'key':
+                    opt.data = {
+                        title: 'dialog.confirm.delete_key_title',
+                        content: 'dialog.confirm.delete_key',
+                        name: select.consumer,
                         consumer: select.consumer,
                         id: select.id,
                         delete: true
@@ -276,7 +291,16 @@ export class DialogHelperService {
                             break;
                         case 'acl':
                             this.api.deleteConsumerAcl(select.consumer, select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.consumer});
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
+                            break;
+                        case 'key':
+                            this.api.deleteConsumerApiKey(select.consumer, select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});

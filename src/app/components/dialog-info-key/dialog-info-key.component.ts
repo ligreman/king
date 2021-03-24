@@ -7,32 +7,33 @@ import { DialogHelperService } from '../../services/dialog-helper.service';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
-    selector: 'app-dialog-info-acl',
-    templateUrl: './dialog-info-acl.component.html',
-    styleUrls: ['./dialog-info-acl.component.scss']
+    selector: 'app-dialog-info-key',
+    templateUrl: './dialog-info-key.component.html',
+    styleUrls: ['./dialog-info-key.component.scss']
 })
-export class DialogInfoAclComponent implements OnInit {
-    acls;
+export class DialogInfoKeyComponent implements OnInit {
+    keys;
     loading = true;
-    group = '';
+    key = '';
+    ttl = 0;
 
     constructor(@Inject(MAT_DIALOG_DATA) public consumerId: string, private api: ApiService, private toast: ToastService,
                 private dialogHelper: DialogHelperService, private translate: TranslateService) { }
 
     ngOnInit(): void {
-        this.getAcls();
+        this.getApiKeys();
     }
 
     /**
      * Obtengo los acls
      */
-    getAcls() {
+    getApiKeys() {
         this.loading = true;
 
         // Recojo los datos del api
-        this.api.getConsumerAcls(this.consumerId)
-            .subscribe(acls => {
-                this.acls = acls['data'];
+        this.api.getConsumerApiKeys(this.consumerId)
+            .subscribe(keys => {
+                this.keys = keys['data'];
             }, error => {
                 this.toast.error_general(error);
             }, () => {
@@ -41,43 +42,52 @@ export class DialogInfoAclComponent implements OnInit {
     }
 
     downloadJson() {
-        const blob = new Blob([JSON.stringify(this.acls, null, 2)], {type: 'text/json'});
-        saveAs(blob, 'acl.consumer_' + this.consumerId + '.json');
+        const blob = new Blob([JSON.stringify(this.keys, null, 2)], {type: 'text/json'});
+        saveAs(blob, 'apikey.consumer_' + this.consumerId + '.json');
     }
 
     /**
-     * Añade un acl al consumidor
+     * Añade un api key al consumidor
      */
-    addAclToConsumer() {
+    addApiKeyToConsumer() {
+        let body = {};
+        if (this.key !== '') {
+            body['key'] = this.key;
+        }
+        if (this.ttl > 0) {
+            body['ttl'] = this.ttl;
+        }
+
         // Guardo el acl en el consumidor
-        this.api.postConsumerAcl(this.consumerId, {group: this.group})
+        this.api.postConsumerApiKey(this.consumerId, body)
             .subscribe(res => {
-                this.toast.success('text.id_extra', 'success.new_acl', {msgExtra: this.group});
-                this.getAcls();
-                this.group = '';
+                this.toast.success('text.id_extra', 'success.new_key', {msgExtra: res['id']});
+                this.getApiKeys();
+                this.key = '';
+                this.ttl = 0;
             }, error => {
                 this.toast.error_general(error, {disableTimeOut: true});
             });
     }
 
     /**
-     * Elimina un acl
-     * @param acl Acl
+     * Elimina un api key
+     * @param apikey api key
      */
-    deleteAcl(acl) {
+    deleteApiKey(apikey) {
         this.dialogHelper
             .confirm({
-                title: this.translate.instant('acl.delete_acl'),
+                title: this.translate.instant('apikey.delete_key'),
                 name: this.consumerId,
-                id: acl.id,
-                content: this.translate.instant('acl.delete_acl_content')
+                id: apikey.id,
+                content: this.translate.instant('apikey.delete_key_content')
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.deleteConsumerAcl(this.consumerId, acl.id)
+                this.api.deleteConsumerApiKey(this.consumerId, apikey.id)
                     .subscribe(res => {
-                        this.toast.success('text.id_extra', 'success.delete_acl', {msgExtra: acl.group});
-                        this.getAcls();
+                        this.toast.success('text.id_extra', 'success.delete_key', {msgExtra: apikey.id});
+                        this.getApiKeys();
                     }, error => {
                         this.toast.error_general(error, {disableTimeOut: true});
                     });

@@ -43,9 +43,9 @@
                 <mat-icon>people</mat-icon>
                 {{'header.menu.acls' | translate | uppercase}}
             </button>
-            <button mat-menu-item routerLink="/" routerLinkActive="active-route">
-                <mat-icon></mat-icon>
-                {{'header.menu.' | translate | uppercase}}
+            <button mat-menu-item routerLink="/access-key" routerLinkActive="active-route">
+                <mat-icon>vpn_key</mat-icon>
+                {{'header.menu.keys' | translate | uppercase}}
             </button>
         </mat-menu>
         <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()" color="accent" mat-button>
