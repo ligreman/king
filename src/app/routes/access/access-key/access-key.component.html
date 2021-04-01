@@ -31,23 +31,37 @@
 
             <ng-container matColumnDef="key">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'apikey.dialog.key' | translate}}</th>
-                <td *matCellDef="let row" class="text-small" mat-cell>{{row.key}}</td>
+                <td *matCellDef="let row" mat-cell>
+                    {{showKey(row.key, row.hide || false)}}
+                    <button (click)="row.hide=!row.hide" class="small-btn" mat-button mat-icon-button>
+                        <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
+                        <mat-icon *ngIf="!row.hide">visibility_on</mat-icon>
+                    </button>
+                    <button [cdkCopyToClipboard]="row.key" class="small-btn" mat-button mat-icon-button
+                            matTooltip="{{'dialog.copy_clipboard'|translate}}" matTooltipClass="tooltip-teal">
+                        <mat-icon>content_copy</mat-icon>
+                    </button>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="consumer">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.label' | translate}}</th>
-                <td *matCellDef="let row" class="text-small" mat-cell matTooltip="{{row.consumer.id}}"
+                <td *matCellDef="let row" mat-cell matTooltip="{{row.consumer.id}}"
                     matTooltipClass="tooltip-teal">{{consumers[row.consumer.id]}}</td>
             </ng-container>
 
             <ng-container matColumnDef="created_at">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.created_at' | translate}}</th>
-                <td *matCellDef="let row" class="small-font" mat-cell>{{ (row.created_at * 1000) | date:'medium'}}</td>
+                <td *matCellDef="let row" class="text-small" mat-cell>{{ (row.created_at * 1000) | date:'medium'}}</td>
             </ng-container>
 
             <ng-container matColumnDef="ttl">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.created_at' | translate}}</th>
-                <td *matCellDef="let row" class="small-font" mat-cell>{{ (row.ttl * 1000) | date:'medium'}}</td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'apikey.dialog.expiration_ttl' | translate}}</th>
+                <td *matCellDef="let row" class="text-small" mat-cell>
+                    <span *ngIf="row.ttl > 0" matTooltip="{{ 'apikey.dialog.add_ttl' | translate }}: {{row.ttl}}s" matTooltipClass="tooltip-teal">
+                    {{(timeNow + (row.ttl * 1000)) | date:'medium'}}
+                    </span>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="tags">
@@ -70,8 +84,8 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
-                <td *ngIf="input.value === ''" class="mat-cell" colspan="6">{{'element.no_data' | translate}}</td>
-                <td *ngIf="input.value !== ''" class="mat-cell" colspan="6">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
+                <td *ngIf="input.value === ''" class="mat-cell" colspan="7">{{'element.no_data' | translate}}</td>
+                <td *ngIf="input.value !== ''" class="mat-cell" colspan="7">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
             </tr>
         </table>
 

@@ -8,7 +8,7 @@
                 <mat-icon class="mini-icon">open_in_new</mat-icon>
             </a>
             <button (click)="downloadJson()" mat-icon-button
-                    matTooltip="{{'dialog.copy_clipboard' | translate}}" matTooltipClass="tooltip-teal">
+                    matTooltip="{{'dialog.download_json' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>download</mat-icon>
             </button>
         </span>
@@ -25,7 +25,7 @@
     <div fxFlex>
         <mat-dialog-content *ngIf="keys && !loading" class="margin-0-i">
             <div fxLayout="row" fxLayoutAlign="space-between center">
-                <div>{{'apikey.dialog.keys' | translate}} <span class="small-font">{{consumerId}}</span></div>
+                <div>{{'apikey.dialog.keys' | translate}}: <span>{{consumerName}}</span></div>
 
                 <div fxFlex="50" fxLayout="row" fxLayoutAlign="end center">
                     <mat-form-field fxFlex="50">
@@ -51,19 +51,33 @@
             </div>
 
             <div fxLayout="row">
-                <div>
-                    <mat-list>
-                        <mat-list-item *ngFor="let apikey of keys">
-                            <mat-icon mat-list-icon>people</mat-icon>
-                            <div mat-line matTooltip="ID: {{apikey.id}}" matTooltipClass="tooltip-teal">{{apikey.key}}</div>
-                            <div class="text-small" mat-line>{{ (apikey.created_at * 1000) | date:'medium'}}</div>
-                            <button (click)="deleteApiKey(apikey)" class="margin-left-20-i" color="warn" mat-button mat-icon-button
+                <mat-list fxFlex>
+                    <mat-list-item *ngFor="let apikey of keys">
+                        <mat-icon mat-list-icon>people</mat-icon>
+                        <div mat-line>
+                            <span matTooltip="ID: {{apikey.id}}" matTooltipClass="tooltip-teal">{{showKey(apikey.key, apikey.hide || false)}}</span>
+                            <button (click)="apikey.hide=!apikey.hide" class="margin-left-20-i" mat-button mat-icon-button>
+                                <mat-icon *ngIf="apikey.hide">visibility_off</mat-icon>
+                                <mat-icon *ngIf="!apikey.hide">visibility_on</mat-icon>
+                            </button>
+                            <button [cdkCopyToClipboard]="apikey.key" mat-button mat-icon-button
+                                    matTooltip="{{'dialog.copy_clipboard'|translate}}" matTooltipClass="tooltip-teal">
+                                <mat-icon>content_copy</mat-icon>
+                            </button>
+                            <button (click)="deleteApiKey(apikey)" color="warn" mat-button mat-icon-button
                                     matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
                                 <mat-icon>delete</mat-icon>
                             </button>
-                        </mat-list-item>
-                    </mat-list>
-                </div>
+                        </div>
+
+                        <div class="text-small" mat-line>
+                            {{ (apikey.created_at * 1000) | date:'medium'}}
+                            <span *ngIf="apikey.ttl" matTooltip="{{ 'apikey.dialog.add_ttl' | translate }}: {{apikey.ttl}}s"
+                                  matTooltipClass="tooltip-teal"> {{'text.to' | translate}} {{ ((apikey.created_at * 1000) + (apikey.ttl * 1000)) | date:'medium'}}
+                                </span>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
             </div>
         </mat-dialog-content>
     </div>

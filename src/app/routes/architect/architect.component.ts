@@ -35,9 +35,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     netFilter = {tag: '', element: 'all', mode: true};
     // Posibles tipos de nodos que tienen acciones propias
     groupsInfo = ['service', 'route', 'upstream', 'target', 'plugin'];
+    othersInfo = ['acl', 'key'];
     groupsEdit = ['service', 'route', 'upstream', 'consumer', 'plugin'];
     groupsDelete = ['service', 'route', 'upstream', 'consumer', 'target', 'plugin'];
-    // groupsAddPlugin = ['service', 'route', 'consumer'];
     groupsAddPlugin = [];
     groupsAddTarget = ['upstream'];
     groupsHealth = ['target'];
@@ -98,16 +98,30 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     } else {
                         this.selection = '';
                     }
+
+                    if (this.selection === null) {
+                        this.selection = '';
+                    }
                 });
 
                 this.network.on('doubleClick', info => {
                     if (info.nodes.length > 0) {
                         this.selection = this.data.nodes.get(info.nodes[0]);
 
-                        if (this.groupsInfo.includes(this.selection.group)) {
+                        // Info node
+                        if (this.selection !== null && this.groupsInfo.includes(this.selection.group)) {
                             this.showInfo(this.selection);
                         }
+
+                        // Open cluster
+                        if (this.network.isCluster(info.nodes[0])) {
+                            this.network.openCluster(info.nodes[0]);
+                        }
                     } else {
+                        this.selection = '';
+                    }
+
+                    if (this.selection === null) {
                         this.selection = '';
                     }
                 });
@@ -138,6 +152,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             this.dataApi = value;
             // Ahora construyo los nodos y edges del grafo
             this.createGraphNodesAndEdges(value).then(r => {
+                this.clusterConsumers();
                 // Marco el grafo como estabilidazo y termino de cargarlo
                 this.stabilized = false;
                 this.loading = false;
@@ -590,7 +605,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         Muestra la info del elemento seleccionado
      */
     showInfo(select) {
-        if (this.groupsInfo.includes(select.group) || select.group === 'acl') {
+        if (this.groupsInfo.includes(select.group) || this.othersInfo.includes(select.group)) {
             this.dialogHelper.showInfoElement(select, select.group);
         }
     }
@@ -679,8 +694,29 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         return data;
     }
 
+    clusterConsumers() {
+        // Count number of consumers
+        const num = this.dataApi.consumers.length;
+
+        const clusterOptionsByData = {
+            // Rules for clustering
+            joinCondition: function (childOptions) {
+                return childOptions.group === 'consumer';
+            },
+            clusterNodeProperties: {
+                id: 'consumers-cluster',
+                group: 'consumerCluster',
+                label: num + ' ' + this.translate.instant('architect.cluster_consumers'),
+                title: this.translate.instant('architect.cluster_title')
+            }
+        };
+        this.network.cluster(clusterOptionsByData);
+    }
 }
 
+/**
+ * Create an HTML div block
+ */
 function generateElement(arrayOfP) {
     const element = document.createElement('div');
 

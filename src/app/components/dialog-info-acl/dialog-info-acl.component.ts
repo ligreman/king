@@ -15,11 +15,15 @@ export class DialogInfoAclComponent implements OnInit {
     acls;
     loading = true;
     group = '';
+    consumerId;
+    consumerName;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public consumerId: string, private api: ApiService, private toast: ToastService,
+    constructor(@Inject(MAT_DIALOG_DATA) public consumer: string, private api: ApiService, private toast: ToastService,
                 private dialogHelper: DialogHelperService, private translate: TranslateService) { }
 
     ngOnInit(): void {
+        this.consumerId = this.consumer['id'];
+        this.consumerName = this.consumer['username'];
         this.getAcls();
     }
 
@@ -42,7 +46,7 @@ export class DialogInfoAclComponent implements OnInit {
 
     downloadJson() {
         const blob = new Blob([JSON.stringify(this.acls, null, 2)], {type: 'text/json'});
-        saveAs(blob, 'acl.consumer_' + this.consumerId + '.json');
+        saveAs(blob, 'acl.consumer_' + this.consumerName + '.json');
     }
 
     /**
@@ -68,8 +72,9 @@ export class DialogInfoAclComponent implements OnInit {
         this.dialogHelper
             .confirm({
                 title: this.translate.instant('acl.delete_acl'),
-                name: this.consumerId,
+                name: this.consumerName,
                 id: acl.id,
+                delete: true,
                 content: this.translate.instant('acl.delete_acl_content')
             })
             .then(() => {

@@ -117,11 +117,11 @@ export class DialogHelperService {
                 component = DialogInfoPluginComponent;
                 break;
             case 'acl':
-                opt.data = select.id;
+                opt.data = select;
                 component = DialogInfoAclComponent;
                 break;
             case 'key':
-                opt.data = select.id;
+                opt.data = select;
                 component = DialogInfoKeyComponent;
                 break;
         }

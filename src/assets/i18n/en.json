@@ -64,7 +64,9 @@
         "true": "Yes",
         "false": "No",
         "health": "Health",
-        "enabled": "Habilitado"
+        "enabled": "Habilitado",
+        "seconds": "seconds",
+        "to": "until"
     },
     "pagination": {
         "itemsPerPageLabel": "Items per page:",
@@ -103,7 +105,8 @@
             "disable_plugin_title": "Disable plugin",
             "disable_plugin": "Do you want to disable this plugin"
         },
-        "copy_clipboard": "Download in JSON",
+        "download_json": "Download in JSON",
+        "copy_clipboard": "Copy to clipboard",
         "about": {
             "title": "About King",
             "developer": "King is developed by",
@@ -202,7 +205,9 @@
         "filter": "Filter by tags, separated by commas",
         "filter_tooltip": "Filter",
         "filter_element_all": "Show all components",
-        "filter_element_mainonly": "Show only services, routes and upstreams"
+        "filter_element_mainonly": "Show only services, routes and upstreams",
+        "cluster_consumers": "consumers",
+        "cluster_title": "Double click to expand all elements"
     },
     "service": {
         "label": "Service",
@@ -531,6 +536,7 @@
             "keys": "API Keys assigned to the consumer",
             "add_key": "API Key to add",
             "add_key_hint": "Leave empty to auto-generate one",
+            "expiration_ttl": "Expires at",
             "add_ttl": "TTL in seconds",
             "add_ttl_hint": "0 = no expiration",
             "key": "API Key",

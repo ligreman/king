@@ -64,6 +64,19 @@
     background: mat-color($mat-teal, 500);
 }
 
+.mat-icon-button.small-btn {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.mat-icon-button.small-btn mat-icon {
+    width: 16px;
+    height: 16px;
+    line-height: 16px;
+    font-size: 16px;
+}
+
 
 /*
     NGX-CHARTS

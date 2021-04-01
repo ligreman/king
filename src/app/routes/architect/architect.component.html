@@ -108,9 +108,18 @@
 
             <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('acl')">
                 <div mat-line>
-                    <button (click)="showInfo({id: selection.id, group: 'acl'})" mat-button>
+                    <button (click)="showInfo({id: selection.id, group: 'acl', username: selection.label})" mat-button>
                         <mat-icon>people</mat-icon>
                         {{'acl.dialog.info' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+
+            <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('key-auth')">
+                <div mat-line>
+                    <button (click)="showInfo({id: selection.id, group: 'key', username: selection.label})" mat-button>
+                        <mat-icon>vpn_key</mat-icon>
+                        {{'apikey.dialog.info' | translate}}
                     </button>
                 </div>
             </mat-list-item>

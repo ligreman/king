@@ -16,11 +16,15 @@ export class DialogInfoKeyComponent implements OnInit {
     loading = true;
     key = '';
     ttl = 0;
+    consumerId;
+    consumerName;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public consumerId: string, private api: ApiService, private toast: ToastService,
+    constructor(@Inject(MAT_DIALOG_DATA) public consumer: string, private api: ApiService, private toast: ToastService,
                 private dialogHelper: DialogHelperService, private translate: TranslateService) { }
 
     ngOnInit(): void {
+        this.consumerId = this.consumer['id'];
+        this.consumerName = this.consumer['username'];
         this.getApiKeys();
     }
 
@@ -41,9 +45,24 @@ export class DialogInfoKeyComponent implements OnInit {
             });
     }
 
+    /**
+     * Muestra u oculta la api key
+     * @param key Clave
+     * @param hide Mostrar u ocultar
+     */
+    showKey(key, hide) {
+        if (!hide) {
+            key = key.substr(0, 5).padEnd(key.length, '*');
+        }
+        return key;
+    }
+
+    /**
+     * Descarga en formato JSON los datos
+     */
     downloadJson() {
         const blob = new Blob([JSON.stringify(this.keys, null, 2)], {type: 'text/json'});
-        saveAs(blob, 'apikey.consumer_' + this.consumerId + '.json');
+        saveAs(blob, 'apikey.consumer_' + this.consumerName + '.json');
     }
 
     /**
@@ -78,8 +97,9 @@ export class DialogInfoKeyComponent implements OnInit {
         this.dialogHelper
             .confirm({
                 title: this.translate.instant('apikey.delete_key'),
-                name: this.consumerId,
+                name: this.consumerName,
                 id: apikey.id,
+                delete: true,
                 content: this.translate.instant('apikey.delete_key_content')
             })
             .then(() => {

@@ -52,6 +52,16 @@ export class AccessAclsComponent implements OnInit {
             .subscribe(value => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
+                    // Accessor para poder ordenar por la columna consumer, cuyo campo para ordenar está anidado
+                    // por defecto no ordena en campos anidados
+                    this.dataSource.sortingDataAccessor = (item, property) => {
+                        switch (property) {
+                            case 'consumer':
+                                return item.consumer.id;
+                            default:
+                                return item[property];
+                        }
+                    };
                     this.dataSource.sort = this.sort;
                 },
                 error => {

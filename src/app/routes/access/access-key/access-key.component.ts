@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { DateTime } from 'luxon';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
@@ -23,6 +24,7 @@ export class AccessKeyComponent implements OnInit {
     loading = false;
     filter = '';
     consumers = {};
+    timeNow = DateTime.now();
 
     constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
     }
@@ -43,6 +45,30 @@ export class AccessKeyComponent implements OnInit {
 
         this.getApiKeys();
         this.getConsumers();
+        this.getNow();
+    }
+
+    /**
+     * Obtiene el tiempo actual en milisegundos
+     */
+    getNow() {
+        this.timeNow = DateTime.now();
+    }
+
+    getConsumer(id) {
+        return this.consumers[id];
+    }
+
+    /**
+     * Muestra u oculta la api key
+     * @param key Clave
+     * @param hide Mostrar u ocultar
+     */
+    showKey(key, hide) {
+        if (!hide) {
+            key = key.substr(0, 5).padEnd(key.length, '*');
+        }
+        return key;
     }
 
     /**
@@ -53,6 +79,16 @@ export class AccessKeyComponent implements OnInit {
             .subscribe(value => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
+                    // Accessor para poder ordenar por la columna consumer, cuyo campo para ordenar está anidado
+                    // por defecto no ordena en campos anidados
+                    this.dataSource.sortingDataAccessor = (item, property) => {
+                        switch (property) {
+                            case 'consumer':
+                                return item.consumer.id;
+                            default:
+                                return item[property];
+                        }
+                    };
                     this.dataSource.sort = this.sort;
                 },
                 error => {
@@ -95,7 +131,8 @@ export class AccessKeyComponent implements OnInit {
      */
     delete(select) {
         this.dialogHelper.deleteElement({
-            id: select.id, consumer: select.consumer.id,
+            id: select.id,
+            consumer: select.consumer.id,
             name: select.key + ' -> ' + this.consumers[select.consumer.id]
         }, 'key')
             .then(() => { this.reloadData(); })

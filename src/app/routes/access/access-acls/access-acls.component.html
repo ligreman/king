@@ -31,18 +31,18 @@
 
             <ng-container matColumnDef="group">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'acl.dialog.group' | translate}}</th>
-                <td *matCellDef="let row" class="text-small" mat-cell>{{row.group}}</td>
+                <td *matCellDef="let row" mat-cell>{{row.group}}</td>
             </ng-container>
 
             <ng-container matColumnDef="consumer">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.label' | translate}}</th>
-                <td *matCellDef="let row" class="text-small" mat-cell matTooltip="{{row.consumer.id}}"
+                <td *matCellDef="let row" mat-cell matTooltip="{{row.consumer.id}}"
                     matTooltipClass="tooltip-teal">{{consumers[row.consumer.id]}}</td>
             </ng-container>
 
             <ng-container matColumnDef="created_at">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.created_at' | translate}}</th>
-                <td *matCellDef="let row" class="small-font" mat-cell>{{ (row.created_at * 1000) | date:'medium'}}</td>
+                <td *matCellDef="let row" class="text-small" mat-cell>{{ (row.created_at * 1000) | date:'medium'}}</td>
             </ng-container>
 
             <ng-container matColumnDef="tags">

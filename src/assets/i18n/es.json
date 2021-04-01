@@ -64,7 +64,9 @@
         "true": "Sí",
         "false": "No",
         "health": "Salud",
-        "enabled": "Habilitado"
+        "enabled": "Habilitado",
+        "seconds": "segundos",
+        "to": "hasta"
     },
     "pagination": {
         "itemsPerPageLabel": "Elementos por página:",
@@ -103,7 +105,8 @@
             "disable_plugin_title": "Desactivar plugin",
             "disable_plugin": "¿Deseas desactivar este plugin?"
         },
-        "copy_clipboard": "Descargar en JSON",
+        "download_json": "Descargar en JSON",
+        "copy_clipboard": "Copiar al portapapeles",
         "about": {
             "title": "Acerca de King",
             "developer": "King está desarrollado por",
@@ -202,7 +205,9 @@
         "filter": "Filtrar por etiquetas, separadas por comas",
         "filter_tooltip": "Filtrar",
         "filter_element_all": "Mostrar todos los elementos",
-        "filter_element_mainonly": "Mostrar sólo servicios, rutas y upstreams"
+        "filter_element_mainonly": "Mostrar sólo servicios, rutas y upstreams",
+        "cluster_consumers": "consumidores",
+        "cluster_title": "Doble click para expandir todos los elementos"
     },
     "service": {
         "label": "Servicio",
@@ -531,6 +536,7 @@
             "keys": "API Keys asignadas al consumidor",
             "add_key": "API Key a añadir",
             "add_key_hint": "Dejar vacío para generar automáticamente",
+            "expiration_ttl": "Caduca el",
             "add_ttl": "TTL en segundos",
             "add_ttl_hint": "0 = no caduca",
             "key": "API Key",
