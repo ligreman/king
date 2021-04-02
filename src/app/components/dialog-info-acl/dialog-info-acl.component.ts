@@ -69,24 +69,12 @@ export class DialogInfoAclComponent implements OnInit {
      * @param acl Acl
      */
     deleteAcl(acl) {
-        this.dialogHelper
-            .confirm({
-                title: this.translate.instant('acl.delete_acl'),
-                name: this.consumerName,
-                id: acl.id,
-                delete: true,
-                content: this.translate.instant('acl.delete_acl_content')
-            })
-            .then(() => {
-                // Ha aceptado el confirm, así que ejecuto
-                this.api.deleteConsumerAcl(this.consumerId, acl.id)
-                    .subscribe(res => {
-                        this.toast.success('text.id_extra', 'success.delete_acl', {msgExtra: acl.group});
-                        this.getAcls();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
-                    });
-            })
+        this.dialogHelper.deleteElement({
+            id: acl.id,
+            consumerId: this.consumerId,
+            name: acl.group + ' [' + this.translate.instant('text.username') + ' ' + this.consumerName + ']'
+        }, 'acl')
+            .then(() => { this.getAcls(); })
             .catch(error => {});
     }
 }

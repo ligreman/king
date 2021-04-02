@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
@@ -23,7 +24,8 @@ export class AccessAclsComponent implements OnInit {
     filter = '';
     consumers = {};
 
-    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
+    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService,
+                private translate: TranslateService) {
     }
 
     ngOnInit(): void {
@@ -103,7 +105,11 @@ export class AccessAclsComponent implements OnInit {
      * @param select Elemento a borrar
      */
     delete(select) {
-        this.dialogHelper.deleteElement({id: select.id, consumer: select.consumer.id, name: select.group + ' -> ' + this.consumers[select.consumer.id]}, 'acl')
+        this.dialogHelper.deleteElement({
+            id: select.id,
+            consumerId: select.consumer.id,
+            name: select.group + ' [' + this.translate.instant('text.username') + ' ' + this.consumers[select.consumer.id] + ']'
+        }, 'acl')
             .then(() => { this.reloadData(); })
             .catch(error => {});
     }

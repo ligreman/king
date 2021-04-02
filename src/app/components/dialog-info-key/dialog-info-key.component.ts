@@ -94,24 +94,12 @@ export class DialogInfoKeyComponent implements OnInit {
      * @param apikey api key
      */
     deleteApiKey(apikey) {
-        this.dialogHelper
-            .confirm({
-                title: this.translate.instant('apikey.delete_key'),
-                name: this.consumerName,
-                id: apikey.id,
-                delete: true,
-                content: this.translate.instant('apikey.delete_key_content')
-            })
-            .then(() => {
-                // Ha aceptado el confirm, así que ejecuto
-                this.api.deleteConsumerApiKey(this.consumerId, apikey.id)
-                    .subscribe(res => {
-                        this.toast.success('text.id_extra', 'success.delete_key', {msgExtra: apikey.id});
-                        this.getApiKeys();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
-                    });
-            })
+        this.dialogHelper.deleteElement({
+            id: apikey.id,
+            consumerId: this.consumerId,
+            name: this.showKey(apikey.key, false) + ' [' + this.translate.instant('text.username') + ' ' + this.consumerName + ']'
+        }, 'key')
+            .then(() => { this.getApiKeys(); })
             .catch(error => {});
     }
 }

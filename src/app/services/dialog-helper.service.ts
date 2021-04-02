@@ -184,8 +184,8 @@ export class DialogHelperService {
                     opt.data = {
                         title: 'dialog.confirm.delete_acl_title',
                         content: 'dialog.confirm.delete_acl',
-                        name: select.consumer,
-                        consumer: select.consumer,
+                        name: select.name,
+                        consumerId: select.consumerId,
                         id: select.id,
                         delete: true
                     };
@@ -194,8 +194,8 @@ export class DialogHelperService {
                     opt.data = {
                         title: 'dialog.confirm.delete_key_title',
                         content: 'dialog.confirm.delete_key',
-                        name: select.consumer,
-                        consumer: select.consumer,
+                        name: select.name,
+                        consumerId: select.consumerId,
                         id: select.id,
                         delete: true
                     };
@@ -290,8 +290,8 @@ export class DialogHelperService {
                             });
                             break;
                         case 'acl':
-                            this.api.deleteConsumerAcl(select.consumer, select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
+                            this.api.deleteConsumerAcl(select.consumerId, select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});
@@ -299,8 +299,8 @@ export class DialogHelperService {
                             });
                             break;
                         case 'key':
-                            this.api.deleteConsumerApiKey(select.consumer, select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
+                            this.api.deleteConsumerApiKey(select.consumerId, select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                 resolve();
                             }, error => {
                                 this.toast.error_general(error, {disableTimeOut: true});

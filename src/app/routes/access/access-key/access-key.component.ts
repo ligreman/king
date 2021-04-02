@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
@@ -26,7 +27,8 @@ export class AccessKeyComponent implements OnInit {
     consumers = {};
     timeNow = DateTime.now();
 
-    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
+    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService,
+                private translate: TranslateService) {
     }
 
     ngOnInit(): void {
@@ -62,10 +64,10 @@ export class AccessKeyComponent implements OnInit {
     /**
      * Muestra u oculta la api key
      * @param key Clave
-     * @param hide Mostrar u ocultar
+     * @param show Mostrar u ocultar
      */
-    showKey(key, hide) {
-        if (!hide) {
+    showKey(key, show) {
+        if (!show) {
             key = key.substr(0, 5).padEnd(key.length, '*');
         }
         return key;
@@ -132,8 +134,8 @@ export class AccessKeyComponent implements OnInit {
     delete(select) {
         this.dialogHelper.deleteElement({
             id: select.id,
-            consumer: select.consumer.id,
-            name: select.key + ' -> ' + this.consumers[select.consumer.id]
+            consumerId: select.consumer.id,
+            name: this.showKey(select.key, false) + ' [' + this.translate.instant('text.username') + ' ' + this.consumers[select.consumer.id] + ']'
         }, 'key')
             .then(() => { this.reloadData(); })
             .catch(error => {});
