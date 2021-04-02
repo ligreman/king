@@ -36,6 +36,13 @@ export class ApiService {
     }
 
     /*
+        TAGS ENDPOINTS
+     */
+    public getTags() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/tags').pipe(catchError(this.handleError));
+    }
+
+    /*
         SERVICE ENDPOINTS
      */
     public getServices() {

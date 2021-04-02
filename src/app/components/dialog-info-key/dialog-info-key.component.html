@@ -58,7 +58,7 @@
                             <span matTooltip="ID: {{apikey.id}}" matTooltipClass="tooltip-teal">{{showKey(apikey.key, apikey.hide || false)}}</span>
                             <button (click)="apikey.hide=!apikey.hide" class="margin-left-20-i" mat-button mat-icon-button>
                                 <mat-icon *ngIf="apikey.hide">visibility_off</mat-icon>
-                                <mat-icon *ngIf="!apikey.hide">visibility_on</mat-icon>
+                                <mat-icon *ngIf="!apikey.hide">visibility</mat-icon>
                             </button>
                             <button [cdkCopyToClipboard]="apikey.key" mat-button mat-icon-button
                                     matTooltip="{{'dialog.copy_clipboard'|translate}}" matTooltipClass="tooltip-teal">

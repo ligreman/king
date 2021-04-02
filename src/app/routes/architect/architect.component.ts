@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { cloneDeep as _cloneDeep, filter as _filter, isEmpty as _isEmpty, uniq as _uniq } from 'lodash';
+import { cloneDeep as _cloneDeep, filter as _filter, isEmpty as _isEmpty, sortedUniq as _sortedUniq, uniq as _uniq } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -29,6 +29,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     network;
     // Datos del API para pintar el grafo
     dataApi;
+    // Las tags existentes en Kong
+    allTags = [];
     // Plugins activos
     enabledPlugins = [];
     // Filtros del grafo
@@ -60,6 +62,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.loading = true;
 
                     this.getNodeInformation();
+                    this.getTags();
                 },
                 error => {
                     this.toast.error('error.node_connection');
@@ -84,7 +87,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 physics: {
                     minVelocity: 1.2,
-                    wind: {x: 1, y: 0}
+                    wind: {x: 0.7, y: 0}
                 },
                 height: '80%'
             };
@@ -152,7 +155,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             this.dataApi = value;
             // Ahora construyo los nodos y edges del grafo
             this.createGraphNodesAndEdges(value).then(r => {
-                this.clusterConsumers();
                 // Marco el grafo como estabilidazo y termino de cargarlo
                 this.stabilized = false;
                 this.loading = false;
@@ -187,6 +189,21 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.enabledPlugins = res['plugins']['enabled_in_cluster'];
             }, error => {
                 this.toast.error('error.node_connection');
+            });
+    }
+
+    /**
+     * Obtiene todas las tags que existen en Kong
+     */
+    getTags() {
+        this.api.getTags()
+            .subscribe(res => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
             });
     }
 
@@ -434,6 +451,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
             }
         });
+
+        this.clusterConsumers();
     }
 
     fitNetwork() {
@@ -711,6 +730,27 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         };
         this.network.cluster(clusterOptionsByData);
+    }
+
+    /**
+     * Ordena filtrar el grafo por unos valores concretos de etiqueta
+     * @param selection
+     */
+    filterTag(selection) {
+        this.netFilter.tag = selection.data.tags.join(',');
+        this.netFilter.element = 'all';
+        this.netFilter.mode = true;
+        this.filterGraphByTag();
+    }
+
+    /**
+     * Limpia los filtros
+     */
+    cleanFilters() {
+        this.netFilter.tag = '';
+        this.netFilter.element = 'all';
+        this.netFilter.mode = true;
+        this.filterGraphByTag();
     }
 }
 

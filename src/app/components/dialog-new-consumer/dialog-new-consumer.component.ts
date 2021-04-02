@@ -1,9 +1,10 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { isEmpty as _isEmpty } from 'lodash';
+import { isEmpty as _isEmpty, sortedUniq as _sortedUniq } from 'lodash';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 
@@ -17,6 +18,7 @@ export class DialogNewConsumerComponent implements OnInit {
     editMode = false;
     loading = true;
     currentTags = [];
+    allTags = [];
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -51,6 +53,17 @@ export class DialogNewConsumerComponent implements OnInit {
         } else {
             this.loading = false;
         }
+
+        // Lista de tags
+        this.api.getTags()
+            .subscribe(res => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
+            });
     }
 
     /*
@@ -102,6 +115,10 @@ export class DialogNewConsumerComponent implements OnInit {
         if (index >= 0) {
             this.currentTags.splice(index, 1);
         }
+    }
+
+    selectedTag($event: MatAutocompleteSelectedEvent) {
+        this.currentTags.push($event.option.viewValue);
     }
 
     /*

@@ -1,10 +1,11 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Joi from 'joi';
-import { isEmpty as _isEmpty, size as _size } from 'lodash';
+import { isEmpty as _isEmpty, size as _size, sortedUniq as _sortedUniq } from 'lodash';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
@@ -20,6 +21,7 @@ export class DialogNewRouteComponent implements OnInit {
     validProtocols = ['http', 'https', 'tcp', 'tls', 'udp', 'grpc', 'grpcs'];
     validMethods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE'];
     validRedirectCodes = [426, 301, 302, 307, 308];
+    allTags = [];
     currentTags = [];
     currentHosts = [];
     currentPaths = [];
@@ -127,6 +129,17 @@ export class DialogNewRouteComponent implements OnInit {
                     this.toast.error_general(error);
                 });
         }
+
+        // Lista de tags
+        this.api.getTags()
+            .subscribe(res => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
+            });
     }
 
     /*
@@ -177,6 +190,10 @@ export class DialogNewRouteComponent implements OnInit {
         if (index >= 0) {
             this.currentTags.splice(index, 1);
         }
+    }
+
+    selectedTag($event: MatAutocompleteSelectedEvent) {
+        this.currentTags.push($event.option.viewValue);
     }
 
     /*

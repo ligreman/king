@@ -1,8 +1,10 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { sortedUniq as _sortedUniq } from 'lodash';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
@@ -19,6 +21,7 @@ export class DialogNewServiceComponent implements OnInit {
     currentTags = [];
     certificatesAvailable = [];
     caCertificatesAvailable = [];
+    allTags = [];
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -119,6 +122,17 @@ export class DialogNewServiceComponent implements OnInit {
             // Estado inicial de los campos disabled
             this.changeRadio();
         }
+
+        // Lista de tags
+        this.api.getTags()
+            .subscribe(res => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
+            });
     }
 
     /*
@@ -192,6 +206,13 @@ export class DialogNewServiceComponent implements OnInit {
         }
     }
 
+    selectedTag($event: MatAutocompleteSelectedEvent) {
+        this.currentTags.push($event.option.viewValue);
+    }
+
+    /**
+     * Formatear los datos para rellenar el formulario
+     */
     prepareDataForForm(service) {
         delete service['id'];
         delete service['created_at'];

@@ -1,8 +1,10 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { sortedUniq as _sortedUniq } from 'lodash';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
@@ -15,6 +17,7 @@ import { CustomValidators } from '../../shared/custom-validators';
 export class DialogNewTargetComponent implements OnInit {
     formValid = false;
     currentTags = [];
+    allTags = [];
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
@@ -34,6 +37,16 @@ export class DialogNewTargetComponent implements OnInit {
     get weightField() { return this.form.get('weight'); }
 
     ngOnInit(): void {
+        // Lista de tags
+        this.api.getTags()
+            .subscribe(res => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
+            });
     }
 
     /*
@@ -74,6 +87,10 @@ export class DialogNewTargetComponent implements OnInit {
         if (index >= 0) {
             this.currentTags.splice(index, 1);
         }
+    }
+
+    selectedTag($event: MatAutocompleteSelectedEvent) {
+        this.currentTags.push($event.option.viewValue);
     }
 
     /*

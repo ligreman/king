@@ -205,8 +205,10 @@
         "refresh": "Refrescar grafo",
         "filter": "Filtrar por etiquetas, separadas por comas",
         "filter_tooltip": "Filtrar",
+        "filter_clear": "Limpiar filtros",
         "filter_element_all": "Mostrar todos los elementos",
         "filter_element_mainonly": "Mostrar sólo servicios, rutas y upstreams",
+        "filter_selected_tags": "Filtrar por sus {{num}} etiquetas",
         "cluster_consumers": "consumidores",
         "cluster_title": "Doble click para expandir todos los elementos"
     },
@@ -325,6 +327,7 @@
         "targets": "Targets del upstream",
         "health_active_on": "Activadas",
         "health_active_off": "Desactivadas",
+        "explanation": "Puedes añadir nuevos Target en el detalle de cada Upstream",
         "dialog": {
             "create": "Crear un Upstream nuevo",
             "edit": "Editar Upstream",

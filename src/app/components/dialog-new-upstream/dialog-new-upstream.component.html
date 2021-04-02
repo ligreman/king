@@ -44,6 +44,7 @@
                                 <mat-icon matChipRemove>cancel</mat-icon>
                             </mat-chip>
                             <input (matChipInputTokenEnd)="addTag($event)"
+                                   [matAutocomplete]="auto"
                                    [matChipInputFor]="chipList"
                                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                                    formControlName="tags"
@@ -51,6 +52,11 @@
                                    placeholder="{{'service.dialog.tags' | translate}}">
                         </mat-chip-list>
                         <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                            <mat-option *ngFor="let tag of allTags" [value]="tag">
+                                {{tag}}
+                            </mat-option>
+                        </mat-autocomplete>
                     </mat-form-field>
                 </div>
 

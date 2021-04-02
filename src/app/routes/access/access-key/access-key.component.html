@@ -35,7 +35,7 @@
                     {{showKey(row.key, row.hide || false)}}
                     <button (click)="row.hide=!row.hide" class="small-btn" mat-button mat-icon-button>
                         <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
-                        <mat-icon *ngIf="!row.hide">visibility_on</mat-icon>
+                        <mat-icon *ngIf="!row.hide">visibility</mat-icon>
                     </button>
                     <button [cdkCopyToClipboard]="row.key" class="small-btn" mat-button mat-icon-button
                             matTooltip="{{'dialog.copy_clipboard'|translate}}" matTooltipClass="tooltip-teal">
@@ -91,6 +91,13 @@
 
         <mat-paginator [pageSizeOptions]="[10, 25, 100]" color="accent"></mat-paginator>
 
-        <div class="margin-top-10" fxLayout="row" fxLayoutAlign="end center"><p>{{ "apikey.explanation" | translate}}</p></div>
+        <div class="margin-top-10" fxLayout="row" fxLayoutAlign="end center">
+            <p>
+                {{ "apikey.explanation" | translate}}
+                <button class="small-btn" mat-icon-button routerLink="/element-consumer">
+                    <mat-icon>launch</mat-icon>
+                </button>
+            </p>
+        </div>
     </div>
 </div>

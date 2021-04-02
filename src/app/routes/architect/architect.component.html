@@ -6,17 +6,22 @@
     </div>
     <div [fxShow]="!loading" class="graph-container" fxFlex="75">
         <div *ngIf="showTools" fxLayout="row" fxLayoutAlign="space-between center" id="graph-tools">
-            <div fxFlex="50" fxLayout="row" fxLayoutAlign="center center">
-                <mat-form-field class="filter" color="accent" fxFlex="75">
+            <div fxFlex="40" fxLayout="row" fxLayoutAlign="start center">
+                <mat-form-field class="filter" color="accent" fxFlex>
                     <mat-slide-toggle (change)="netFilter.mode = !netFilter.mode" [checked]="netFilter.mode" class="margin-right-20" matPrefix>
                         <span *ngIf="netFilter.mode">AND</span>
                         <span *ngIf="!netFilter.mode">OR</span>
                     </mat-slide-toggle>
                     <mat-label>{{ 'architect.filter' | translate}}</mat-label>
-                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput type="text">
+                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" [matAutocomplete]="auto" matInput type="text">
                     <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
                         <mat-icon>close</mat-icon>
                     </button>
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option *ngFor="let tag of allTags" [value]="tag">
+                            {{tag}}
+                        </mat-option>
+                    </mat-autocomplete>
                 </mat-form-field>
             </div>
 
@@ -30,6 +35,11 @@
             <button (click)="filterGraphByTag()" color="accent" mat-stroked-button
                     matTooltip="{{'architect.filter_tooltip' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>search</mat-icon>
+            </button>
+
+            <button (click)="cleanFilters()" color="accent" mat-stroked-button
+                    matTooltip="{{'architect.filter_clear' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>search_off</mat-icon>
             </button>
 
             <button (click)="populateGraph()" [matTooltipShowDelay]="1000" color="accent"
@@ -100,6 +110,16 @@
                     <button (click)="showInfo(selection)" mat-button>
                         <mat-icon>info</mat-icon>
                         {{'text.info' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+
+            <!-- filtro por tag -->
+            <mat-list-item *ngIf="groupsInfo.includes(selection.group) && (selection.data.tags.length > 0)">
+                <div mat-line>
+                    <button (click)="filterTag(selection)" mat-button matTooltip="{{selection.data.tags.join(', ')}}" matTooltipClass="tooltip-teal">
+                        <mat-icon>filter_alt</mat-icon>
+                        {{'architect.filter_selected_tags' | translate:{num: selection.data.tags.length} }}
                     </button>
                 </div>
             </mat-list-item>

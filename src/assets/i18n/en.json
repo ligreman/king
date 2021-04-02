@@ -205,8 +205,10 @@
         "refresh": "Refresh graph",
         "filter": "Filter by tags, separated by commas",
         "filter_tooltip": "Filter",
+        "filter_clear": "Reset filters",
         "filter_element_all": "Show all components",
         "filter_element_mainonly": "Show only services, routes and upstreams",
+        "filter_selected_tags": "Filter by its {{num}} tags",
         "cluster_consumers": "consumers",
         "cluster_title": "Double click to expand all elements"
     },
@@ -325,6 +327,7 @@
         "targets": "Upstream´s targets",
         "health_active_on": "Enabled",
         "health_active_off": "Disabled",
+        "explanation": "You can add new Target in the detail of each Upstream",
         "dialog": {
             "create": "Create a new Upstream",
             "edit": "Edit Upstream",

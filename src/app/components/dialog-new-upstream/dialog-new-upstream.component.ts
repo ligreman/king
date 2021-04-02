@@ -1,9 +1,10 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, Inject, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { startsWith as _startsWith } from 'lodash';
+import { sortedUniq as _sortedUniq, startsWith as _startsWith } from 'lodash';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
@@ -24,6 +25,7 @@ export class DialogNewUpstreamComponent implements OnInit {
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp'];
     validHttpStatuses = [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 427, 428, 429, 431, 451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511];
     currentTags = [];
+    allTags = [];
     certificatesAvailable = [];
     servicesAvailable = [];
 
@@ -192,6 +194,17 @@ export class DialogNewUpstreamComponent implements OnInit {
                     this.toast.error_general(error);
                 });
         }
+
+        // Lista de tags
+        this.api.getTags()
+            .subscribe(res => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
+            });
     }
 
     /*
@@ -244,6 +257,13 @@ export class DialogNewUpstreamComponent implements OnInit {
         }
     }
 
+    selectedTag($event: MatAutocompleteSelectedEvent) {
+        this.currentTags.push($event.option.viewValue);
+    }
+
+    /**
+     * Formatear los datos para rellenar el formulario
+     */
     prepareDataForForm(upstream) {
         delete upstream['id'];
         delete upstream['created_at'];

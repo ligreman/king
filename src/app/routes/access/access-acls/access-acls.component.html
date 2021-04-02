@@ -72,6 +72,13 @@
 
         <mat-paginator [pageSizeOptions]="[10, 25, 100]" color="accent"></mat-paginator>
 
-        <div class="margin-top-10" fxLayout="row" fxLayoutAlign="end center"><p>{{ "acl.explanation" | translate}}</p></div>
+        <div class="margin-top-10" fxLayout="row" fxLayoutAlign="end center">
+            <p>
+                {{ "acl.explanation" | translate}}
+                <button class="small-btn" mat-icon-button routerLink="/element-consumer">
+                    <mat-icon>launch</mat-icon>
+                </button>
+            </p>
+        </div>
     </div>
 </div>
