@@ -7,16 +7,20 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ManualContentComponent implements OnInit {
     @Input() summary;
+    @Input() language;
 
-    constructor() { }
+    constructor() {
+    }
 
     ngOnInit(): void {
     }
 
-    /*
-          Scroll hacia un elemento
-       */
-    scrollTo(element) {
-        element.scrollIntoView();
+    isEN() {
+        return this.language.value === 'en';
     }
+
+    isES() {
+        return this.language.value === 'es';
+    }
+
 }

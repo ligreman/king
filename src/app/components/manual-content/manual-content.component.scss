@@ -26,7 +26,24 @@ div.manual-block {
     display: block;
 }
 
-.manual-block li:before {
-    content: counters(item, ".") " ";
+.manual-block ol li:before {
+    content: counters(item, ".") ". ";
     counter-increment: item;
+}
+
+.manual-block ul li:before {
+    content: '• ';
+}
+
+.manual-block section h3 {
+    margin-top: 1rem;
+}
+
+.manual-block section {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.manual-block .capitalize {
+    font-variant: small-caps;
 }

@@ -1,0 +1,389 @@
+<div class="manual-block">
+    <ol class="padding-0">
+        <li><a (click)="scrollTo(m1)">Conectando a un nodo de Kong</a></li>
+        <li><a (click)="scrollTo(m2)">Información del nodo</a></li>
+        <li><a (click)="scrollTo(m3)">Componentes de Kong</a>
+            <ol>
+                <li><a (click)="scrollTo(m31)">Fujo del tráfico a través de Kong</a></li>
+            </ol>
+        </li>
+        <li><a (click)="scrollTo(m4)">Plugins</a>
+            <ol>
+                <li><a (click)="scrollTo(m41)">Configurando un plugin</a></li>
+                <li><a (click)="scrollTo(m42)">Plugins de interés</a></li>
+            </ol>
+        </li>
+        <li><a (click)="scrollTo(m5)">Protegiendo un servicio</a>
+            <ol>
+                <li><a (click)="scrollTo(m51)">Consumidores</a></li>
+                <li><a (click)="scrollTo(m52)">Credenciales</a></li>
+                <li><a (click)="scrollTo(m53)">Autentificación</a></li>
+                <li><a (click)="scrollTo(m54)">Grupos y sesiones</a></li>
+                <li><a (click)="scrollTo(m55)">Certificados</a></li>
+            </ol>
+        </li>
+        <li><a (click)="scrollTo(m6)">Tráfico de peticiones</a>
+            <ol>
+                <li><a (click)="scrollTo(m61)">Balanceo de carga</a></li>
+                <li><a (click)="scrollTo(m62)">Control del tráfico</a></li>
+            </ol>
+        </li>
+        <li><a (click)="scrollTo(m7)">Monitorización</a>
+            <ol>
+                <li><a (click)="scrollTo(m71)">Estado de salud de las APIs</a></li>
+                <li><a (click)="scrollTo(m72)">Métricas y Logs</a></li>
+                <li><a (click)="scrollTo(m73)">Syslog</a></li>
+            </ol>
+        </li>
+        <li><a (click)="scrollTo(m8)">Optimizando el rendimiento</a>
+            <ol>
+                <li><a (click)="scrollTo(m81)">Clúster de nodos Kong</a></li>
+                <li><a (click)="scrollTo(m82)">Cacheo de peticiones</a></li>
+                <li><a (click)="scrollTo(m83)">Asignación de recursos</a></li>
+            </ol>
+        </li>
+    </ol>
+</div>
+
+<div class="padding-left-20 padding-right-20">
+    <hr/>
+</div>
+
+<div #m1 class="manual-block" id="m1">
+    <h2>1. Conectando a un nodo de Kong</h2>
+    <section>
+        <p>Para conectar a un nodo de Kong hay que introducir la url y puerto de la API de administración de dicho nodo, en el formulario de la parte superior
+            derecha de la aplicación, y pulsar el botón de conexión
+            <mat-icon color="accent">play_arrow</mat-icon>
+            .
+        </p>
+        <p>Los nodos con los que hemos conectado con éxito previamente quedarán guardados en el navegador, y nos aparecerán en el formulario como una lista
+            desplegable.</p>
+    </section>
+</div>
+
+<div #m2 class="manual-block" id="m2">
+    <h2>2. Información del nodo</h2>
+    <section>
+        <p>Al conectar a un nodo accederemos a la página de información del mismo. Podremos volver a esta página pinchando en el nombre de la aplicación
+            <span class="capitalize">"King for Kong"</span> junto al logo.</p>
+        <p>En esta pantalla se muestra información de configuración de Kong, y una gráfica con algunas métricas básicas de conexiones. También se muestra la
+            lista de plugins disponibles en el servidor y los que están
+            actualmente en uso que aparecen en color verde.</p>
+    </section>
+</div>
+
+<div #m3 class="manual-block" id="m3">
+    <h2>3. Componentes de Kong</h2>
+    <section>
+        <p>A la hora de gestionar el tráfico a través del API Gateway participan diferentes componentes:</p>
+        <ul>
+            <li><span class="bold">Servicios</span>: componente que abstrae y gestiona la API que se quiere publicar.</li>
+            <li><span class="bold">Rutas</span>: puntos de acceso para los clientes que envían peticiones a las APIs publicadas.
+                Las Rutas definen si se envían, y cómo, las peticiones recibidas a los Servicios. Un Servicio puede tener múltiples Rutas.
+            </li>
+            <li><span class="bold">Upstreams</span>: es el balanceador interno del Gateway que reenvía las peticiones al servidor API final.
+                Se conecta con un Servicio indicando como host del Servicio el nombre del Upstream.
+            </li>
+            <li><span class="bold">Consumidores</span>: representan a los clientes o usuarios finales de las APIs. Se puede asociar un consumidor a cada cliente
+                final, o tratar varios clientes como un mismo consumidor (por ejemplo, todos los clientes android). Entre otros usos facilitan el control sobre
+                quién puede acceder a una API.
+            </li>
+            <li><span class="bold">Plugins</span>: proveen de diferente funcionalidad configurable, como mecanismos de seguridad, control de tráfico,
+                monitorización, logs, etc. Los plugins pueden aplicarse a una ruta, servicio o consumidor concreto; o bien configurarlos de forma global para
+                que apliquen a todo el Gateway.
+            </li>
+        </ul>
+        <p>Se puede consultar en la <a href="https://docs.konghq.com/gateway-oss/2.3.x/admin-api/#service-object" rel="noopener noreferrer"
+                                       target="_blank">documentación oficial</a> la forma de gestionar todos estos elementos mediante el API de administración.
+        </p>
+
+        <h3 #m31 id="m31">3.1. Fujo del tráfico a través de Kong</h3>
+        <section>
+            <p>Kong publica una API, denominado Proxy API, para que los clientes envíen sus peticiones dirigidos a los servidores API finales. Cuando llega una
+                petición al Proxy API, Kong intenta encajarla en alguna de las Rutas creadas. Si encuentra una Ruta que encaje, redirigirá la petición al
+                Servicio al que esté asociado la Ruta. En caso de que encaje con varias Rutas, se aplica un orden de prioridad para decidir cuál es la
+                correcta.</p>
+            <p>Puedes consultar el orden de prioridad a la hora de verificar las Rutas del Gateway que encajan con una petición en la
+                <a href="https://docs.konghq.com/gateway-oss/2.3.x/proxy/#routes-and-matching-capabilities" rel="noopener noreferrer" target="_blank">documentación
+                    oficial</a>.</p>
+        </section>
+    </section>
+</div>
+
+<div #m4 class="manual-block" id="m4">
+    <h2>4. Plugins</h2>
+    <section>
+        <p>Existen numerosos plugins oficiales que pueden usarse para añadir funcionalidad al Gateway. Puedes consultar la lista de plugins en el
+            <a href="https://docs.konghq.com/hub/" rel="noopener noreferrer" target="_blank">Hub de Kong</a>.</p>
+
+        <h3 #m41 id="m41">4.1. Configurando un plugin</h3>
+        <section>
+            <p>Al crear un nuevo Plugin se puede asociar a un Servicio, Ruta o Consumido concreto (depende del plugin). Entonces ese Plugin concreto aplicará a
+                las peticiones que lleguen a dicho Servicio o Ruta, o provengan de dicho Consumidor. También puede aplicarse un Plugin de forma global si no se
+                asocia a ninguno de esos elementos, y entonces aplicará a todas las peticiones que lleguen al Gateway. A parte de esto, cada Plugin tendrá sus
+                propios parámetros de configuración.</p>
+            <p>Se pueden tener múltiples Plugins del mismo tipo aplicados a distintos puntos del Gateway y con diferente configuración. Por ejemplo, se puede
+                tener un Plugin que limite las peticiones a 100 por minuto de forma global, y luego otro a nivel de Ruta que limite las peticiones que llegan a
+                esa Ruta concreta a 5 por minuto. Puedes consultar aquí el <a href="https://docs.konghq.com/gateway-oss/2.3.x/admin-api/#precedence"
+                                                                              rel="noopener noreferrer" target="_blank">orden de precedencia de los Plugin</a>.
+            </p>
+        </section>
+
+        <h3 #m42 id="m42">4.2. Plugins de interés</h3>
+        <section>
+            <p>Kong distribuye los plugins por categorías como autentificación, seguridad, control de tráfico, etc. A lo largo de este manual se hace referencia
+                a varios de estos Plugins. Es importante consultar su documentación de cara a utilizarlos y configurarlos correctamente.</p>
+            <p>Puedes consultar todos los Plugins y su documentación en el <a href="https://docs.konghq.com/hub/" rel="noopener noreferrer" target="_blank">Hub
+                de Kong</a>.</p>
+        </section>
+    </section>
+</div>
+
+<div #m5 class="manual-block" id="m5">
+    <h2>5. Protegiendo un servicio</h2>
+    <section>
+        <p>Kong permite restringir el acceso a las APIs publicadas mediante diferentes Plugins. Para proteger una API mediante autentificación de los clientes
+            se requien tres elementos:</p>
+        <ul>
+            <li>Un Consumidor, que representará a uno o varios clientes.</li>
+            <li>Unas Credenciales para el consumidor, como pueden ser usuario y contraseña, un token, etc.</li>
+            <li>Un Plugin de autentificación, que es el encargado de validar las credenciales del consumidor.</li>
+        </ul>
+
+        <h3 #m51 id="m51">5.1. Consumidores</h3>
+        <section>
+            <p>Los consumidores son abstracciones de los clientes finales dentro del Gateway. Cuando un cliente se identifica correctamente con unas
+                credenciales ante un Plugin de autentificación, se le vinculará con el consumidor que tenga asociadas esas credenciales.</p>
+            <p>Hay numerosos Plugins que pueden aplicarse a nivel de Consumidor.</p>
+        </section>
+
+        <h3 #m52 id="m52">5.2. Credenciales</h3>
+        <section>
+            <p>Son el mecanismo que va a utilizar un Consumidor para identificarse, y puede ir desde un usuario y contraseña, hasta un token de API o
+                certificados. Al generar unas credenciales se tendrá que hacer vinculándolas a un consumidor, para así identificarlo.</p>
+            <p>Las gestión de las credenciales la proporcionan los Plugins de autentificación. Cada uno requiere de unas credenciales diferentes que se explican
+                en su documentación.</p>
+        </section>
+
+        <h3 #m53 id="m53">5.3. Autentificación</h3>
+        <section>
+            <p>Existen varios Plugins de autentificación que proporcionan diferentes mecanismos de identificar a los consumidores. Muchos de ellos son
+                compatibles entre sí, pudiendo aplicar más de un mecanismo a la vez, aunque hay que tener en cuenta que el efecto que tienen es un OR, es decir,
+                con que el cliente se identifique contra uno de ellos es suficiente.</p>
+            <p>Destacan los siguientes Plugins:</p>
+            <ul>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/basic-auth/" rel="noreferrer noopener" target="_blank">Basic Authentication</a>:
+                    autentificación mediante usuario y contraseña, almacenados en Kong.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/hmac-auth/" rel="noreferrer noopener" target="_blank">HMAC Authentication</a>: autentificación
+                    mediante HMAC.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/jwt/" rel="noreferrer noopener" target="_blank">JWT</a>: autentificación mediante tokens JWT.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/key-auth/" rel="noreferrer noopener" target="_blank">Key Authentication</a>: autentificación
+                    mediante API Keys.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/ldap-auth/" rel="noreferrer noopener" target="_blank">LDAP Authentication</a>: autentificación
+                    mediante la integración con LDAP. Actualmente la versión open-source de Kong no soporta la verificación de grupos LDAP, por lo que cualquier
+                    usuario válido en LDAP podrá identificarse correctamente.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/oauth2/" rel="noreferrer noopener" target="_blank">
+                    OAuth 2.0 Authentication
+                </a>: autentificación mediante OAuth 2.0.
+                </li>
+            </ul>
+            <p>De todo ellos, King for Kong ofrece actualmente soporte a la creación de credenciales para "Key Authentication".</p>
+        </section>
+
+        <h3 #m54 id="m54">5.4. Grupos y sesiones</h3>
+        <section>
+            <p>Cabe destacar un Plugin muy interesante para la gestión de grupos de consumidores, llamado
+                <a href="https://docs.konghq.com/hub/kong-inc/acl/" rel="noreferrer noopener" target="_blank">ACL</a>. Como su nombre indica sirve para la
+                gestión de ACLs en Kong, pudiendo crear grupos de consumidores. Esto nos permite, aplicando este Plugin a un Servicio o Ruta (o de forma global)
+                restringir el acceso a dicho elemento a un grupo concreto de consumidores. Aunque un consumidor se haya identificado correctamente, si no
+                pertenece a ese grupo no podrá acceder a dicha API.
+            </p>
+            <p>También existe otro Plugin llamado <a href="https://docs.konghq.com/hub/kong-inc/session/" rel="noreferrer noopener" target="_blank">Session</a>
+                para poder mantener sesiones de clientes abiertas en navegadores. Es útil en caso de que el Gateway sirva aplicaciones web, no se recomienda
+                usar para otros casos.</p>
+        </section>
+
+        <h3 #m55 id="m55">5.5. Certificados</h3>
+        <section>
+            <p>Si alguna de las APIs que queremos situar por detrás del Gateway requiere autentificación de sus clientes mediante certificado cliente, Kong
+                ofrece la posibilidad de <a href="https://docs.konghq.com/gateway-oss/2.3.x/admin-api/#certificate-object" rel="noreferrer noopener"
+                                            target="_blank">gestionar los
+                    certificados, CAs y SNIs</a>, de forma que se utilicen a la hora de llamar desde el Servicio o Upstream al
+                servidor API final.</p>
+            <p>Actualmente la versión open-source de Kong no soporta autentificación de consumidores mediante certificado.</p>
+        </section>
+    </section>
+</div>
+
+<div #m6 class="manual-block" id="m6">
+    <h2>6. Tráfico de peticiones</h2>
+    <section>
+        <p>Podemos aplicar diferentes técnicas de control del tráfico de peticiones mediante varios de los Plugins que ofrece Kong.</p>
+
+        <h3 #m61 id="m61">6.1. Balanceo de carga</h3>
+        <section>
+            <p>La gestión del balanceo de carga a la hora de enviar las peticiones a los servicios API finales la llevan a cabo los <a
+                    href="https://docs.konghq.com/gateway-oss/2.3.x/admin-api/#upstream-object" rel="noreferrer noopener"
+                    target="_blank">Upstreams</a>. Un Upstream recibe las peticiones desde el Servicio y las redirige a los Targets (cada instancia de un
+                servicio API final)
+                siguiendo unas reglas pre-configuradas.</p>
+            <p>Cada Upstream contiene un <a
+                    href="https://docs.konghq.com/gateway-oss/2.3.x/loadbalancing/#ring-balancer" rel="noreferrer noopener"
+                    target="_blank">balanceador en anillo (Ring-Balancer)</a> para redirigir el tráfico. Soporta los siguientes algoritmos:</p>
+            <ul>
+                <li>Round-Robin: distribuye las peticiones equitativamente en base a los pesos indicados para cada Target.</li>
+                <li>Consisten-Hashing: especialmente útil si se añaden y eliminan Targets de forma habitual al anillo, o cambian sus pesos. Por ejemplo si
+                    automáticamente se levantan o eliminan instancias (Targets).
+                </li>
+                <li>Least-Connections: distribuye las peticiones seleccionando los Targets con menor número de conexiones, ponderándolo con los pesos
+                    indicados.
+                </li>
+            </ul>
+        </section>
+
+        <h3 #m62 id="m62">6.2. Control del tráfico</h3>
+        <section>
+            <p>Los Plugins para control del tráfico más interesantes son:</p>
+            <ul>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/rate-limiting/" rel="noreferrer noopener" target="_blank">Rate Limiting</a>:
+                    limita el ritmo de peticiones que pueden hacerse en una unidad de tiempo. Por ejemplo, limitar a 5 peticiones por minuto a un Servicio o
+                    Ruta; o limitar a un Consumidor a un ritmo, y a otro Consumidor a otro ritmo diferente.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/request-size-limiting/" rel="noreferrer noopener" target="_blank">Request Size Limiting</a>:
+                    limita el tamaño de las peticiones recibidas. Es bastante interesante de cara a evitar ataques de denegación de servicio.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/response-ratelimiting/" rel="noreferrer noopener" target="_blank">Response Rate Limiting</a>:
+                    permite establecer quotas de peticiones que puede realizar un consumidor a una API. Por ejemplo, establecer que puede realizar 1000
+                    peticiones mensuales. Esto no limita el ritmo de peticiones, eso lo hace el Plugin Rate-Limiting.
+                </li>
+            </ul>
+        </section>
+    </section>
+</div>
+
+
+<div #m7 class="manual-block" id="m7">
+    <h2>7. Monitorización</h2>
+    <section>
+        <p>Kong permite monitorizar la actividad del Gateway y las peticiones que circulan por él, y ofrece diferentes mecanismos y Plugins para consultar y
+            gestionar esta actividad.</p>
+
+        <h3 #m71 id="m71">7.1. Estado de salud de las APIs</h3>
+        <section>
+            <p>Los Upstreams además de ejercer de balanceadores de carga integran mecanismos para verificar el estado de salud de las instancias de servidores
+                API a los que se conectan. Se pueden establecer baremos para determinar si un Target (o Upstream completo) está sano o no, y en caso de no
+                estarlo dejar de enviarle peticiones hasta que se recupere. Pueden hacer comprobaciones de forma activa o pasiva.</p>
+            <p>Las comprobaciones <span class="bold">activas</span> las lleva a cabo realizando peticiones HTTP/S a un endpoint del Target que se le indique y
+                determinando el estado de salud del Target dependiendo del código de respuesta. También puede comprobar la validez del certificado del Target.
+                Al requerir realizar peticiones se recomienda no abusar de
+                ellas.</p>
+            <p>Las comprobaciones <span class="bold">pasivas</span> las realiza analizando los códigos de respuesta de las peticiones que hacen los clientes del
+                Gateway a los distintos Targets. En este caso sólo "observa" el tráfico y deduce el estado del Target dependiendo del código HTTP de las
+                respuestas que va devolviendo, por lo que no genera tráfico extra y no afecta al rendimiento. Como característica particular, las comprobaciones
+                pasivas pueden deducir si un Target no está sano, para "desactivarlo", pero como a partir de ese momento dejará de recibir peticiones no podrá
+                nunca deducir que vuelve a estar sano y que vuelva a recibir peticiones. Por ello a las comprobaciones pasivas se las denomina "disruptores o
+                circuit-breakers".</p>
+            <p>Por ello lo aconsejable es utilizar las comporbaciones pasivas para detectar los Targets que no estén sanos, y establecer comprobaciones activas
+                con una periodicidad no muy corta para determinar si un Target vuelve a estar sano, con el fin de no incrementar la carga sobre los Targets.</p>
+            <p>Todas estas comprobaciones pueden configurarse con bastante detalle, se recomienda leer la <a
+                    href="https://docs.konghq.com/gateway-oss/2.3.x/health-checks-circuit-breakers" rel="noreferrer noopener" target="_blank">documentación</a>.
+            </p>
+        </section>
+
+        <h3 #m72 id="m72">7.2. Métricas y Logs</h3>
+        <section>
+            <p>Mediante Plugins podemos recoger diferentes métricas y logs de las peticiones y respuestas que pasan a través del Gateway.</p>
+            <ul>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/statsd/" rel="noreferrer noopener" target="_blank">Prometheus</a>: expone un endpoint /metrics
+                    para las API de Proxy y Administración, para que Prometheus recoja de ahí las métricas de uso.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/prometheus/" rel="noreferrer noopener" target="_blank">StatsD</a>: envía métricas de uso a un
+                    servidor StatsD.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/file-log/" rel="noreferrer noopener" target="_blank">File Log</a>: envía información de las
+                    peticiones y respuestas a un fichero de log.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/http-log/" rel="noreferrer noopener" target="_blank">HTTP Log</a>: envía información de las
+                    peticiones y respuestas a un servidor HTTP.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/tcp-log/" rel="noreferrer noopener" target="_blank">TCP Log</a>: envía información de las
+                    peticiones y respuestas a un servidor TCP.
+                </li>
+                <li><a href="https://docs.konghq.com/hub/kong-inc/udp-log/" rel="noreferrer noopener" target="_blank">UDP Log</a>: envía información de las
+                    peticiones y respuestas a un servidor UDP.
+                </li>
+            </ul>
+        </section>
+
+        <h3 #m73 id="m73">7.3. Syslog</h3>
+        <section>
+            <p>Kong permite enviar a syslog sus logs a dos niveles. Por un lado, podemos configurar Kong en sus <a
+                    href="https://docs.konghq.com/gateway-oss/2.3.x/systemd/#logging-to-syslog-and-journald" rel="noreferrer noopener" target="_blank">ficheros
+                de configuración</a> para que los propios logs de Kong se envíen a syslog.</p>
+            <p>Por otro lado, podemos enviar información de cada petición y respuesta a Syslog también, mediante el Plugin <a
+                    href="https://docs.konghq.com/hub/kong-inc/syslog/" rel="noreferrer noopener" target="_blank">Syslog</a>. Permite configurar ciertos
+                parámetros para definir los niveles de log según el código de respuesta o de error, por ejemplo, para evitar enviar todo.
+            </p>
+        </section>
+    </section>
+</div>
+
+<div #m8 class="manual-block" id="m8">
+    <h2>8. Optimizando el rendimiento</h2>
+    <section>
+        <p>Hay varios aspectos que se han de tener en cuenta para mejorar el rendimiento del API Gateway.</p>
+
+        <h3 #m81 id="m81">8.1. Clúster de nodos Kong</h3>
+        <section>
+            <p>Kong permite clusterizar el Gateway de forma sencilla levantando diferentes nodos, que comparten una misma base de datos para sincronizarse.
+                Únicamente hay que desplegar diferentes instancias de Kong apuntando a la misma base de datos. Se puede configurar diferentes formas de realizar
+                esta sincronización mediante el fichero de configuración de Kong.</p>
+            <p>Una vez clusterizado, cada nodo levantará su propio Proxy API y Admin API. Se requiere pues poner un balanceador de carga (por ejemplo Nginx) por
+                delante de los nodos de Kong para distribuir el tráfico. Al realizar un cambio en un nodo mediante la API de administración, se propagará al
+                resto de nodos mediante la sincronización.</p>
+            <p>Más información sobre <a href="https://docs.konghq.com/gateway-oss/2.3.x/clustering/" rel="noreferrer noopener" target="_blank">Clústers de
+                Kong</a>.</p>
+        </section>
+
+        <h3 #m82 id="m82">8.2. Cacheo de peticiones</h3>
+        <section>
+            <p>Se puede mejorar el rendimiento cacheando las peticiones del Proxy API. Para ello Kong ofrece un Plugin llamado <a
+                    href="https://docs.konghq.com/hub/kong-inc/proxy-cache/" rel="noreferrer noopener" target="_blank">Proxy Cache</a>. Nos permite establecer
+                una cache para las respuestas ante peticiones entrantes en un márgen de tiempo, de forma que si hay una respuesta cacheada el Gateway responderá
+                directamente con la caché, liberando de dicha petición al servidor API final.</p>
+            <p>Más información sobre el <a href="https://docs.konghq.com/getting-started-guide/2.3.x/improve-performance/" rel="noreferrer noopener"
+                                           target="_blank">cacheo de peticiones</a>.</p>
+        </section>
+
+        <h3 #m83 id="m83">8.3. Asignación de recursos</h3>
+        <section>
+            <p>A la hora de asignar recursos a los servidores que van a alojar el API Gateway hay que tener en cuenta diversos aspectos de cómo hemos diseñado
+                la red de Servicios, Rutas, Upstreams... y el uso que hacemos de los Plugins.</p>
+            <p>Como reglas generales se ha de tener en cuenta que:</p>
+            <ul>
+                <li>El número de Rutas y Servicios afecta al consumo de CPU.</li>
+                <li>El número de Consumidores y Credenciales afecta más a la memoria, ya que se cachean para evitar estar consultándolos a base de datos
+                    constantemente.
+                </li>
+                <li>El número de Plugins configurado afecta a la CPU.</li>
+                <li>La cardinalidad de los Plugins configurado: se refiere a la cantidad de Plugins diferentes que estemos utilizando. Un nodo tiene mayor
+                    cardinalidad si utiliza 5 plugins diferentes, que si usara 1000 veces un sólo Plugin. A mayor cardinalidad, más consumo de CPU (esto no
+                    quiere decir que el número total de Plugins no afecte, son dos valores diferentes).
+                </li>
+                <li>Tamaño de las peticiones y respuestas: el tamaño de los cuerpos (HTTP body) de peticiones y respuestas afectan en cuanto que requieren más
+                    tiempo procesarlas. Sobretodo en cuerpos muy grandes ya que Kong tendrá que hacer un buffer de la petición a disco mientras recibe toda la
+                    petición, para luego procesarla (así evita quedarse sin memoria). Por lo tanto es recomendable evitar siempre que se pueda peticiones y
+                    respuestas muy grandes.
+                </li>
+            </ul>
+            <p>Más información sobre este tema en la <a href="https://docs.konghq.com/gateway-oss/2.3.x/sizing-guidelines/" rel="noreferrer noopener"
+                                                        target="_blank">documentación sobre recursos</a>.</p>
+        </section>
+    </section>
+</div>

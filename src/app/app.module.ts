@@ -56,6 +56,8 @@ import { DialogNewSniComponent } from './components/dialog-new-sni/dialog-new-sn
 import { DialogNewTargetComponent } from './components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from './components/dialog-new-upstream/dialog-new-upstream.component';
 import { ManualContentComponent } from './components/manual-content/manual-content.component';
+import { ManualEnComponent } from './components/manual-content/manual-en/manual-en.component';
+import { ManualEsComponent } from './components/manual-content/manual-es/manual-es.component';
 import { AccessAclsComponent } from './routes/access/access-acls/access-acls.component';
 import { AccessKeyComponent } from './routes/access/access-key/access-key.component';
 import { ElementConsumerComponent } from './routes/access/element-consumer/element-consumer.component';
@@ -113,7 +115,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogInfoAclComponent,
         AccessAclsComponent,
         AccessKeyComponent,
-        DialogInfoKeyComponent
+        DialogInfoKeyComponent,
+        ManualEnComponent,
+        ManualEsComponent
     ],
     imports: [
         BrowserModule,
