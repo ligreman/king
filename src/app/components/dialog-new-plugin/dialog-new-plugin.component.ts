@@ -88,7 +88,7 @@ export class DialogNewPluginComponent implements OnInit {
             this.pluginsList = value.plugins.sort();
         });
 
-        // Si viene un servicio para editar
+        // Si viene un plugin para editar
         if (this.pluginIdEdit !== null) {
             this.editMode = true;
 
@@ -98,6 +98,9 @@ export class DialogNewPluginComponent implements OnInit {
                     // Primero he de disparar el evento de cambio de schema para que cargue los campos de formulario
                     this.nameField.setValue(plugin['name']);
                     this.pluginChange(plugin);
+
+                    // Como estoy en modo edición, no permito cambiar el tipo de plugin
+                    this.nameField.disable();
                 }, error => {
                     this.toast.error_general(error);
                 });
@@ -228,8 +231,9 @@ export class DialogNewPluginComponent implements OnInit {
         this.arrayFields.forEach(field => {
             const fValue = _get(body, field);
 
-            if (fValue === '' || fValue === null || (_isArray(fValue) && fValue.length === 0)) {
-                _set(body, field, null);
+            // Si es nulo, vacío o undefined, o un array de un valor único que es vacío => le pongo de valor un array vacío
+            if (fValue === '' || fValue === null || fValue === undefined || (_isArray(fValue) && fValue.length === 1 && fValue[0] === '')) {
+                _set(body, field, []);
             } else if (!_isArray(fValue)) {
                 _set(body, field, fValue.split('\n'));
             } else {
@@ -380,7 +384,12 @@ export class DialogNewPluginComponent implements OnInit {
 
                     // Requerido
                     if (value.required) {
-                        validators.push(Validators.required);
+                        // Si el valor por defecto es un array vacío, quito el requerido
+                        if (value.default.length === 0) {
+                            value.required = false;
+                        } else {
+                            validators.push(Validators.required);
+                        }
                     }
 
                     // Si tiene one_of es un select
