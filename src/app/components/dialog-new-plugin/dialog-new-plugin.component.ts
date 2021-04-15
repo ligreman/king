@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { get as _get, isArray as _isArray, set as _set, sortedUniq as _sortedUniq } from 'lodash';
+import { get as _get, isArray as _isArray, set as _set, sortedUniq as _sortedUniq, toInteger as _toInteger } from 'lodash';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
@@ -30,6 +30,7 @@ export class DialogNewPluginComponent implements OnInit {
     pluginsList;
     pluginForm = [];
     arrayFields = [];
+    fieldTypes = {};
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
@@ -235,7 +236,20 @@ export class DialogNewPluginComponent implements OnInit {
             if (fValue === '' || fValue === null || fValue === undefined || (_isArray(fValue) && fValue.length === 1 && fValue[0] === '')) {
                 _set(body, field, []);
             } else if (!_isArray(fValue)) {
-                _set(body, field, fValue.split('\n'));
+                let values = fValue.split('\n');
+                let output = [];
+                const confField = field.replace('config.', '');
+
+                // Miro si he de convertir a integer
+                if (this.fieldTypes[confField] === 'number' || this.fieldTypes[confField] === 'integer') {
+                    output = values.map((el) => {
+                        return _toInteger(el);
+                    });
+                } else {
+                    output = values;
+                }
+
+                _set(body, field, output);
             } else {
                 _set(body, field, fValue);
             }
@@ -253,6 +267,7 @@ export class DialogNewPluginComponent implements OnInit {
             .subscribe(value => {
                 const pluginSchemaFields = this.parseSchema(value);
                 this.arrayFields = [];
+                this.fieldTypes = {};
                 this.form.get('config').reset();
 
                 const data = this.generateFormFields(pluginSchemaFields, 'config');
@@ -399,6 +414,11 @@ export class DialogNewPluginComponent implements OnInit {
                     } else {
                         // Es un array de strings (no hay de otro tipo)
                         this.arrayFields.push(currentGroup + '.' + field);
+                    }
+
+                    // Guardo el tipo
+                    if (value.elements && value.elements.type) {
+                        this.fieldTypes[field] = value.elements.type;
                     }
 
                     dConfig.addControl(field, this.fb.control(value.default, validators));

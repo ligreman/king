@@ -1,7 +1,7 @@
-<mat-progress-bar mode="indeterminate" color="accent" [fxShow]="loading"></mat-progress-bar>
-<div class="progress-placeholder" [fxShow]="!loading"></div>
+<mat-progress-bar [fxShow]="loading" color="accent" mode="indeterminate"></mat-progress-bar>
+<div [fxShow]="!loading" class="progress-placeholder"></div>
 
-<div class="padding-30" [fxShow]="!loading">
+<div [fxShow]="!loading" class="padding-30">
     <div gdAreas="node node server server | database database files files | plugins plugins plugins plugins"
          gdGap="30px"
          gdRows="auto auto auto">
@@ -9,33 +9,49 @@
             <mat-toolbar color="accent">
                 {{'information.node' | translate}}
                 <span class="spacer"></span>
-                <button mat-icon-button matTooltip="{{'information.download_info' | translate}}" matTooltipClass="tooltip-teal"
-                        (click)="downloadJson('info')">
+                <button (click)="downloadJson('info')" mat-icon-button matTooltip="{{'information.download_info' | translate}}"
+                        matTooltipClass="tooltip-teal">
                     <mat-icon>info</mat-icon>
                 </button>
-                <button mat-icon-button matTooltip="{{'information.download_status' | translate}}" matTooltipClass="tooltip-teal"
-                        (click)="downloadJson('status')">
+                <button (click)="downloadJson('status')" mat-icon-button matTooltip="{{'information.download_status' | translate}}"
+                        matTooltipClass="tooltip-teal">
                     <mat-icon>assignment</mat-icon>
                 </button>
             </mat-toolbar>
 
-            <div>
-                <mat-list>
-                    <mat-list-item><span class="badge">{{'text.id' | translate}}</span> {{data['node_id']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'information.version' | translate}}</span> {{data['version']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'information.admin_listen' | translate}}</span> {{data['admin_listen']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'information.admin_ssl' | translate}}</span> {{'text.' + data['admin_ssl'] | translate}}
-                    </mat-list-item>
-                    <mat-list-item><span class="badge">{{'information.proxy_listen' | translate}}</span> {{data['proxy_listen']}}</mat-list-item>
-                    <mat-list-item><span class="badge">{{'information.proxy_ssl' | translate}}</span> {{'text.' + data['proxy_ssl'] | translate}}
-                    </mat-list-item>
-                    <mat-list-item>
-                        <span class="badge">{{'information.cluster_control_plane' | translate}}</span> {{data['cluster_control_plane'] | translate}}
-                    </mat-list-item>
-                    <mat-list-item>
-                        <span class="badge">{{'information.anonymous_reports' | translate}}</span> {{'text.' + data['anonymous_reports'] | translate}}
-                    </mat-list-item>
-                </mat-list>
+            <div class="list-block">
+                <div fxLayout="row">
+                    <p class="badge">{{'text.id' | translate}}</p>
+                    <p>{{data['node_id']}}</p>
+                </div>
+                <div fxLayout="row">
+                    <p class="badge">{{'information.version' | translate}}</p>
+                    <p>{{data['version']}}</p>
+                </div>
+                <div fxLayout="row">
+                    <p class="badge" fxLayout="row" fxLayoutAlign="center center">{{'information.admin_listen' | translate}}</p>
+                    <p>{{data['admin_listen']}}</p>
+                </div>
+                <div fxLayout="row">
+                    <p class="badge">{{'information.admin_ssl' | translate}}</p>
+                    <p>{{'text.' + data['admin_ssl'] | translate}}</p>
+                </div>
+                <div fxLayout="row">
+                    <p class="badge">{{'information.proxy_listen' | translate}}</p>
+                    <p>{{data['proxy_listen']}}</p>
+                </div>
+                <div fxLayout="row">
+                    <p class="badge">{{'information.proxy_ssl' | translate}}</p>
+                    <p>{{'text.' + data['proxy_ssl'] | translate}}</p>
+                </div>
+                <div fxLayout="row">
+                    <p class="badge">{{'information.cluster_control_plane' | translate}}</p>
+                    <p>{{data['cluster_control_plane'] | translate}}</p>
+                </div>
+                <div fxLayout="row">
+                    <p class="badge">{{'information.anonymous_reports' | translate}}</p>
+                    <p>{{'text.' + data['anonymous_reports'] | translate}}</p>
+                </div>
             </div>
         </div>
         <div gdArea="server">
@@ -45,13 +61,13 @@
 
             <div class="padding-20 dark" fxLayout="row" fxLayoutAlign="center start">
                 <ngx-charts-bar-vertical
-                        [view]="chartSize"
                         [results]="chartData"
                         [scheme]="colorScheme"
-                        tooltipDisabled="false"
+                        [view]="chartSize"
+                        rotateXAxisTicks="true"
                         showDataLabel="true"
-                        xAxis="true"
-                        rotateXAxisTicks="true">
+                        tooltipDisabled="false"
+                        xAxis="true">
                 </ngx-charts-bar-vertical>
             </div>
         </div>
@@ -69,7 +85,7 @@
                 </mat-chip-list>
             </div>
         </div>
-        <div gdArea="files" *ngIf="data['files']" class="block-25">
+        <div *ngIf="data['files']" class="block-25" gdArea="files">
             <mat-toolbar color="accent">
                 {{'information.files.title' | translate}}
             </mat-toolbar>
@@ -95,7 +111,7 @@
                 </mat-list>
             </div>
         </div>
-        <div gdArea="database" *ngIf="data['database']" class="block-25">
+        <div *ngIf="data['database']" class="block-25" gdArea="database">
             <mat-toolbar color="accent">
                 {{'information.database' | translate}}
                 <span class="spacer"></span>

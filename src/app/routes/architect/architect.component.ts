@@ -246,20 +246,24 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             const serviceUpstream = _filter(data.upstreams, {name: service.host});
             if (serviceUpstream.length > 0) {
                 for (const up of serviceUpstream) {
-                    // Health del upstream
-                    const hu = await this.api.getUpstreamHealth(up.id).toPromise();
-                    const hc = this.getHealthData(hu['data'].health);
+                    // Si no he generado previamente el nodo de upstream ya
+                    if (this.data.nodes.get(up.id) === null) {
+                        // Health del upstream
+                        const hu = await this.api.getUpstreamHealth(up.id).toPromise();
+                        const hc = this.getHealthData(hu['data'].health);
 
-                    // nodo del upstream
-                    const element = generateElement(['Upstream: ' + up.id, this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm, hc['label']]);
-                    this.data.nodes.add({
-                        id: up.id,
-                        label: up.name,
-                        title: element,
-                        group: 'upstream',
-                        data: up,
-                        font: {color: hc['color']}
-                    });
+                        // nodo del upstream
+                        const element = generateElement(['Upstream: ' + up.id, this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm, hc['label']]);
+                        this.data.nodes.add({
+                            id: up.id,
+                            label: up.name,
+                            title: element,
+                            group: 'upstream',
+                            data: up,
+                            font: {color: hc['color']}
+                        });
+                    }
+
                     // Edge desde el servicio al upstream
                     this.data.edges.add({
                         from: service.id,

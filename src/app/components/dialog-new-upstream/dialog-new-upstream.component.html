@@ -14,13 +14,13 @@
             <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
     </div>
-    <div *ngIf="!loading && servicesAvailable.length === 0 && !editMode" fxFlex="90">
+    <div *ngIf="!loading && servicesAvailable.size === 0 && !editMode" fxFlex="90">
         <p fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
             {{ 'upstream.dialog.no_upstream' | translate}}
         </p>
     </div>
 
-    <div *ngIf="!loading && (servicesAvailable.length > 0 || editMode)" fxFlex="90">
+    <div *ngIf="!loading && (servicesAvailable.size > 0 || editMode)" fxFlex="90">
         <form [formGroup]="form">
             <!--Nombre-->
             <div class="margin-bottom-10" fxLayout="column">
@@ -28,7 +28,7 @@
                     <mat-form-field appearance="outline" color="accent" fxFlex="49">
                         <mat-label>{{'upstream.dialog.name' | translate}}</mat-label>
                         <mat-select cdkFocusInitial formControlName="name" required>
-                            <mat-option *ngFor="let srvs of servicesAvailable" value="{{srvs}}">{{srvs}}</mat-option>
+                            <mat-option *ngFor="let srvs of servicesAvailable | keyvalue" value="{{srvs.value}}">[{{srvs.key}}] {{srvs.value}}</mat-option>
                         </mat-select>
                         <mat-error *ngIf="nameField.invalid">
                             {{ 'error.field_required' | translate }}

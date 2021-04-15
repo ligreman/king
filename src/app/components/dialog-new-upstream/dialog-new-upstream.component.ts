@@ -27,7 +27,7 @@ export class DialogNewUpstreamComponent implements OnInit {
     currentTags = [];
     allTags = [];
     certificatesAvailable = [];
-    servicesAvailable = [];
+    servicesAvailable = new Map<String, String>();
 
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
@@ -169,7 +169,7 @@ export class DialogNewUpstreamComponent implements OnInit {
             for (let srv of value['services']) {
                 // Si el Host no está ya añadido como posible elección válida
                 if (!upstreams.includes(srv.host)) {
-                    this.servicesAvailable.push(srv.host);
+                    this.servicesAvailable.set('srv-' + srv.name, srv.host);
                 }
             }
         }, error => {
@@ -186,7 +186,8 @@ export class DialogNewUpstreamComponent implements OnInit {
             this.api.getUpstream(this.upstreamIdEdit)
                 .subscribe(upstream => {
                     // Añado el Host a la lista de válidos ya que lo estoy editando
-                    this.servicesAvailable.push(upstream['name']);
+                    // this.servicesAvailable.push(upstream['name']);
+                    this.servicesAvailable.set('up-', upstream['name']);
 
                     // Cambios especiales para representarlos en el formulario
                     this.form.setValue(this.prepareDataForForm(upstream));
