@@ -56,8 +56,7 @@
             <p class="margin-top-10-i">{{'target.info_health' | translate}}</p>
             <div class="padding-left-20" fxLayout="row" fxLayoutAlign="start center">
                 <div fxFlex="25">
-                    <p class="text" matTooltip="{{target?.health}}"
-                       matTooltipClass="tooltip-teal">
+                    <p class="text" matTooltip="{{target?.health}}" matTooltipClass="tooltip-teal">
                         <span [className]="getColor(target?.health)">{{ 'target.health_' + target?.health | translate}}</span>
                     </p>
                 </div>
@@ -86,8 +85,8 @@
                         <div fxFlex fxLayout="row" fxLayoutAlign="start center">
                             <div fxFlex="25"><p class="text monospace">{{ add.ip + ':' + add.port}}</p></div>
                             <div fxFlex="25"><p class="text text-small">{{ 'target.dialog.weight' | translate }}: {{ add.weight }}</p></div>
-                            <div fxFlex="25" matTooltip="{{target?.health}}" matTooltipClass="tooltip-teal"><p class="text text-small">
-                                <span [className]="getColor(target?.health)">{{ 'target.health_' + add.health | translate}}</span>
+                            <div fxFlex="25" matTooltip="{{add.health}}" matTooltipClass="tooltip-teal"><p class="text text-small">
+                                <span [className]="getColor(add.health)">{{ 'target.health_' + add.health | translate}}</span>
                             </p></div>
                             <div fxFlex="25">
                                 <p>

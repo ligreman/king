@@ -103,8 +103,22 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
             .catch(error => {});
     }
 
+    /*
+        Muestra la información del Target
+     */
     showTarget(target) {
         target['data'] = {upstream: target['upstream']};
         this.dialogHelper.showInfoElement(target, 'target');
+    }
+
+    /*
+        Borra el target
+     */
+    deleteTarget(target, event) {
+        event.stopPropagation();
+
+        this.dialogHelper.deleteElement(target, 'target')
+            .then(() => { this.reloadData(); })
+            .catch(error => {});
     }
 }

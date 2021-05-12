@@ -74,10 +74,17 @@
                         </mat-icon>
                     </button>
                     <mat-menu #menuT="matMenu">
-                        <button (click)="showTarget(tg)" *ngFor="let tg of row.targets" mat-menu-item>
+                        <div (click)="showTarget(tg)" *ngFor="let tg of row.targets" mat-menu-item>
+                            <!--<button (click)="showTarget(tg)">-->
                             <mat-icon>info_outline</mat-icon>
                             <span>{{ tg.target }}</span>
-                        </button>
+
+                            <!--</button>-->
+                            <button (click)="deleteTarget(tg, $event)" color="warn" mat-button mat-icon-button
+                                    matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
+                                <mat-icon class="delete-icon">delete</mat-icon>
+                            </button>
+                        </div>
                     </mat-menu>
                     <button (click)="addEdit(row)" color="accent" mat-icon-button matTooltip="{{'text.edit' | translate}}"
                             matTooltipClass="tooltip-teal">

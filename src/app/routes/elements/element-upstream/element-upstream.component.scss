@@ -1,4 +1,10 @@
+@import '~@angular/material/theming';
 
 table {
     width: 100%;
+}
+
+.delete-icon {
+    margin-right: auto;
+    color: mat-color($mat-red, 600);
 }
