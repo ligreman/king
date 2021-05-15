@@ -594,6 +594,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.api.postSetTargetHealthy(selected.data.id, selected.data.upstream.id)
                     .subscribe(value => {
                         this.toast.success('success.healthy_target', '', {msgExtra: selected.data.id});
+                        this.populateGraph();
                     }, error => {
                         this.toast.error_general(error, {disableTimeOut: true});
                     });
@@ -617,6 +618,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.api.postSetTargetUnhealthy(selected.data.id, selected.data.upstream.id)
                     .subscribe(value => {
                         this.toast.success('success.unhealthy_target', '', {msgExtra: selected.data.id});
+                        this.populateGraph();
                     }, error => {
                         this.toast.error_general(error, {disableTimeOut: true});
                     });
