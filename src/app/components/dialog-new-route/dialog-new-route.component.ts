@@ -386,6 +386,14 @@ export class DialogNewRouteComponent implements OnInit {
         route['hosts_validation'] = '';
         route['paths_validation'] = '';
 
+        // Si estos campos vienen ya completos, la validación es correcta
+        if (this.currentHosts.length > 0) {
+            route['hosts_validation'] = 'true';
+        }
+        if (this.currentPaths.length > 0) {
+            route['paths_validation'] = 'true';
+        }
+
         return route;
     }
 
