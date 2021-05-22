@@ -140,7 +140,10 @@ export class GlobalsService {
             labelHighlightBold: false,
             shape: 'hexagon',
             size: 15,
-            fixed: true,
+            fixed: {
+                x: true,
+                y: true
+            },
             chosen: false,
             borderWidth: 4,
             color: {
@@ -157,6 +160,33 @@ export class GlobalsService {
             },
             font: {
                 color: '#009789',
+                size: 14
+            }
+        },
+        routeStart: {
+            labelHighlightBold: false,
+            shape: 'hexagon',
+            size: 10,
+            fixed: {
+                x: true,
+                y: true
+            },
+            chosen: false,
+            borderWidth: 3,
+            color: {
+                border: '#1e5aa3',
+                background: '#212121',
+                highlight: {
+                    border: '#1e5aa3',
+                    background: '#212121'
+                },
+                hover: {
+                    border: '#1e5aa3',
+                    background: '#212121'
+                }
+            },
+            font: {
+                color: '#1e5aa3',
                 size: 14
             }
         },

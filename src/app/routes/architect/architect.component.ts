@@ -87,7 +87,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 physics: {
                     minVelocity: 1.2,
-                    wind: {x: 0.7, y: 0}
+                    wind: {x: 2, y: 0},
+                    barnesHut: {
+                        springConstant: 0.15,
+                        avoidOverlap: 0.5
+                    }
                 },
                 height: '80%'
             };
@@ -143,8 +147,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         }, 1500);
     }
 
-    /*
-        Llama al API y genera nodos y edges
+    /**
+     Llama al API y genera nodos y edges
      */
     populateGraph() {
         this.loading = true;
@@ -162,8 +166,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     }
 
-    /*
-        Agrupo las llamadas al API para pedir los datos del grafo
+    /**
+     Agrupo las llamadas al API para pedir los datos del grafo
      */
     getGraphDataFromApi() {
         // Recojo del api los datos
@@ -215,8 +219,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.enabledPlugins.includes(plugin);
     }
 
-    /*
-        Calculo los datos de nodos y edges del grafo
+    /**
+     Calculo los datos de nodos y edges del grafo
      */
     async createGraphNodesAndEdges(data) {
         // Limpio el grafo
@@ -227,7 +231,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         const element = generateElement([this.translate.instant('text.kong_node'), this.globals.NODE_API_URL]);
         this.data.nodes.add({
             id: 'center',
+            x: 0,
+            y: 0,
             title: element,
+            label: this.globals.NODE_API_URL,
             group: 'kong'
         });
 
@@ -236,7 +243,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             // Nodos de Servicio
             this.data.nodes.add({
                 id: service.id,
-                label: service.name,
+                label: service.name + '\n' + service.protocol + '://' + service.host + service.port + service.path,
                 title: this.translate.instant('service.label') + ': ' + service.id,
                 group: 'service',
                 data: service
@@ -322,6 +329,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
 
+        // Contador de rutas
+        let sign = 1, dist = 100, routeCounter = 1;
         // Recorro las rutas creando los nodos de rutas
         for (let route of data.routes) {
             let extras = [this.translate.instant('route.label') + ': ' + route.id];
@@ -343,7 +352,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             const element = generateElement(extras);
             this.data.nodes.add({
                 id: route.id,
-                label: route.name + '\n[' + route.protocols.join(', ') + ']',
+                label: route.name + '\n' + route.paths.join(', ') + '\n[' + route.protocols.join(', ') + ']',
                 title: element,
                 group: 'route',
                 data: route
@@ -362,10 +371,43 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             }
 
-            // Edge del nodo central a la ruta
+            // Genero un nodo de inicio para esta ruta
+            this.data.nodes.add({
+                id: 'route-start-' + routeCounter,
+                group: 'routeStart',
+                x: 0,
+                y: dist * sign
+            });
+            // Edge de la ruta al nodo inicial propio de su ruta
             this.data.edges.add({
-                from: 'center',
+                from: 'route-start-' + routeCounter,
                 to: route.id,
+                length: 1,
+                arrows: {to: {enabled: false}}
+            });
+            routeCounter++;
+
+            // Cambio de orientación en cada ruta, una arriba y otra abajo
+            sign = sign * -1;
+            // Sólo en las impares sumo distancia, cuando ya tengo una ruta arriba y otra abajo
+            if (sign === 1) {
+                dist += 100;
+            }
+        }
+
+        // Engancho los nodos de inicio de rutas entre sí
+        let x = 0;
+        for (x; x < routeCounter - 1; x++) {
+            let from = 'route-start-' + x, to = x + 1;
+            if (x == 0) {
+                from = 'center';
+                to = 1;
+            }
+            this.data.edges.add({
+                from: from,
+                to: 'route-start-' + to,
+                smooth: false,
+                width: 2,
                 arrows: {to: {enabled: false}}
             });
         }
@@ -410,7 +452,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             // Plugin activo?
-            const color = plugin.enabled ? '#C0CA33' : '#E53935';
+            const color = plugin.enabled ? '#7FCA33' : '#E53935';
 
             // Nodos de plugin
             const element = generateElement(extrasC);
@@ -447,7 +489,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
         this.data.nodes.forEach(node => {
             // Si el nodo no tiene un edge que vaya a él (un to), pues lo engancho con el centro
-            if (!edgesTos.includes(node.id)) {
+            // pero no para los nodos starter de route
+            if (!edgesTos.includes(node.id) && node.group !== 'routeStart') {
                 this.data.edges.add({
                     from: 'center',
                     to: node.id,
@@ -464,6 +507,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         // this.network.focus('center');
     }
 
+    /**
+     * Obtiene los nodos conectados con otro
+     * @param nodeId
+     */
     getNodesConnectedTo(nodeId) {
         let nodes = [];
 
@@ -477,8 +524,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         return nodes;
     }
 
-    /*
-        Alta edición general
+    /**
+     Alta edición general
      */
     addEdit(selected = null, group) {
         switch (group) {
@@ -500,8 +547,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    /*
-        Añade un servicio nuevo
+    /**
+     Añade un servicio nuevo
      */
     addEditService(selected = null) {
         this.dialogHelper.addEdit(selected, 'service')
@@ -513,8 +560,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => {});
     }
 
-    /*
-        Añade una ruta nueva
+    /**
+     Añade una ruta nueva
      */
     addEditRoute(selected = null) {
         this.dialogHelper.addEdit(selected, 'route')
@@ -526,8 +573,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => {});
     }
 
-    /*
-        Añade un upstream nuevo
+    /**
+     Añade un upstream nuevo
      */
     addEditUpstream(selected = null) {
         this.dialogHelper.addEdit(selected, 'upstream')
@@ -539,8 +586,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => {});
     }
 
-    /*
-        Añade un consumidor nuevo
+    /**
+     Añade un consumidor nuevo
      */
     addEditConsumer(selected = null) {
         this.dialogHelper.addEdit(selected, 'consumer')
@@ -552,8 +599,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => {});
     }
 
-    /*
-        Añade un Plugin
+    /**
+     Añade un Plugin
      */
     addEditPlugin(selected = null) {
         this.dialogHelper.addEdit(selected, 'plugin')
@@ -565,8 +612,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => {});
     }
 
-    /*
-        Añade un Target
+    /**
+     Añade un Target
      */
     addTarget(selected = null) {
         this.dialogHelper.addEdit(selected, 'target')
@@ -578,8 +625,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => {});
     }
 
-    /*
-        Pone el target en estado sano
+    /**
+     Pone el target en estado sano
      */
     setTargetHealthy(selected = null) {
         this.dialogHelper
@@ -602,8 +649,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => {});
     }
 
-    /*
-        Pone el target en estado erróneo
+    /**
+     Pone el target en estado erróneo
      */
     setTargetUnhealthy(selected = null) {
         this.dialogHelper
@@ -626,8 +673,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .catch(error => {});
     }
 
-    /*
-        Muestra la info del elemento seleccionado
+    /**
+     Muestra la info del elemento seleccionado
      */
     showInfo(select) {
         if (this.groupsInfo.includes(select.group) || this.othersInfo.includes(select.group)) {
@@ -635,8 +682,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    /*
-        Borra el elemento seleccionado
+    /**
+     Borra el elemento seleccionado
      */
     delete(select) {
         if (this.groupsDelete.includes(select.group)) {
@@ -650,8 +697,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         }
     }
 
-    /*
-        Filtra el grafo por la etiqueta elegida
+    /**
+     Filtra el grafo por la etiqueta elegida
      */
     filterGraphByTag() {
         const tags = this.netFilter.tag;
@@ -701,6 +748,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.createGraphNodesAndEdges(newData);
     }
 
+    /**
+     * Crea un mensaje con la información de salud
+     * @param health
+     */
     getHealthData(health) {
         let data = {};
 
@@ -710,7 +761,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 data['color'] = '#E53935';
                 break;
             case 'HEALTHY':
-                data['color'] = '#C0CA33';
+                data['color'] = '#7FCA33';
                 break;
         }
 
@@ -719,6 +770,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         return data;
     }
 
+    /**
+     * Clusteriza los nodos de consumidores
+     */
     clusterConsumers() {
         // Count number of consumers
         const num = this.dataApi.consumers.length;
