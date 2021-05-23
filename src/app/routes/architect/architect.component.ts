@@ -243,7 +243,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             // Nodos de Servicio
             this.data.nodes.add({
                 id: service.id,
-                label: service.name + '\n' + service.protocol + '://' + service.host + service.port + service.path,
+                label: service.name + '\n' + service.protocol + '://' + service.host + ':' + service.port + service.path,
                 title: this.translate.instant('service.label') + ': ' + service.id,
                 group: 'service',
                 data: service
