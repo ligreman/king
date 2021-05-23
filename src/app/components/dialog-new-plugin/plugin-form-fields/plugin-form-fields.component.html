@@ -1,5 +1,5 @@
 <p *ngIf="currentGroup === 'config' && fields.length>0">
-    <a href="https://docs.konghq.com/hub/kong-inc/{{plugin}}" mat-button rel="noopener noreferrer" target="_blank">
+    <a [href]="createDocLink(plugin)" mat-button rel="noopener noreferrer" target="_blank">
         {{ 'plugin.dialog.config' | translate }}
         <mat-icon class="mini-icon">open_in_new</mat-icon>
     </a>

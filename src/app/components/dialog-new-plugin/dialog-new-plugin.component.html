@@ -35,7 +35,7 @@
                                   matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
                         <mat-hint *ngIf="nameField.value !== ''">
-                            <a class="link" href="https://docs.konghq.com/hub/kong-inc/{{nameField.value}}" rel="noopener noreferrer" target="_blank">
+                            <a [href]="createDocLink(nameField.value)" class="link" rel="noopener noreferrer" target="_blank">
                                 {{'plugin.dialog.plugin_link' | translate}}
                                 <mat-icon class="link">open_in_new</mat-icon>
                             </a>

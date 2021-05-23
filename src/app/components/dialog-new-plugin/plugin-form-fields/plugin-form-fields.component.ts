@@ -27,7 +27,7 @@ export class PluginFormFieldsComponent implements OnInit {
     }
 
     formatText(txt) {
-        return txt.replace('/_/g', ' ');
+        return txt.replace(/_/g, ' ');
     }
 
     arrayNum(n: number): any[] {
@@ -46,5 +46,15 @@ export class PluginFormFieldsComponent implements OnInit {
             this.count[s] = 1;
         }
         return this.count[s];
+    }
+
+    createDocLink(plugin: string): string {
+        let url = 'https://docs.konghq.com/hub/kong-inc/' + plugin;
+
+        if (plugin === 'proxy-cache-redis') {
+            url = 'https://github.com/ligreman/kong-proxy-cache-redis-plugin/blob/master/README.md';
+        }
+
+        return url;
     }
 }

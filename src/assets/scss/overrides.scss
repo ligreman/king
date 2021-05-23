@@ -2,6 +2,10 @@
 
 
 /* Toastr Overrides */
+.toast-container {
+    z-index: 1001 !important;
+}
+
 .toast-container .ngx-toastr {
     box-shadow: none !important;
 }

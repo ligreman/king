@@ -69,4 +69,15 @@ export class DialogInfoPluginComponent implements OnInit {
         const blob = new Blob([JSON.stringify(this.plugin, null, 2)], {type: 'text/json'});
         saveAs(blob, 'plugin_' + this.pluginId + '.json');
     }
+
+
+    createDocLink(plugin: string): string {
+        let url = 'https://docs.konghq.com/hub/kong-inc/' + plugin;
+
+        if (plugin === 'proxy-cache-redis') {
+            url = 'https://github.com/ligreman/kong-proxy-cache-redis-plugin/blob/master/README.md';
+        }
+
+        return url;
+    }
 }

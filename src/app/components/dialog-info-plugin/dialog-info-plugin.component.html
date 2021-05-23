@@ -72,7 +72,7 @@
                 <div fxFlex="100">
                     <div fxLayout="row" fxLayoutAlign="space-between center">
                         <p class="title margin-0-i">{{'plugin.dialog.config' | translate}}</p>
-                        <a color="accent" href="https://docs.konghq.com/hub/kong-inc/{{plugin['name']}}" mat-button rel="noopener noreferrer" target="_blank">
+                        <a [href]="createDocLink(plugin['name'])" color="accent" mat-button rel="noopener noreferrer" target="_blank">
                             {{ 'plugin.dialog.plugin_link' | translate }}
                             <mat-icon class="mini-icon">open_in_new</mat-icon>
                         </a>

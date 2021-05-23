@@ -478,4 +478,14 @@ export class DialogNewPluginComponent implements OnInit {
 
         return res;
     }
+
+    createDocLink(plugin: string): string {
+        let url = 'https://docs.konghq.com/hub/kong-inc/' + plugin;
+
+        if (plugin === 'proxy-cache-redis') {
+            url = 'https://github.com/ligreman/kong-proxy-cache-redis-plugin/blob/master/README.md';
+        }
+
+        return url;
+    }
 }
