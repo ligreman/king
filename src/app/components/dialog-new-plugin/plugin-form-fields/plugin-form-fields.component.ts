@@ -27,7 +27,7 @@ export class PluginFormFieldsComponent implements OnInit {
     }
 
     formatText(txt) {
-        return txt.replace('_', ' ');
+        return txt.replace('/_/g', ' ');
     }
 
     arrayNum(n: number): any[] {
