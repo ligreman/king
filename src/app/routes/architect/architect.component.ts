@@ -375,7 +375,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             this.data.nodes.add({
                 id: 'route-start-' + routeCounter,
                 group: 'routeStart',
-                x: 0,
+                x: 150,
                 y: dist * sign
             });
             // Edge de la ruta al nodo inicial propio de su ruta
@@ -383,6 +383,14 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 from: 'route-start-' + routeCounter,
                 to: route.id,
                 length: 1,
+                arrows: {to: {enabled: false}}
+            });
+            // Edge del nodo central de Kong al inical de esta ruta
+            this.data.edges.add({
+                from: 'center',
+                to: 'route-start-' + routeCounter,
+                smooth: false,
+                width: 2,
                 arrows: {to: {enabled: false}}
             });
             routeCounter++;
@@ -393,23 +401,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             if (sign === 1) {
                 dist += 100;
             }
-        }
-
-        // Engancho los nodos de inicio de rutas entre sí
-        let x = 0;
-        for (x; x < routeCounter - 1; x++) {
-            let from = 'route-start-' + x, to = x + 1;
-            if (x == 0) {
-                from = 'center';
-                to = 1;
-            }
-            this.data.edges.add({
-                from: from,
-                to: 'route-start-' + to,
-                smooth: false,
-                width: 2,
-                arrows: {to: {enabled: false}}
-            });
         }
 
         // Creo los nodos de consumidores
