@@ -1,7 +1,15 @@
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { cloneDeep as _cloneDeep, filter as _filter, isEmpty as _isEmpty, sortedUniq as _sortedUniq, uniq as _uniq } from 'lodash';
+import {
+    cloneDeep as _cloneDeep,
+    filter as _filter,
+    floor as _floor,
+    isEmpty as _isEmpty,
+    sortBy as _sortBy,
+    sortedUniq as _sortedUniq,
+    uniq as _uniq
+} from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -329,10 +337,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
 
+        // Ordeno las rutas por nombre de ruta
+        const allRoutes = _sortBy(data.routes, ['name']);
+        const par = (allRoutes.length % 2) === 0;
+        const half = _floor(allRoutes.length / 2);
         // Contador de rutas
-        let sign = 1, dist = 100, routeCounter = 1;
+        let dist = half * -150, routeCounter = 1;
+
         // Recorro las rutas creando los nodos de rutas
-        for (let route of data.routes) {
+        for (let route of allRoutes) {
             let extras = [this.translate.instant('route.label') + ': ' + route.id];
 
             if (!_isEmpty(route.methods)) {
@@ -376,7 +389,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 id: 'route-start-' + routeCounter,
                 group: 'routeStart',
                 x: 150,
-                y: dist * sign
+                y: dist
             });
             // Edge de la ruta al nodo inicial propio de su ruta
             this.data.edges.add({
@@ -395,11 +408,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             });
             routeCounter++;
 
-            // Cambio de orientación en cada ruta, una arriba y otra abajo
-            sign = sign * -1;
-            // Sólo en las impares sumo distancia, cuando ya tengo una ruta arriba y otra abajo
-            if (sign === 1) {
-                dist += 100;
+            // Añado distancia al nodo
+            dist += 150;
+            // Si el número de rutas es par, no pongo ninguna en el punto 0 del eje y
+            if (dist === 0 && par) {
+                dist += 150;
             }
         }
 
