@@ -61,6 +61,16 @@
             <div class="subheader" mat-subheader>{{'architect.global_actions' | translate}}</div>
             <mat-list-item>
                 <div mat-line>
+                    <button (click)="addEdit(null, 'rsu')" mat-button>
+                        <mat-icon class="color-route">timeline</mat-icon>&nbsp;
+                        <mat-icon class="color-service">memory</mat-icon>&nbsp;
+                        <mat-icon class="color-upstream">share</mat-icon>&nbsp;
+                        {{'rsu.add' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+            <mat-list-item>
+                <div mat-line>
                     <button (click)="addEdit(null, 'service')" mat-button>
                         <mat-icon class="color-service">memory</mat-icon>&nbsp;
                         {{'service.add' | translate}}

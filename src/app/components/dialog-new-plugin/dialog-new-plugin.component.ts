@@ -148,7 +148,7 @@ export class DialogNewPluginComponent implements OnInit {
         Gestión de tags
      */
     addTag(event: MatChipInputEvent): void {
-        const input = event.input;
+        const input = event.chipInput.inputElement;
         const value = event.value.trim();
 
         // Add our tag

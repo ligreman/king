@@ -7,6 +7,7 @@
         "field_required": "Field required"
     },
     "success": {
+        "new_rsu": "Route, Service and Upstream created",
         "new_service": "Service created",
         "new_route": "Route created",
         "new_upstream": "Upstream created",
@@ -265,6 +266,17 @@
             }
         }
     },
+    "rsu": {
+        "add": "Add R+S+U",
+        "dialog": {
+            "create": "Create a new Route, Service and Upstream",
+            "targets": "Targets expected that the upstream will have",
+            "targets_min": "Number greater than 0",
+            "targets_tooltip": "It will be used to calculate the number of slots (it will be set to 100 per target)",
+            "timeouts": "Base timeout for the Service (ms)",
+            "timeouts_tooltip": "This timeout will be applied to the connection, reading and writing timeouts of the Service"
+        }
+    },
     "route": {
         "add": "Add Route",
         "header": "Routes",
@@ -281,7 +293,7 @@
             "hosts_example": "example.com",
             "hosts_tooltip": "A list of hosts that match this Route. Allows one wildcard at the beggining or the end",
             "hosts_hint": "Write a value and press enter or coma",
-            "paths": "Paths",
+            "paths": "Paths to be published",
             "paths_example": "/api_rest",
             "paths_tooltip": "A list of paths that match this Route",
             "methods": "Methods",
@@ -355,9 +367,11 @@
             "health": "Health of the upstream",
             "health_target": "Health check of the targets",
             "health_active": "Active health checks",
-            "health_passive": "Pasive health checks (in proxied traffic)",
-            "health_healthy": "Healthy active checks: healthy",
-            "health_unhealthy": "Unhealthy active health checks: unhealthy",
+            "health_passive": "Passive health checks (in proxied traffic)",
+            "health_active_healthy": "Healthy active checks: healthy",
+            "health_active_unhealthy": "Unhealthy active health checks: unhealthy",
+            "health_passive_healthy": "Healthy passive checks: healthy",
+            "health_passive_unhealthy": "Unhealthy passive health checks: unhealthy",
             "host_tooltip": "The hostname to be used as Host header when proxying requests through Kong",
             "slots": "Slots",
             "slots_tooltip": "The number of slots in the loadbalancer algorithm",

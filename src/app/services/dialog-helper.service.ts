@@ -13,6 +13,7 @@ import { DialogNewCertComponent } from '../components/dialog-new-cert/dialog-new
 import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
 import { DialogNewPluginComponent } from '../components/dialog-new-plugin/dialog-new-plugin.component';
 import { DialogNewRouteComponent } from '../components/dialog-new-route/dialog-new-route.component';
+import { DialogNewRsuComponent } from '../components/dialog-new-rsu/dialog-new-rsu.component';
 import { DialogNewServiceComponent } from '../components/dialog-new-service/dialog-new-service.component';
 import { DialogNewSniComponent } from '../components/dialog-new-sni/dialog-new-sni.component';
 import { DialogNewTargetComponent } from '../components/dialog-new-target/dialog-new-target.component';
@@ -38,6 +39,9 @@ export class DialogHelperService {
             let component;
 
             switch (group) {
+                case 'rsu':
+                    component = DialogNewRsuComponent;
+                    break;
                 case 'service':
                     component = DialogNewServiceComponent;
                     break;

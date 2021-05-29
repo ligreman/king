@@ -7,6 +7,7 @@
         "field_required": "Campo obligatorio"
     },
     "success": {
+        "new_rsu": "Ruta, Servicio y Upstream creados",
         "new_service": "Servicio creado",
         "new_route": "Ruta creada",
         "new_upstream": "Upstream creado",
@@ -265,6 +266,17 @@
             }
         }
     },
+    "rsu": {
+        "add": "Añadir R+S+U",
+        "dialog": {
+            "create": "Crear nueva Ruta, Servicio y Upstream",
+            "targets": "Targets previstos que tendrá el upstream",
+            "targets_min": "Número mayor de 0",
+            "targets_tooltip": "Se utilizará para calcular el número de slots (se establecerá a 100 por target)",
+            "timeouts": "Timeout base para el Servicio (ms)",
+            "timeouts_tooltip": "Este timeout se aplicará a los timeouts de conexión, lectura y escritura del Servicio"
+        }
+    },
     "route": {
         "add": "Añadir Ruta",
         "header": "Rutas",
@@ -281,7 +293,7 @@
             "hosts_example": "example.com",
             "hosts_tooltip": "Lista de hosts que encajan en esta Ruta. Admite un wildcard al principio o al final.",
             "hosts_hint": "Escribe un valor y pulsa enter o coma",
-            "paths": "Rutas (paths)",
+            "paths": "Rutas a publicar (paths)",
             "paths_example": "/api_rest",
             "paths_tooltip": "Lista de rutas uri (paths) que encajan en esta Ruta de Kong.",
             "methods": "Métodos",
@@ -356,8 +368,10 @@
             "health_target": "Comprobaciones de estado de salud de los target",
             "health_active": "Comprobaciones activas de salud",
             "health_passive": "Comprobaciones pasivas de salud (según el tráfico a través del API Gateway)",
-            "health_healthy": "Comprobaciones activas de estado de salud: sano",
-            "health_unhealthy": "Comprobaciones activas de estado de salud: erróneo",
+            "health_active_healthy": "Comprobaciones activas de estado de salud: sano",
+            "health_active_unhealthy": "Comprobaciones activas de estado de salud: erróneo",
+            "health_passive_healthy": "Comprobaciones pasivas de estado de salud: sano",
+            "health_passive_unhealthy": "Comprobaciones pasivas de estado de salud: erróneo",
             "host_tooltip": "El nombre de host que se utilizará como cabecera Host al enviar solicitudes a través de Kong.",
             "slots": "Slots",
             "slots_tooltip": "El número de slots en el algoritmo de balanceo de carga",

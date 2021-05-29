@@ -1,0 +1,14 @@
+.mat-expansion-panel:not([class*="mat-elevation-z"]) {
+    box-shadow: none;
+}
+
+.input-method mat-form-field {
+    padding-left: 20px;
+}
+
+
+.form-block {
+    border-left: 1px solid rgba(255, 255, 255, 0.12);
+    margin-left: 20px;
+}
+

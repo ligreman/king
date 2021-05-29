@@ -171,7 +171,7 @@ export class DialogNewRouteComponent implements OnInit {
         Gestión de tags
      */
     addTag(event: MatChipInputEvent): void {
-        const input = event.input;
+        const input = event.chipInput.inputElement;
         const value = event.value.trim();
 
         // Add our tag
@@ -200,7 +200,7 @@ export class DialogNewRouteComponent implements OnInit {
         Gestión de hosts
      */
     addHost(event: MatChipInputEvent): void {
-        const input = event.input;
+        const input = event.chipInput.inputElement;
         const value = event.value.trim();
 
         // Add
@@ -230,7 +230,7 @@ export class DialogNewRouteComponent implements OnInit {
         Gestión de rutas
      */
     addPath(event: MatChipInputEvent): void {
-        const input = event.input;
+        const input = event.chipInput.inputElement;
         const value = event.value.trim();
 
         // Add

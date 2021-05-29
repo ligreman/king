@@ -533,6 +533,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     addEdit(selected = null, group) {
         switch (group) {
+            case 'rsu':
+                this.addEditRSU(selected);
+                break;
             case 'service':
                 this.addEditService(selected);
                 break;
@@ -549,6 +552,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.addEditPlugin(selected);
                 break;
         }
+    }
+
+    /**
+     Añade una ruta + servicio + upstream nuevos
+     */
+    addEditRSU(selected = null) {
+        this.dialogHelper.addEdit(selected, 'rsu')
+            .then(() => {
+                this.netFilter.tag = '';
+                this.netFilter.element = 'all';
+                this.populateGraph();
+            })
+            .catch(error => {});
     }
 
     /**
