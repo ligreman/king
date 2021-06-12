@@ -56,7 +56,12 @@
 
             <ng-container matColumnDef="health">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'upstream.dialog.health' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{ 'target.health_' + row.health | translate }}</td>
+                <td *matCellDef="let row" mat-cell>
+                    <span *ngIf="row.health === 'HEALTHCHECKS_OFF'">{{ 'target.health_' + row.health | translate }}</span>
+                    <span *ngIf="row.health === 'HEALTHY'" class="accent">{{ 'target.health_' + row.health | translate }}</span>
+                    <span *ngIf="row.health !== 'HEALTHY' && row.health !== 'HEALTHCHECKS_OFF'"
+                          class="warn">{{ 'target.health_' + row.health | translate }}</span>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="tags">

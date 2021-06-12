@@ -38,6 +38,14 @@
                 <mat-checkbox [formControl]="getField(field.field)">{{formatText(field.field) | titlecase}}</mat-checkbox>
             </div>
 
+            <ng-container *ngIf="field.type === 'map'">
+                <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                    <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
+                    <textarea [formControl]="getField(field.field)" [required]="field.required" matInput></textarea>
+                    <mat-hint>{{ 'plugin.dialog.map' | translate }}</mat-hint>
+                </mat-form-field>
+            </ng-container>
+
             <ng-container *ngIf="field.type === 'array'">
                 <mat-form-field appearance="outline" color="accent" fxFlex="100">
                     <mat-label>{{formatText(field.field) | titlecase}}</mat-label>

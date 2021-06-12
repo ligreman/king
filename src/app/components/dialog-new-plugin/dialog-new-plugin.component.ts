@@ -4,7 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { get as _get, isArray as _isArray, set as _set, sortedUniq as _sortedUniq, toInteger as _toInteger } from 'lodash';
+import { get as _get, isArray as _isArray, isObject as _isObject, set as _set, sortedUniq as _sortedUniq, toInteger as _toInteger } from 'lodash';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
@@ -202,6 +202,15 @@ export class DialogNewPluginComponent implements OnInit {
 
             if (fValue !== null && _isArray(fValue)) {
                 _set(plugin, field, fValue.join('\n'));
+            } else if (fValue !== null && _isObject(fValue)) {
+                const keys = Object.getOwnPropertyNames(fValue);
+                let converted = [];
+
+                keys.forEach(key => {
+                    converted.push(key + ':' + fValue[key]);
+                });
+
+                _set(plugin, field, '' + converted.join('\n'));
             } else {
                 _set(plugin, field, null);
             }
@@ -237,13 +246,23 @@ export class DialogNewPluginComponent implements OnInit {
                 _set(body, field, []);
             } else if (!_isArray(fValue)) {
                 let values = fValue.split('\n');
-                let output = [];
+                let output;
                 const confField = field.replace('config.', '');
 
                 // Miro si he de convertir a integer
                 if (this.fieldTypes[confField] === 'number' || this.fieldTypes[confField] === 'integer') {
                     output = values.map((el) => {
                         return _toInteger(el);
+                    });
+                }
+                // Si es map, transformo a objeto
+                else if (this.fieldTypes[confField] === 'map') {
+                    output = {};
+                    values.forEach(val => {
+                        const [a, b] = val.split(':');
+                        if (a !== undefined && b !== undefined) {
+                            output[a] = b;
+                        }
                     });
                 } else {
                     output = values;
@@ -387,6 +406,27 @@ export class DialogNewPluginComponent implements OnInit {
                     formFields.push({
                         field: field,
                         type: 'boolean',
+                        required: value.required || false
+                    });
+                }
+
+                // Maps (objetos)
+                if (value.type === 'map') {
+                    let validators = [];
+
+                    // Requerido
+                    if (value.required) {
+                        // validators.push(Validators.required);
+                        validators.push(CustomValidators.isBoolean());
+                    }
+
+                    this.arrayFields.push(currentGroup + '.' + field);
+                    this.fieldTypes[field] = value.type;
+
+                    dConfig.addControl(field, this.fb.control(value.default, validators));
+                    formFields.push({
+                        field: field,
+                        type: 'map',
                         required: value.required || false
                     });
                 }

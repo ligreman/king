@@ -340,6 +340,7 @@
         "health_active_on": "Enabled",
         "health_active_off": "Disabled",
         "explanation": "You can add new Target in the detail of each Upstream",
+        "orphan": "Orphan upstream",
         "dialog": {
             "create": "Create a new Upstream",
             "edit": "Edit Upstream",
@@ -454,7 +455,8 @@
             "consumer_tooltip": "If set, the plugin will activate only for requests where the specified consumer has been authenticated (note that some plugins can not be restricted to consumers this way). Leave unset for the plugin to activate regardless of the authenticated Consumer",
             "min": "Number greater than {{min}}",
             "max": "Number lower than {{max}}",
-            "min_max": "Number between {{min}} and {{max}}"
+            "min_max": "Number between {{min}} and {{max}}",
+            "map": "Format to use -> field:expression"
         }
     },
     "target": {

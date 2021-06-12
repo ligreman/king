@@ -165,12 +165,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         // Llamo al API por la información para pintar el grafo
         this.getGraphDataFromApi().subscribe(value => {
             this.dataApi = value;
-            // Ahora construyo los nodos y edges del grafo
-            this.createGraphNodesAndEdges(value).then(r => {
-                // Marco el grafo como estabilidazo y termino de cargarlo
-                this.stabilized = false;
-                this.loading = false;
-            });
+            this.filterGraphByTag();
         });
     }
 
@@ -227,6 +222,63 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         return this.enabledPlugins.includes(plugin);
     }
 
+
+    /**
+     Filtra el grafo por la etiqueta elegida
+     */
+    filterGraphByTag() {
+        const tags = this.netFilter.tag;
+        let newData;
+
+        if (tags === '') {
+            newData = _cloneDeep(this.dataApi);
+        } else {
+            let theTags = tags.split(',');
+            theTags = theTags.map(value => value.trim());
+            newData = {services: [], routes: [], upstreams: [], plugins: [], consumers: []};
+
+            // AND
+            if (this.netFilter.mode) {
+                newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: theTags}));
+                newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: theTags}));
+                newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: theTags}));
+                newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: theTags}));
+                newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: theTags}));
+            }
+            // OR
+            else {
+                theTags.forEach(tag => {
+                    newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: [tag]}));
+                    newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: [tag]}));
+                    newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: [tag]}));
+                    newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: [tag]}));
+                    newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: [tag]}));
+                });
+
+                // Elimino duplicados
+                newData.services = _uniq(newData.services);
+                newData.routes = _uniq(newData.routes);
+                newData.upstreams = _uniq(newData.upstreams);
+                newData.consumers = _uniq(newData.consumers);
+                newData.plugins = _uniq(newData.plugins);
+            }
+        }
+
+        // Filtro de elementos a mostrar
+        if (this.netFilter.element === 'mainonly') {
+            // Elimino consumers y plugins
+            newData.consumers = [];
+            newData.plugins = [];
+        }
+
+        // Ahora construyo los nodos y edges del grafo
+        this.createGraphNodesAndEdges(newData).then(r => {
+            // Marco el grafo como estabilidazo y termino de cargarlo
+            this.stabilized = false;
+            this.loading = false;
+        });
+    }
+
     /**
      Calculo los datos de nodos y edges del grafo
      */
@@ -234,6 +286,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         // Limpio el grafo
         this.data.nodes.clear();
         this.data.edges.clear();
+
+        // Variable para guardar los upstream con padre
+        let upstreamsWithParent = [];
 
         // Genero el nodo central del grafo
         const element = generateElement([this.translate.instant('text.kong_node'), this.globals.NODE_API_URL]);
@@ -261,6 +316,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             const serviceUpstream = _filter(data.upstreams, {name: service.host});
             if (serviceUpstream.length > 0) {
                 for (const up of serviceUpstream) {
+                    upstreamsWithParent.push(up.id);
+
                     // Si no he generado previamente el nodo de upstream ya
                     if (this.data.nodes.get(up.id) === null) {
                         // Health del upstream
@@ -491,8 +548,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         });
 
+        // Si el nodo no tiene un edge que vaya a él (un to), pues lo engancho con el centro
         this.data.nodes.forEach(node => {
-            // Si el nodo no tiene un edge que vaya a él (un to), pues lo engancho con el centro
             // pero no para los nodos starter de route
             if (!edgesTos.includes(node.id) && node.group !== 'routeStart') {
                 this.data.edges.add({
@@ -502,6 +559,28 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 });
             }
         });
+
+        // Por último, genero los nodos upstream huérfanos y los engancho al centro
+        for (let upstream of data.upstreams) {
+            // miro si el up ya tiene padre
+            if (!upstreamsWithParent.includes(upstream.id)) {
+                // Le creo un nodo
+                this.data.nodes.add({
+                    id: upstream.id,
+                    label: upstream.name,
+                    title: this.translate.instant('upstream.orphan'),
+                    group: 'upstream',
+                    data: upstream
+                });
+
+                // Engancho con el centro
+                this.data.edges.add({
+                    from: 'center',
+                    to: upstream.id,
+                    arrows: {to: {enabled: false}}
+                });
+            }
+        }
 
         this.clusterConsumers();
     }
@@ -560,8 +639,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     addEditRSU(selected = null) {
         this.dialogHelper.addEdit(selected, 'rsu')
             .then(() => {
-                this.netFilter.tag = '';
-                this.netFilter.element = 'all';
                 this.populateGraph();
             })
             .catch(error => {});
@@ -573,8 +650,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     addEditService(selected = null) {
         this.dialogHelper.addEdit(selected, 'service')
             .then(() => {
-                this.netFilter.tag = '';
-                this.netFilter.element = 'all';
                 this.populateGraph();
             })
             .catch(error => {});
@@ -586,8 +661,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     addEditRoute(selected = null) {
         this.dialogHelper.addEdit(selected, 'route')
             .then(() => {
-                this.netFilter.tag = '';
-                this.netFilter.element = 'all';
                 this.populateGraph();
             })
             .catch(error => {});
@@ -599,8 +672,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     addEditUpstream(selected = null) {
         this.dialogHelper.addEdit(selected, 'upstream')
             .then(() => {
-                this.netFilter.tag = '';
-                this.netFilter.element = 'all';
                 this.populateGraph();
             })
             .catch(error => {});
@@ -612,8 +683,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     addEditConsumer(selected = null) {
         this.dialogHelper.addEdit(selected, 'consumer')
             .then(() => {
-                this.netFilter.tag = '';
-                this.netFilter.element = 'all';
                 this.populateGraph();
             })
             .catch(error => {});
@@ -625,8 +694,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     addEditPlugin(selected = null) {
         this.dialogHelper.addEdit(selected, 'plugin')
             .then(() => {
-                this.netFilter.tag = '';
-                this.netFilter.element = 'all';
                 this.populateGraph();
             })
             .catch(error => {});
@@ -638,8 +705,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     addTarget(selected = null) {
         this.dialogHelper.addEdit(selected, 'target')
             .then(() => {
-                this.netFilter.tag = '';
-                this.netFilter.element = 'all';
                 this.populateGraph();
             })
             .catch(error => {});
@@ -709,63 +774,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.groupsDelete.includes(select.group)) {
             this.dialogHelper.deleteElement(select.data, select.group)
                 .then(() => {
-                    this.netFilter.tag = '';
-                    this.netFilter.element = 'all';
                     this.populateGraph();
                 })
                 .catch(error => {});
         }
-    }
-
-    /**
-     Filtra el grafo por la etiqueta elegida
-     */
-    filterGraphByTag() {
-        const tags = this.netFilter.tag;
-        let newData;
-
-        if (tags === '') {
-            newData = _cloneDeep(this.dataApi);
-        } else {
-            let theTags = tags.split(',');
-            theTags = theTags.map(value => value.trim());
-            newData = {services: [], routes: [], upstreams: [], plugins: [], consumers: []};
-
-            // AND
-            if (this.netFilter.mode) {
-                newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: theTags}));
-                newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: theTags}));
-                newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: theTags}));
-                newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: theTags}));
-                newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: theTags}));
-            }
-            // OR
-            else {
-                theTags.forEach(tag => {
-                    newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: [tag]}));
-                    newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: [tag]}));
-                    newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: [tag]}));
-                    newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: [tag]}));
-                    newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: [tag]}));
-                });
-
-                // Elimino duplicados
-                newData.services = _uniq(newData.services);
-                newData.routes = _uniq(newData.routes);
-                newData.upstreams = _uniq(newData.upstreams);
-                newData.consumers = _uniq(newData.consumers);
-                newData.plugins = _uniq(newData.plugins);
-            }
-        }
-
-        // Filtro de elementos a mostrar
-        if (this.netFilter.element === 'mainonly') {
-            // Elimino consumers y plugins
-            newData.consumers = [];
-            newData.plugins = [];
-        }
-
-        this.createGraphNodesAndEdges(newData);
     }
 
     /**
