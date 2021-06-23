@@ -211,7 +211,8 @@
         "filter_element_mainonly": "Show only services, routes and upstreams",
         "filter_selected_tags": "Filter by its {{num}} tags",
         "cluster_consumers": "consumers",
-        "cluster_title": "Double click to expand all elements"
+        "cluster_title": "Double click to expand all elements",
+        "labels": "Labels"
     },
     "service": {
         "label": "Service",

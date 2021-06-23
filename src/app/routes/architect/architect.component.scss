@@ -18,14 +18,27 @@
 #graph-tools {
     height: 55px;
     border-bottom: 1px solid #292929;
+    background: #212526;
 }
 
-#graph-tools .filter {
-    margin-left: 2rem;
+#graph-tools {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 }
 
 #graph-actions {
     border-left: 1px solid #292929;
+    background: #212526;
+}
+
+#graph-filters {
+    width: 150px;
+    border-right: 1px solid #292929;
+    background: #212526;
+}
+
+.graph-background {
+    background: #212121;
 }
 
 div#node-network:focus {
@@ -34,4 +47,8 @@ div#node-network:focus {
 
 .mat-list-base .mat-list-item {
     height: 45px !important;
+}
+
+.line-small {
+    line-height: 15px !important;
 }

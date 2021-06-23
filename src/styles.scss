@@ -74,3 +74,17 @@ footer {
     padding: 5px 20px;
     background: #292929;
 }
+
+// Scrollbars de Chrome
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track, ::-webkit-scrollbar-corner {
+    background: #181818;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #009688;
+}

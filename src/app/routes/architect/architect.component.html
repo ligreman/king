@@ -4,24 +4,29 @@
             <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
     </div>
+    <!-- Contenedor de grafo -->
     <div [fxShow]="!loading" class="graph-container" fxFlex="75">
+        <!-- Barra de herramientas horizontal -->
         <div *ngIf="showTools" fxLayout="row" fxLayoutAlign="space-between center" id="graph-tools">
-            <div fxFlex="40" fxLayout="row" fxLayoutAlign="start center">
-                <mat-form-field class="filter" color="accent" fxFlex>
+            <div fxFlex="initial" fxLayout="row" fxLayoutAlign="center center">
+                <div class="filter" fxFlex>
+                    <button (click)="drawer.toggle()" color="accent" mat-icon-button
+                            matTooltip="{{ 'architect.labels' | translate }}" matTooltipClass="tooltip-teal">
+                        <mat-icon>label</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div fxFlex="35" fxLayout="row" fxLayoutAlign="start center">
+                <mat-form-field color="accent" fxFlex>
                     <mat-slide-toggle (change)="netFilter.mode = !netFilter.mode" [checked]="netFilter.mode" class="margin-right-20" matPrefix>
                         <span *ngIf="netFilter.mode">AND</span>
                         <span *ngIf="!netFilter.mode">OR</span>
                     </mat-slide-toggle>
                     <mat-label>{{ 'architect.filter' | translate}}</mat-label>
-                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" [matAutocomplete]="auto" matInput type="text">
+                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput type="text">
                     <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
                         <mat-icon>close</mat-icon>
                     </button>
-                    <mat-autocomplete #auto="matAutocomplete">
-                        <mat-option *ngFor="let tag of allTags" [value]="tag">
-                            {{tag}}
-                        </mat-option>
-                    </mat-autocomplete>
                 </mat-form-field>
             </div>
 
@@ -54,8 +59,25 @@
                 <mat-icon>center_focus_strong</mat-icon>
             </button>
         </div>
-        <div id="node-network"></div>
+
+        <mat-drawer-container>
+            <mat-drawer #drawer id="graph-filters" mode="side">
+                <div fxLayout="column" fxLayoutAlign="start start">
+                    <button (click)="addTagFilter(tag)" *ngFor="let tag of allTags"
+                            [fxHide]="netFilter.tag.split(',').includes(tag)"
+                            [ngClass]="{'line-small': chopTag(tag, 14).length>1}" color="accent" mat-button>
+                        <span *ngFor="let piece of chopTag(tag, 14); let first = first">
+                            <br *ngIf="!first">{{ piece }}
+                        </span>
+                    </button>
+                </div>
+            </mat-drawer>
+            <mat-drawer-content class="graph-background" fxFlex>
+                <div id="node-network"></div>
+            </mat-drawer-content>
+        </mat-drawer-container>
     </div>
+    <!-- Contenedor de acciones derecho -->
     <div fxFlex="25" id="graph-actions">
         <mat-list>
             <div class="subheader" mat-subheader>{{'architect.global_actions' | translate}}</div>

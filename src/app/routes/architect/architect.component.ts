@@ -6,6 +6,7 @@ import {
     filter as _filter,
     floor as _floor,
     isEmpty as _isEmpty,
+    remove as _remove,
     sortBy as _sortBy,
     sortedUniq as _sortedUniq,
     uniq as _uniq
@@ -162,6 +163,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.loading = true;
         this.selection = '';
 
+        // Recojo las tags por si hay nuevas
+        this.getTags();
+
         // Llamo al API por la información para pintar el grafo
         this.getGraphDataFromApi().subscribe(value => {
             this.dataApi = value;
@@ -234,6 +238,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             newData = _cloneDeep(this.dataApi);
         } else {
             let theTags = tags.split(',');
+            theTags = _uniq(theTags);
             theTags = theTags.map(value => value.trim());
             newData = {services: [], routes: [], upstreams: [], plugins: [], consumers: []};
 
@@ -843,6 +848,31 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.netFilter.element = 'all';
         this.netFilter.mode = true;
         this.filterGraphByTag();
+    }
+
+    /**
+     * Añade una tag a los filtros
+     */
+    addTagFilter(tag: any) {
+        let newTags = this.netFilter.tag.split(',');
+        newTags.push(tag);
+
+        newTags = _remove(newTags, function (n) {
+            return n !== '';
+        });
+
+        this.filterTag({
+            data: {
+                tags: newTags
+            }
+        });
+    }
+
+    /**
+     * Trocea una tag por longitud
+     */
+    chopTag(tag: any, length: number) {
+        return tag.match(new RegExp('.{1,' + length + '}', 'g'));
     }
 }
 
