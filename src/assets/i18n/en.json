@@ -505,7 +505,8 @@
             "name": "Name",
             "name_tooltip": "The SNI name to associate with the given certificate",
             "certificate": "Client certificate",
-            "certificate_tooltip": "The id (a UUID) of the certificate with which to associate the SNI hostname. The Certificate must have a valid private key associated with it to be used by the SNI object"
+            "certificate_tooltip": "The id (a UUID) of the certificate with which to associate the SNI hostname. The Certificate must have a valid private key associated with it to be used by the SNI object",
+            "no_certificate": "Cannot create SNI because there is no certificate available"
         }
     },
     "cert": {

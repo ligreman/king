@@ -478,7 +478,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
 
-        // Creo los nodos de consumidores
+        // Preparo la información de los nodos de consumidor aunque no los creo aún
+        let consumerList = {}, consumerNodesCreated = [];
         for (let consumer of data.consumers) {
             let extrasC = [this.translate.instant('consumer.label') + ': ' + consumer.id];
             if (!_isEmpty(consumer.username)) {
@@ -490,13 +491,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
             // Nodos de consumidor
             const element = generateElement(extrasC);
-            this.data.nodes.add({
+
+            // Recojo en una lista los consumidores existentes
+            consumerList[consumer.id] = {
                 id: consumer.id,
                 label: consumer.username || consumer.custom_id,
                 title: element,
                 group: 'consumer',
                 data: consumer
-            });
+            };
         }
 
         // Creo los nodos de plugin
@@ -514,7 +517,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
             if (plugin.consumer && !_isEmpty(plugin.consumer.id)) {
                 extrasC.push(this.translate.instant('consumer.label') + ': ' + plugin.consumer.id);
-                pluginEdges.push(plugin.consumer.id);
+                pluginEdges.push(plugin.id + '#' + plugin.consumer.id);
+
+                // Creo el nodo del consumidor
+                const theConsumer = consumerList[plugin.consumer.id];
+                this.data.nodes.add({
+                    id: plugin.id + '#' + theConsumer.id,
+                    consumerId: theConsumer.id,
+                    label: theConsumer.label,
+                    title: theConsumer.title,
+                    group: theConsumer.group,
+                    data: theConsumer.data
+                });
+                consumerNodesCreated.push(plugin.consumer.id);
             }
 
             // Plugin activo?
@@ -539,6 +554,22 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     data: 'plugin'
                 });
             });
+        }
+
+        // Ahora sí creo los nodos consumidores que no haya creado asociados a los plugin
+        for (let consu in consumerList) {
+            // si no he creado el nodo aún
+            if (consumerList.hasOwnProperty(consu) && !consumerNodesCreated.includes(consu)) {
+                const thisConsu = consumerList[consu];
+                this.data.nodes.add({
+                    id: thisConsu.id,
+                    consumerId: thisConsu.id,
+                    label: thisConsu.label,
+                    title: thisConsu.title,
+                    group: thisConsu.group,
+                    data: thisConsu.data
+                });
+            }
         }
 
         // Ahora voy a enganchar al center los nodos que hayan quedado sueltos
@@ -587,7 +618,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
 
-        this.clusterConsumers();
+        // this.clusterConsumers();
     }
 
     fitNetwork() {
@@ -777,6 +808,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     delete(select) {
         if (this.groupsDelete.includes(select.group)) {
+            select.data['consumerId'] = select.consumerId;
             this.dialogHelper.deleteElement(select.data, select.group)
                 .then(() => {
                     this.populateGraph();

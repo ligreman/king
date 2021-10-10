@@ -23,6 +23,7 @@
     position: fixed;
     width: 100%;
     transition: 0.5s;
+    z-index: 999;
 }
 
 #manual-container div.manual-text {
@@ -43,7 +44,7 @@
 }
 
 #manual-container.showing div.manual-text {
-    right: 0;
+    right: -10px;
     transition: 0.5s;
 }
 

@@ -505,7 +505,8 @@
             "name": "Nombre",
             "name_tooltip": "El nombre del SNI para asociar al certificado.",
             "certificate": "Certificado de cliente",
-            "certificate_tooltip": "El ID (UUID) del certificado con el que asociar el host del SNI. El certificado debe tener una clave privada válida asociada para ser utilizado por el objeto SNI."
+            "certificate_tooltip": "El ID (UUID) del certificado con el que asociar el host del SNI. El certificado debe tener una clave privada válida asociada para ser utilizado por el objeto SNI.",
+            "no_certificate": "No se puede crear un SNI porque no existe un certificado disponible"
         }
     },
     "cert": {

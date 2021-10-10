@@ -53,6 +53,9 @@ export class DialogHelperService {
                     break;
                 case 'consumer':
                     component = DialogNewConsumerComponent;
+                    if (selected !== null) {
+                        selectedId = selected.consumerId;
+                    }
                     break;
                 case 'sni':
                     component = DialogNewSniComponent;
@@ -162,6 +165,7 @@ export class DialogHelperService {
                         title: 'dialog.confirm.delete_consumer_title',
                         content: 'dialog.confirm.delete_consumer',
                         name: select.username || select.custom_id,
+                        consumerId: select.consumerId,
                         id: select.id,
                         delete: true
                     };
@@ -240,7 +244,7 @@ export class DialogHelperService {
                             });
                             break;
                         case 'consumer':
-                            this.api.deleteConsumer(select.id).subscribe(() => {
+                            this.api.deleteConsumer(select.consumerId).subscribe(() => {
                                 this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: (select.username || select.custom_id)});
                                 resolve();
                             }, error => {
