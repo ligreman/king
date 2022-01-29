@@ -1,17 +1,19 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { DialogHelperService } from '../../services/dialog-helper.service';
 import { ToastService } from '../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-info-target',
     templateUrl: './dialog-info-target.component.html',
     styleUrls: ['./dialog-info-target.component.scss']
 })
-export class DialogInfoTargetComponent implements OnInit {
+export class DialogInfoTargetComponent implements OnInit, OnDestroy {
     target;
     upstreamId;
     targetId;
@@ -28,20 +30,23 @@ export class DialogInfoTargetComponent implements OnInit {
         this.getData();
     }
 
+    ngOnDestroy(): void {
+    }
+
     getData() {
         // Recojo los datos del api de los target en el endpoint de health que me viene todo
         this.api.getUpstreamTargetsHealth(this.upstreamId)
-            .subscribe(up => {
-                // Busco el target concreto
-                up['data'].forEach(tg => {
-                    if (tg.id === this.targetId) {
-                        this.target = tg;
-                    }
-                });
-            }, error => {
-                this.toast.error_general(error);
-            }, () => {
-                this.loading = false;
+            .subscribe({
+                next: (up) => {
+                    // Busco el target concreto
+                    up['data'].forEach(tg => {
+                        if (tg.id === this.targetId) {
+                            this.target = tg;
+                        }
+                    });
+                },
+                error: (error) => this.toast.error_general(error),
+                complete: () => this.loading = false
             });
     }
 
@@ -83,15 +88,16 @@ export class DialogInfoTargetComponent implements OnInit {
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
                 this.api.postSetTargetHealthy(this.target.id, this.target.upstream.id)
-                    .subscribe(value => {
-                        this.toast.success('success.healthy_target', '', {msgExtra: this.target.id});
-                        // Recargo datos
-                        this.getData();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.healthy_target', '', {msgExtra: this.target.id});
+                            // Recargo datos
+                            this.getData();
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     setTargetUnhealthy() {
@@ -105,15 +111,16 @@ export class DialogInfoTargetComponent implements OnInit {
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
                 this.api.postSetTargetUnhealthy(this.target.id, this.target.upstream.id)
-                    .subscribe(value => {
-                        this.toast.success('success.unhealthy_target', '', {msgExtra: this.target.id});
-                        // Recargo datos
-                        this.getData();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.unhealthy_target', '', {msgExtra: this.target.id});
+                            // Recargo datos
+                            this.getData();
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     setAddressHealthy(addr, port) {
@@ -127,15 +134,16 @@ export class DialogInfoTargetComponent implements OnInit {
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
                 this.api.postSetAddressHealthy(this.target.id, this.target.upstream.id, addr + ':' + port)
-                    .subscribe(value => {
-                        this.toast.success('success.healthy_address', '', {msgExtra: addr + ':' + port});
-                        // Recargo datos
-                        this.getData();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.healthy_address', '', {msgExtra: addr + ':' + port});
+                            // Recargo datos
+                            this.getData();
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     setAddressUnhealthy(addr, port) {
@@ -149,14 +157,15 @@ export class DialogInfoTargetComponent implements OnInit {
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
                 this.api.postSetAddressUnhealthy(this.target.id, this.target.upstream.id, addr + ':' + port)
-                    .subscribe(value => {
-                        this.toast.success('success.unhealthy_address', '', {msgExtra: addr + ':' + port});
-                        // Recargo datos
-                        this.getData();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.unhealthy_address', '', {msgExtra: addr + ':' + port});
+                            // Recargo datos
+                            this.getData();
+                        },
+                        error: error => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 }

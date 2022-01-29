@@ -1,18 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-certificate-cacert',
     templateUrl: './certificate-cacert.component.html',
     styleUrls: ['./certificate-cacert.component.scss']
 })
-export class CertificateCacertComponent implements OnInit {
+export class CertificateCacertComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['id', 'certificate', 'digest', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -31,6 +33,9 @@ export class CertificateCacertComponent implements OnInit {
         this.getCerts();
     }
 
+    ngOnDestroy(): void {
+    }
+
     reloadData() {
         this.loading = true;
         this.filter = '';
@@ -40,16 +45,15 @@ export class CertificateCacertComponent implements OnInit {
 
     getCerts() {
         this.api.getCACertificates()
-            .subscribe(value => {
+            .subscribe({
+                next: (value) => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     applyFilter() {
@@ -67,7 +71,7 @@ export class CertificateCacertComponent implements OnInit {
     addEditCert(selected = null) {
         this.dialogHelper.addEdit(selected, 'cacert')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -76,6 +80,6 @@ export class CertificateCacertComponent implements OnInit {
     delete(select) {
         this.dialogHelper.deleteElement(select, 'cacert')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 }

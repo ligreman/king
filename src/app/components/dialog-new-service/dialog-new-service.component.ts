@@ -1,20 +1,22 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { sortedUniq as _sortedUniq } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-service',
     templateUrl: './dialog-new-service.component.html',
     styleUrls: ['./dialog-new-service.component.scss']
 })
-export class DialogNewServiceComponent implements OnInit {
+export class DialogNewServiceComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
     formValid = false;
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp', 'tls', 'udp'];
@@ -72,35 +74,31 @@ export class DialogNewServiceComponent implements OnInit {
 
     get readTimeoutField() { return this.form.get('read_timeout'); }
 
-    get clientCertificateField() { return this.form.get('client_certificate'); }
-
-    get tlsVerifyField() { return this.form.get('tls_verify'); }
-
     get tlsVerifyDepthField() { return this.form.get('tls_verify_depth'); }
 
     get caCertificatesField() { return this.form.get('ca_certificates'); }
 
-    get tagsField() { return this.form.get('tags'); }
-
     ngOnInit(): void {
         // Recupero la lista de certificados
         this.api.getCertificates()
-            .subscribe(certs => {
-                for (let cert of certs['data']) {
-                    this.certificatesAvailable.push(cert.id);
-                }
-            }, error => {
-                this.toast.error_general(error);
+            .subscribe({
+                next: (certs) => {
+                    for (let cert of certs['data']) {
+                        this.certificatesAvailable.push(cert.id);
+                    }
+                },
+                error: (error) => this.toast.error_general(error)
             });
 
         // Recupero la lista de certificados
         this.api.getCACertificates()
-            .subscribe(cacerts => {
-                for (let cert of cacerts['data']) {
-                    this.caCertificatesAvailable.push(cert.id);
-                }
-            }, error => {
-                this.toast.error_general(error);
+            .subscribe({
+                next: (cacerts) => {
+                    for (let cert of cacerts['data']) {
+                        this.caCertificatesAvailable.push(cert.id);
+                    }
+                },
+                error: (error) => this.toast.error_general(error)
             });
 
         // Si viene un servicio para editar
@@ -109,14 +107,15 @@ export class DialogNewServiceComponent implements OnInit {
 
             // Rescato la info del servicio del api
             this.api.getService(this.serviceIdEdit)
-                .subscribe(service => {
-                    // Cambios especiales para representarlos en el formulario
-                    this.form.setValue(this.prepareDataForForm(service));
+                .subscribe({
+                    next: (service) => {
+                        // Cambios especiales para representarlos en el formulario
+                        this.form.setValue(this.prepareDataForForm(service));
 
-                    // Estado inicial de los campos disabled
-                    this.changeRadio();
-                }, error => {
-                    this.toast.error_general(error);
+                        // Estado inicial de los campos disabled
+                        this.changeRadio();
+                    },
+                    error: (error) => this.toast.error_general(error)
                 });
         } else {
             // Estado inicial de los campos disabled
@@ -125,7 +124,7 @@ export class DialogNewServiceComponent implements OnInit {
 
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -133,6 +132,9 @@ export class DialogNewServiceComponent implements OnInit {
                 this.allTags.sort();
                 this.allTags = _sortedUniq(this.allTags);
             });
+    }
+
+    ngOnDestroy(): void {
     }
 
     /*
@@ -163,21 +165,25 @@ export class DialogNewServiceComponent implements OnInit {
         // Si no venía selected, es que es nuevo servicio
         if (!this.editMode) {
             // llamo al API
-            this.api.postNewService(result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.postNewService(result)
+                .subscribe({
+                    next: value => {
+                        this.toast.success('text.id_extra', 'success.new_service', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
         // Si venía es que es edición
         else {
-            this.api.patchService(this.serviceIdEdit, result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.update_service', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.patchService(this.serviceIdEdit, result)
+                .subscribe({
+                    next: value => {
+                        this.toast.success('text.id_extra', 'success.update_service', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
     }
 

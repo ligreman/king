@@ -1,22 +1,24 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { sortedUniq as _sortedUniq, startsWith as _startsWith } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-upstream',
     templateUrl: './dialog-new-upstream.component.html',
     styleUrls: ['./dialog-new-upstream.component.scss']
 })
-export class DialogNewUpstreamComponent implements OnInit {
+export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
     loading = true;
     // Uso la variable para el estado del formulario
     formValid = false;
@@ -97,23 +99,15 @@ export class DialogNewUpstreamComponent implements OnInit {
      */
     get nameField() { return this.form.get('name'); }
 
-    get algorithmField() { return this.form.get('algorithm'); }
-
     get slotsField() { return this.form.get('slots'); }
 
-    get hashOnField() { return this.form.get('hash_on'); }
-
     get hashOnHeaderField() { return this.form.get('hash_on_header'); }
-
-    get hashFallbackField() { return this.form.get('hash_fallback'); }
 
     get hashFallbakHeaderField() { return this.form.get('hash_fallback_header'); }
 
     get hashOnCookieField() { return this.form.get('hash_on_cookie'); }
 
     get hashOnCookiePathField() { return this.form.get('hash_on_cookie_path'); }
-
-    get haHttpsVerifyCertificateField() { return this.form.get('healthchecks.active.https_verify_certificate'); }
 
     get haHttpPathField() { return this.form.get('healthchecks.active.http_path'); }
 
@@ -143,10 +137,6 @@ export class DialogNewUpstreamComponent implements OnInit {
 
     get hostHeaderField() { return this.form.get('host_header'); }
 
-    get clientCertificateField() { return this.form.get('client_certificate'); }
-
-    get tagsField() { return this.form.get('tags'); }
-
     ngOnInit(): void {
         forkJoin([
             this.api.getServices(),
@@ -155,27 +145,27 @@ export class DialogNewUpstreamComponent implements OnInit {
         ]).pipe(map(([services, certs, upstreams]) => {
             // forkJoin returns an array of values, here we map those values to an object
             return {services: services['data'], certs: certs['data'], upstreams: upstreams['data']};
-        })).subscribe(value => {
-            for (let cert of value['certs']) {
-                this.certificatesAvailable.push(cert.id);
-            }
-
-            // Host para el upstream disponibles
-            let upstreams = [];
-            for (let up of value['upstreams']) {
-                upstreams.push(up.name);
-            }
-
-            for (let srv of value['services']) {
-                // Si el Host no está ya añadido como posible elección válida
-                if (!upstreams.includes(srv.host)) {
-                    this.servicesAvailable.set('srv-' + srv.name, srv.host);
+        })).subscribe({
+            next: (value) => {
+                for (let cert of value['certs']) {
+                    this.certificatesAvailable.push(cert.id);
                 }
-            }
-        }, error => {
-            this.toast.error_general(error);
-        }, () => {
-            this.loading = false;
+
+                // Host para el upstream disponibles
+                let upstreams = [];
+                for (let up of value['upstreams']) {
+                    upstreams.push(up.name);
+                }
+
+                for (let srv of value['services']) {
+                    // Si el Host no está ya añadido como posible elección válida
+                    if (!upstreams.includes(srv.host)) {
+                        this.servicesAvailable.set('srv-' + srv.name, srv.host);
+                    }
+                }
+            },
+            error: (error) => this.toast.error_general(error),
+            complete: () => this.loading = false
         });
 
         // Si viene un upstream para editar
@@ -184,21 +174,22 @@ export class DialogNewUpstreamComponent implements OnInit {
 
             // Rescato la info del upstream del api
             this.api.getUpstream(this.upstreamIdEdit)
-                .subscribe(upstream => {
-                    // Añado el Host a la lista de válidos ya que lo estoy editando
-                    // this.servicesAvailable.push(upstream['name']);
-                    this.servicesAvailable.set('up-', upstream['name']);
+                .subscribe({
+                    next: (upstream) => {
+                        // Añado el Host a la lista de válidos ya que lo estoy editando
+                        // this.servicesAvailable.push(upstream['name']);
+                        this.servicesAvailable.set('up-', upstream['name']);
 
-                    // Cambios especiales para representarlos en el formulario
-                    this.form.setValue(this.prepareDataForForm(upstream));
-                }, error => {
-                    this.toast.error_general(error);
+                        // Cambios especiales para representarlos en el formulario
+                        this.form.setValue(this.prepareDataForForm(upstream));
+                    },
+                    error: (error) => this.toast.error_general(error)
                 });
         }
 
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -208,6 +199,9 @@ export class DialogNewUpstreamComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+    }
+
     /*
       Submit del formulario
    */
@@ -215,21 +209,25 @@ export class DialogNewUpstreamComponent implements OnInit {
         const result = this.prepareDataForKong(this.form.value);
         if (!this.editMode) {
             // llamo al API
-            this.api.postNewUpstream(result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_upstream', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.postNewUpstream(result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.new_upstream', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
         // Si venía es que es edición
         else {
-            this.api.patchUpstream(this.upstreamIdEdit, result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.update_upstream', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.patchUpstream(this.upstreamIdEdit, result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.update_upstream', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
     }
 

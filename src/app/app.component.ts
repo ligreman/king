@@ -87,25 +87,25 @@ export class AppComponent implements OnInit, OnDestroy {
 
         // Conecto al nodo de Kong elegido
         this.api.getNodeInformation()
-            .subscribe(res => {
-                // Si ha ido bien la conexión guardo como nodo esta url
-                if (!this.node_list.includes(node)) {
-                    this.node_list.push(node);
-                    localStorage.setItem('kongNodes', btoa(this.node_list.join(',')));
-                }
-                localStorage.setItem('kongLastNode', btoa(node));
-                this.toast.success('header.node_connected', '', {msgExtra: node});
+            .subscribe({
+                next: (res) => {
+                    // Si ha ido bien la conexión guardo como nodo esta url
+                    if (!this.node_list.includes(node)) {
+                        this.node_list.push(node);
+                        localStorage.setItem('kongNodes', btoa(this.node_list.join(',')));
+                    }
+                    localStorage.setItem('kongLastNode', btoa(node));
+                    this.toast.success('header.node_connected', '', {msgExtra: node});
 
-                // Aviso del cambio de nodo
-                this.nodeWatcher.changeNode(node);
+                    // Aviso del cambio de nodo
+                    this.nodeWatcher.changeNode(node);
 
-                // Recojo los plugins activos para habilitar las secciones
-                this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+                    // Recojo los plugins activos para habilitar las secciones
+                    this.enabledPlugins = res['plugins']['enabled_in_cluster'];
 
-                // Voy a la página de información de nodos
-                this.route.navigate(['/node-information']);
-            }, error => {
-                this.toast.error('error.node_connection');
+                    // Voy a la página de información de nodos
+                    this.route.navigate(['/node-information']);
+                }, error: (error) => this.toast.error('error.node_connection')
             });
     }
 

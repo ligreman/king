@@ -1,19 +1,21 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { isEmpty as _isEmpty, sortedUniq as _sortedUniq } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-consumer',
     templateUrl: './dialog-new-consumer.component.html',
     styleUrls: ['./dialog-new-consumer.component.scss']
 })
-export class DialogNewConsumerComponent implements OnInit {
+export class DialogNewConsumerComponent implements OnInit, OnDestroy {
     formValid = false;
     editMode = false;
     loading = true;
@@ -31,9 +33,6 @@ export class DialogNewConsumerComponent implements OnInit {
     constructor(@Inject(MAT_DIALOG_DATA) public consumerIdEdit: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewConsumerComponent>,
                 private api: ApiService, private toast: ToastService) { }
 
-    get usernameField() { return this.form.get('username'); }
-
-    get customField() { return this.form.get('custom_id'); }
 
     ngOnInit(): void {
         // Si viene  para editar
@@ -42,13 +41,13 @@ export class DialogNewConsumerComponent implements OnInit {
 
             // Rescato la info  del api
             this.api.getConsumer(this.consumerIdEdit)
-                .subscribe(consumer => {
-                    // Relleno el formuarlio
-                    this.form.setValue(this.prepareDataForForm(consumer));
-                }, error => {
-                    this.toast.error_general(error);
-                }, () => {
-                    this.loading = false;
+                .subscribe({
+                    next: (consumer) => {
+                        // Relleno el formuarlio
+                        this.form.setValue(this.prepareDataForForm(consumer));
+                    },
+                    error: (error) => this.toast.error_general(error),
+                    complete: () => this.loading = false
                 });
         } else {
             this.loading = false;
@@ -56,7 +55,7 @@ export class DialogNewConsumerComponent implements OnInit {
 
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -66,6 +65,9 @@ export class DialogNewConsumerComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+    }
+
     /*
       Submit del formulario
    */
@@ -73,21 +75,25 @@ export class DialogNewConsumerComponent implements OnInit {
         const result = this.prepareDataForKong(this.form.value);
         if (!this.editMode) {
             // llamo al API
-            this.api.postNewConsumer(result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_consumer', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.postNewConsumer(result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.new_consumer', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
         // Si venía es que es edición
         else {
-            this.api.patchConsumer(this.consumerIdEdit, result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.update_consumer', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.patchConsumer(this.consumerIdEdit, result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.update_consumer', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
         this.dialogRef.close(this.prepareDataForKong(this.form.value));
     }

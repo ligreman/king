@@ -20,12 +20,12 @@ export class MatPaginatorIntlSpanish extends MatPaginatorIntl {
     constructor(private translate: TranslateService) {
         super();
 
-        translate.get('pagination.itemsPerPageLabel').subscribe(res => this.itemsPerPageLabel = res);
-        translate.get('pagination.nextPageLabel').subscribe(res => this.nextPageLabel = res);
-        translate.get('pagination.previousPageLabel').subscribe(res => this.previousPageLabel = res);
-        translate.get('pagination.firstPageLabel').subscribe(res => this.firstPageLabel = res);
-        translate.get('pagination.lastPageLabel').subscribe(res => this.lastPageLabel = res);
-        translate.get('pagination.ofLabel').subscribe(res => this.ofLabel = res);
+        translate.get('pagination.itemsPerPageLabel').subscribe((res) => this.itemsPerPageLabel = res);
+        translate.get('pagination.nextPageLabel').subscribe((res) => this.nextPageLabel = res);
+        translate.get('pagination.previousPageLabel').subscribe((res) => this.previousPageLabel = res);
+        translate.get('pagination.firstPageLabel').subscribe((res) => this.firstPageLabel = res);
+        translate.get('pagination.lastPageLabel').subscribe((res) => this.lastPageLabel = res);
+        translate.get('pagination.ofLabel').subscribe((res) => this.ofLabel = res);
     }
 
     getRangeLabel: any = (
@@ -38,7 +38,7 @@ export class MatPaginatorIntlSpanish extends MatPaginatorIntl {
         }
         length = Math.max(length, 0);
         const startIndex: number = page * pageSize;
-        // If the start index exceeds the list length, do not try and fix the end index to the end.
+        // If the start index exceeds the list length, do not try to fix the end index to the end.
         const endIndex: number =
             startIndex < length
                 ? Math.min(startIndex + pageSize, length)

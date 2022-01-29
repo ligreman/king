@@ -1,15 +1,17 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { saveAs } from 'file-saver';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-info-service',
     templateUrl: './dialog-info-service.component.html',
     styleUrls: ['./dialog-info-service.component.scss']
 })
-export class DialogInfoServiceComponent implements OnInit {
+export class DialogInfoServiceComponent implements OnInit, OnDestroy {
     service;
     loading = true;
 
@@ -18,13 +20,16 @@ export class DialogInfoServiceComponent implements OnInit {
     ngOnInit(): void {
         // Recojo los datos del api
         this.api.getService(this.serviceId)
-            .subscribe(service => {
-                this.service = service;
-            }, error => {
-                this.toast.error_general(error);
-            }, () => {
-                this.loading = false;
+            .subscribe({
+                next: (service) => {
+                    this.service = service;
+                },
+                error: (error) => this.toast.error_general(error)
+                , complete: () => this.loading = false
             });
+    }
+
+    ngOnDestroy(): void {
     }
 
     downloadJson() {

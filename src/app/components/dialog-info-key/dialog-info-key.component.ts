@@ -1,17 +1,19 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { DialogHelperService } from '../../services/dialog-helper.service';
 import { ToastService } from '../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-info-key',
     templateUrl: './dialog-info-key.component.html',
     styleUrls: ['./dialog-info-key.component.scss']
 })
-export class DialogInfoKeyComponent implements OnInit {
+export class DialogInfoKeyComponent implements OnInit, OnDestroy {
     keys;
     loading = true;
     key = '';
@@ -28,6 +30,9 @@ export class DialogInfoKeyComponent implements OnInit {
         this.getApiKeys();
     }
 
+    ngOnDestroy(): void {
+    }
+
     /**
      * Obtengo los acls
      */
@@ -36,12 +41,13 @@ export class DialogInfoKeyComponent implements OnInit {
 
         // Recojo los datos del api
         this.api.getConsumerApiKeys(this.consumerId)
-            .subscribe(keys => {
-                this.keys = keys['data'];
-            }, error => {
-                this.toast.error_general(error);
-            }, () => {
-                this.loading = false;
+            .subscribe({
+                next: (keys) => {
+                    this.keys = keys['data'];
+                },
+                error: (error) => this.toast.error_general(error),
+                complete: () =>
+                    this.loading = false
             });
     }
 
@@ -83,13 +89,15 @@ export class DialogInfoKeyComponent implements OnInit {
 
         // Guardo el acl en el consumidor
         this.api.postConsumerApiKey(this.consumerId, body)
-            .subscribe(res => {
-                this.toast.success('text.id_extra', 'success.new_key', {msgExtra: res['id']});
-                this.getApiKeys();
-                this.key = '';
-                this.ttl = 0;
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
+            .subscribe({
+                next: (res) => {
+                    this.toast.success('text.id_extra', 'success.new_key', {msgExtra: res['id']});
+                    this.getApiKeys();
+                    this.key = '';
+                    this.ttl = 0;
+                },
+                error: (error) =>
+                    this.toast.error_general(error, {disableTimeOut: true})
             });
     }
 
@@ -104,6 +112,6 @@ export class DialogInfoKeyComponent implements OnInit {
             name: this.showKey(apikey.key, false) + ' [' + this.translate.instant('text.username') + ' ' + this.consumerName + ']'
         }, 'key')
             .then(() => { this.getApiKeys(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 }

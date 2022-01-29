@@ -226,117 +226,142 @@ export class DialogHelperService {
             }
 
             const dialogRef = this.dialog.open(DialogConfirmComponent, opt);
-            dialogRef.afterClosed().subscribe(result => {
+            dialogRef.afterClosed().subscribe((result) => {
                 if (result === 'true') {
 
                     // llamo al API
                     switch (group) {
                         case 'service':
-                            this.api.deleteService(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteService(select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                },
+                                error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'route':
-                            this.api.deleteRoute(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteRoute(select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'upstream':
-                            this.api.deleteUpstream(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteUpstream(select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'consumer':
-                            this.api.deleteConsumer(select.consumerId).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: (select.username || select.custom_id)});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteConsumer(select.consumerId).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: (select.username || select.custom_id)});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'target':
-                            this.api.deleteTarget(select.id, select.upstream.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.target});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteTarget(select.id, select.upstream.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.target});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'sni':
-                            this.api.deleteSni(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteSni(select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'cert':
-                            this.api.deleteCertificate(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteCertificate(select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'cacert':
-                            this.api.deleteCACertificate(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteCACertificate(select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'plugin':
-                            this.api.deletePlugin(select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deletePlugin(select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.id});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'acl':
-                            this.api.deleteConsumerAcl(select.consumerId, select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteConsumerAcl(select.consumerId, select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'key':
-                            this.api.deleteConsumerApiKey(select.consumerId, select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteConsumerApiKey(select.consumerId, select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                         case 'jwt':
-                            this.api.deleteConsumerJwtToken(select.consumerId, select.id).subscribe(() => {
-                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
-                                resolve();
-                            }, error => {
-                                this.toast.error_general(error, {disableTimeOut: true});
-                                reject();
+                            this.api.deleteConsumerJwtToken(select.consumerId, select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
                             });
                             break;
                     }

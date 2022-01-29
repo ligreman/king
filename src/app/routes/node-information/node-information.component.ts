@@ -34,7 +34,7 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
         this.getData();
 
         // Escucho cambios de nodo
-        this.nodeWatcher.nodeChanged$.subscribe(node => {
+        this.nodeWatcher.nodeChanged$.subscribe(() => {
             this.getData();
         });
     }
@@ -50,24 +50,29 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
         this.loading = true;
 
         this.api.getNodeInformation()
-            .subscribe(res => {
-                this.node_info = res;
+            .subscribe({
+                next: (res) => {
+                    this.node_info = res;
 
-                // pido el status del nodo
-                this.api.getNodeStatus()
-                    .subscribe(value => {
-                        this.node_status = value;
-                        this.processData();
-                    }, error => {
-                        this.toast.error('error.node_connection');
-                        this.route.navigate(['/landing']);
-                    }, () => {
-                        this.loading = false;
-                    });
-            }, error => {
-                this.toast.error('error.node_connection');
-                this.route.navigate(['/landing']);
-                this.loading = false;
+                    // pido el status del nodo
+                    this.api.getNodeStatus()
+                        .subscribe({
+                            next: (value) => {
+                                this.node_status = value;
+                                this.processData();
+                            },
+                            error: () => {
+                                this.toast.error('error.node_connection');
+                                this.route.navigate(['/landing']).then();
+                            },
+                            complete: () => this.loading = false
+                        });
+                },
+                error: () => {
+                    this.toast.error('error.node_connection');
+                    this.route.navigate(['/landing']).then();
+                    this.loading = false;
+                }
             });
     }
 

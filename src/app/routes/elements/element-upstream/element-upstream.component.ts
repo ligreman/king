@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
@@ -39,30 +40,29 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
         this.loading = true;
         this.filter = '';
 
-        this.getData()
-            .then(value => {
-                    this.dataSource = new MatTableDataSource(value);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                    this.loading = false;
-                },
-                error => {
-                    this.toast.error('error.node_connection');
-                    this.loading = false;
-                });
+        this.getData().then((value) => {
+                this.dataSource = new MatTableDataSource(value);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+                this.loading = false;
+            },
+            () => {
+                this.toast.error('error.node_connection');
+                this.loading = false;
+            });
     }
 
     /*
         Obtener los datos de forma asíncrona
      */
     async getData() {
-        const upstreams = await this.api.getUpstreams().toPromise();
+        const upstreams = await firstValueFrom(this.api.getUpstreams());
 
         for (const [idx, up] of upstreams['data'].entries()) {
-            const h = await this.api.getUpstreamHealth(up['id']).toPromise();
+            const h = await firstValueFrom(this.api.getUpstreamHealth(up['id']));
             upstreams['data'][idx]['health'] = h['data']['health'];
 
-            const t = await this.api.getTargets(up['id']).toPromise();
+            const t = await firstValueFrom(this.api.getTargets(up['id']));
             upstreams['data'][idx]['targets'] = t['data'];
         }
 
@@ -84,7 +84,7 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
     addEdit(selected = null) {
         this.dialogHelper.addEdit(selected, 'upstream')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -100,7 +100,7 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
     delete(select) {
         this.dialogHelper.deleteElement(select, 'upstream')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -119,6 +119,6 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
 
         this.dialogHelper.deleteElement(target, 'target')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 }

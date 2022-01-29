@@ -1,19 +1,21 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { find as _find } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-element-route',
     templateUrl: './element-route.component.html',
     styleUrls: ['./element-route.component.scss']
 })
-export class ElementRouteComponent implements OnInit, AfterViewInit {
+export class ElementRouteComponent implements OnInit, OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['id', 'name', 'service', 'protocols', 'methods', 'hosts', 'paths', 'headers', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -32,17 +34,19 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
         this.loading = true;
     }
 
+    ngOnDestroy(): void {
+    }
+
     ngAfterViewInit() {
         this.api.getServices()
-            .subscribe(ss => {
+            .subscribe({
+                next: (ss) => {
                     this.services = ss['data'];
                     this.getRoutes();
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     reloadData() {
@@ -54,16 +58,15 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
 
     getRoutes() {
         this.api.getRoutes()
-            .subscribe(value => {
+            .subscribe({
+                next: (value) => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     applyFilter() {
@@ -81,7 +84,7 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
     addEdit(selected = null) {
         this.dialogHelper.addEdit(selected, 'route')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -97,7 +100,7 @@ export class ElementRouteComponent implements OnInit, AfterViewInit {
     delete(select) {
         this.dialogHelper.deleteElement(select, 'route')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*

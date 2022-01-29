@@ -1,20 +1,22 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { sortedUniq as _sortedUniq } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-target',
     templateUrl: './dialog-new-target.component.html',
     styleUrls: ['./dialog-new-target.component.scss']
 })
-export class DialogNewTargetComponent implements OnInit {
+export class DialogNewTargetComponent implements OnInit, OnDestroy {
     formValid = false;
     currentTags = [];
     allTags = [];
@@ -39,7 +41,7 @@ export class DialogNewTargetComponent implements OnInit {
     ngOnInit(): void {
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -49,6 +51,9 @@ export class DialogNewTargetComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+    }
+
     /*
       Submit del formulario
    */
@@ -56,12 +61,14 @@ export class DialogNewTargetComponent implements OnInit {
         const result = this.prepareDataForKong(this.form.value);
 
         // llamo al API
-        this.api.postNewTarget(result, this.upstreamId).subscribe(value => {
-            this.toast.success('text.id_extra', 'success.new_target', {msgExtra: value['id']});
-            this.dialogRef.close(true);
-        }, error => {
-            this.toast.error_general(error, {disableTimeOut: true});
-        });
+        this.api.postNewTarget(result, this.upstreamId)
+            .subscribe({
+                next: (value) => {
+                    this.toast.success('text.id_extra', 'success.new_target', {msgExtra: value['id']});
+                    this.dialogRef.close(true);
+                },
+                error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+            });
     }
 
     /*

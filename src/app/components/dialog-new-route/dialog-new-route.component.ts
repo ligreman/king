@@ -1,21 +1,23 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Joi from 'joi';
 import { isEmpty as _isEmpty, size as _size, sortedUniq as _sortedUniq } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-route',
     templateUrl: './dialog-new-route.component.html',
     styleUrls: ['./dialog-new-route.component.scss']
 })
-export class DialogNewRouteComponent implements OnInit {
+export class DialogNewRouteComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
     formValid = false;
     validProtocols = ['http', 'https', 'tcp', 'tls', 'udp', 'grpc', 'grpcs'];
@@ -71,49 +73,33 @@ export class DialogNewRouteComponent implements OnInit {
 
     get protocolsField() { return this.form.get('protocols'); }
 
-    get hostsField() { return this.form.get('hosts'); }
-
     get methodsField() { return this.form.get('methods'); }
 
     get pathsField() { return this.form.get('paths'); }
 
-    get httpsRedirectStatusCodeField() { return this.form.get('https_redirect_status_code'); }
-
-    get snisField() { return this.form.get('snis'); }
-
     get regexPriorityField() { return this.form.get('regex_priority'); }
-
-    get pathHandlingField() { return this.form.get('path_handling'); }
-
-    get stripPathField() { return this.form.get('strip_path'); }
-
-    get preserveHostField() { return this.form.get('preserve_host'); }
-
-    get requestBufferingField() { return this.form.get('request_buffering'); }
-
-    get responseBufferingField() { return this.form.get('response_buffering'); }
-
-    get tagsField() { return this.form.get('tags'); }
 
     ngOnInit(): void {
         // Recupero la lista de servicios
         this.api.getServices()
-            .subscribe(services => {
-                for (let serv of services['data']) {
-                    this.servicesAvailable.push({id: serv.id, name: serv.name});
-                }
-            }, error => {
-                this.toast.error_general(error);
+            .subscribe({
+                next: (services) => {
+                    for (let serv of services['data']) {
+                        this.servicesAvailable.push({id: serv.id, name: serv.name});
+                    }
+                },
+                error: (error) => this.toast.error_general(error)
             });
 
         // La lista de SNIs
         this.api.getSnis()
-            .subscribe(snis => {
-                for (let sni of snis['data']) {
-                    this.snisAvailable.push({id: sni.id, name: sni.name});
-                }
-            }, error => {
-                this.toast.error_general(error);
+            .subscribe({
+                next: (snis) => {
+                    for (let sni of snis['data']) {
+                        this.snisAvailable.push({id: sni.id, name: sni.name});
+                    }
+                },
+                error: (error) => this.toast.error_general(error)
             });
 
         // Si viene un servicio para editar
@@ -122,17 +108,18 @@ export class DialogNewRouteComponent implements OnInit {
 
             // Rescato la info del servicio del api
             this.api.getRoute(this.routeIdEdit)
-                .subscribe(route => {
-                    // Relleno el formuarlio
-                    this.form.setValue(this.prepareDataForForm(route));
-                }, error => {
-                    this.toast.error_general(error);
+                .subscribe({
+                    next: (route) => {
+                        // Relleno el formuarlio
+                        this.form.setValue(this.prepareDataForForm(route));
+                    },
+                    error: (error) => this.toast.error_general(error)
                 });
         }
 
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -142,6 +129,9 @@ export class DialogNewRouteComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+    }
+
     /*
         Submit del formulario
      */
@@ -149,21 +139,25 @@ export class DialogNewRouteComponent implements OnInit {
         const result = this.prepareDataForKong(this.form.value);
         if (!this.editMode) {
             // llamo al API
-            this.api.postNewRoute(result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_route', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.postNewRoute(result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.new_route', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
         // Si venía es que es edición
         else {
-            this.api.patchRoute(this.routeIdEdit, result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.update_route', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.patchRoute(this.routeIdEdit, result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.update_route', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
     }
 

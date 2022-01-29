@@ -1,16 +1,18 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { saveAs } from 'file-saver';
 import { find as _find } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-info-route',
     templateUrl: './dialog-info-route.component.html',
     styleUrls: ['./dialog-info-route.component.scss']
 })
-export class DialogInfoRouteComponent implements OnInit {
+export class DialogInfoRouteComponent implements OnInit, OnDestroy {
     route;
     services;
     loading = true;
@@ -20,36 +22,38 @@ export class DialogInfoRouteComponent implements OnInit {
 
     ngOnInit(): void {
         this.api.getServices()
-            .subscribe(ss => {
+            .subscribe({
+                next: (ss) => {
                     this.services = ss['data'];
 
                     // Recojo los datos del api
                     this.api.getRoute(this.routeId)
-                        .subscribe(route => {
-                            this.route = route;
-                        }, error => {
-                            this.toast.error_general(error);
-                        }, () => {
-                            this.loading = false;
+                        .subscribe({
+                            next: (route) => {
+                                this.route = route;
+                            },
+                            error: (error) => this.toast.error_general(error),
+                            complete: () => this.loading = false
                         });
 
                     // La lista de SNIs
                     this.api.getSnis()
-                        .subscribe(snis => {
-                            for (let sni of snis['data']) {
-                                this.sniList[sni.id] = sni.name;
-                            }
-                        }, error => {
-                            this.toast.error_general(error);
+                        .subscribe({
+                            next: (snis) => {
+                                for (let sni of snis['data']) {
+                                    this.sniList[sni.id] = sni.name;
+                                }
+                            },
+                            error: (error) => this.toast.error_general(error)
                         });
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
+    ngOnDestroy(): void {
+    }
 
     downloadJson() {
         const blob = new Blob([JSON.stringify(this.route, null, 2)], {type: 'text/json'});

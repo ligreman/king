@@ -1,21 +1,23 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { isEmpty as _isEmpty, max as _max, min as _min, sortedUniq as _sortedUniq } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-rsu',
     templateUrl: './dialog-new-rsu.component.html',
     styleUrls: ['./dialog-new-rsu.component.scss']
 })
-export class DialogNewRsuComponent implements OnInit {
+export class DialogNewRsuComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
     formValid = false;
     validProtocols = ['http', 'https'];
@@ -58,8 +60,6 @@ export class DialogNewRsuComponent implements OnInit {
      */
     get nameField() { return this.form.get('name'); }
 
-    get tagsField() { return this.form.get('tags'); }
-
     get serviceProtocolField() { return this.form.get('service.protocol'); }
 
     get serviceHostField() { return this.form.get('service.host'); }
@@ -76,16 +76,12 @@ export class DialogNewRsuComponent implements OnInit {
 
     get routeMethodsField() { return this.form.get('route.methods'); }
 
-    get routePathsField() { return this.form.get('route.paths'); }
-
-    get routeStripPathField() { return this.form.get('route.strip_path'); }
-
     get targetsField() { return this.form.get('upstream.targets');}
 
     ngOnInit(): void {
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -95,27 +91,30 @@ export class DialogNewRsuComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+    }
+
     /*
         Submit del formulario
      */
     onSubmit() {
         const result = this.prepareDataForKong(this.form.value);
         // llamo al API para crear el servicio
-        this.api.postNewService(result.service).subscribe(newService => {
-            // Ahora creo la ruta y el Upstream
-            result.route.service.id = newService['id'];
+        this.api.postNewService(result.service).subscribe({
+            next: (newService) => {
+                // Ahora creo la ruta y el Upstream
+                result.route.service.id = newService['id'];
 
-            forkJoin({
-                theRoute: this.api.postNewRoute(result.route),
-                theUpstream: this.api.postNewUpstream(result.upstream)
-            }).subscribe(results => {
-                this.toast.success('success.new_rsu');
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
-        }, error => {
-            this.toast.error_general(error, {disableTimeOut: true});
+                forkJoin([this.api.postNewRoute(result.route), this.api.postNewUpstream(result.upstream)])
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.new_rsu');
+                            this.dialogRef.close(true);
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                    });
+            },
+            error: (error) => this.toast.error_general(error, {disableTimeOut: true})
         });
     }
 

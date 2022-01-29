@@ -1,18 +1,20 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-element-consumer',
     templateUrl: './element-consumer.component.html',
     styleUrls: ['./element-consumer.component.scss']
 })
-export class ElementConsumerComponent implements OnInit {
+export class ElementConsumerComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['id', 'username', 'custom_id', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -33,6 +35,9 @@ export class ElementConsumerComponent implements OnInit {
         this.getNodeInformation();
     }
 
+    ngOnDestroy(): void {
+    }
+
     /**
      * Recarga los datos de consumidores
      */
@@ -49,16 +54,15 @@ export class ElementConsumerComponent implements OnInit {
      */
     getConsumers() {
         this.api.getConsumers()
-            .subscribe(value => {
+            .subscribe({
+                next: (value) => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     /**
@@ -66,11 +70,12 @@ export class ElementConsumerComponent implements OnInit {
      */
     getNodeInformation() {
         this.api.getNodeInformation()
-            .subscribe(res => {
-                // Recojo los plugins activos para habilitar las secciones
-                this.enabledPlugins = res['plugins']['enabled_in_cluster'];
-            }, error => {
-                this.toast.error('error.node_connection');
+            .subscribe({
+                next: (res) => {
+                    // Recojo los plugins activos para habilitar las secciones
+                    this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+                },
+                error: () => this.toast.error('error.node_connection')
             });
     }
 

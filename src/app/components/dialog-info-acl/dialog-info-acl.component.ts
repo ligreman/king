@@ -1,17 +1,19 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { DialogHelperService } from '../../services/dialog-helper.service';
 import { ToastService } from '../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-info-acl',
     templateUrl: './dialog-info-acl.component.html',
     styleUrls: ['./dialog-info-acl.component.scss']
 })
-export class DialogInfoAclComponent implements OnInit {
+export class DialogInfoAclComponent implements OnInit, OnDestroy {
     acls;
     loading = true;
     group = '';
@@ -27,6 +29,9 @@ export class DialogInfoAclComponent implements OnInit {
         this.getAcls();
     }
 
+    ngOnDestroy(): void {
+    }
+
     /**
      * Obtengo los acls
      */
@@ -35,12 +40,12 @@ export class DialogInfoAclComponent implements OnInit {
 
         // Recojo los datos del api
         this.api.getConsumerAcls(this.consumerId)
-            .subscribe(acls => {
-                this.acls = acls['data'];
-            }, error => {
-                this.toast.error_general(error);
-            }, () => {
-                this.loading = false;
+            .subscribe({
+                next: (acls) => {
+                    this.acls = acls['data'];
+                },
+                error: (error) => this.toast.error_general(error),
+                complete: () => this.loading = false
             });
     }
 
@@ -55,12 +60,13 @@ export class DialogInfoAclComponent implements OnInit {
     addAclToConsumer() {
         // Guardo el acl en el consumidor
         this.api.postConsumerAcl(this.consumerId, {group: this.group})
-            .subscribe(res => {
-                this.toast.success('text.id_extra', 'success.new_acl', {msgExtra: this.group});
-                this.getAcls();
-                this.group = '';
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
+            .subscribe({
+                next: () => {
+                    this.toast.success('text.id_extra', 'success.new_acl', {msgExtra: this.group});
+                    this.getAcls();
+                    this.group = '';
+                },
+                error: (error) => this.toast.error_general(error, {disableTimeOut: true})
             });
     }
 

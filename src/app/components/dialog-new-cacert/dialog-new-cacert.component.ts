@@ -1,20 +1,22 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { sortedUniq as _sortedUniq } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-cacert',
     templateUrl: './dialog-new-cacert.component.html',
     styleUrls: ['./dialog-new-cacert.component.scss']
 })
-export class DialogNewCacertComponent implements OnInit {
+export class DialogNewCacertComponent implements OnInit, OnDestroy {
     formValid = false;
     editMode = false;
     loading = true;
@@ -42,13 +44,13 @@ export class DialogNewCacertComponent implements OnInit {
 
             // Rescato la info del servicio del api
             this.api.getCACertificate(this.cacertIdEdit)
-                .subscribe(cert => {
-                    // Relleno el formuarlio
-                    this.form.setValue(this.prepareDataForForm(cert));
-                }, error => {
-                    this.toast.error_general(error);
-                }, () => {
-                    this.loading = false;
+                .subscribe({
+                    next: (cert) => {
+                        // Relleno el formulario
+                        this.form.setValue(this.prepareDataForForm(cert));
+                    },
+                    error: (error) => this.toast.error_general(error),
+                    complete: () => this.loading = false
                 });
         } else {
             this.loading = false;
@@ -56,7 +58,7 @@ export class DialogNewCacertComponent implements OnInit {
 
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -66,6 +68,9 @@ export class DialogNewCacertComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+    }
+
     /*
       Submit del formulario
    */
@@ -73,21 +78,25 @@ export class DialogNewCacertComponent implements OnInit {
         const result = this.prepareDataForKong(this.form.value);
         if (!this.editMode) {
             // llamo al API
-            this.api.postNewCACertificate(result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_cacert', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.postNewCACertificate(result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.new_cacert', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
         // Si venía es que es edición
         else {
-            this.api.patchCACertificate(this.cacertIdEdit, result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.update_cacert', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.patchCACertificate(this.cacertIdEdit, result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.update_cacert', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
     }
 

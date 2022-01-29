@@ -1,18 +1,20 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-element-service',
     templateUrl: './element-service.component.html',
     styleUrls: ['./element-service.component.scss']
 })
-export class ElementServiceComponent implements OnInit, AfterViewInit {
+export class ElementServiceComponent implements OnInit, OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['id', 'name', 'protocol', 'host', 'port', 'path', 'ssl', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -30,6 +32,9 @@ export class ElementServiceComponent implements OnInit, AfterViewInit {
         this.loading = true;
     }
 
+    ngOnDestroy(): void {
+    }
+
     ngAfterViewInit() {
         this.reloadData();
     }
@@ -39,16 +44,15 @@ export class ElementServiceComponent implements OnInit, AfterViewInit {
         this.filter = '';
 
         this.api.getServices()
-            .subscribe(value => {
+            .subscribe({
+                next: (value) => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     applyFilter() {
@@ -66,7 +70,7 @@ export class ElementServiceComponent implements OnInit, AfterViewInit {
     addEdit(selected = null) {
         this.dialogHelper.addEdit(selected, 'service')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -82,6 +86,6 @@ export class ElementServiceComponent implements OnInit, AfterViewInit {
     delete(select) {
         this.dialogHelper.deleteElement(select, 'service')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 }

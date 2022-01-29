@@ -12,7 +12,7 @@ import {
     uniq as _uniq
 } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { forkJoin } from 'rxjs';
+import { firstValueFrom, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DataSet, Network } from 'vis-network/standalone';
 import { ApiService } from '../../services/api.service';
@@ -69,16 +69,18 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
         // Compruebo la conexión al nodo
         this.api.getNodeStatus()
-            .subscribe(value => {
+            .subscribe({
+                next: () => {
                     this.loading = true;
 
                     this.getNodeInformation();
                     this.getTags();
                 },
-                error => {
+                error: () => {
                     this.toast.error('error.node_connection');
-                    this.route.navigate(['/landing']);
-                });
+                    this.route.navigate(['/landing']).then();
+                }
+            });
     }
 
     ngOnDestroy(): void {}
@@ -144,7 +146,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 });
 
-                this.network.on('stabilized', d => {
+                this.network.on('stabilized', () => {
                     if (!this.stabilized) {
                         this.stabilized = true;
 
@@ -173,7 +175,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.getTags();
 
         // Llamo al API por la información para pintar el grafo
-        this.getGraphDataFromApi().subscribe(value => {
+        this.getGraphDataFromApi().subscribe((value) => {
             this.dataApi = value;
             this.filterGraphByTag();
         });
@@ -201,11 +203,12 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     getNodeInformation() {
         this.api.getNodeInformation()
-            .subscribe(res => {
-                // Recojo los plugins activos para habilitar las secciones
-                this.enabledPlugins = res['plugins']['enabled_in_cluster'];
-            }, error => {
-                this.toast.error('error.node_connection');
+            .subscribe({
+                next: (res) => {
+                    // Recojo los plugins activos para habilitar las secciones
+                    this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+                },
+                error: () => this.toast.error('error.node_connection')
             });
     }
 
@@ -214,7 +217,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     getTags() {
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -283,7 +286,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         // Ahora construyo los nodos y edges del grafo
-        this.createGraphNodesAndEdges(newData).then(r => {
+        this.createGraphNodesAndEdges(newData).then(() => {
             // Marco el grafo como estabilidazo y termino de cargarlo
             this.stabilized = false;
             this.loading = false;
@@ -332,7 +335,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     // Si no he generado previamente el nodo de upstream ya
                     if (this.data.nodes.get(up.id) === null) {
                         // Health del upstream
-                        const hu = await this.api.getUpstreamHealth(up.id).toPromise();
+                        const hu = await firstValueFrom(this.api.getUpstreamHealth(up.id));
                         const hc = this.getHealthData(hu['data'].health);
 
                         // nodo del upstream
@@ -355,12 +358,12 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     });
 
                     // Busco los targets del upstream
-                    const targets = await this.api.getTargets(up.id).toPromise();
+                    const targets = await firstValueFrom(this.api.getTargets(up.id));
 
                     // Por cada target creo un nodo
                     for (const target of targets['data']) {
                         // Health del upstream
-                        const ht = await this.api.getUpstreamTargetsHealth(up.id).toPromise();
+                        const ht = await firstValueFrom(this.api.getUpstreamTargetsHealth(up.id));
                         let htc = {};
                         // Busco el target concreto
                         ht['data'].forEach(tg => {
@@ -685,7 +688,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -696,7 +699,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -707,7 +710,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -718,7 +721,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -729,7 +732,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -740,7 +743,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -751,7 +754,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -768,14 +771,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
                 this.api.postSetTargetHealthy(selected.data.id, selected.data.upstream.id)
-                    .subscribe(value => {
-                        this.toast.success('success.healthy_target', '', {msgExtra: selected.data.id});
-                        this.populateGraph();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.healthy_target', '', {msgExtra: selected.data.id});
+                            this.populateGraph();
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -792,14 +796,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
                 this.api.postSetTargetUnhealthy(selected.data.id, selected.data.upstream.id)
-                    .subscribe(value => {
-                        this.toast.success('success.unhealthy_target', '', {msgExtra: selected.data.id});
-                        this.populateGraph();
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.unhealthy_target', '', {msgExtra: selected.data.id});
+                            this.populateGraph();
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /**
@@ -821,7 +826,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 .then(() => {
                     this.populateGraph();
                 })
-                .catch(error => {});
+                .catch(() => {});
         }
     }
 

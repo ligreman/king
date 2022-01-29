@@ -1,20 +1,22 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { DialogHelperService } from '../../services/dialog-helper.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-info-jwt',
     templateUrl: './dialog-info-jwt.component.html',
     styleUrls: ['./dialog-info-jwt.component.scss']
 })
-export class DialogInfoJwtComponent implements OnInit {
+export class DialogInfoJwtComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['key', 'algorithm', 'rsa_public_key', 'secret', 'actions'];
     dataSource: MatTableDataSource<any>;
     keys;
@@ -40,6 +42,9 @@ export class DialogInfoJwtComponent implements OnInit {
         this.getJwtTokens();
     }
 
+    ngOnDestroy(): void {
+    }
+
     /**
      * Obtengo los acls
      */
@@ -48,13 +53,13 @@ export class DialogInfoJwtComponent implements OnInit {
 
         // Recojo los datos del api
         this.api.getConsumerJwtTokens(this.consumerId)
-            .subscribe(tokens => {
-                this.dataSource = new MatTableDataSource(tokens['data']);
-                this.keys = tokens['data'];
-            }, error => {
-                this.toast.error_general(error);
-            }, () => {
-                this.loading = false;
+            .subscribe({
+                next: (tokens) => {
+                    this.dataSource = new MatTableDataSource(tokens['data']);
+                    this.keys = tokens['data'];
+                },
+                error: (error) => this.toast.error_general(error),
+                complete: () => this.loading = false
             });
     }
 
@@ -99,12 +104,13 @@ export class DialogInfoJwtComponent implements OnInit {
 
         // Guardo el acl en el consumidor
         this.api.postConsumerJwtTokens(this.consumerId, body)
-            .subscribe(res => {
-                this.toast.success('text.id_extra', 'success.new_jwt', {msgExtra: res['id']});
-                this.getJwtTokens();
-                this.form.reset();
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
+            .subscribe({
+                next: (res) => {
+                    this.toast.success('text.id_extra', 'success.new_jwt', {msgExtra: res['id']});
+                    this.getJwtTokens();
+                    this.form.reset();
+                },
+                error: (error) => this.toast.error_general(error, {disableTimeOut: true})
             });
     }
 

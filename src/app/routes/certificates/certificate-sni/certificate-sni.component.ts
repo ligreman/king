@@ -1,18 +1,20 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-certificate-sni',
     templateUrl: './certificate-sni.component.html',
     styleUrls: ['./certificate-sni.component.scss']
 })
-export class CertificateSniComponent implements OnInit, AfterViewInit {
+export class CertificateSniComponent implements OnInit, OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['id', 'name', 'certificate', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -31,17 +33,19 @@ export class CertificateSniComponent implements OnInit, AfterViewInit {
         this.loading = true;
     }
 
+    ngOnDestroy(): void {
+    }
+
     ngAfterViewInit() {
         this.api.getServices()
-            .subscribe(ss => {
+            .subscribe({
+                next: (ss) => {
                     this.snis = ss['data'];
                     this.getSnis();
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     reloadData() {
@@ -53,16 +57,15 @@ export class CertificateSniComponent implements OnInit, AfterViewInit {
 
     getSnis() {
         this.api.getSnis()
-            .subscribe(value => {
+            .subscribe({
+                next: (value) => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
                     this.dataSource.sort = this.sort;
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     applyFilter() {
@@ -80,7 +83,7 @@ export class CertificateSniComponent implements OnInit, AfterViewInit {
     addEditSni(selected = null) {
         this.dialogHelper.addEdit(selected, 'sni')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -89,6 +92,6 @@ export class CertificateSniComponent implements OnInit, AfterViewInit {
     delete(select) {
         this.dialogHelper.deleteElement(select, 'sni')
             .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .catch(() => {});
     }
 }

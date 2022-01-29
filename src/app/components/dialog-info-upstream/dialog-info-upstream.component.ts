@@ -1,17 +1,20 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { saveAs } from 'file-saver';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
+import { firstValueFrom } from 'rxjs';
 import { ApiService } from '../../services/api.service';
 import { DialogHelperService } from '../../services/dialog-helper.service';
 import { ToastService } from '../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-info-upstream',
     templateUrl: './dialog-info-upstream.component.html',
     styleUrls: ['./dialog-info-upstream.component.scss']
 })
-export class DialogInfoUpstreamComponent implements OnInit {
+export class DialogInfoUpstreamComponent implements OnInit, OnDestroy {
     upstream;
     upstreamHealth;
     upstreamBar = {ok: 0, off: 0, color: 'primary'};
@@ -25,9 +28,12 @@ export class DialogInfoUpstreamComponent implements OnInit {
         this.reloadData();
     }
 
+    ngOnDestroy(): void {
+    }
+
     reloadData() {
         this.loading = true;
-        this.getData().then(value => {
+        this.getData().then(() => {
                 this.loading = false;
             },
             error => {
@@ -38,11 +44,11 @@ export class DialogInfoUpstreamComponent implements OnInit {
 
     async getData() {
         // Datos del upstream
-        this.upstream = await this.api.getUpstream(this.upstreamId).toPromise();
+        this.upstream = await firstValueFrom(this.api.getUpstream(this.upstreamId));
         // Salud del upstream
-        this.upstreamHealth = await this.api.getUpstreamHealth(this.upstreamId).toPromise();
+        this.upstreamHealth = await firstValueFrom(this.api.getUpstreamHealth(this.upstreamId));
         // Salud de los targets y su info
-        const t = await this.api.getUpstreamTargetsHealth(this.upstreamId).toPromise();
+        const t = await firstValueFrom(this.api.getUpstreamTargetsHealth(this.upstreamId));
         this.targets = t['data'];
 
         // Calculo el porcentaje de health del upstream según sus targets
@@ -108,13 +114,14 @@ export class DialogInfoUpstreamComponent implements OnInit {
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
                 this.api.postSetTargetHealthy(selected.id, selected.upstream.id)
-                    .subscribe(value => {
-                        this.toast.success('success.healthy_target', '', {msgExtra: selected.id});
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.healthy_target', '', {msgExtra: selected.id});
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -131,13 +138,14 @@ export class DialogInfoUpstreamComponent implements OnInit {
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
                 this.api.postSetTargetUnhealthy(selected.id, selected.upstream.id)
-                    .subscribe(value => {
-                        this.toast.success('success.unhealthy_target', '', {msgExtra: selected.id});
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            this.toast.success('success.unhealthy_target', '', {msgExtra: selected.id});
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*

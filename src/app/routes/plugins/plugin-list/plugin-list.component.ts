@@ -1,9 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DialogConfirmComponent } from '../../../components/dialog-confirm/dialog-confirm.component';
@@ -11,12 +12,13 @@ import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-plugin-list',
     templateUrl: './plugin-list.component.html',
     styleUrls: ['./plugin-list.component.scss']
 })
-export class PluginListComponent implements OnInit {
+export class PluginListComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['enabled', 'id', 'name', 'route', 'service', 'consumer', 'protocols', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -37,32 +39,36 @@ export class PluginListComponent implements OnInit {
         this.reloadData(true);
     }
 
+    ngOnDestroy(): void {
+    }
+
     reloadData(all: boolean) {
         this.loading = true;
         this.filter = '';
 
-        this.getData(all).subscribe(value => {
-            this.dataSource = new MatTableDataSource(value.plugins);
-            this.dataSource.paginator = this.paginator;
-            this.dataSource.sort = this.sort;
+        this.getData(all)
+            .subscribe({
+                next: (value) => {
+                    this.dataSource = new MatTableDataSource(value.plugins);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
 
-            // Si he cogido todos los datos, los proceso
-            if (all) {
-                value['services'].forEach(serv => {
-                    this.services[serv.id] = serv.name;
-                });
-                value['routes'].forEach(route => {
-                    this.routes[route.id] = route.name;
-                });
-                value['consumers'].forEach(consumer => {
-                    this.consumers[consumer.id] = consumer.username;
-                });
-            }
-        }, error => {
-            this.toast.error('error.node_connection');
-        }, () => {
-            this.loading = false;
-        });
+                    // Si he cogido todos los datos, los proceso
+                    if (all) {
+                        value['services'].forEach(serv => {
+                            this.services[serv.id] = serv.name;
+                        });
+                        value['routes'].forEach(route => {
+                            this.routes[route.id] = route.name;
+                        });
+                        value['consumers'].forEach(consumer => {
+                            this.consumers[consumer.id] = consumer.username;
+                        });
+                    }
+                },
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     getData(all: boolean) {
@@ -100,7 +106,7 @@ export class PluginListComponent implements OnInit {
     addEditPlugin(selected = null) {
         this.dialogHelper.addEdit(selected, 'plugin')
             .then(() => { this.reloadData(false); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -116,7 +122,7 @@ export class PluginListComponent implements OnInit {
     delete(select) {
         this.dialogHelper.deleteElement(select, 'plugin')
             .then(() => { this.reloadData(false); })
-            .catch(error => {});
+            .catch(() => {});
     }
 
     /*
@@ -139,18 +145,19 @@ export class PluginListComponent implements OnInit {
         };
 
         const dialogRef = this.dialog.open(DialogConfirmComponent, opt);
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
             if (result === 'true') {
                 this.api.enablePlugin(row.id, row.enabled)
-                    .subscribe(value => {
-                        if (row.enabled) {
-                            this.toast.success('success.enabled_plugin', '', {msgExtra: row.name});
-                        } else {
-                            this.toast.success('success.disabled_plugin', '', {msgExtra: row.name});
-                        }
-                        this.reloadData(false);
-                    }, error => {
-                        this.toast.error_general(error, {disableTimeOut: true});
+                    .subscribe({
+                        next: () => {
+                            if (row.enabled) {
+                                this.toast.success('success.enabled_plugin', '', {msgExtra: row.name});
+                            } else {
+                                this.toast.success('success.disabled_plugin', '', {msgExtra: row.name});
+                            }
+                            this.reloadData(false);
+                        },
+                        error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             } else {
                 row.enabled = !row.enabled;

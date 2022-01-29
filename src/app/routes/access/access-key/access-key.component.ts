@@ -1,20 +1,22 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { DateTime } from 'luxon';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-access-key',
     templateUrl: './access-key.component.html',
     styleUrls: ['./access-key.component.scss']
 })
-export class AccessKeyComponent implements OnInit {
+export class AccessKeyComponent implements OnInit, OnDestroy {
 
     displayedColumns: string[] = ['id', 'key', 'consumer', 'created_at', 'ttl', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
@@ -36,6 +38,9 @@ export class AccessKeyComponent implements OnInit {
         this.loading = true;
         this.getApiKeys();
         this.getConsumers();
+    }
+
+    ngOnDestroy(): void {
     }
 
     /**
@@ -82,7 +87,8 @@ export class AccessKeyComponent implements OnInit {
      */
     getApiKeys() {
         this.api.getApiKeys()
-            .subscribe(value => {
+            .subscribe({
+                next: (value) => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
                     // Accessor para poder ordenar por la columna consumer, cuyo campo para ordenar está anidado
@@ -97,11 +103,9 @@ export class AccessKeyComponent implements OnInit {
                     };
                     this.dataSource.sort = this.sort;
                 },
-                error => {
-                    this.toast.error('error.node_connection');
-                }, () => {
-                    this.loading = false;
-                });
+                error: () => this.toast.error('error.node_connection'),
+                complete: () => this.loading = false
+            });
     }
 
     /**
@@ -109,13 +113,14 @@ export class AccessKeyComponent implements OnInit {
      */
     getConsumers() {
         this.api.getConsumers()
-            .subscribe(res => {
-                // Recojo los consumidores
-                res['data'].forEach(consumer => {
-                    this.consumers[consumer.id] = consumer.username;
-                });
-            }, error => {
-                this.toast.error('error.node_connection');
+            .subscribe({
+                next: (res) => {
+                    // Recojo los consumidores
+                    res['data'].forEach(consumer => {
+                        this.consumers[consumer.id] = consumer.username;
+                    });
+                },
+                error: () => this.toast.error('error.node_connection')
             });
     }
 

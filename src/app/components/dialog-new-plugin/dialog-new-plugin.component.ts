@@ -1,22 +1,24 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { get as _get, isArray as _isArray, isObject as _isObject, set as _set, sortedUniq as _sortedUniq, toInteger as _toInteger } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-plugin',
     templateUrl: './dialog-new-plugin.component.html',
     styleUrls: ['./dialog-new-plugin.component.scss']
 })
-export class DialogNewPluginComponent implements OnInit {
+export class DialogNewPluginComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
     formValid = false;
     defaultProtocols = ['http', 'https', 'tcp', 'tls', 'udp', 'grpc', 'grpcs'];
@@ -66,12 +68,6 @@ export class DialogNewPluginComponent implements OnInit {
 
     get protocolsField() { return this.form.get('protocols'); }
 
-    get enabledField() { return this.form.get('enabled'); }
-
-    get configField() { return this.form.get('config'); }
-
-    get tagsField() { return this.form.get('tags'); }
-
     ngOnInit(): void {
         // Recojo del api los datos
         forkJoin([
@@ -82,7 +78,7 @@ export class DialogNewPluginComponent implements OnInit {
         ]).pipe(map(([services, routes, consumers, plugins]) => {
             // forkJoin returns an array of values, here we map those values to an object
             return {services: services['data'], routes: routes['data'], consumers: consumers['data'], plugins: plugins['enabled_plugins']};
-        })).subscribe(value => {
+        })).subscribe((value) => {
             this.servicesList = value.services;
             this.routesList = value.routes;
             this.consumersList = value.consumers;
@@ -95,21 +91,22 @@ export class DialogNewPluginComponent implements OnInit {
 
             // Rescato la info del servicio del api
             this.api.getPlugin(this.pluginIdEdit)
-                .subscribe(plugin => {
-                    // Primero he de disparar el evento de cambio de schema para que cargue los campos de formulario
-                    this.nameField.setValue(plugin['name']);
-                    this.pluginChange(plugin);
+                .subscribe({
+                    next: (plugin) => {
+                        // Primero he de disparar el evento de cambio de schema para que cargue los campos de formulario
+                        this.nameField.setValue(plugin['name']);
+                        this.pluginChange(plugin);
 
-                    // Como estoy en modo edición, no permito cambiar el tipo de plugin
-                    this.nameField.disable();
-                }, error => {
-                    this.toast.error_general(error);
+                        // Como estoy en modo edición, no permito cambiar el tipo de plugin
+                        this.nameField.disable();
+                    },
+                    error: (error) => this.toast.error_general(error)
                 });
         }
 
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -119,6 +116,9 @@ export class DialogNewPluginComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+    }
+
     /*
         Submit del formulario
      */
@@ -126,21 +126,25 @@ export class DialogNewPluginComponent implements OnInit {
         const result = this.prepareDataForKong(this.form.value);
         if (!this.editMode) {
             // llamo al API
-            this.api.postNewPlugin(result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_plugin', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.postNewPlugin(result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.new_plugin', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
         // Si es que es edición
         else {
-            this.api.patchPlugin(this.pluginIdEdit, result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.update_plugin', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.patchPlugin(this.pluginIdEdit, result)
+                .subscribe({
+                    next: (value) => {
+                        this.toast.success('text.id_extra', 'success.update_plugin', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
     }
 
@@ -283,7 +287,7 @@ export class DialogNewPluginComponent implements OnInit {
     pluginChange(updateFormData = null) {
         // Obtengo el schema del plugin
         this.api.getPluginSchema(this.nameField.value)
-            .subscribe(value => {
+            .subscribe((value) => {
                 const pluginSchemaFields = this.parseSchema(value);
                 this.arrayFields = [];
                 this.fieldTypes = {};

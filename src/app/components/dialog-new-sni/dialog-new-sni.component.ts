@@ -1,19 +1,21 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { sortedUniq as _sortedUniq } from 'lodash';
+import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-dialog-new-sni',
     templateUrl: './dialog-new-sni.component.html',
     styleUrls: ['./dialog-new-sni.component.scss']
 })
-export class DialogNewSniComponent implements OnInit {
+export class DialogNewSniComponent implements OnInit, OnDestroy {
     formValid = false;
     editMode = false;
     currentTags = [];
@@ -39,14 +41,14 @@ export class DialogNewSniComponent implements OnInit {
 
     ngOnInit(): void {
         this.api.getCertificates()
-            .subscribe(certs => {
-                for (let cert of certs['data']) {
-                    this.certificatesAvailable.push(cert.id);
-                }
-            }, error => {
-                this.toast.error_general(error);
-            }, () => {
-                this.loading = false;
+            .subscribe({
+                next: (certs) => {
+                    for (let cert of certs['data']) {
+                        this.certificatesAvailable.push(cert.id);
+                    }
+                },
+                error: (error) => this.toast.error_general(error),
+                complete: () => this.loading = false
             });
 
         // Si viene un servicio para editar
@@ -55,17 +57,17 @@ export class DialogNewSniComponent implements OnInit {
 
             // Rescato la info del servicio del api
             this.api.getSni(this.sniIdEdit)
-                .subscribe(route => {
-                    // Relleno el formuarlio
-                    this.form.setValue(this.prepareDataForForm(route));
-                }, error => {
-                    this.toast.error_general(error);
+                .subscribe({
+                    next: route => {
+                        // Relleno el formuarlio
+                        this.form.setValue(this.prepareDataForForm(route));
+                    }, error: (error) => this.toast.error_general(error)
                 });
         }
 
         // Lista de tags
         this.api.getTags()
-            .subscribe(res => {
+            .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
                     this.allTags.push(data.tag);
@@ -75,6 +77,9 @@ export class DialogNewSniComponent implements OnInit {
             });
     }
 
+    ngOnDestroy(): void {
+    }
+
     /*
       Submit del formulario
    */
@@ -82,21 +87,25 @@ export class DialogNewSniComponent implements OnInit {
         const result = this.prepareDataForKong(this.form.value);
         if (!this.editMode) {
             // llamo al API
-            this.api.postNewSni(result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.new_sni', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.postNewSni(result)
+                .subscribe({
+                    next: value => {
+                        this.toast.success('text.id_extra', 'success.new_sni', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
         // Si venía es que es edición
         else {
-            this.api.patchSni(this.sniIdEdit, result).subscribe(value => {
-                this.toast.success('text.id_extra', 'success.update_sni', {msgExtra: value['id']});
-                this.dialogRef.close(true);
-            }, error => {
-                this.toast.error_general(error, {disableTimeOut: true});
-            });
+            this.api.patchSni(this.sniIdEdit, result)
+                .subscribe({
+                    next: value => {
+                        this.toast.success('text.id_extra', 'success.update_sni', {msgExtra: value['id']});
+                        this.dialogRef.close(true);
+                    },
+                    error: (error) => this.toast.error_general(error, {disableTimeOut: true})
+                });
         }
     }
 
