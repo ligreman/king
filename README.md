@@ -34,8 +34,7 @@ King for Kong has been developed to be compatible with Kong API Gateway 2.4.x ve
 
 ## Installation
 
-Download the latest `.zip` [release package](https://github.com/ligreman/king/releases), and unzip it into a web application
-server ([Apache](https://httpd.apache.org/download.cgi), [Nginx](https://nginx.org/en/download.html)...).
+Download the latest `.zip` [release package](https://github.com/ligreman/king/releases), and unzip it into a web application server ([Apache](https://httpd.apache.org/download.cgi), [Nginx](https://nginx.org/en/download.html)...).
 
 ## Development
 
@@ -57,11 +56,11 @@ King for Kong will be available at `http://localhost:4200`
 
 ### How to upgrade
 
-To upgrade Angular and Angular Material libraries, use the `ng` tool included with Angular:
+To upgrade Angular and Angular Material libraries, use the `npx` tool included with Angular. Example:
 
-`ng update @angular/core @angular/cli`
+`npx @angular/cli@13 update @angular/core@13 @angular/cli@13 --force`
 
-`ng update @angular/material`
+`npx @angular/cli@13 update @angular/material@13 --force`
 
 ## Author
 

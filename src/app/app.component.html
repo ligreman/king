@@ -47,6 +47,10 @@
                 <mat-icon>vpn_key</mat-icon>
                 {{'header.menu.keys' | translate | uppercase}}
             </button>
+            <button mat-menu-item routerLink="/access-jwt" routerLinkActive="active-route">
+                <mat-icon>confirmation_number</mat-icon>
+                {{'header.menu.jwt' | translate | uppercase}}
+            </button>
         </mat-menu>
         <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()" color="accent" mat-button>
             <mat-icon>security</mat-icon>

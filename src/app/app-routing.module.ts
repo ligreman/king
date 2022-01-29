@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ConnectedGuard } from './guards/connected.guard';
 import { AccessAclsComponent } from './routes/access/access-acls/access-acls.component';
+import { AccessJwtComponent } from './routes/access/access-jwt/access-jwt.component';
 import { AccessKeyComponent } from './routes/access/access-key/access-key.component';
 import { ElementConsumerComponent } from './routes/access/element-consumer/element-consumer.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
@@ -26,6 +27,7 @@ const routes: Routes = [
     {path: 'element-consumer', component: ElementConsumerComponent, canActivate: [ConnectedGuard]},
     {path: 'access-acls', component: AccessAclsComponent, canActivate: [ConnectedGuard]},
     {path: 'access-key', component: AccessKeyComponent, canActivate: [ConnectedGuard]},
+    {path: 'access-jwt', component: AccessJwtComponent, canActivate: [ConnectedGuard]},
     {path: 'plugin-list', component: PluginListComponent, canActivate: [ConnectedGuard]},
     {path: 'certificate-cert', component: CertificateCertComponent, canActivate: [ConnectedGuard]},
     {path: 'certificate-cacert', component: CertificateCacertComponent, canActivate: [ConnectedGuard]},

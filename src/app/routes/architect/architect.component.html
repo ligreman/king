@@ -176,6 +176,15 @@
                 </div>
             </mat-list-item>
 
+            <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('jwt')">
+                <div mat-line>
+                    <button (click)="showInfo({id: selection.consumerId, group: 'jwt', username: selection.label})" mat-button>
+                        <mat-icon>confirmation_number</mat-icon>
+                        {{'jwt.dialog.info' | translate}}
+                    </button>
+                </div>
+            </mat-list-item>
+
             <!---->
 
             <mat-list-item *ngIf="groupsEdit.includes(selection.group)">

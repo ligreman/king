@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogConfirmComponent } from '../components/dialog-confirm/dialog-confirm.component';
 import { DialogInfoAclComponent } from '../components/dialog-info-acl/dialog-info-acl.component';
+import { DialogInfoJwtComponent } from '../components/dialog-info-jwt/dialog-info-jwt.component';
 import { DialogInfoKeyComponent } from '../components/dialog-info-key/dialog-info-key.component';
 import { DialogInfoPluginComponent } from '../components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from '../components/dialog-info-route/dialog-info-route.component';
@@ -131,6 +132,10 @@ export class DialogHelperService {
                 opt.data = select;
                 component = DialogInfoKeyComponent;
                 break;
+            case 'jwt':
+                opt.data = select;
+                component = DialogInfoJwtComponent;
+                break;
         }
 
         this.dialog.open(component, opt);
@@ -202,6 +207,16 @@ export class DialogHelperService {
                     opt.data = {
                         title: 'dialog.confirm.delete_key_title',
                         content: 'dialog.confirm.delete_key',
+                        name: select.name,
+                        consumerId: select.consumerId,
+                        id: select.id,
+                        delete: true
+                    };
+                    break;
+                case 'jwt':
+                    opt.data = {
+                        title: 'dialog.confirm.delete_jwt_title',
+                        content: 'dialog.confirm.delete_jwt',
                         name: select.name,
                         consumerId: select.consumerId,
                         id: select.id,
@@ -308,6 +323,15 @@ export class DialogHelperService {
                             break;
                         case 'key':
                             this.api.deleteConsumerApiKey(select.consumerId, select.id).subscribe(() => {
+                                this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                resolve();
+                            }, error => {
+                                this.toast.error_general(error, {disableTimeOut: true});
+                                reject();
+                            });
+                            break;
+                        case 'jwt':
+                            this.api.deleteConsumerJwtToken(select.consumerId, select.id).subscribe(() => {
                                 this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                 resolve();
                             }, error => {

@@ -31,6 +31,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     // Si tengo seleccionado un elemento del grafo
     selection: any = '';
     // First stabilization
+    firstStabilized = false;
+    // Is stabilized
     stabilized = false;
     // Show the toolbar
     showTools = false;
@@ -46,7 +48,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     netFilter = {tag: '', element: 'all', mode: true};
     // Posibles tipos de nodos que tienen acciones propias
     groupsInfo = ['service', 'route', 'upstream', 'target', 'plugin'];
-    othersInfo = ['acl', 'key'];
+    othersInfo = ['acl', 'key', 'jwt'];
     groupsEdit = ['service', 'route', 'upstream', 'consumer', 'plugin'];
     groupsDelete = ['service', 'route', 'upstream', 'consumer', 'target', 'plugin'];
     groupsAddPlugin = [];
@@ -145,7 +147,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.network.on('stabilized', d => {
                     if (!this.stabilized) {
                         this.stabilized = true;
-                        this.network.fit();
+
+                        if (!this.firstStabilized) {
+                            this.network.fit();
+                            this.firstStabilized = true;
+                        }
                         // this.network.focus('center');
                     }
                 });
@@ -430,6 +436,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 label: route.name + '\n' + route.paths.join(', ') + '\n[' + route.protocols.join(', ') + ']',
                 title: element,
                 group: 'route',
+                x: 300,
+                y: dist,
                 data: route
             });
 

@@ -40,6 +40,7 @@ import { AppComponent } from './app.component';
 import { DialogAboutComponent } from './components/dialog-about/dialog-about.component';
 import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
 import { DialogInfoAclComponent } from './components/dialog-info-acl/dialog-info-acl.component';
+import { DialogInfoJwtComponent } from './components/dialog-info-jwt/dialog-info-jwt.component';
 import { DialogInfoKeyComponent } from './components/dialog-info-key/dialog-info-key.component';
 import { DialogInfoPluginComponent } from './components/dialog-info-plugin/dialog-info-plugin.component';
 import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-info-route.component';
@@ -61,6 +62,7 @@ import { ManualContentComponent } from './components/manual-content/manual-conte
 import { ManualEnComponent } from './components/manual-content/manual-en/manual-en.component';
 import { ManualEsComponent } from './components/manual-content/manual-es/manual-es.component';
 import { AccessAclsComponent } from './routes/access/access-acls/access-acls.component';
+import { AccessJwtComponent } from './routes/access/access-jwt/access-jwt.component';
 import { AccessKeyComponent } from './routes/access/access-key/access-key.component';
 import { ElementConsumerComponent } from './routes/access/element-consumer/element-consumer.component';
 import { ArchitectComponent } from './routes/architect/architect.component';
@@ -120,7 +122,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogInfoKeyComponent,
         ManualEnComponent,
         ManualEsComponent,
-        DialogNewRsuComponent
+        DialogNewRsuComponent,
+        AccessJwtComponent,
+        DialogInfoJwtComponent
     ],
     imports: [
         BrowserModule,

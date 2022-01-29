@@ -123,6 +123,14 @@ export class ElementConsumerComponent implements OnInit {
     }
 
     /**
+     * Muestra la info JWT Tokens del elemento seleccionado
+     * @param select Elemento a ver su info
+     */
+    infoJwtTokens(select) {
+        this.dialogHelper.showInfoElement(select, 'jwt');
+    }
+
+    /**
      * Comprueba que un plugin esté activo
      * @param plugin Nombre del plugin
      */

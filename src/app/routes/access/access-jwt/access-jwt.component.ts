@@ -10,13 +10,13 @@ import { DialogHelperService } from '../../../services/dialog-helper.service';
 import { ToastService } from '../../../services/toast.service';
 
 @Component({
-    selector: 'app-access-key',
-    templateUrl: './access-key.component.html',
-    styleUrls: ['./access-key.component.scss']
+    selector: 'app-access-jwt',
+    templateUrl: './access-jwt.component.html',
+    styleUrls: ['./access-jwt.component.scss']
 })
-export class AccessKeyComponent implements OnInit {
+export class AccessJwtComponent implements OnInit {
 
-    displayedColumns: string[] = ['id', 'key', 'consumer', 'created_at', 'ttl', 'tags', 'actions'];
+    displayedColumns: string[] = ['id', 'key', 'algorithm', 'rsa_public_key', 'secret', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -34,7 +34,7 @@ export class AccessKeyComponent implements OnInit {
     ngOnInit(): void {
         // Aquí para que no error de ExpressionChangedAfterItHasBeenCheckedError
         this.loading = true;
-        this.getApiKeys();
+        this.getJwtTokens();
         this.getConsumers();
     }
 
@@ -45,7 +45,7 @@ export class AccessKeyComponent implements OnInit {
         this.loading = true;
         this.filter = '';
 
-        this.getApiKeys();
+        this.getJwtTokens();
         this.getConsumers();
         this.getNow();
     }
@@ -80,8 +80,8 @@ export class AccessKeyComponent implements OnInit {
     /**
      * Obtiene las API key
      */
-    getApiKeys() {
-        this.api.getApiKeys()
+    getJwtTokens() {
+        this.api.getJwtTokens()
             .subscribe(value => {
                     this.dataSource = new MatTableDataSource(value['data']);
                     this.dataSource.paginator = this.paginator;
@@ -140,9 +140,10 @@ export class AccessKeyComponent implements OnInit {
             id: select.id,
             consumerId: select.consumer.id,
             name: this.showKey(select.key, false) + ' [' + this.translate.instant('text.username') + ' ' + this.consumers[select.consumer.id] + ']'
-        }, 'key')
+        }, 'jwt')
             .then(() => { this.reloadData(); })
             .catch(error => {});
     }
 
 }
+

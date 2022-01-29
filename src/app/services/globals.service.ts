@@ -4,19 +4,7 @@ import { Injectable } from '@angular/core';
     providedIn: 'root'
 })
 export class GlobalsService {
-    constructor() {
-    }
-
     private _NODE_API_URL = '';
-
-    get NODE_API_URL(): string {
-        return this._NODE_API_URL;
-    }
-
-    set NODE_API_URL(value: string) {
-        this._NODE_API_URL = value;
-    }
-
     // NETWORK GRAPH
     private _NETWORK_NODES = {
         font: {
@@ -58,11 +46,6 @@ export class GlobalsService {
             borderRadius: 2
         }
     };
-
-    get NETWORK_NODES(): {} {
-        return this._NETWORK_NODES;
-    }
-
     private _NETWORK_EDGES = {
         arrows: {
             to: {
@@ -130,11 +113,6 @@ export class GlobalsService {
         selectionWidth: 1,
         width: 1
     };
-
-    get NETWORK_EDGES(): {} {
-        return this._NETWORK_EDGES;
-    }
-
     private _NETWORK_GROUPS = {
         kong: {
             labelHighlightBold: false,
@@ -217,6 +195,10 @@ export class GlobalsService {
         },
         route: {
             shape: 'icon',
+            fixed: {
+                x: true,
+                y: true
+            },
             icon: {
                 face: 'Material Icons',
                 code: 'timeline',
@@ -440,12 +422,30 @@ export class GlobalsService {
             }
         }
     };
+    private _GRAPH_SCHEME = ['#B2DFDB', '#80CBC4', '#4DB6AC', '#009688', '#00796B', '#004D40'];
+
+    constructor() {
+    }
+
+    get NODE_API_URL(): string {
+        return this._NODE_API_URL;
+    }
+
+    set NODE_API_URL(value: string) {
+        this._NODE_API_URL = value;
+    }
+
+    get NETWORK_NODES(): {} {
+        return this._NETWORK_NODES;
+    }
+
+    get NETWORK_EDGES(): {} {
+        return this._NETWORK_EDGES;
+    }
 
     get NETWORK_GROUPS(): {} {
         return this._NETWORK_GROUPS;
     }
-
-    private _GRAPH_SCHEME = ['#B2DFDB', '#80CBC4', '#4DB6AC', '#009688', '#00796B', '#004D40'];
 
     get GRAPH_SCHEME(): string[] {
         return this._GRAPH_SCHEME;

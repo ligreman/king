@@ -19,6 +19,7 @@
         "new_cacert": "Certificado de CA creado",
         "new_acl": "ACL creado",
         "new_key": "API Key creada",
+        "new_jwt": "Token JWT creado",
         "update_service": "Servicio actualizado",
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
@@ -37,6 +38,7 @@
         "delete_cert": "Certificado {{extra}} eliminado",
         "delete_cacert": "Certificado de CA {{extra}} eliminado",
         "delete_acl": "ACL {{extra}} eliminado",
+        "delete_jwt": "Token JWT {{extra}} eliminado",
         "delete_key": "API Key {{extra}} eliminada",
         "healthy_target": "Target {{extra}} marcado sano",
         "unhealthy_target": "Target {{extra}} marcado erróneo",
@@ -100,6 +102,8 @@
             "delete_plugin": "¿Deseas eliminar este plugin?",
             "delete_acl_title": "Eliminar ACL",
             "delete_acl": "¿Deseas eliminar este ACL?",
+            "delete_jwt_title": "Eliminar token JWT",
+            "delete_jwt": "¿Deseas eliminar esta validación de token JWT?",
             "delete_key_title": "Eliminar API Key",
             "delete_key": "¿Deseas eliminar esta API Key?",
             "enable_plugin_title": "Activar plugin",
@@ -132,6 +136,7 @@
             "acl": "Control de acceso",
             "acls": "Grupos ACL",
             "keys": "API keys",
+            "jwt": "Tokens JWT",
             "kong_node": "API de administración de un nodo de Kong",
             "kong_node_tooltip": "Introduce la URL y puerto",
             "kong_node_button_tooltip": "Conectar",
@@ -568,10 +573,36 @@
             }
         }
     },
+    "jwt": {
+        "add": "Añadir validación de token JWT",
+        "header": "Tokens JWT válidos",
+        "delete_key": "Eliminar validación del token JWT del consumidor",
+        "delete_key_content": "Confirma que quieres que este token JWT deje de ser válido para el consumidor.",
+        "explanation": "Para añadir nuevos tokens JWT válidos acude a la pantalla de consumidores",
+        "dialog": {
+            "info": "Tokens JWT válidos para el consumidor",
+            "add_jwt": "Identificador del token JWT",
+            "add_jwt_hint": "Dejar vacío para generar automáticamente",
+            "add_alg": "Algoritmo",
+            "add_alg_hint": "Usado para verificar el token",
+            "add_rsa": "Clave pública RSA",
+            "add_rsa_hint": "Para RS256 y ES256. Formato PEM",
+            "add_secret": "Texto secreto",
+            "add_secret_tooltip": "Usado para firmar el token",
+            "add_secret_hint": "Dejar vacío para generar automáticamente",
+            "key": "Identificador del token JWT",
+            "algorithm": "Algoritmo",
+            "rsa": "Clave pública RSA",
+            "secret": "Secreto para firma",
+            "error": {
+            }
+        }
+    },
     "element": {
         "text_search": "texto a buscar",
         "no_data": "No hay resultados",
         "no_data_search": "No hay resultados buscando por",
+        "explanation": "Para agregar un ACL, API Key o token JWT, primero debe agregar el plugin correspondiente a algún elemento",
         "actions": "Acciones",
         "reload": "Recargar los datos",
         "ssl": "Certificados"

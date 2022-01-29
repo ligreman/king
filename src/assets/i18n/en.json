@@ -19,6 +19,7 @@
         "new_cacert": "CA certificate created",
         "new_acl": "ACL created",
         "new_key": "API Key created",
+        "new_jwt": "JWT token created",
         "update_service": "Service updated",
         "update_route": "Route updated",
         "update_upstream": "Upstream updated",
@@ -37,6 +38,7 @@
         "delete_cert": "Certificate {{extra}} deleted",
         "delete_cacert": "CA certificate {{extra}} deleted",
         "delete_acl": "ACL {{extra}} deleted",
+        "delete_jwt": "JWT token {{extra}} removed",
         "delete_key": "API Key {{extra}} deleted",
         "healthy_target": "Target {{extra}} set as healthy",
         "unhealthy_target": "Target {{extra}} set as unhealthy",
@@ -100,6 +102,8 @@
             "delete_plugin": "Do you want to delete this plugin?",
             "delete_acl_title": "Delete ACL",
             "delete_acl": "Do you want to delete this ACL?",
+            "delete_jwt_title": "Delete JWT token",
+            "delete_jwt": "Do you want to remove this JWT token validation?",
             "delete_key_title": "Delete API Key",
             "delete_key": "Do you want to delete this API Key?",
             "enable_plugin_title": "Enable plugin",
@@ -132,6 +136,7 @@
             "acl": "Access control",
             "acls": "ACL groups",
             "keys": "API keys",
+            "jwt": "JWT tokens",
             "kong_node": "Kong node admin API",
             "kong_node_tooltip": "Type in the URL and port",
             "kong_node_button_tooltip": "Connect",
@@ -568,10 +573,36 @@
             }
         }
     },
+    "jwt": {
+        "add": "Add JWT token validation",
+        "header": "Valid JWT tokens",
+        "delete_key": "Remove consumer JWT token validation",
+        "delete_key_content": "Confirm that you want this JWT token to become invalid for the consumer.",
+        "explanation": "To add new valid JWT tokens go to the consumer screen",
+        "dialog": {
+            "info": "Valid JWT tokens for the consumer",
+            "add_jwt": "JWT token identifier",
+            "add_jwt_hint": "Leave empty to automatically generate",
+            "add_alg": "Algorithm",
+            "add_alg_hint": "Used to verify the token",
+            "add_rsa": "RSA public key",
+            "add_rsa_hint": "For RS256 and ES256. PEM format",
+            "add_secret": "Secret Text",
+            "add_secret_tooltip": "Used to sign the token",
+            "add_secret_hint": "Leave empty to automatically generate",
+            "key": "JWT token identifier",
+            "algorithm": "Algorithm",
+            "rsa": "RSA public key",
+            "secret": "Singing secret",
+            "error": {
+            }
+        }
+    },
     "element": {
         "text_search": "search text",
         "no_data": "There is no data",
         "no_data_search": "No data matching the filter",
+        "explanation": "To add an ACL, API Key or JWT token, you must first add the corresponding plugin to some element",
         "actions": "Actions",
         "reload": "Reload data",
         "ssl": "Certificates"

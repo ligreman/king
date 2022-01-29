@@ -51,8 +51,12 @@ export class DialogInfoKeyComponent implements OnInit {
      * @param hide Mostrar u ocultar
      */
     showKey(key, hide) {
+        if (key === null) {
+            return '';
+        }
+
         if (!hide) {
-            key = key.substr(0, 5).padEnd(key.length, '*');
+            key = key.substring(0, 5).padEnd(key.length, '*');
         }
         return key;
     }

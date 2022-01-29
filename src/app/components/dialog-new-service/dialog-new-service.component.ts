@@ -32,7 +32,7 @@ export class DialogNewServiceComponent implements OnInit {
         protocol: ['', [Validators.required, CustomValidators.isProtocol(this.validProtocols)]],
         host: ['', [Validators.required, CustomValidators.isHost()]],
         port: ['', [Validators.required, CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]],
-        path: ['', [Validators.pattern(/^\//)]],
+        path: ['/', [Validators.pattern(/^\//), Validators.required]],
         retries: [5, [CustomValidators.isNumber(), Validators.min(0), Validators.max(32767)]],
         connect_timeout: [60000, [CustomValidators.isNumber(), Validators.min(1), Validators.max(2147483646)]],
         write_timeout: [60000, [CustomValidators.isNumber(), Validators.min(1), Validators.max(2147483646)]],

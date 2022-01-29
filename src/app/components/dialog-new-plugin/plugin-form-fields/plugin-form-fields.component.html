@@ -12,7 +12,7 @@
 
             <mat-form-field *ngIf="field.type === 'string'" appearance="outline" color="accent" fxFlex="100">
                 <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
-                <input [formControl]="getField(field.field)" [required]="field.required" matInput type="text"/>
+                <input [formControl]="getField(field.field)" [required]="field.required" matInput type="{{ isPassword(field.field) ? 'password' : 'text' }}"/>
             </mat-form-field>
 
             <mat-form-field *ngIf="field.type === 'number'" appearance="outline" color="accent" fxFlex="100">

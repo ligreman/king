@@ -53,7 +53,7 @@
             <div fxLayout="row">
                 <mat-list fxFlex>
                     <mat-list-item *ngFor="let apikey of keys">
-                        <mat-icon mat-list-icon>people</mat-icon>
+                        <mat-icon mat-list-icon>vpn_key</mat-icon>
                         <div mat-line>
                             <span matTooltip="ID: {{apikey.id}}" matTooltipClass="tooltip-teal">{{showKey(apikey.key, apikey.hide || false)}}</span>
                             <button (click)="apikey.hide=!apikey.hide" class="margin-left-20-i" mat-button mat-icon-button>

@@ -26,6 +26,10 @@ export class PluginFormFieldsComponent implements OnInit {
         return this.parentForm.get(this.group + '.' + field);
     }
 
+    isPassword(label) {
+        return label.toLowerCase().includes('password');
+    }
+
     formatText(txt) {
         return txt.replace(/_/g, ' ');
     }
