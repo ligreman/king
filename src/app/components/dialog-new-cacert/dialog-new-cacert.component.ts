@@ -25,7 +25,7 @@ export class DialogNewCacertComponent implements OnInit, OnDestroy {
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
-        cert: ['', [Validators.required, Validators.pattern(/^(-----BEGIN CERTIFICATE-----)([\r\n]|.)*(-----END CERTIFICATE-----)([\r\n])?$/)]],
+        cert: ['', [Validators.required, Validators.pattern(/^(-----BEGIN CERTIFICATE-----)([\r\n]|.){1,200}(-----END CERTIFICATE-----)([\r\n])?$/)]],
         cert_digest: ['', [CustomValidators.isSHA256(true)]],
         tags: ['']
     });
