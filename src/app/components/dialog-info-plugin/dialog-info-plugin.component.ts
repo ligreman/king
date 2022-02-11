@@ -25,6 +25,12 @@ export class DialogInfoPluginComponent implements OnInit, OnDestroy {
         this.api.getPlugin(this.pluginId)
             .subscribe({
                 next: (plugin) => {
+                    // Oculto passwords
+                    Object.keys(plugin['config']).forEach(key => {
+                        if (this.isPassword(key)) {
+                            plugin['config'][key] = '*****';
+                        }
+                    });
                     this.plugin = plugin;
 
                     // La lista de rutas
@@ -78,12 +84,19 @@ export class DialogInfoPluginComponent implements OnInit, OnDestroy {
         saveAs(blob, 'plugin_' + this.pluginId + '.json');
     }
 
+    isPassword(label) {
+        return label.toLowerCase().includes('password');
+    }
 
     createDocLink(plugin: string): string {
         let url = 'https://docs.konghq.com/hub/kong-inc/' + plugin;
 
         if (plugin === 'proxy-cache-redis') {
             url = 'https://github.com/ligreman/kong-proxy-cache-redis-plugin/blob/master/README.md';
+        }
+
+        if (plugin === 'proxy-cache-redis-cluster') {
+            url = 'https://github.com/ligreman/kong-proxy-cache-redis-cluster-plugin/blob/main/README.md';
         }
 
         return url;

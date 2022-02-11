@@ -59,6 +59,10 @@ export class PluginFormFieldsComponent implements OnInit {
             url = 'https://github.com/ligreman/kong-proxy-cache-redis-plugin/blob/master/README.md';
         }
 
+        if (plugin === 'proxy-cache-redis-cluster') {
+            url = 'https://github.com/ligreman/kong-proxy-cache-redis-cluster-plugin/blob/main/README.md';
+        }
+
         return url;
     }
 }

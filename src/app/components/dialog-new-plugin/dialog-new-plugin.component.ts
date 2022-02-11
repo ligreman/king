@@ -203,7 +203,6 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         this.arrayFields.forEach(field => {
             // Cojo el array de valores
             const fValue = _get(plugin, field, null);
-
             if (fValue !== null && _isArray(fValue)) {
                 _set(plugin, field, fValue.join('\n'));
             } else if (fValue !== null && _isObject(fValue)) {
@@ -244,7 +243,6 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         // Campos array
         this.arrayFields.forEach(field => {
             const fValue = _get(body, field);
-
             // Si es nulo, vacío o undefined, o un array de un valor único que es vacío => le pongo de valor un array vacío
             if (fValue === '' || fValue === null || fValue === undefined || (_isArray(fValue) && fValue.length === 1 && fValue[0] === '')) {
                 _set(body, field, []);
@@ -305,6 +303,14 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                     setTimeout(() => {
                         this.form.setValue(this.prepareDataForForm(updateFormData));
                     }, 0);
+                } else {
+                    // De inicio pongo los valores de campos array como una entrada por línea
+                    this.arrayFields.forEach(field => {
+                        let f = this.form.get(field);
+                        if (f.value !== null) {
+                            f.setValue(f.value.join('\n'));
+                        }
+                    });
                 }
             });
     }
@@ -528,6 +534,10 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
 
         if (plugin === 'proxy-cache-redis') {
             url = 'https://github.com/ligreman/kong-proxy-cache-redis-plugin/blob/master/README.md';
+        }
+
+        if (plugin === 'proxy-cache-redis-cluster') {
+            url = 'https://github.com/ligreman/kong-proxy-cache-redis-cluster-plugin/blob/main/README.md';
         }
 
         return url;
