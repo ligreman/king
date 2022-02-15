@@ -15,6 +15,8 @@ import { ToastService } from '../../services/toast.service';
 })
 export class DialogInfoAclComponent implements OnInit, OnDestroy {
     acls;
+    total_acls: string[] = [];
+    filteredAcls: string[] = [];
     loading = true;
     group = '';
     consumerId;
@@ -32,6 +34,20 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
+    valueChanged() {
+        setTimeout(() => {
+            let group = this.group;
+
+            // Limpio primero para que se entere de que está cambiando el valor
+            this.filteredAcls = [];
+            if (group !== '') {
+                this.filteredAcls = this._filterAcls(group);
+            } else {
+                this.filteredAcls = this.total_acls;
+            }
+        }, 0);
+    }
+
     /**
      * Obtengo los acls
      */
@@ -43,6 +59,19 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (acls) => {
                     this.acls = acls['data'];
+                },
+                error: (error) => this.toast.error_general(error),
+                complete: () => this.loading = false
+            });
+
+        // Recojo también todos los acls existentes para rellenar el autocomplete
+        this.api.getAcls()
+            .subscribe({
+                next: (acls) => {
+                    acls['data'].forEach(acl => {
+                        this.total_acls.push(acl.group);
+                        this.filteredAcls.push(acl.group);
+                    });
                 },
                 error: (error) => this.toast.error_general(error),
                 complete: () => this.loading = false
@@ -82,5 +111,11 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy {
         }, 'acl')
             .then(() => { this.getAcls(); })
             .catch(error => {});
+    }
+
+    private _filterAcls(value) {
+        const filterValue = value.toLowerCase();
+
+        return this.total_acls.filter(option => option.toLowerCase().includes(filterValue));
     }
 }

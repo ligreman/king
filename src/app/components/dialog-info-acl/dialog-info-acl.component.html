@@ -30,10 +30,15 @@
                 <div>
                     <mat-form-field>
                         <mat-label>{{ 'acl.dialog.add_group' | translate}}</mat-label>
-                        <input [(ngModel)]="group" matInput required type="text">
-                        <button (click)="group=''" *ngIf="group" mat-button mat-icon-button matSuffix>
+                        <input (ngModelChange)="valueChanged()" [(ngModel)]="group" [matAutocomplete]="auto" matInput type="text">
+                        <button (click)="group='';valueChanged()" mat-button mat-icon-button matSuffix>
                             <mat-icon>close</mat-icon>
                         </button>
+                        <mat-autocomplete #auto="matAutocomplete">
+                            <mat-option *ngFor="let option of filteredAcls" [value]="option">
+                                {{option}}
+                            </mat-option>
+                        </mat-autocomplete>
                     </mat-form-field>
 
                     <button (click)="addAclToConsumer()" [disabled]="group===''" color="accent" mat-icon-button
