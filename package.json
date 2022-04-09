@@ -31,7 +31,7 @@
         "joi": "17.6.0",
         "lodash": "4.17.21",
         "luxon": "2.3.0",
-        "moment": "2.29.1",
+        "moment": "2.29.2",
         "ngx-auto-unsubscribe": "3.0.1",
         "ngx-json-viewer": "3.0.2",
         "ngx-toastr": "14.2.1",
