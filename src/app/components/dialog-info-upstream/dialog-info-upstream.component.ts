@@ -117,6 +117,7 @@ export class DialogInfoUpstreamComponent implements OnInit, OnDestroy {
                     .subscribe({
                         next: () => {
                             this.toast.success('success.healthy_target', '', {msgExtra: selected.id});
+                            this.reloadData();
                         },
                         error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
@@ -141,6 +142,7 @@ export class DialogInfoUpstreamComponent implements OnInit, OnDestroy {
                     .subscribe({
                         next: () => {
                             this.toast.success('success.unhealthy_target', '', {msgExtra: selected.id});
+                            this.reloadData();
                         },
                         error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
