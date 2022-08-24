@@ -2,6 +2,7 @@
     "error": {
         "unknown": "Unknown error",
         "node_connection": "Error connecting to Kong node",
+        "get_data": "Error getting data",
         "title": "Error in the operation - {{extra}}",
         "content": "{{extra}}",
         "field_required": "Field required"

@@ -59,8 +59,12 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
         const upstreams = await firstValueFrom(this.api.getUpstreams());
 
         for (const [idx, up] of upstreams['data'].entries()) {
-            const h = await firstValueFrom(this.api.getUpstreamHealth(up['id']));
-            upstreams['data'][idx]['health'] = h['data']['health'];
+            try {
+                const h = await firstValueFrom(this.api.getUpstreamHealth(up['id']));
+                upstreams['data'][idx]['health'] = h['data']['health'];
+            } catch (err) {
+                this.toast.error('error.get_data');
+            }
 
             const t = await firstValueFrom(this.api.getTargets(up['id']));
             upstreams['data'][idx]['targets'] = t['data'];

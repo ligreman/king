@@ -2,6 +2,7 @@
     "error": {
         "unknown": "Error desconocido",
         "node_connection": "Error al conectar con el nodo de Kong",
+        "get_data": "Error obteniendo información",
         "title": "Error en la operación - {{extra}}",
         "content": "{{extra}}",
         "field_required": "Campo obligatorio"
