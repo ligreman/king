@@ -479,6 +479,7 @@
         "health_HEALTHCHECKS_OFF": "Health checks disabled",
         "health_HEALTHY": "Healthy",
         "health_UNHEALTHY": "Unhealthy",
+        "health_UNKNOWN": "Unknown",
         "info_health": "Target`s health status",
         "addresses_percent": "Addresses available percentage",
         "dialog": {

@@ -479,6 +479,7 @@
         "health_HEALTHCHECKS_OFF": "Comprobaciones desactivadas",
         "health_HEALTHY": "Sano",
         "health_UNHEALTHY": "Erróneo",
+        "health_UNKNOWN": "Desconocido",
         "info_health": "Estado de salud del target",
         "addresses_percent": "Porcentaje de direcciones disponibles",
         "dialog": {

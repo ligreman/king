@@ -335,7 +335,16 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     // Si no he generado previamente el nodo de upstream ya
                     if (this.data.nodes.get(up.id) === null) {
                         // Health del upstream
-                        const hu = await firstValueFrom(this.api.getUpstreamHealth(up.id));
+                        let hu;
+                        try {
+                            hu = await firstValueFrom(this.api.getUpstreamHealth(up.id));
+                        } catch (err) {
+                            this.toast.error('error.get_data');
+                        } finally {
+                            if (!hu['data'] || !hu['data'].health) {
+                                hu = {data: {health: 'UNKNOWN'}};
+                            }
+                        }
                         const hc = this.getHealthData(hu['data'].health);
 
                         // nodo del upstream
@@ -844,6 +853,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 break;
             case 'HEALTHY':
                 data['color'] = '#7FCA33';
+                break;
+            case 'UNKNOWN':
+                data['color'] = '#999999';
                 break;
         }
 
