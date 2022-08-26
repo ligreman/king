@@ -25,7 +25,7 @@ _King is not official, and does not have any affiliation with [Kong](https://www
 
 ## Compatibility
 
-King for Kong has been developed to be compatible with Kong API Gateway 2.4.x version. It may be compatible backwards, but it has not been tested.
+King for Kong has been developed to be compatible with Kong API Gateway 2.8.x version. It may be compatible backwards, but it has not been tested.
 
 ## Prerequisites
 
