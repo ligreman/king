@@ -41,7 +41,7 @@
                     <mat-form-field appearance="outline" color="accent" fxFlex="48">
                         <mat-label>{{'cert.dialog.certificate_alt' | translate}}</mat-label>
                         <textarea cdkFocusInitial formControlName="cert_alt" matInput placeholder="-----BEGIN CERTIFICATE-----..."></textarea>
-                        <mat-error *ngIf="certField.invalid">
+                        <mat-error *ngIf="certAltField.invalid">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
                     </mat-form-field>
@@ -49,7 +49,7 @@
                     <mat-form-field appearance="outline" color="accent" fxFlex="48">
                         <mat-label>{{'cert.dialog.key_alt' | translate}}</mat-label>
                         <textarea formControlName="key_alt" matInput placeholder="-----BEGIN PRIVATE KEY-----..."></textarea>
-                        <mat-error *ngIf="keyField.invalid">
+                        <mat-error *ngIf="keyAltField.invalid">
                             {{ 'error.field_required' | translate }}
                         </mat-error>
                     </mat-form-field>
