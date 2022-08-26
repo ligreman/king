@@ -54,8 +54,10 @@ export class DialogHelperService {
                     break;
                 case 'consumer':
                     component = DialogNewConsumerComponent;
-                    if (selected !== null) {
+                    if (selected !== null && selected.consumerId) {
                         selectedId = selected.consumerId;
+                    } else if (selected !== null) {
+                        selectedId = selected.id;
                     }
                     break;
                 case 'sni':
@@ -166,6 +168,9 @@ export class DialogHelperService {
                     };
                     break;
                 case 'consumer':
+                    if (!select.consumerId) {
+                        select.consumerId = select.id;
+                    }
                     opt.data = {
                         title: 'dialog.confirm.delete_consumer_title',
                         content: 'dialog.confirm.delete_consumer',

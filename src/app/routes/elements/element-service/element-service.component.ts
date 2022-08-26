@@ -15,7 +15,7 @@ import { ToastService } from '../../../services/toast.service';
     styleUrls: ['./element-service.component.scss']
 })
 export class ElementServiceComponent implements OnInit, OnDestroy, AfterViewInit {
-    displayedColumns: string[] = ['id', 'name', 'protocol', 'host', 'port', 'path', 'ssl', 'tags', 'actions'];
+    displayedColumns: string[] = ['id', 'name', 'protocol', 'host', 'port', 'path', 'ssl', 'enabled', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

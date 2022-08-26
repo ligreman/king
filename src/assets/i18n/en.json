@@ -2,7 +2,7 @@
     "error": {
         "unknown": "Unknown error",
         "node_connection": "Error connecting to Kong node",
-        "get_data": "Error getting data",
+		"get_data": "Error getting data",
         "title": "Error in the operation - {{extra}}",
         "content": "{{extra}}",
         "field_required": "Field required"
@@ -242,6 +242,7 @@
             "path": "Path",
             "path_example": "/api_rest",
             "retries": "Retries",
+            "enabled": "Enabled",
             "connect_timeout": "Connect timeout (ms)",
             "connect_tooltip": "Timeout for connection to the upstream server",
             "write_timeout": "Write timeout (ms)",
@@ -479,7 +480,7 @@
         "health_HEALTHCHECKS_OFF": "Health checks disabled",
         "health_HEALTHY": "Healthy",
         "health_UNHEALTHY": "Unhealthy",
-        "health_UNKNOWN": "Unknown",
+		"health_UNKNOWN": "Unknown",
         "info_health": "Target`s health status",
         "addresses_percent": "Addresses available percentage",
         "dialog": {
@@ -524,6 +525,8 @@
             "edit": "Edit Certificate",
             "certificate": "Public Certificate (PEM)",
             "key": "Private key (PEM)",
+            "certificate_alt": "Alternative public Certificate",
+            "key_alt": "Alternative private key",
             "snis": "SNIs"
         }
     },
@@ -535,6 +538,8 @@
             "edit": "Edit CA Certificate",
             "certificate": "Public CA Certificate (PEM)",
             "key": "Private key (PEM)",
+            "certificate_alt": "Alternative public CA Certificate",
+            "key_alt": "Alternative private key",
             "digest": "SHA256 hash",
             "error": {
                 "digest": "Must be a SHA256 hash"

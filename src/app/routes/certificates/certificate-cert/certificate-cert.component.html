@@ -37,7 +37,7 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'cert.dialog.certificate' | translate}}</th>
                 <td mat-cell *matCellDef="let row" matTooltip="{{row.cert}}"
                     matTooltipClass="tooltip-teal tooltip-wide tooltip-multi">
-                    {{row.cert.replace('-----BEGIN CERTIFICATE-----', '') | slice:0:30}}...
+                    {{row.cert.replace('-----BEGIN CERTIFICATE-----', '') | slice:0:20}}...
                 </td>
             </ng-container>
 
@@ -45,7 +45,24 @@
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'cert.dialog.key' | translate}}</th>
                 <td mat-cell *matCellDef="let row" matTooltip="{{row.key}}"
                     matTooltipClass="tooltip-teal tooltip-wide tooltip-multi">
-                    {{row.key.replace('-----BEGIN RSA PRIVATE KEY-----', '') | slice:0:30}}...
+                    {{ replaceHeader(row.key) | slice:0:20}}...
+                </td>
+            </ng-container>
+
+
+            <ng-container matColumnDef="certificate_alt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'cert.dialog.certificate_alt' | translate}}</th>
+                <td mat-cell *matCellDef="let row" matTooltip="{{row.cert_alt}}"
+                    matTooltipClass="tooltip-teal tooltip-wide tooltip-multi">
+                    {{row.cert.replace('-----BEGIN CERTIFICATE-----', '') | slice:0:20}}...
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="key_alt">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'cert.dialog.key_alt' | translate}}</th>
+                <td mat-cell *matCellDef="let row" matTooltip="{{row.key_alt}}"
+                    matTooltipClass="tooltip-teal tooltip-wide tooltip-multi">
+                    {{ replaceHeader(row.key) | slice:0:20}}...
                 </td>
             </ng-container>
 

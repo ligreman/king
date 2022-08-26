@@ -15,7 +15,7 @@ import { ToastService } from '../../../services/toast.service';
     styleUrls: ['./certificate-cert.component.scss']
 })
 export class CertificateCertComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['id', 'certificate', 'key', 'snis', 'tags', 'actions'];
+    displayedColumns: string[] = ['id', 'certificate', 'key', 'certificate_alt', 'key_alt', 'snis', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -63,6 +63,12 @@ export class CertificateCertComponent implements OnInit, OnDestroy {
         if (this.dataSource.paginator) {
             this.dataSource.paginator.firstPage();
         }
+    }
+
+    replaceHeader(txt) {
+        let aux = txt.replace('-----BEGIN RSA PRIVATE KEY-----', '');
+        aux = aux.replace('-----BEGIN PRIVATE KEY-----', '');
+        return aux;
     }
 
     /*

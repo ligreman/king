@@ -317,13 +317,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Recorro los servicios creando los nodos de servicios
         for (let service of data.services) {
+            const scolor = service.enabled ? '#CCCCCC' : '#E53935';
             // Nodos de Servicio
             this.data.nodes.add({
                 id: service.id,
                 label: service.name + '\n' + service.protocol + '://' + service.host + ':' + service.port + service.path,
                 title: this.translate.instant('service.label') + ': ' + service.id,
                 group: 'service',
-                data: service
+                data: service,
+                font: {color: scolor}
             });
 
             // Si el host de este servicio se corresponde con el name de un Upstream, edge

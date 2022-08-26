@@ -31,7 +31,7 @@
 
             <ng-container matColumnDef="key">
                 <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.key' | translate}}</th>
-                <td *matCellDef="let row" mat-cell matTooltip="ID: {{row.id}}" matTooltipClass="tooltip-teal">{{row.key}}</td>
+                <td *matCellDef="let row" mat-cell>{{row.key}}</td>
             </ng-container>
 
             <ng-container matColumnDef="algorithm">
@@ -41,18 +41,21 @@
 
             <ng-container matColumnDef="rsa_public_key">
                 <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.rsa' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{row.rsa_public_key}}</td>
+                <td *matCellDef="let row" mat-cell matTooltip="{{row.rsa_public_key}}"
+                    matTooltipClass="tooltip-teal tooltip-wide tooltip-multi">
+                    <span *ngIf="row.rsa_public_key">{{row.rsa_public_key.replace('-----BEGIN CERTIFICATE-----', '') | slice:0:20}}...</span>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="secret">
                 <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.secret' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>
                     {{showKey(row.secret, row.hide || false)}}
-                    <button (click)="row.hide=!row.hide" class="small-btn" mat-button mat-icon-button>
+                    <button *ngIf="row.secret" (click)="row.hide=!row.hide" class="small-btn" mat-button mat-icon-button>
                         <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
                         <mat-icon *ngIf="!row.hide">visibility</mat-icon>
                     </button>
-                    <button [cdkCopyToClipboard]="row.secret" class="small-btn" mat-button mat-icon-button
+                    <button *ngIf="row.secret" [cdkCopyToClipboard]="row.secret" class="small-btn" mat-button mat-icon-button
                             matTooltip="{{'dialog.copy_clipboard'|translate}}" matTooltipClass="tooltip-teal">
                         <mat-icon>content_copy</mat-icon>
                     </button>

@@ -23,8 +23,10 @@ export class DialogNewCertComponent implements OnInit, OnDestroy {
     allTags = [];
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     form = this.fb.group({
-        cert: ['', [Validators.required, Validators.pattern(/^(-----BEGIN CERTIFICATE-----)([\r\n]|.){1,200}(-----END CERTIFICATE-----)([\r\n])?$/)]],
-        key: ['', [Validators.required, Validators.pattern(/^(-----BEGIN RSA PRIVATE KEY-----)([\r\n]|.){1,200}(-----END RSA PRIVATE KEY-----)([\r\n])?$/)]],
+        cert: ['', [Validators.required]],
+        key: ['', [Validators.required]],
+        cert_alt: [''],
+        key_alt: [''],
         tags: ['']
     });
 
@@ -34,6 +36,10 @@ export class DialogNewCertComponent implements OnInit, OnDestroy {
     get certField() { return this.form.get('cert'); }
 
     get keyField() { return this.form.get('key'); }
+
+    get certAltField() { return this.form.get('cert_alt'); }
+
+    get keyAltField() { return this.form.get('key_alt'); }
 
     ngOnInit(): void {
         // Si viene  para editar

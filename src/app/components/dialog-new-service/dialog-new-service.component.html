@@ -24,7 +24,7 @@
                         </mat-error>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" color="accent" fxFlex="45">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="35">
                         <mat-chip-list #chipList aria-label="">
                             <mat-chip (removed)="removeTag(tag)"
                                       *ngFor="let tag of currentTags" removable="true">{{tag}}
@@ -45,6 +45,11 @@
                             </mat-option>
                         </mat-autocomplete>
                     </mat-form-field>
+
+                    <!-- Enabled -->
+                    <div class="margin-bottom-10 padding-top-20" fxFlex="10" fxLayout="row" fxLayoutAlign="start center">
+                        <mat-checkbox formControlName="enabled">{{'service.dialog.enabled' | translate}}</mat-checkbox>
+                    </div>
                 </div>
 
                 <!--Tipo de entrada, shorthand o completa-->

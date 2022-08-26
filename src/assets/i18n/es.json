@@ -2,7 +2,7 @@
     "error": {
         "unknown": "Error desconocido",
         "node_connection": "Error al conectar con el nodo de Kong",
-        "get_data": "Error obteniendo información",
+		"get_data": "Error obteniendo información",
         "title": "Error en la operación - {{extra}}",
         "content": "{{extra}}",
         "field_required": "Campo obligatorio"
@@ -242,6 +242,7 @@
             "path": "Ruta (path)",
             "path_example": "/api_rest",
             "retries": "Reintentos",
+            "enabled": "Activo",
             "connect_timeout": "Timeout conexión (ms)",
             "connect_tooltip": "Timeout para conectar al servidor upstream.",
             "write_timeout": "Timeout escritura (ms)",
@@ -479,7 +480,7 @@
         "health_HEALTHCHECKS_OFF": "Comprobaciones desactivadas",
         "health_HEALTHY": "Sano",
         "health_UNHEALTHY": "Erróneo",
-        "health_UNKNOWN": "Desconocido",
+		"health_UNKNOWN": "Desconocido",
         "info_health": "Estado de salud del target",
         "addresses_percent": "Porcentaje de direcciones disponibles",
         "dialog": {
@@ -522,8 +523,10 @@
         "dialog": {
             "create": "Crear un Certificado nuevo",
             "edit": "Editar Certificado",
-            "certificate": "Certificado público (PEM)",
-            "key": "Clave privada (PEM)",
+            "certificate": "Certificado público",
+            "key": "Clave privada",
+            "certificate_alt": "Certificado público alternativo",
+            "key_alt": "Clave privada alternativa",
             "snis": "SNIs"
         }
     },
@@ -533,8 +536,10 @@
         "dialog": {
             "create": "Crear un Certificado de CA nuevo",
             "edit": "Editar Certificado de CA",
-            "certificate": "Certificado público de CA (PEM)",
-            "key": "Clave privada (PEM)",
+            "certificate": "Certificado público de CA",
+            "key": "Clave privada",
+            "certificate_alt": "Certificado público de CA alternativo",
+            "key_alt": "Clave privada alternativa",
             "digest": "Hash SHA256",
             "error": {
                 "digest": "Ha de ser un hash SHA256"
