@@ -87,7 +87,7 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.postSetTargetHealthy(this.target.id, this.target.upstream.id)
+                this.api.putSetTargetHealthy(this.target.id, this.target.upstream.id)
                     .subscribe({
                         next: () => {
                             this.toast.success('success.healthy_target', '', {msgExtra: this.target.id});
@@ -110,7 +110,7 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.postSetTargetUnhealthy(this.target.id, this.target.upstream.id)
+                this.api.putSetTargetUnhealthy(this.target.id, this.target.upstream.id)
                     .subscribe({
                         next: () => {
                             this.toast.success('success.unhealthy_target', '', {msgExtra: this.target.id});
@@ -133,7 +133,7 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.postSetAddressHealthy(this.target.id, this.target.upstream.id, addr + ':' + port)
+                this.api.putSetAddressHealthy(this.target.id, this.target.upstream.id, addr + ':' + port)
                     .subscribe({
                         next: () => {
                             this.toast.success('success.healthy_address', '', {msgExtra: addr + ':' + port});
@@ -156,7 +156,7 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.postSetAddressUnhealthy(this.target.id, this.target.upstream.id, addr + ':' + port)
+                this.api.putSetAddressUnhealthy(this.target.id, this.target.upstream.id, addr + ':' + port)
                     .subscribe({
                         next: () => {
                             this.toast.success('success.unhealthy_address', '', {msgExtra: addr + ':' + port});

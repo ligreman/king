@@ -113,7 +113,7 @@ export class DialogInfoUpstreamComponent implements OnInit, OnDestroy {
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.postSetTargetHealthy(selected.id, selected.upstream.id)
+                this.api.putSetTargetHealthy(selected.id, selected.upstream.id)
                     .subscribe({
                         next: () => {
                             this.toast.success('success.healthy_target', '', {msgExtra: selected.id});
@@ -138,7 +138,7 @@ export class DialogInfoUpstreamComponent implements OnInit, OnDestroy {
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.postSetTargetUnhealthy(selected.id, selected.upstream.id)
+                this.api.putSetTargetUnhealthy(selected.id, selected.upstream.id)
                     .subscribe({
                         next: () => {
                             this.toast.success('success.unhealthy_target', '', {msgExtra: selected.id});

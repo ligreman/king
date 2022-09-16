@@ -23,7 +23,7 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
     formValid = false;
     validAlgorithms = ['consistent-hashing', 'least-connections', 'round-robin'];
-    validHash = ['none', 'consumer', 'ip', 'header', 'cookie'];
+    validHash = ['none', 'consumer', 'ip', 'header', 'cookie', 'path', 'query_arg', 'uri_capture'];
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp'];
     validHttpStatuses = [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 427, 428, 429, 431, 451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511];
     currentTags = [];
@@ -41,8 +41,16 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
         hash_fallback: ['none', [CustomValidators.isOneOf(this.validHash)]],
         // si hash_on es header
         hash_on_header: ['', []],
+        // si hash_on es query_arg
+        hash_on_query_arg: ['', []],
+        // si hash_on es uri_capture
+        hash_on_uri_capture: ['', []],
         // si hash_fallback es header
         hash_fallback_header: ['', []],
+        // si hash_fallback es query_arg
+        hash_fallback_query_arg: ['', []],
+        // si hash_fallback es uri_capture
+        hash_fallback_uri_capture: ['', []],
         // si hash_on o hash_fallback es cookie
         hash_on_cookie: ['', []],
         // si hash_on o hash_fallback es cookie
@@ -58,6 +66,7 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
                 http_path: ['/'],
                 timeout: [1, [CustomValidators.isNumber(), Validators.min(0), Validators.max(65535)]],
                 https_sni: [''],
+                headers: [''],
                 concurrency: [10, [CustomValidators.isNumber(), Validators.min(0), Validators.max(2147483648)]],
                 type: ['http', [CustomValidators.isOneOf(this.validProtocols)]],
                 healthy: this.fb.group({
@@ -105,6 +114,14 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
 
     get hashFallbakHeaderField() { return this.form.get('hash_fallback_header'); }
 
+    get hashOnQueryArg() { return this.form.get('hash_on_query_arg'); }
+
+    get hashFallbakQueryArg() { return this.form.get('hash_fallback_query_arg'); }
+
+    get hashOnUriCapture() { return this.form.get('hash_on_uri_capture'); }
+
+    get hashFallbakUriCapture() { return this.form.get('hash_fallback_uri_capture'); }
+
     get hashOnCookieField() { return this.form.get('hash_on_cookie'); }
 
     get hashOnCookiePathField() { return this.form.get('hash_on_cookie_path'); }
@@ -114,6 +131,8 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
     get httpsSniField() { return this.form.get('healthchecks.active.https_sni'); }
 
     get timeoutActiveField() { return this.form.get('healthchecks.active.timeout'); }
+
+    get activeHeadersField() { return this.form.get('healthchecks.active.headers'); }
 
     get concurrencyField() { return this.form.get('healthchecks.active.concurrency'); }
 
@@ -298,8 +317,8 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
             body.tags = [];
         }
 
-        if (body.hash_fallback_header === '' || body.hash_fallback_header === null) {
-            body.hash_fallback_header = null;
+        if (body.host_header === '' || body.host_header === null) {
+            body.host_header = null;
         }
         if (body.hash_on_cookie === '' || body.hash_on_cookie === null) {
             body.hash_on_cookie = null;
@@ -307,8 +326,20 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
         if (body.hash_on_header === '' || body.hash_on_header === null) {
             body.hash_on_header = null;
         }
-        if (body.host_header === '' || body.host_header === null) {
-            body.host_header = null;
+        if (body.hash_fallback_header === '' || body.hash_fallback_header === null) {
+            body.hash_fallback_header = null;
+        }
+        if (body.hash_on_query_arg === '' || body.hash_on_query_arg === null) {
+            body.hash_on_query_arg = null;
+        }
+        if (body.hash_fallback_query_arg === '' || body.hash_fallback_query_arg === null) {
+            body.hash_fallback_query_arg = null;
+        }
+        if (body.hash_on_uri_capture === '' || body.hash_on_uri_capture === null) {
+            body.hash_on_uri_capture = null;
+        }
+        if (body.hash_fallback_uri_capture === '' || body.hash_fallback_uri_capture === null) {
+            body.hash_fallback_uri_capture = null;
         }
 
         if (body.healthchecks.active.https_sni === '' || body.healthchecks.active.https_sni === null) {
@@ -324,8 +355,12 @@ function HashFormValidator(): ValidatorFn {
     return (fg: AbstractControl): ValidationErrors => {
         const hashOn = fg.get('hash_on').value;
         const hashOnHeader = fg.get('hash_on_header').value;
+        const hashOnQueryArg = fg.get('hash_on_query_arg').value;
+        const hashOnUriCapture = fg.get('hash_on_uri_capture').value;
         const hashFallback = fg.get('hash_fallback').value;
         const hashFallbackHeader = fg.get('hash_fallback_header').value;
+        const hashFallbackQueryArg = fg.get('hash_fallback_query_arg').value;
+        const hashFallbackUriCapture = fg.get('hash_fallback_uri_capture').value;
         const hashOnCookie = fg.get('hash_on_cookie').value;
         const hashOnCookiePath = fg.get('hash_on_cookie_path').value;
         let valid = true;
@@ -343,6 +378,22 @@ function HashFormValidator(): ValidatorFn {
         if ((hashOn === 'cookie' || hashFallback === 'cookie') && (hashOnCookie === '' || hashOnCookie === null
             || hashOnCookiePath === '' || hashOnCookiePath === null || !_startsWith(hashOnCookiePath, '/'))) {
             error = {hashCookieForm: hashOn};
+            valid = false;
+        }
+        if (hashOn === 'query_arg' && (hashOnQueryArg === '' || hashOnQueryArg === null)) {
+            error = {hashOnForm: hashOn};
+            valid = false;
+        }
+        if (hashFallback === 'query_arg' && (hashFallbackQueryArg === '' || hashFallbackQueryArg === null)) {
+            error = {hashFallbackForm: hashFallback};
+            valid = false;
+        }
+        if (hashOn === 'uri_capture' && (hashOnUriCapture === '' || hashOnUriCapture === null)) {
+            error = {hashOnForm: hashOn};
+            valid = false;
+        }
+        if (hashFallback === 'uri_capture' && (hashFallbackUriCapture === '' || hashFallbackUriCapture === null)) {
+            error = {hashFallbackForm: hashFallback};
             valid = false;
         }
 

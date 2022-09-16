@@ -158,20 +158,20 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id).pipe(catchError(this.handleError));
     }
 
-    public postSetTargetHealthy(id: string, upstreamId: string) {
-        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/healthy', {}).pipe(catchError(this.handleError));
+    public putSetTargetHealthy(id: string, upstreamId: string) {
+        return this.httpClient.put(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/healthy', {}).pipe(catchError(this.handleError));
     }
 
-    public postSetTargetUnhealthy(id: string, upstreamId: string) {
-        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/unhealthy', {}).pipe(catchError(this.handleError));
+    public putSetTargetUnhealthy(id: string, upstreamId: string) {
+        return this.httpClient.put(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/unhealthy', {}).pipe(catchError(this.handleError));
     }
 
-    public postSetAddressHealthy(id: string, upstreamId: string, address: string) {
-        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/' + address + '/healthy', {}).pipe(catchError(this.handleError));
+    public putSetAddressHealthy(id: string, upstreamId: string, address: string) {
+        return this.httpClient.put(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/' + address + '/healthy', {}).pipe(catchError(this.handleError));
     }
 
-    public postSetAddressUnhealthy(id: string, upstreamId: string, address: string) {
-        return this.httpClient.post(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/' + address + '/unhealthy', {}).pipe(catchError(this.handleError));
+    public putSetAddressUnhealthy(id: string, upstreamId: string, address: string) {
+        return this.httpClient.put(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/' + address + '/unhealthy', {}).pipe(catchError(this.handleError));
     }
 
     /*

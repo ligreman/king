@@ -781,7 +781,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.postSetTargetHealthy(selected.data.id, selected.data.upstream.id)
+                this.api.putSetTargetHealthy(selected.data.id, selected.data.upstream.id)
                     .subscribe({
                         next: () => {
                             this.toast.success('success.healthy_target', '', {msgExtra: selected.data.id});
@@ -806,7 +806,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             })
             .then(() => {
                 // Ha aceptado el confirm, así que ejecuto
-                this.api.postSetTargetUnhealthy(selected.data.id, selected.data.upstream.id)
+                this.api.putSetTargetUnhealthy(selected.data.id, selected.data.upstream.id)
                     .subscribe({
                         next: () => {
                             this.toast.success('success.unhealthy_target', '', {msgExtra: selected.data.id});

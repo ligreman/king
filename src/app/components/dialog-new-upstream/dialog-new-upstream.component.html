@@ -156,6 +156,57 @@
                     </mat-form-field>
                 </div>
 
+                <!--Hash options-->
+                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="24">
+                        <mat-label>{{'upstream.dialog.hash_on_query_arg' | translate}}</mat-label>
+                        <input aria-label="" formControlName="hash_on_query_arg" matInput placeholder="Query-String-Name"
+                               type="text"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_on_query_arg_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hashOnQueryArg.invalid">
+                            {{ 'upstream.dialog.error.header_format' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" color="accent" fxFlex="24">
+                        <mat-label>{{'upstream.dialog.hash_fallback_query_arg' | translate}}</mat-label>
+                        <input aria-label="" formControlName="hash_fallback_query_arg" matInput placeholder="Query-String-Name"
+                               type="text"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_fallback_query_arg_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hashFallbakQueryArg.invalid">
+                            {{ 'upstream.dialog.error.header_format' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" color="accent" fxFlex="24">
+                        <mat-label>{{'upstream.dialog.hash_on_uri_capture' | translate}}</mat-label>
+                        <input aria-label="" formControlName="hash_on_uri_capture" matInput placeholder="Uri-Capture-Name"
+                               type="text"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_on_uri_capture_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hashOnUriCapture.invalid">
+                            {{ 'upstream.dialog.error.header_format' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" color="accent" fxFlex="24">
+                        <mat-label>{{'upstream.dialog.hash_fallback_uri_capture' | translate}}</mat-label>
+                        <input aria-label="" formControlName="hash_fallback_uri_capture" matInput placeholder="Uri-Capture-Name"
+                               type="text"/>
+                        <mat-icon matSuffix matTooltip="{{'upstream.dialog.hash_fallback_uri_capture_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="hashFallbakUriCapture.invalid">
+                            {{ 'upstream.dialog.error.header_format' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
                 <div fxLayout="row" fxLayoutAlign="space-between start">
                     <!--Certificado cliente-->
                     <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="49">
@@ -272,6 +323,16 @@
                                     <mat-error *ngIf="concurrencyField.invalid">
                                         {{ 'upstream.dialog.error.concurrency_min_max' | translate }}
                                     </mat-error>
+                                </mat-form-field>
+                            </div>
+
+                            <div fxLayout="row" fxLayoutAlign="space-between start">
+                                <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                                    <mat-label>{{'upstream.dialog.health_active_headers' | translate}}</mat-label>
+                                    <input aria-label="" formControlName="headers" matInput type="text"/>
+                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.health_active_headers_tooltip' | translate}}"
+                                              matTooltipClass="tooltip-teal">info_outline
+                                    </mat-icon>
                                 </mat-form-field>
                             </div>
 

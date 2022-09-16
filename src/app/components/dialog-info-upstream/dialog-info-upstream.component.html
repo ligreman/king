@@ -68,14 +68,14 @@
                     <p class="text margin-left-20-i">{{upstream['hash_on_header']}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_cookie_tooltip' | translate}}"
-                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_cookie' | translate}}</p>
-                    <p class="text margin-left-20-i">{{upstream['hash_on_cookie']}}</p>
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_query_arg_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_query_arg' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_on_query_arg']}}</p>
                 </div>
                 <div fxFlex="25">
-                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_cookie_path_tooltip' | translate}}"
-                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_cookie_path' | translate}}</p>
-                    <p class="text margin-left-20-i">{{upstream['hash_on_cookie_path']}}</p>
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_uri_capture_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_uri_capture' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_on_uri_capture']}}</p>
                 </div>
             </div>
 
@@ -89,6 +89,29 @@
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_fallback_header_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_fallback_header' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream['hash_fallback_header']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_fallback_query_arg_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_fallback_query_arg' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_fallback_query_arg']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_fallback_uri_capture_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_fallback_uri_capture' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_fallback_uri_capture']}}</p>
+                </div>
+            </div>
+
+            <div class="margin-top-10-i" fxLayout="row">
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_cookie_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_cookie' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_on_cookie']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.hash_on_cookie_path_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.hash_on_cookie_path' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream['hash_on_cookie_path']}}</p>
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.host_tooltip' | translate}}"
@@ -203,6 +226,13 @@
                 <div fxFlex="33">
                     <p class="title margin-0-i">{{'upstream.dialog.timeout' | translate}}</p>
                     <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.timeout}}</p>
+                </div>
+            </div>
+            <div class="padding-left-40" fxLayout="row">
+                <div fxFlex="100">
+                    <p class="title margin-0-i" matTooltip="{{'upstream.dialog.health_active_headers_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'upstream.dialog.health_active_headers' | translate}}</p>
+                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.headers}}</p>
                 </div>
             </div>
             <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_active_healthy' | translate}}</p>
