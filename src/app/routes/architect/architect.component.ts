@@ -71,10 +71,12 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         this.api.getNodeStatus()
             .subscribe({
                 next: () => {
-                    this.loading = true;
+                    this.dialogHelper.getRouterMode().then(() => {
+                        this.loading = true;
 
-                    this.getNodeInformation();
-                    this.getTags();
+                        this.getNodeInformation();
+                        this.getTags();
+                    }).catch(() => this.toast.error('error.route_mode'));
                 },
                 error: () => {
                     this.toast.error('error.node_connection');
@@ -86,7 +88,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnDestroy(): void {}
 
     ngAfterViewInit() {
-        // create a network. El setTimeout es para dejar tiempo a que cargue bien el DOM
+        // Create a network. El setTimeout es para dejar tiempo a que cargue bien el DOM
         setTimeout(() => {
             const container = document.getElementById('node-network');
             const reference = document.getElementById('net-reference');
@@ -102,6 +104,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     minVelocity: 1.2,
                     wind: {x: 2, y: 0},
                     barnesHut: {
+                        theta: 0.8,
+                        springLength: 200,
                         springConstant: 0.15,
                         avoidOverlap: 0.5
                     }
@@ -429,25 +433,36 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         // Recorro las rutas creando los nodos de rutas
         for (let route of allRoutes) {
             let extras = [this.translate.instant('route.label') + ': ' + route.id];
+            // Label
+            let lbl = '';
 
-            if (!_isEmpty(route.methods)) {
-                extras.push(this.translate.instant('route.dialog.methods') + ': ' + route.methods.join(', '));
-            }
-            if (!_isEmpty(route.hosts)) {
-                extras.push(this.translate.instant('route.dialog.hosts') + ': ' + route.hosts.join(', '));
-            }
-            if (!_isEmpty(route.paths)) {
-                extras.push(this.translate.instant('route.dialog.paths') + ': ' + route.paths.join(', '));
-            }
-            if (!_isEmpty(route.headers)) {
-                extras.push(this.translate.instant('route.dialog.headers') + ': ' + JSON.stringify(route.headers));
+            // Dependiendo del modo de router, el label y los extras será uno u otro
+            if (this.globals.ROUTER_MODE === 'expressions') {
+                if (!_isEmpty(route.expression)) {
+                    extras.push(this.translate.instant('route.dialog.expression') + ': ' + route.expression);
+                    lbl = route.expression;
+                }
+            } else {
+                if (!_isEmpty(route.methods)) {
+                    extras.push(this.translate.instant('route.dialog.methods') + ': ' + route.methods.join(', '));
+                }
+                if (!_isEmpty(route.hosts)) {
+                    extras.push(this.translate.instant('route.dialog.hosts') + ': ' + route.hosts.join(', '));
+                }
+                if (!_isEmpty(route.paths)) {
+                    extras.push(this.translate.instant('route.dialog.paths') + ': ' + route.paths.join(', '));
+                    lbl = route.paths.join(', ');
+                }
+                if (!_isEmpty(route.headers)) {
+                    extras.push(this.translate.instant('route.dialog.headers') + ': ' + JSON.stringify(route.headers));
+                }
             }
 
             // Nodos de ruta
             const element = generateElement(extras);
             this.data.nodes.add({
                 id: route.id,
-                label: route.name + '\n' + route.paths.join(', ') + '\n[' + route.protocols.join(', ') + ']',
+                label: route.name + '\n' + lbl + '\n[' + route.protocols.join(', ') + ']',
                 title: element,
                 group: 'route',
                 x: 300,

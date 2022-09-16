@@ -55,7 +55,7 @@
                     <p class="title margin-0-i">{{'route.dialog.protocols' | translate}}</p>
                     <p class="text margin-left-20-i">{{ (route['protocols'] || []).join(', ')}}</p>
                 </div>
-                <div fxFlex="25">
+                <div *ngIf="!expressions" fxFlex="25">
                     <p class="title margin-0-i">{{'route.dialog.methods' | translate}}</p>
                     <p class="text margin-left-20-i">{{ (route['methods'] || []).join(', ')}}</p>
                 </div>
@@ -66,7 +66,7 @@
                 </div>
             </div>
 
-            <div class="margin-top-10-i" fxLayout="row">
+            <div *ngIf="!expressions" class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="25">
                     <p class="title margin-0-i" matTooltip="{{'route.dialog.hosts_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'route.dialog.hosts' | translate}}</p>
@@ -84,32 +84,10 @@
                 </div>
             </div>
 
-            <div class="margin-top-10-i" fxLayout="row">
+            <div *ngIf="!expressions" class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'route.dialog.headers' | translate}}</p>
                     <p *ngFor="let h of drawHeaders(route['headers'])" class="text margin-left-20-i">{{ h }}</p>
-                </div>
-                <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.request_buffering' | translate}}</p>
-                    <p class="text margin-left-20-i">{{route['request_buffering']}}</p>
-                </div>
-                <div fxFlex="25">
-                    <p class="title margin-0-i">{{'route.dialog.response_buffering' | translate}}</p>
-                    <p class="text margin-left-20-i">{{route['response_buffering']}}</p>
-                </div>
-            </div>
-
-            <div class="margin-top-10-i" fxLayout="row">
-
-                <div fxFlex="25">
-                    <p class="title margin-0-i" matTooltip="{{'route.dialog.preserve_host_tooltip' | translate}}"
-                       matTooltipClass="tooltip-teal">{{'route.dialog.preserve_host' | translate}}</p>
-                    <p class="text margin-left-20-i">{{route['preserve_host']}}</p>
-                </div>
-                <div fxFlex="25">
-                    <p class="title margin-0-i" matTooltip="{{'route.dialog.strip_path_tooltip' | translate}}"
-                       matTooltipClass="tooltip-teal">{{'route.dialog.strip_path' | translate}}</p>
-                    <p class="text margin-left-20-i">{{route['strip_path']}}</p>
                 </div>
                 <div fxFlex="25">
                     <p class="title margin-0-i">{{'route.dialog.path_handling' | translate}}</p>
@@ -122,7 +100,39 @@
                 </div>
             </div>
 
+            <div *ngIf="expressions" class="margin-top-10-i" fxLayout="row">
+                <div fxFlex="75">
+                    <p class="title margin-0-i">{{'route.dialog.expression' | translate}}</p>
+                    <p class="text margin-left-20-i">{{route['expression']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.priority' | translate}}</p>
+                    <p class="text margin-left-20-i">{{route['priority']}}</p>
+                </div>
+            </div>
+
             <div class="margin-top-10-i" fxLayout="row">
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'route.dialog.preserve_host_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'route.dialog.preserve_host' | translate}}</p>
+                    <p class="text margin-left-20-i">{{route['preserve_host']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i" matTooltip="{{'route.dialog.strip_path_tooltip' | translate}}"
+                       matTooltipClass="tooltip-teal">{{'route.dialog.strip_path' | translate}}</p>
+                    <p class="text margin-left-20-i">{{route['strip_path']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.request_buffering' | translate}}</p>
+                    <p class="text margin-left-20-i">{{route['request_buffering']}}</p>
+                </div>
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'route.dialog.response_buffering' | translate}}</p>
+                    <p class="text margin-left-20-i">{{route['response_buffering']}}</p>
+                </div>
+            </div>
+
+            <div *ngIf="!expressions" class="margin-top-10-i" fxLayout="row">
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'route.dialog.sources' | translate}}</p>
                     <p *ngFor="let s of route['sources']" class="text margin-left-20-i">{{ drawIpPort(s) }}</p>

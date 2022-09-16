@@ -83,9 +83,11 @@ export class NodeInformationComponent implements OnInit, OnDestroy {
         this.data = {
             node_id: this.node_info['node_id'],
             version: this.node_info['version'],
+            hostname: this.node_info['hostname'],
             plugins: this.parsePlugins(this.node_info['plugins']),
             admin_listen: this.node_info['configuration']['admin_listen'],
             admin_ssl: this.node_info['configuration']['admin_ssl_enabled'],
+            router_flavor: this.node_info['configuration']['router_flavor'],
             proxy_listen: this.node_info['configuration']['proxy_listen'],
             proxy_ssl: this.node_info['configuration']['proxy_ssl_enabled'],
             cluster_control_plane: this.node_info['configuration']['cluster_control_plane'],

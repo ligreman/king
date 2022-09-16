@@ -4,6 +4,8 @@ import { saveAs } from 'file-saver';
 import { find as _find } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
+import { DialogHelperService } from '../../services/dialog-helper.service';
+import { GlobalsService } from '../../services/globals.service';
 import { ToastService } from '../../services/toast.service';
 
 @AutoUnsubscribe()
@@ -17,10 +19,24 @@ export class DialogInfoRouteComponent implements OnInit, OnDestroy {
     services;
     loading = true;
     sniList = {};
+    expressions = true;
 
-    constructor(@Inject(MAT_DIALOG_DATA) public routeId: string, private api: ApiService, private toast: ToastService) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public routeId: string, private api: ApiService, private globals: GlobalsService, private toast: ToastService, private dialogHelper: DialogHelperService) { }
 
     ngOnInit(): void {
+        this.dialogHelper.getRouterMode().then(() => {
+            // Si no estoy en modo expressions cambio la tabla
+            if (this.globals.ROUTER_MODE !== 'expressions') {
+                this.expressions = false;
+            }
+            this.loadData();
+        }).catch(() => this.toast.error('error.route_mode'));
+    }
+
+    ngOnDestroy(): void {
+    }
+
+    loadData() {
         this.api.getServices()
             .subscribe({
                 next: (ss) => {
@@ -52,9 +68,6 @@ export class DialogInfoRouteComponent implements OnInit, OnDestroy {
             });
     }
 
-    ngOnDestroy(): void {
-    }
-
     downloadJson() {
         const blob = new Blob([JSON.stringify(this.route, null, 2)], {type: 'text/json'});
         saveAs(blob, 'route_' + this.routeId + '.json');
@@ -69,8 +82,8 @@ export class DialogInfoRouteComponent implements OnInit, OnDestroy {
     }
 
     drawHeaders(txt) {
-        if (txt === null) {
-            return '';
+        if (txt === null || txt === undefined) {
+            return [''];
         }
 
         let res = [];

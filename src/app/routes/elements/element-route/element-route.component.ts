@@ -7,6 +7,7 @@ import { find as _find } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../../services/api.service';
 import { DialogHelperService } from '../../../services/dialog-helper.service';
+import { GlobalsService } from '../../../services/globals.service';
 import { ToastService } from '../../../services/toast.service';
 
 @AutoUnsubscribe()
@@ -16,17 +17,18 @@ import { ToastService } from '../../../services/toast.service';
     styleUrls: ['./element-route.component.scss']
 })
 export class ElementRouteComponent implements OnInit, OnDestroy, AfterViewInit {
-    displayedColumns: string[] = ['id', 'name', 'service', 'protocols', 'methods', 'hosts', 'paths', 'headers', 'tags', 'actions'];
+    displayedColumns: string[] = ['id', 'name', 'service', 'protocols', 'expression', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
     data;
-    services;
+    services = [];
     loading = false;
     filter = '';
+    expressions = true;
 
-    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
+    constructor(private api: ApiService, private toast: ToastService, private globals: GlobalsService, private route: Router, private dialogHelper: DialogHelperService) {
     }
 
     ngOnInit(): void {
@@ -38,15 +40,23 @@ export class ElementRouteComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngAfterViewInit() {
-        this.api.getServices()
-            .subscribe({
-                next: (ss) => {
-                    this.services = ss['data'];
-                    this.getRoutes();
-                },
-                error: () => this.toast.error('error.node_connection'),
-                complete: () => this.loading = false
-            });
+        // Primero cojo el modo de router
+        this.dialogHelper.getRouterMode().then(() => {
+            // Si no estoy en modo expressions cambio la tabla
+            if (this.globals.ROUTER_MODE !== 'expressions') {
+                this.displayedColumns = ['id', 'name', 'service', 'protocols', 'methods', 'hosts', 'paths', 'headers', 'tags', 'actions'];
+                this.expressions = false;
+            }
+            this.api.getServices()
+                .subscribe({
+                    next: (ss) => {
+                        this.services = ss['data'];
+                        this.getRoutes();
+                    },
+                    error: () => this.toast.error('error.node_connection'),
+                    complete: () => this.loading = false
+                });
+        }).catch(() => this.toast.error('error.route_mode'));
     }
 
     reloadData() {
@@ -112,7 +122,7 @@ export class ElementRouteComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     getJSON(txt) {
-        if (txt === null) {
+        if (txt === null || txt === undefined) {
             return '';
         }
 

@@ -327,13 +327,35 @@
                             </div>
 
                             <div fxLayout="row" fxLayoutAlign="space-between start">
-                                <mat-form-field appearance="outline" color="accent" fxFlex="100">
-                                    <mat-label>{{'upstream.dialog.health_active_headers' | translate}}</mat-label>
-                                    <input aria-label="" formControlName="headers" matInput type="text"/>
-                                    <mat-icon matSuffix matTooltip="{{'upstream.dialog.health_active_headers_tooltip' | translate}}"
-                                              matTooltipClass="tooltip-teal">info_outline
-                                    </mat-icon>
-                                </mat-form-field>
+                                <div fxFlex="55" fxLayout="row" fxLayoutAlign="space-between center">
+                                    <mat-form-field appearance="standard" class="margin-bottom-10" color="accent" fxFlex="40">
+                                        <mat-label>{{'upstream.dialog.health_active_headers' | translate}}</mat-label>
+                                        <input #hKey matInput type="text"/>
+                                    </mat-form-field>
+
+                                    <mat-form-field appearance="standard" class="margin-bottom-10" color="accent" fxFlex="40">
+                                        <mat-label>{{'route.dialog.header_value' | translate}}</mat-label>
+                                        <input #hVal matInput type="text"/>
+                                        <mat-hint>{{ 'route.dialog.header_value_hint' | translate}}</mat-hint>
+                                    </mat-form-field>
+
+                                    <button (click)="addHeader(hKey, hVal)" color="accent" mat-icon-button>
+                                        <mat-icon>add_box</mat-icon>
+                                    </button>
+                                    <div fxFlex="5"></div>
+                                </div>
+
+                                <div fxFlex="45" fxLayout="column">
+                                    <div class="margin-bottom-5" fxLayout="row">{{'route.dialog.headers' | translate}}</div>
+                                    <mat-list class="list" fxFlex="40" role="list">
+                                        <mat-list-item *ngFor="let head of currentHeaders | keyvalue" role="listitem">
+                                            {{head.key}}: {{head.value.join(', ')}}
+                                            <button (click)="removeHeader(head.key)" color="warn" mat-icon-button>
+                                                <mat-icon>clear</mat-icon>
+                                            </button>
+                                        </mat-list-item>
+                                    </mat-list>
+                                </div>
                             </div>
 
                             <p class="margin-top-10-i">{{'upstream.dialog.health_active_healthy' | translate}}</p>

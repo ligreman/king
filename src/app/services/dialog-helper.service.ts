@@ -20,6 +20,7 @@ import { DialogNewSniComponent } from '../components/dialog-new-sni/dialog-new-s
 import { DialogNewTargetComponent } from '../components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from '../components/dialog-new-upstream/dialog-new-upstream.component';
 import { ApiService } from './api.service';
+import { GlobalsService } from './globals.service';
 import { ToastService } from './toast.service';
 
 @Injectable({
@@ -27,7 +28,7 @@ import { ToastService } from './toast.service';
 })
 export class DialogHelperService {
 
-    constructor(private dialog: MatDialog, private api: ApiService, private toast: ToastService) { }
+    constructor(private dialog: MatDialog, private api: ApiService, private toast: ToastService, private globals: GlobalsService) { }
 
 
     addEdit(selected, group) {
@@ -397,6 +398,22 @@ export class DialogHelperService {
                     reject();
                 }
             });
+        });
+    }
+
+    getRouterMode() {
+        return new Promise<void>((resolve, reject) => {
+            if (this.globals.ROUTER_MODE === '') {
+                this.api.getNodeInformation()
+                    .subscribe({
+                        next: (res) => {
+                            this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
+                            resolve();
+                        }, error: () => reject()
+                    });
+            } else {
+                resolve();
+            }
         });
     }
 }

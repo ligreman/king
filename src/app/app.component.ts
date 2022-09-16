@@ -65,6 +65,15 @@ export class AppComponent implements OnInit, OnDestroy {
     get nodeField() { return this.formNodes.get('node'); }
 
     ngOnInit(): void {
+        // Conecto al nodo y si no lo consigo voy a landing
+        if (this.globals.NODE_API_URL !== '' && this.globals.ROUTER_MODE === '') {
+            this.api.getNodeInformation()
+                .subscribe({
+                    next: (res) => {
+                        this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
+                    }, error: () => this.route.navigate(['/landing'])
+                });
+        }
     }
 
     ngOnDestroy(): void {
@@ -102,6 +111,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
                     // Recojo los plugins activos para habilitar las secciones
                     this.enabledPlugins = res['plugins']['enabled_in_cluster'];
+
+                    // Modo del router
+                    this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
 
                     // Voy a la página de información de nodos
                     this.route.navigate(['/node-information']);

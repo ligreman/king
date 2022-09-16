@@ -82,6 +82,23 @@ export class DialogInfoUpstreamComponent implements OnInit, OnDestroy {
         this.dialogHelper.showInfoElement(target, 'target');
     }
 
+
+    drawHeaders(up) {
+        if (up === null || up === undefined || up.active === null || up.active === undefined || up.active.headers === null || up.active.headers === undefined) {
+            return [''];
+        }
+        up = up.active.headers;
+
+        let res = [];
+        const d = Object.getOwnPropertyNames(up);
+
+        for (const i of d) {
+            res.push(i.toUpperCase() + ': ' + up[i]);
+        }
+
+        return res;
+    }
+
     /*
         Calculates color
      */

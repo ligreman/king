@@ -49,22 +49,22 @@
                 <td *matCellDef="let row" mat-cell>{{(row.protocols || []).join(', ')}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="methods">
+            <ng-container *ngIf="!expressions" matColumnDef="methods">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'route.dialog.methods' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>{{(row.methods || []).join(', ')}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="hosts">
+            <ng-container *ngIf="!expressions" matColumnDef="hosts">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'route.dialog.hosts' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>{{(row.hosts && row.hosts.length > 0) ? row.hosts.join(', ') : ''}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="paths">
+            <ng-container *ngIf="!expressions" matColumnDef="paths">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'route.dialog.paths' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>{{(row.paths && row.paths.length > 0) ? row.paths.join(', ') : ''}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="headers">
+            <ng-container *ngIf="!expressions" matColumnDef="headers">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'route.dialog.headers' | translate}}</th>
                 <td *matCellDef="let row" class="cell-highlight" mat-cell>
                     <span [fxShow]="row.headers === null || getJSON(row.headers) === ''" matTooltip="{{getJSON(row.headers)}}"
@@ -72,6 +72,11 @@
                     <span [fxShow]="row.headers !== null && getJSON(row.headers) !== ''" class="on"
                           matTooltip="{{getJSON(row.headers)}}" matTooltipClass="tooltip-teal tooltip-multi">HEAD</span>
                 </td>
+            </ng-container>
+
+            <ng-container *ngIf="expressions" matColumnDef="expression">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'route.dialog.expression' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>{{(row.expression || '')}}</td>
             </ng-container>
 
             <ng-container matColumnDef="tags">

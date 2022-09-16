@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class GlobalsService {
     private _NODE_API_URL = '';
+    private _ROUTER_MODE = '';
     // NETWORK GRAPH
     private _NETWORK_NODES = {
         font: {
@@ -433,6 +434,14 @@ export class GlobalsService {
 
     set NODE_API_URL(value: string) {
         this._NODE_API_URL = value;
+    }
+
+    get ROUTER_MODE(): string {
+        return this._ROUTER_MODE;
+    }
+
+    set ROUTER_MODE(value: string) {
+        this._ROUTER_MODE = value;
     }
 
     get NETWORK_NODES(): {} {

@@ -232,7 +232,7 @@
                 <div fxFlex="100">
                     <p class="title margin-0-i" matTooltip="{{'upstream.dialog.health_active_headers_tooltip' | translate}}"
                        matTooltipClass="tooltip-teal">{{'upstream.dialog.health_active_headers' | translate}}</p>
-                    <p class="text margin-left-20-i">{{upstream?.healthchecks?.active?.headers}}</p>
+                    <p *ngFor="let h of drawHeaders(upstream['healthchecks'])" class="text margin-left-20-i">{{ h }}</p>
                 </div>
             </div>
             <p class="margin-top-10-i padding-left-40">{{'upstream.dialog.health_active_healthy' | translate}}</p>

@@ -25,8 +25,16 @@
                     <p>{{data['node_id']}}</p>
                 </div>
                 <div fxLayout="row">
+                    <p class="badge">{{'information.hostname' | translate}}</p>
+                    <p>{{data['hostname']}}</p>
+                </div>
+                <div fxLayout="row">
                     <p class="badge">{{'information.version' | translate}}</p>
                     <p>{{data['version']}}</p>
+                </div>
+                <div fxLayout="row">
+                    <p class="badge">{{'information.router_mode' | translate}}</p>
+                    <p>{{data['router_flavor']}}</p>
                 </div>
                 <div fxLayout="row">
                     <p class="badge" fxLayout="row" fxLayoutAlign="center center">{{'information.admin_listen' | translate}}</p>

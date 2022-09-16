@@ -10,11 +10,12 @@
 
 <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="90">
-        <form [formGroup]="form">
+        <form [formGroup]="expressions?formE:formNE">
             <!--Nombre-->
             <div class="margin-bottom-10" fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="space-between start">
 
+                    <!--NAME-->
                     <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="50">
                         <mat-label>{{'route.dialog.name' | translate}}</mat-label>
                         <input aria-label="" cdkFocusInitial formControlName="name" matInput placeholder="{{'route.dialog.name_example' | translate}}"
@@ -27,6 +28,7 @@
                         </mat-error>
                     </mat-form-field>
 
+                    <!--TAGS-->
                     <mat-form-field appearance="outline" color="accent" fxFlex="45">
                         <mat-chip-list #chipList aria-label="">
                             <mat-chip (removed)="removeTag(tag)"
@@ -63,22 +65,8 @@
                         </mat-error>
                     </mat-form-field>
 
-
-                    <!--Métodos-->
-                    <mat-form-field appearance="outline" color="accent" fxFlex="45">
-                        <mat-label>{{'route.dialog.methods' | translate}}</mat-label>
-                        <mat-select formControlName="methods" multiple>
-                            <mat-option *ngFor="let method of validMethods" [value]="method">{{method}}</mat-option>
-                        </mat-select>
-                        <mat-icon matSuffix matTooltip="{{'route.dialog.methods_tooltip' | translate}}"
-                                  matTooltipClass="tooltip-teal">info_outline
-                        </mat-icon>
-                    </mat-form-field>
-                </div>
-
-                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
                     <!--Protocols-->
-                    <mat-form-field appearance="outline" color="accent" fxFlex="50">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="45">
                         <mat-label>{{'route.dialog.protocols' | translate}}</mat-label>
                         <mat-select formControlName="protocols" multiple required>
                             <mat-option *ngFor="let proto of validProtocols" [value]="proto">{{proto}}</mat-option>
@@ -93,9 +81,73 @@
                             {{ 'route.dialog.error.protocols_exclusions' | translate }}
                         </mat-error>
                     </mat-form-field>
+                </div>
 
+
+                <div *ngIf="expressions" fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-form-field appearance="standard" color="accent" fxFlex="15">
+                        <mat-select #etransform placeholder="{{ 'route.dialog.transform' | translate}}">
+                            <mat-option [value]=""></mat-option>
+                            <mat-option *ngFor="let proto of validETransformsStrings" [fxShow]="eType==='string'"
+                                        [value]="proto">{{'route.dialog.transform_' + proto | translate}}</mat-option>
+                            <mat-option *ngFor="let proto of validETransforms" [fxShow]="eType==='int'"
+                                        [value]="proto">{{'route.dialog.transform_' + proto | translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="standard" color="accent" fxFlex="15">
+                        <mat-select #efield (selectionChange)="changeEField(efield.value)" placeholder="{{ 'route.dialog.field' | translate}}">
+                            <mat-option *ngFor="let proto of validEFields" [value]="proto">{{ 'route.dialog.field_' + proto | translate}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="standard" color="accent" fxFlex="10">
+                        <mat-select #eop placeholder="{{ 'route.dialog.operator' | translate}}">
+                            <mat-option *ngFor="let proto of validEOpsStrings" [fxShow]="eType==='string'" [value]="proto">{{proto}}</mat-option>
+                            <mat-option *ngFor="let proto of validEOpsIntegers" [fxShow]="eType==='int'" [value]="proto">{{proto}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="standard" color="accent" fxFlex="25">
+                        <input #evalue aria-label="" matInput placeholder="{{ 'route.dialog.value' | translate}}" type="text"/>
+                    </mat-form-field>
+                    <button (click)="btnExp(etransform.value,efield.value,eop.value,evalue.value)" color="accent" mat-icon-button>
+                        <mat-icon>add</mat-icon>
+                    </button>
+                    <button (click)="btnAppend('(')" aria-label="" color="accent" mat-icon-button>(</button>
+                    <button (click)="btnAppend(')')" aria-label="" color="accent" mat-icon-button>)</button>
+                    <button (click)="btnAppend(' && ')" aria-label="" color="accent" mat-icon-button>AND</button>
+                    <button (click)="btnAppend(' || ')" aria-label="" color="accent" mat-icon-button>OR</button>
+                    <mat-icon matSuffix matTooltip="{{'route.dialog.expression_tooltip' | translate}}"
+                              matTooltipClass="tooltip-teal tooltip-multi">info_outline
+                    </mat-icon>
+                </div>
+                <div *ngIf="expressions" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <!--Expresión-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                        <mat-label>{{'route.dialog.expression' | translate}}</mat-label>
+                        <input aria-label="" formControlName="expression" matInput required type="text"/>
+                        <mat-error *ngIf="expressionField.invalid">
+                            {{ 'error.field_required' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+
+                <div *ngIf="expressions" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <!--Priority-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="25">
+                        <mat-label>{{'route.dialog.priority' | translate}}</mat-label>
+                        <input aria-label="" formControlName="priority" matInput required type="number"/>
+                        <mat-error *ngIf="priorityField.hasError('required')">
+                            {{ 'error.field_required' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="priorityField.invalid">
+                            {{ 'route.dialog.error.regex_min_max' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div *ngIf="!expressions" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
                     <!--Hosts-->
-                    <mat-form-field appearance="outline" color="accent" fxFlex="45">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="70">
                         <mat-chip-list #chipList2 aria-label="">
                             <mat-chip (removed)="removeHost(host)"
                                       *ngFor="let host of currentHosts" removable="true">{{host}}
@@ -113,9 +165,20 @@
                         </mat-icon>
                         <mat-hint>{{'route.dialog.hosts_hint' | translate}}</mat-hint>
                     </mat-form-field>
+
+                    <!--Métodos-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="25">
+                        <mat-label>{{'route.dialog.methods' | translate}}</mat-label>
+                        <mat-select formControlName="methods" multiple>
+                            <mat-option *ngFor="let method of validMethods" [value]="method">{{method}}</mat-option>
+                        </mat-select>
+                        <mat-icon matSuffix matTooltip="{{'route.dialog.methods_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                    </mat-form-field>
                 </div>
 
-                <div class="margin-bottom-20-i" fxLayout="row" fxLayoutAlign="space-between start">
+                <div *ngIf="!expressions" class="margin-bottom-20-i" fxLayout="row" fxLayoutAlign="space-between start">
                     <!--Rutas-->
                     <mat-form-field appearance="outline" color="accent" fxFlex="50">
                         <mat-chip-list #chipList3 aria-label="">
@@ -148,7 +211,7 @@
                     </mat-form-field>
                 </div>
 
-                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                <div *ngIf="!expressions" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
                     <!--Cabeceras-->
                     <div fxFlex="55" fxLayout="row" fxLayoutAlign="space-between center">
                         <mat-form-field appearance="standard" class="margin-bottom-10" color="accent" fxFlex="40">
@@ -211,7 +274,7 @@
                         </mat-form-field>
 
                         <!--RegExp priority-->
-                        <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="30">
+                        <mat-form-field *ngIf="!expressions" appearance="outline" class="margin-bottom-10" color="accent" fxFlex="30">
                             <mat-label>{{'route.dialog.regex_priority' | translate}}</mat-label>
                             <input aria-label="" formControlName="regex_priority" matInput type="number"/>
                             <mat-icon matSuffix matTooltip="{{'route.dialog.regex_tooltip' | translate}}"
@@ -223,7 +286,7 @@
                         </mat-form-field>
 
                         <!--Path handling-->
-                        <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="30">
+                        <mat-form-field *ngIf="!expressions" appearance="outline" class="margin-bottom-10" color="accent" fxFlex="30">
                             <mat-label>{{'route.dialog.path_handling' | translate}}</mat-label>
                             <mat-select formControlName="path_handling">
                                 <mat-option value="v0">v0</mat-option>
@@ -261,7 +324,7 @@
                         </div>
                     </div>
 
-                    <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <div *ngIf="!expressions" class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
                         <!--Sources and destinations-->
                         <div fxFlex="47" fxLayout="column">
                             <div fxLayout="row">{{'route.dialog.sources' | translate}}
@@ -336,8 +399,13 @@
 <mat-divider class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between start">
-    <div>
-        <mat-error *ngIf="form.hasError('finalValidation')">
+    <div *ngIf="expressions">
+        <mat-error *ngIf="formE.hasError('finalValidation')">
+            {{ 'route.dialog.error.final_validation' | translate }}
+        </mat-error>
+    </div>
+    <div *ngIf="!expressions">
+        <mat-error *ngIf="formNE.hasError('finalValidation')">
             {{ 'route.dialog.error.final_validation' | translate }}
         </mat-error>
     </div>
@@ -345,8 +413,13 @@
     <div>
         <button color="warn" mat-button mat-dialog-close="null">{{'text.cancel' | translate}}</button>
         <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
-        <button (click)="onSubmit()" [disabled]="form.invalid" color="accent"
-                mat-flat-button>
+        <button (click)="onSubmit()" *ngIf="expressions" [disabled]="formE.invalid"
+                color="accent" mat-flat-button>
+            <span *ngIf="!editMode">{{'text.create' | translate}}</span>
+            <span *ngIf="editMode">{{'text.edit' | translate}}</span>
+        </button>
+        <button (click)="onSubmit()" *ngIf="!expressions" [disabled]="formNE.invalid"
+                color="accent" mat-flat-button>
             <span *ngIf="!editMode">{{'text.create' | translate}}</span>
             <span *ngIf="editMode">{{'text.edit' | translate}}</span>
         </button>

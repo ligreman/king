@@ -4,7 +4,8 @@ import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { sortedUniq as _sortedUniq, startsWith as _startsWith } from 'lodash';
+import * as Joi from 'joi';
+import { size as _size, sortedUniq as _sortedUniq, startsWith as _startsWith } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -27,6 +28,7 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp'];
     validHttpStatuses = [200, 201, 202, 203, 204, 205, 206, 207, 208, 226, 300, 301, 302, 303, 304, 305, 306, 307, 308, 400, 401, 402, 403, 404, 405, 406, 407, 408, 409, 410, 411, 412, 413, 414, 415, 416, 417, 418, 421, 422, 423, 424, 425, 426, 427, 428, 429, 431, 451, 500, 501, 502, 503, 504, 505, 506, 507, 508, 510, 511];
     currentTags = [];
+    currentHeaders = {};
     allTags = [];
     certificatesAvailable = [];
     servicesAvailable = new Map<String, String>();
@@ -275,6 +277,34 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
         }
     }
 
+
+    /*
+        Gestión de headers
+     */
+    addHeader(keyInput, valInput): void {
+        const {error, value} = Joi.object({
+            key: Joi.string().invalid('Host').required(),
+            value: Joi.string().required()
+        }).validate({key: keyInput.value, value: valInput.value});
+
+        // Add
+        if (error === undefined) {
+            this.currentHeaders[keyInput.value] = valInput.value.split(',');
+            this.form.get('healthchecks.active.headers').setValue('true');
+
+            keyInput.value = '';
+            valInput.value = '';
+        }
+    }
+
+    removeHeader(key): void {
+        delete this.currentHeaders[key];
+        if (_size(this.currentHeaders) === 0) {
+            // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
+            this.form.get('healthchecks.active.headers').setValue(null);
+        }
+    }
+
     selectedTag($event: MatAutocompleteSelectedEvent) {
         this.currentTags.push($event.option.viewValue);
     }
@@ -298,6 +328,7 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
             upstream['host_header'] = '';
         }
 
+        this.currentHeaders = upstream['healthchecks']['active']['headers'] || [];
         this.currentTags = upstream['tags'] || [];
         upstream['tags'] = [];
 
@@ -315,6 +346,12 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
             body.tags = this.currentTags;
         } else {
             body.tags = [];
+        }
+
+        if (this.currentHeaders && Object.getOwnPropertyNames(this.currentHeaders).length > 0) {
+            body.healthchecks.active.headers = this.currentHeaders;
+        } else {
+            body.healthchecks.active.headers = {};
         }
 
         if (body.host_header === '' || body.host_header === null) {
