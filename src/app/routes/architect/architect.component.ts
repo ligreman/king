@@ -36,6 +36,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     stabilized = false;
     // Show the toolbar
     showTools = false;
+    expressions = true;
     // Grafo
     network;
     // Datos del API para pintar el grafo
@@ -67,22 +68,28 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit(): void {
-        // Compruebo la conexión al nodo
-        this.api.getNodeStatus()
-            .subscribe({
-                next: () => {
-                    this.dialogHelper.getRouterMode().then(() => {
-                        this.loading = true;
+        this.dialogHelper.getRouterMode().then(() => {
+            // Si no estoy en modo expressions cambio la tabla
+            if (this.globals.ROUTER_MODE !== 'expressions') {
+                this.expressions = false;
+            }
+            // Compruebo la conexión al nodo
+            this.api.getNodeStatus()
+                .subscribe({
+                    next: () => {
+                        this.dialogHelper.getRouterMode().then(() => {
+                            this.loading = true;
 
-                        this.getNodeInformation();
-                        this.getTags();
-                    }).catch(() => this.toast.error('error.route_mode'));
-                },
-                error: () => {
-                    this.toast.error('error.node_connection');
-                    this.route.navigate(['/landing']).then();
-                }
-            });
+                            this.getNodeInformation();
+                            this.getTags();
+                        }).catch(() => this.toast.error('error.route_mode'));
+                    },
+                    error: () => {
+                        this.toast.error('error.node_connection');
+                        this.route.navigate(['/landing']).then();
+                    }
+                });
+        }).catch(() => this.toast.error('error.route_mode'));
     }
 
     ngOnDestroy(): void {}
@@ -105,7 +112,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     wind: {x: 2, y: 0},
                     barnesHut: {
                         theta: 0.8,
-                        springLength: 200,
+                        springLength: 150,
                         springConstant: 0.15,
                         avoidOverlap: 0.5
                     }

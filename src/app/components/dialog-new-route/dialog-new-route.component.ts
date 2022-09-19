@@ -450,6 +450,11 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
 
     btnExp(transform, field, op, value): void {
         let out = '';
+
+        value = value.replace(/"/g, '').replace(/'/g, '');
+        // Si no tiene comillas dobles las añado
+        value = '"' + value + '"';
+
         if (field && op && value) {
             if (transform) {
                 out = transform;
@@ -525,25 +530,6 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             body.tags = [];
         }
 
-        // Si es http o https no admite sources y destionations
-        if (body.protocols.includes('http') || body.protocols.includes('https')) {
-            delete body.sources;
-            delete body.destinations;
-        }
-        // En caso de tcp, tls o udp no puede llevar methods, headers, paths o hosts
-        if (body.protocols.includes('tcp') || body.protocols.includes('tls') || body.protocols.includes('udp')) {
-            delete body.hosts;
-            delete body.methods;
-            delete body.paths;
-            delete body.headers;
-        }
-        // Para estos no hay que enviar strip_path, sources ni destinations
-        if (body.protocols.includes('grpc') || body.protocols.includes('grpcs')) {
-            delete body.strip_path;
-            delete body.sources;
-            delete body.destinations;
-        }
-
         // Dependiendo del modo de router
         if (!this.expressions) {
             if (this.currentHosts && this.currentHosts.length > 0) {
@@ -583,6 +569,25 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             if (_isEmpty(body.snis)) {
                 body.snis = null;
             }
+        }
+
+        // Si es http o https no admite sources y destionations
+        if (body.protocols.includes('http') || body.protocols.includes('https')) {
+            delete body.sources;
+            delete body.destinations;
+        }
+        // En caso de tcp, tls o udp no puede llevar methods, headers, paths o hosts
+        if (body.protocols.includes('tcp') || body.protocols.includes('tls') || body.protocols.includes('udp')) {
+            delete body.hosts;
+            delete body.methods;
+            delete body.paths;
+            delete body.headers;
+        }
+        // Para estos no hay que enviar strip_path, sources ni destinations
+        if (body.protocols.includes('grpc') || body.protocols.includes('grpcs')) {
+            delete body.strip_path;
+            delete body.sources;
+            delete body.destinations;
         }
 
         return body;

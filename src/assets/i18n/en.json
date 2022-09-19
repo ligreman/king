@@ -339,7 +339,7 @@
             "field": "Field",
             "operator": "Operator",
             "value": "Value",
-            "expression_tooltip": "- net.protocol: The protocol used to communicate with the upstream application.\n- net.port: Server end port number.\n- http.method: HTTP methods that match a route.\n- http.host: Lists of domains that match a route.\n- http.path: Normalized request path (without query parameters).\n- http.headers.header_name: Value of header Header-Name. Header names are converted to lower case, and - are replaced to _.\n- tls.sni: Server name indication (SNI).\n- ~: Regex matching.\n- ^=: Prefix matching.\n- =^: Suffix matching.",
+            "expression_tooltip": "- net.protocol: The protocol used to communicate with the upstream application.\n- net.port: Server end port number.\n- http.method: HTTP methods that match a route.\n- http.host: Lists of domains that match a route.\n- http.path: Normalized request path (without query parameters).\n- http.headers.header_name: Value of header Header-Name. Header names are converted to lower case, and - are replaced to _.\n- tls.sni: Server name indication (SNI).\n- ~: Regex matching.\n- ==: Exact match.\n- ^=: Prefix matching.\n- =^: Suffix matching.",
             "transform_lower": "Lowercase",
             "field_net.protocol": "Protocol",
             "field_net.port": "Port",

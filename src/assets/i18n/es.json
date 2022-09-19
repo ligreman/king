@@ -339,7 +339,7 @@
             "field": "Parámetro",
             "operator": "Operador",
             "value": "Valor",
-            "expression_tooltip": "- net.protocol: El protocolo utilizado para comunicarse con el upstream.\n- net.port: Número de puerto del servidor.\n- http.method: Métodos HTTP que coinciden con una ruta.\n- http.host: Listas de dominios que coinciden con una ruta.\n- http.path: Ruta de solicitud normalizada (sin parámetros de consulta).\n- http.headers.header_name: Valor de la cabecera Header-Name. Los nombres de las cabeceras se convierten a minúsculas y los - se reemplazan por _.\n- tls.sni: Server name indication (SNI).\n- ~: Coincidencia de expresiones regulares.\n- ^=: Empieza con.\n- =^: Termina con.",
+            "expression_tooltip": "- net.protocol: El protocolo utilizado para comunicarse con el upstream.\n- net.port: Número de puerto del servidor.\n- http.method: Métodos HTTP que coinciden con una ruta.\n- http.host: Listas de dominios que coinciden con una ruta.\n- http.path: Ruta de solicitud normalizada (sin parámetros de consulta).\n- http.headers.header_name: Valor de la cabecera Header-Name. Los nombres de las cabeceras se convierten a minúsculas y los - se reemplazan por _.\n- tls.sni: Server name indication (SNI).\n- ~: Coincidencia de expresiones regulares.\n- ==: Coincidencia exacta.\n- ^=: Empieza con.\n- =^: Termina con.",
             "transform_lower": "Minúsculas",
             "field_net.protocol": "Protocolo",
             "field_net.port": "Puerto",

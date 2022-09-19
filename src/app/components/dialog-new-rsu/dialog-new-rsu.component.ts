@@ -8,6 +8,8 @@ import { isEmpty as _isEmpty, max as _max, min as _min, sortedUniq as _sortedUni
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api.service';
+import { DialogHelperService } from '../../services/dialog-helper.service';
+import { GlobalsService } from '../../services/globals.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
 
@@ -21,11 +23,17 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
     formValid = false;
     validProtocols = ['http', 'https'];
-    validMethods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE'];
     allTags = [];
     currentTags = [];
-    currentPaths = [];
+    expressions = true;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+    validETransforms = [];
+    validETransformsStrings = ['lower'];
+    validEFields = ['http.method', 'http.host', 'http.path', 'http.headers.header_name', 'net.protocol', 'net.port', 'tls.sni'];
+    validEOpsStrings = ['==', '!=', '~', '^=', '=^', 'in', 'not in'];
+    validEOpsIntegers = ['==', '!=', '>', '>=', '<', '<='];
+    eType = 'string';
 
 
     form = this.fb.group({
@@ -33,8 +41,7 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         tags: [''],
         route: this.fb.group({
             protocols: ['', [Validators.required, CustomValidators.isProtocolListValidForRoute(this.validProtocols)]],
-            methods: ['', []],
-            paths: [''],
+            expression: ['', [Validators.required]],
             strip_path: [true]
         }),
         service: this.fb.group({
@@ -52,8 +59,7 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         paths_validation: ['']
     }, {validators: [FinalFormValidator()]});
 
-    constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
-                public dialogRef: MatDialogRef<DialogNewRsuComponent>) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private globals: GlobalsService, private toast: ToastService, public dialogRef: MatDialogRef<DialogNewRsuComponent>, private dialogHelper: DialogHelperService) { }
 
     /*
         Getters de campos del formulario
@@ -74,21 +80,27 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
 
     get routeProtocolsField() { return this.form.get('route.protocols'); }
 
-    get routeMethodsField() { return this.form.get('route.methods'); }
+    get routeExpressionField() { return this.form.get('route.expression'); }
 
     get targetsField() { return this.form.get('upstream.targets');}
 
     ngOnInit(): void {
-        // Lista de tags
-        this.api.getTags()
-            .subscribe((res) => {
-                // Recojo las tags
-                res['data'].forEach(data => {
-                    this.allTags.push(data.tag);
+        this.dialogHelper.getRouterMode().then(() => {
+            // Si no estoy en modo expressions cambio la tabla
+            if (this.globals.ROUTER_MODE !== 'expressions') {
+                this.expressions = false;
+            }
+            // Lista de tags
+            this.api.getTags()
+                .subscribe((res) => {
+                    // Recojo las tags
+                    res['data'].forEach(data => {
+                        this.allTags.push(data.tag);
+                    });
+                    this.allTags.sort();
+                    this.allTags = _sortedUniq(this.allTags);
                 });
-                this.allTags.sort();
-                this.allTags = _sortedUniq(this.allTags);
-            });
+        }).catch(() => this.toast.error('error.route_mode'));
     }
 
     ngOnDestroy(): void {
@@ -147,33 +159,33 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         this.currentTags.push($event.option.viewValue);
     }
 
-    /*
-        Gestión de rutas
-     */
-    addPath(event: MatChipInputEvent): void {
-        const input = event.chipInput.inputElement;
-        const value = event.value.trim();
-
-        // Add
-        if ((value || '') && /^\//.test(value) && !/\/\//.test(value)) {
-            this.currentPaths.push(value);
-            this.form.get('paths_validation').setValue('true');
-
-            // Reset the input value
-            if (input) {
-                input.value = '';
-            }
+    btnAppend(txt): void {
+        if (txt) {
+            this.form.get('route.expression').setValue(this.form.get('route.expression').value + txt);
         }
     }
 
-    removePath(host): void {
-        const index = this.currentPaths.indexOf(host);
-        if (index >= 0) {
-            this.currentPaths.splice(index, 1);
-            if (this.currentPaths.length === 0) {
-                // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
-                this.form.get('paths_validation').setValue(null);
+    btnExp(transform, field, op, value): void {
+        let out = '';
+
+        value = value.replace(/"/g, '').replace(/'/g, '');
+        // Si no tiene comillas dobles las añado
+        value = '"' + value + '"';
+
+        if (field && op && value) {
+            if (transform) {
+                out = transform;
             }
+            out += field + ' ' + op + ' ' + value;
+            this.form.get('route.expression').setValue(this.form.get('route.expression').value + out);
+        }
+    }
+
+    changeEField(newField) {
+        if (newField === 'net.port') {
+            this.eType = 'int';
+        } else {
+            this.eType = 'string';
         }
     }
 
@@ -182,16 +194,6 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
             body.tags = this.currentTags;
         } else {
             body.tags = [];
-        }
-
-        if (this.currentPaths && this.currentPaths.length > 0) {
-            body.route.paths = this.currentPaths;
-        } else {
-            body.route.paths = [];
-        }
-
-        if (_isEmpty(this.routeMethodsField.value)) {
-            body.route.methods = [];
         }
 
         // Cálculo de slots del upstream
@@ -216,8 +218,7 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
                 name: body.name,
                 service: {id: ''},
                 protocols: body.route.protocols,
-                methods: body.route.methods,
-                paths: body.route.paths,
+                expression: body.route.expression,
                 strip_path: body.route.strip_path,
                 tags: body.tags
             },
