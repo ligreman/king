@@ -173,10 +173,11 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         value = '"' + value + '"';
 
         if (field && op && value) {
+            out = field;
             if (transform) {
-                out = transform;
+                out = transform + '(' + out + ')';
             }
-            out += field + ' ' + op + ' ' + value;
+            out += ' ' + op + ' ' + value;
             this.form.get('route.expression').setValue(this.form.get('route.expression').value + out);
         }
     }
