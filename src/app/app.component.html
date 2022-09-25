@@ -25,6 +25,10 @@
                 <mat-icon class="color-upstream">share</mat-icon>
                 {{ 'header.menu.upstreams' | translate | uppercase }}
             </button>
+            <button mat-menu-item routerLink="/element-vault" routerLinkActive="active-route">
+                <mat-icon class="color-vault">work</mat-icon>
+                {{ 'header.menu.vaults' | translate | uppercase }}
+            </button>
         </mat-menu>
         <button [disabled]="!isConnectedToNode()" color="accent" mat-button routerLink="/plugin-list" routerLinkActive="active-route">
             <mat-icon>settings_input_component</mat-icon>

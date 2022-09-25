@@ -1,0 +1,77 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+        <span>{{'vault.dialog.info' | translate}}</span>
+
+        <span fxFlexAlign="end">
+            <a href="https://docs.konghq.com/gateway/latest/admin-api/#vaults-entity" mat-button rel="noopener noreferrer" target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button (click)="downloadJson()" mat-icon-button
+                    matTooltip="{{'dialog.download_json' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>download</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        </p>
+    </div>
+
+    <div fxFlex>
+        <mat-dialog-content *ngIf="vault && !loading" class="margin-0-i">
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.name' | translate}}</p>
+                    <p class="text margin-left-20-i">{{vault['name']}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.id' | translate}}</p>
+                    <p class="text margin-left-20-i">{{vault['id']}}</p>
+                </div>
+            </div>
+            <div fxLayout="row">
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.created_at' | translate}}</p>
+                    <p class="text margin-left-20-i">{{vault['created_at'] * 1000 | date:'medium'}}</p>
+                </div>
+                <div fxFlex="50">
+                    <p class="title margin-0-i">{{'text.updated_at' | translate}}</p>
+                    <p class="text margin-left-20-i">{{vault['updated_at'] * 1000 | date:'medium'}}</p>
+                </div>
+            </div>
+
+            <div class="margin-top-10-i" fxLayout="row">
+                <div fxFlex="25">
+                    <p class="title margin-0-i">{{'vault.dialog.prefix' | translate}}</p>
+                    <p class="text margin-left-20-i">{{vault['prefix']}}</p>
+                </div>
+                <div fxFlex="75">
+                    <p class="title margin-0-i">{{'vault.dialog.description' | translate}}</p>
+                    <p class="text margin-left-20-i">{{vault['description']}}</p>
+                </div>
+            </div>
+
+            <div class="margin-top-10-i" fxLayout="row">
+                <div fxFlex="100">
+                    <p class="title margin-0-i">{{'vault.dialog.config' | translate}}</p>
+                    <p *ngFor="let h of drawConfigs(vault['config'])" class="text margin-left-20-i">{{ h }}</p>
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <mat-chip-list *ngIf="vault" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
+            <mat-chip *ngFor="let chip of vault['tags']" color="primary">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <div><!-- leave empty --></div>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>

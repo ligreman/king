@@ -13,6 +13,7 @@
         "new_service": "Servicio creado",
         "new_route": "Ruta creada",
         "new_upstream": "Upstream creado",
+        "new_vault": "Vault creado",
         "new_consumer": "Consumidor creado",
         "new_plugin": "Plugin creado",
         "new_target": "Target creado",
@@ -25,6 +26,7 @@
         "update_service": "Servicio actualizado",
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
+        "update_vault": "Vault actualizado",
         "update_consumer": "Consumidor actualizado",
         "update_plugin": "Plugin actualizado",
         "update_sni": "SNI actualizado",
@@ -33,6 +35,7 @@
         "delete_service": "Servicio {{extra}} eliminado",
         "delete_route": "Ruta {{extra}} eliminada",
         "delete_upstream": "Upstream {{extra}} eliminado",
+        "delete_vault": "Vault {{extra}} eliminado",
         "delete_consumer": "Consumidor {{extra}} eliminado",
         "delete_plugin": "Plugin {{extra}} eliminado",
         "delete_target": "Target {{extra}} eliminado",
@@ -90,6 +93,8 @@
             "delete_route": "¿Deseas eliminar esta ruta?",
             "delete_upstream_title": "Eliminar upstream",
             "delete_upstream": "¿Deseas eliminar este upstream?",
+            "delete_vault_title": "Eliminar vault",
+            "delete_vault": "¿Deseas eliminar este vault?",
             "delete_consumer_title": "Eliminar consumidor",
             "delete_consumer": "¿Deseas eliminar este consumidor?",
             "delete_target_title": "Eliminar target",
@@ -132,6 +137,7 @@
             "routes": "Rutas",
             "upstreams": "Upstreams",
             "consumers": "Consumidores",
+            "vaults": "Vaults",
             "certificates": "Certificados",
             "cacerts": "Certificados de CA",
             "snis": "SNIs",
@@ -453,6 +459,25 @@
                 "threshold_min_max": "Porcentaje entre 0 y 100",
                 "http_statuses": "Debe ser un código de estado HTTP válido"
             }
+        }
+    },
+    "vault": {
+        "label": "Vault",
+        "header": "Vaults",
+        "add": "Añadir Vault",
+        "dialog": {
+            "create": "Crear un Vault nuevo",
+            "edit": "Editar Vault",
+            "info": "Información del Vault",
+            "name": "Nombre del Vault",
+            "name_example": "my-vault",
+            "prefix": "Prefijo",
+            "description": "Descripción",
+            "config": "Parámetros de configuración",
+            "config_param": "Parámetro",
+            "config_value": "Valor",
+            "config_value_hint": "Consulta la documentación del vault",
+            "config_params": "Parámetros de configuración"
         }
     },
     "consumer": {

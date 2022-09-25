@@ -1,0 +1,24 @@
+@import '@angular/material/theming';
+
+table {
+    width: 100%;
+}
+
+.cell-ssl {
+    color: mat-color($mat-gray, 700);
+    font-weight: bold;
+    font-variant: small-caps;
+}
+
+.cell-ssl span {
+    margin-right: 5px;
+    margin-left: 5px;
+}
+
+.cell-ssl .on {
+    color: mat-color($mat-teal, 400);
+}
+
+.cell-ssl .off {
+    color: mat-color($mat-red, 500);
+}

@@ -9,6 +9,7 @@ import { DialogInfoRouteComponent } from '../components/dialog-info-route/dialog
 import { DialogInfoServiceComponent } from '../components/dialog-info-service/dialog-info-service.component';
 import { DialogInfoTargetComponent } from '../components/dialog-info-target/dialog-info-target.component';
 import { DialogInfoUpstreamComponent } from '../components/dialog-info-upstream/dialog-info-upstream.component';
+import { DialogInfoVaultComponent } from '../components/dialog-info-vault/dialog-info-vault.component';
 import { DialogNewCacertComponent } from '../components/dialog-new-cacert/dialog-new-cacert.component';
 import { DialogNewCertComponent } from '../components/dialog-new-cert/dialog-new-cert.component';
 import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
@@ -19,6 +20,7 @@ import { DialogNewServiceComponent } from '../components/dialog-new-service/dial
 import { DialogNewSniComponent } from '../components/dialog-new-sni/dialog-new-sni.component';
 import { DialogNewTargetComponent } from '../components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from '../components/dialog-new-upstream/dialog-new-upstream.component';
+import { DialogNewVaultComponent } from '../components/dialog-new-vault/dialog-new-vault.component';
 import { ApiService } from './api.service';
 import { GlobalsService } from './globals.service';
 import { ToastService } from './toast.service';
@@ -49,6 +51,9 @@ export class DialogHelperService {
                     break;
                 case 'route':
                     component = DialogNewRouteComponent;
+                    break;
+                case 'vault':
+                    component = DialogNewVaultComponent;
                     break;
                 case 'upstream':
                     component = DialogNewUpstreamComponent;
@@ -119,6 +124,10 @@ export class DialogHelperService {
                 opt.data = select.id;
                 component = DialogInfoUpstreamComponent;
                 break;
+            case 'vault':
+                opt.data = select.id;
+                component = DialogInfoVaultComponent;
+                break;
             case 'target':
                 opt.data = select.id + '#' + select.data.upstream.id;
                 component = DialogInfoTargetComponent;
@@ -157,6 +166,7 @@ export class DialogHelperService {
                 case 'service':
                 case 'route':
                 case 'upstream':
+                case 'vault':
                 case 'sni':
                 case 'cert':
                 case 'cacert':
@@ -277,6 +287,18 @@ export class DialogHelperService {
                                     this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: (select.username || select.custom_id)});
                                     resolve();
                                 }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
+                            });
+                            break;
+                        case 'vault':
+                            this.api.deleteVault(select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                },
+                                error: (error) => {
                                     this.toast.error_general(error, {disableTimeOut: true});
                                     reject();
                                 }

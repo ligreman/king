@@ -12,6 +12,7 @@ import { CertificateSniComponent } from './routes/certificates/certificate-sni/c
 import { ElementRouteComponent } from './routes/elements/element-route/element-route.component';
 import { ElementServiceComponent } from './routes/elements/element-service/element-service.component';
 import { ElementUpstreamComponent } from './routes/elements/element-upstream/element-upstream.component';
+import { ElementVaultComponent } from './routes/elements/element-vault/element-vault.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
@@ -25,6 +26,7 @@ const routes: Routes = [
     {path: 'element-route', component: ElementRouteComponent, canActivate: [ConnectedGuard]},
     {path: 'element-upstream', component: ElementUpstreamComponent, canActivate: [ConnectedGuard]},
     {path: 'element-consumer', component: ElementConsumerComponent, canActivate: [ConnectedGuard]},
+    {path: 'element-vault', component: ElementVaultComponent, canActivate: [ConnectedGuard]},
     {path: 'access-acls', component: AccessAclsComponent, canActivate: [ConnectedGuard]},
     {path: 'access-key', component: AccessKeyComponent, canActivate: [ConnectedGuard]},
     {path: 'access-jwt', component: AccessJwtComponent, canActivate: [ConnectedGuard]},

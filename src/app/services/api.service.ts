@@ -121,6 +121,29 @@ export class ApiService {
     }
 
     /*
+        VAULT ENDPOINTS
+     */
+    public getVaults() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/vaults?size=1000').pipe(catchError(this.handleError));
+    }
+
+    public getVault(id: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/vaults/' + id).pipe(catchError(this.handleError));
+    }
+
+    public postNewVault(body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/vaults', body).pipe(catchError(this.handleError));
+    }
+
+    public patchVault(id: string, body) {
+        return this.httpClient.patch(this.globals.NODE_API_URL + '/vaults/' + id, body).pipe(catchError(this.handleError));
+    }
+
+    public deleteVault(id: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/vaults/' + id).pipe(catchError(this.handleError));
+    }
+
+    /*
         CONSUMERS ENDPOINTS
      */
     public getConsumers() {

@@ -47,6 +47,7 @@ import { DialogInfoRouteComponent } from './components/dialog-info-route/dialog-
 import { DialogInfoServiceComponent } from './components/dialog-info-service/dialog-info-service.component';
 import { DialogInfoTargetComponent } from './components/dialog-info-target/dialog-info-target.component';
 import { DialogInfoUpstreamComponent } from './components/dialog-info-upstream/dialog-info-upstream.component';
+import { DialogInfoVaultComponent } from './components/dialog-info-vault/dialog-info-vault.component';
 import { DialogNewCacertComponent } from './components/dialog-new-cacert/dialog-new-cacert.component';
 import { DialogNewCertComponent } from './components/dialog-new-cert/dialog-new-cert.component';
 import { DialogNewConsumerComponent } from './components/dialog-new-consumer/dialog-new-consumer.component';
@@ -58,6 +59,7 @@ import { DialogNewServiceComponent } from './components/dialog-new-service/dialo
 import { DialogNewSniComponent } from './components/dialog-new-sni/dialog-new-sni.component';
 import { DialogNewTargetComponent } from './components/dialog-new-target/dialog-new-target.component';
 import { DialogNewUpstreamComponent } from './components/dialog-new-upstream/dialog-new-upstream.component';
+import { DialogNewVaultComponent } from './components/dialog-new-vault/dialog-new-vault.component';
 import { ManualContentComponent } from './components/manual-content/manual-content.component';
 import { ManualEnComponent } from './components/manual-content/manual-en/manual-en.component';
 import { ManualEsComponent } from './components/manual-content/manual-es/manual-es.component';
@@ -72,6 +74,7 @@ import { CertificateSniComponent } from './routes/certificates/certificate-sni/c
 import { ElementRouteComponent } from './routes/elements/element-route/element-route.component';
 import { ElementServiceComponent } from './routes/elements/element-service/element-service.component';
 import { ElementUpstreamComponent } from './routes/elements/element-upstream/element-upstream.component';
+import { ElementVaultComponent } from './routes/elements/element-vault/element-vault.component';
 import { LandingComponent } from './routes/landing/landing.component';
 import { NodeInformationComponent } from './routes/node-information/node-information.component';
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
@@ -92,12 +95,15 @@ export function HttpLoaderFactory(http: HttpClient) {
         ArchitectComponent,
         DialogNewServiceComponent,
         DialogInfoServiceComponent,
+        DialogInfoVaultComponent,
         DialogConfirmComponent,
         ElementServiceComponent,
         ElementRouteComponent,
         ElementUpstreamComponent,
+        ElementVaultComponent,
         ElementConsumerComponent,
         DialogNewRouteComponent,
+        DialogNewVaultComponent,
         DialogNewConsumerComponent,
         DialogNewUpstreamComponent,
         DialogNewPluginComponent,

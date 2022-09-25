@@ -13,6 +13,7 @@
         "new_service": "Service created",
         "new_route": "Route created",
         "new_upstream": "Upstream created",
+        "new_vault": "Vault created",
         "new_consumer": "Consumer created",
         "new_plugin": "Plugin created",
         "new_target": "Target created",
@@ -26,6 +27,7 @@
         "update_route": "Route updated",
         "update_upstream": "Upstream updated",
         "update_consumer": "Consumer updated",
+        "update_vault": "Vault updated",
         "update_plugin": "Plugin updated",
         "update_sni": "SNI updated",
         "update_cert": "Certificate updated",
@@ -33,6 +35,7 @@
         "delete_service": "Service {{extra}} deleted",
         "delete_route": "Route {{extra}} deleted",
         "delete_upstream": "Upstream {{extra}} deleted",
+        "delete_vault": "Vault {{extra}} deleted",
         "delete_consumer": "Consumer {{extra}} deleted",
         "delete_plugin": "Plugin {{extra}} deleted",
         "delete_target": "Target {{extra}} deleted",
@@ -90,6 +93,8 @@
             "delete_route": "Do you want to delete this route?",
             "delete_upstream_title": "Delete upstream",
             "delete_upstream": "Do you want to delete this upstream?",
+            "delete_vault_title": "Delete vault",
+            "delete_vault": "Do you want to delete this vault?",
             "delete_consumer_title": "Delete consumer",
             "delete_consumer": "Do you want to delete this consumer?",
             "delete_target_title": "Delete target",
@@ -132,6 +137,7 @@
             "routes": "Routes",
             "upstreams": "Upstreams",
             "consumers": "Consumers",
+            "vaults": "Vaults",
             "certificates": "Certificates",
             "cacerts": "CA certificates",
             "snis": "SNIs",
@@ -453,6 +459,25 @@
                 "threshold_min_max": "Percentage between 0 and 100",
                 "http_statuses": "Must be a valid HTTP status code"
             }
+        }
+    },
+    "vault": {
+        "label": "Vault",
+        "header": "Vaults",
+        "add": "Add Vault",
+        "dialog": {
+            "create": "Create a new Vault",
+            "edit": "Edit Vault",
+            "info": "Vault`s information",
+            "name": "Name for the Vault",
+            "name_example": "my-vault",
+            "prefix": "Prefix",
+            "description": "Description",
+            "config": "Config properties",
+            "config_param": "Parameter",
+            "config_value": "Value",
+            "config_value_hint": "Check the vault documentation",
+            "config_params": "Configuration parameters"
         }
     },
     "consumer": {
