@@ -72,6 +72,10 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy {
                         this.total_acls.push(acl.group);
                         this.filteredAcls.push(acl.group);
                     });
+
+                    // Elimino duplicados
+                    this.total_acls = [...new Set(this.total_acls)];
+                    this.filteredAcls = [...new Set(this.filteredAcls)];
                 },
                 error: (error) => this.toast.error_general(error),
                 complete: () => this.loading = false

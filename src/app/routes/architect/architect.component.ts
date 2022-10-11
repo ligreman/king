@@ -441,13 +441,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         for (let route of allRoutes) {
             let extras = [this.translate.instant('route.label') + ': ' + route.id];
             // Label
-            let lbl = '';
+            let lbl = '', prefix = '';
 
             // Dependiendo del modo de router, el label y los extras será uno u otro
             if (this.globals.ROUTER_MODE === 'expressions') {
                 if (!_isEmpty(route.expression)) {
                     extras.push(this.translate.instant('route.dialog.expression') + ': ' + route.expression);
+                    extras.push(this.translate.instant('route.dialog.priority') + ': ' + route.priority);
                     lbl = route.expression;
+                    prefix = route.priority + ' - ';
                 }
             } else {
                 if (!_isEmpty(route.methods)) {
@@ -463,13 +465,17 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 if (!_isEmpty(route.headers)) {
                     extras.push(this.translate.instant('route.dialog.headers') + ': ' + JSON.stringify(route.headers));
                 }
+                if (!_isEmpty(route.regex_priority)) {
+                    extras.push(this.translate.instant('route.dialog.regex_priority') + ': ' + route.regex_priority);
+                    prefix = route.regex_priority + ' - ';
+                }
             }
 
             // Nodos de ruta
             const element = generateElement(extras);
             this.data.nodes.add({
                 id: route.id,
-                label: route.name + '\n' + lbl + '\n[' + route.protocols.join(', ') + ']',
+                label: route.name + '\n' + lbl + '\n' + prefix + '[' + route.protocols.join(', ') + ']',
                 title: element,
                 group: 'route',
                 x: 300,
