@@ -59,23 +59,31 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (acls) => {
                     this.acls = acls['data'];
-                },
-                error: (error) => this.toast.error_general(error),
-                complete: () => this.loading = false
-            });
+                    let yatengo = [];
+                    this.acls.forEach(one => {yatengo.push(one.group);});
 
-        // Recojo también todos los acls existentes para rellenar el autocomplete
-        this.api.getAcls()
-            .subscribe({
-                next: (acls) => {
-                    acls['data'].forEach(acl => {
-                        this.total_acls.push(acl.group);
-                        this.filteredAcls.push(acl.group);
-                    });
+                    // Recojo también todos los acls existentes para rellenar el autocomplete
+                    this.api.getAcls()
+                        .subscribe({
+                            next: (acls) => {
+                                acls['data'].forEach(acl => {
+                                    // Si es un acl que no tiene ya el consumidor, lo añado al autocomplete
+                                    if (!yatengo.includes(acl.group)) {
+                                        this.total_acls.push(acl.group);
+                                        this.filteredAcls.push(acl.group);
+                                    }
+                                });
 
-                    // Elimino duplicados
-                    this.total_acls = [...new Set(this.total_acls)];
-                    this.filteredAcls = [...new Set(this.filteredAcls)];
+                                // Elimino duplicados
+                                this.total_acls = [...new Set(this.total_acls)];
+                                this.filteredAcls = [...new Set(this.filteredAcls)];
+                                // Ordeno
+                                this.total_acls.sort();
+                                this.filteredAcls.sort();
+                            },
+                            error: (error) => this.toast.error_general(error),
+                            complete: () => this.loading = false
+                        });
                 },
                 error: (error) => this.toast.error_general(error),
                 complete: () => this.loading = false

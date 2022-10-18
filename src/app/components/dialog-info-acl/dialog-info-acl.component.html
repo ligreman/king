@@ -25,10 +25,10 @@
     <div fxFlex>
         <mat-dialog-content *ngIf="acls && !loading" class="margin-0-i">
             <div fxLayout="row" fxLayoutAlign="space-between center">
-                <div>{{'acl.dialog.groups' | translate}}: <span>{{consumerName}}</span></div>
+                <div fxFlex="50">{{'acl.dialog.groups' | translate}}: <span>{{consumerName}}</span></div>
 
-                <div>
-                    <mat-form-field>
+                <div fxFlex="50">
+                    <mat-form-field fxFlex>
                         <mat-label>{{ 'acl.dialog.add_group' | translate}}</mat-label>
                         <input (ngModelChange)="valueChanged()" [(ngModel)]="group" [matAutocomplete]="auto" matInput type="text">
                         <button (click)="group='';valueChanged()" mat-button mat-icon-button matSuffix>
