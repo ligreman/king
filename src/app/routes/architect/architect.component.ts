@@ -56,6 +56,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     groupsAddTarget = ['upstream'];
     groupsHealth = ['target'];
     groupsAll = ['service', 'route', 'upstream', 'consumer', 'target', 'plugin'];
+    distRouterStep = 175;
+    distConsumerStep = 75;
+    lastPosition = {scale: 1, position: {x: 0, y: 0}};
 
     // Datos del grafo
     data = {
@@ -161,9 +164,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (!this.stabilized) {
                         this.stabilized = true;
 
+                        // Primera vez que se crea el grafo
                         if (!this.firstStabilized) {
                             this.network.fit();
                             this.firstStabilized = true;
+
+                            setTimeout(() => {
+                                // Guardo la posición
+                                this.lastPosition.scale = this.network.getScale();
+                                this.lastPosition.position = this.network.getViewPosition();
+                            }, 2000);
+                        } else {
+                            // Si había posición guardada la recupero
+                            this.network.moveTo(this.lastPosition);
                         }
                         // this.network.focus('center');
                     }
@@ -181,6 +194,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     populateGraph() {
         this.loading = true;
         this.selection = '';
+
+        // Guardo la posición
+        this.lastPosition.scale = this.network.getScale();
+        this.lastPosition.position = this.network.getViewPosition();
 
         // Recojo las tags por si hay nuevas
         this.getTags();
@@ -435,7 +452,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         const par = (allRoutes.length % 2) === 0;
         const half = _floor(allRoutes.length / 2);
         // Contador de rutas
-        let dist = half * -150, routeCounter = 1;
+        let distRoutes = half * -this.distRouterStep, routeCounter = 1;
 
         // Recorro las rutas creando los nodos de rutas
         for (let route of allRoutes) {
@@ -479,7 +496,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 title: element,
                 group: 'route',
                 x: 300,
-                y: dist,
+                y: distRoutes,
                 data: route
             });
 
@@ -501,7 +518,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 id: 'route-start-' + routeCounter,
                 group: 'routeStart',
                 x: 150,
-                y: dist
+                y: distRoutes
             });
             // Edge de la ruta al nodo inicial propio de su ruta
             this.data.edges.add({
@@ -521,10 +538,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             routeCounter++;
 
             // Añado distancia al nodo
-            dist += 150;
+            distRoutes += this.distRouterStep;
             // Si el número de rutas es par, no pongo ninguna en el punto 0 del eje y
-            if (dist === 0 && par) {
-                dist += 150;
+            if (distRoutes === 0 && par) {
+                distRoutes += this.distRouterStep;
             }
         }
 
@@ -606,20 +623,30 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             });
         }
 
+        /************** CONSUMIDORES SIN PLUGIN ***********************/
+        const halfC = _floor(Object.keys(consumerList).length / 2);
+        // Contador de rutas
+        let distConsumers = halfC * -this.distConsumerStep;
         // Ahora sí creo los nodos consumidores que no haya creado asociados a los plugin
-        for (let consu in consumerList) {
+        for (let consuId in consumerList) {
             // si no he creado el nodo aún
-            if (consumerList.hasOwnProperty(consu) && !consumerNodesCreated.includes(consu)) {
-                const thisConsu = consumerList[consu];
+            if (consumerList.hasOwnProperty(consuId) && !consumerNodesCreated.includes(consuId)) {
+                const thisConsu = consumerList[consuId];
                 this.data.nodes.add({
                     id: thisConsu.id,
                     consumerId: thisConsu.id,
                     label: thisConsu.label,
                     title: thisConsu.title,
                     group: thisConsu.group,
-                    data: thisConsu.data
+                    data: thisConsu.data,
+                    x: -200,
+                    y: distConsumers,
+                    fixed: {x: true, y: true}
                 });
             }
+
+            // Añado distancia al nodo
+            distConsumers += this.distConsumerStep;
         }
 
         // Ahora voy a enganchar al center los nodos que hayan quedado sueltos

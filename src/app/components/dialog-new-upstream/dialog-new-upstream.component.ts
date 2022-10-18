@@ -184,6 +184,9 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
                         this.servicesAvailable.set('srv-' + srv.name, srv.host);
                     }
                 }
+
+                // ordeno el Map
+                this.servicesAvailable = new Map([...this.servicesAvailable.entries()].sort());
             },
             error: (error) => this.toast.error_general(error),
             complete: () => this.loading = false
@@ -198,8 +201,7 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
                 .subscribe({
                     next: (upstream) => {
                         // Añado el Host a la lista de válidos ya que lo estoy editando
-                        // this.servicesAvailable.push(upstream['name']);
-                        this.servicesAvailable.set('up-', upstream['name']);
+                        this.servicesAvailable.set('up', upstream['name']);
 
                         // Cambios especiales para representarlos en el formulario
                         this.form.setValue(this.prepareDataForForm(upstream));

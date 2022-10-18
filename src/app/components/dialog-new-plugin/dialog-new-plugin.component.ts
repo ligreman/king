@@ -4,7 +4,15 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { get as _get, isArray as _isArray, isObject as _isObject, set as _set, sortedUniq as _sortedUniq, toInteger as _toInteger } from 'lodash';
+import {
+    get as _get,
+    isArray as _isArray,
+    isObject as _isObject,
+    orderBy as _orderBy,
+    set as _set,
+    sortedUniq as _sortedUniq,
+    toInteger as _toInteger
+} from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -79,6 +87,10 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             // forkJoin returns an array of values, here we map those values to an object
             return {services: services['data'], routes: routes['data'], consumers: consumers['data'], plugins: plugins['enabled_plugins']};
         })).subscribe((value) => {
+            value.services = _orderBy(value.services, ['name'], ['asc']);
+            value.routes = _orderBy(value.routes, ['name'], ['asc']);
+            value.consumers = _orderBy(value.consumers, ['username'], ['asc']);
+
             this.servicesList = value.services;
             this.routesList = value.routes;
             this.consumersList = value.consumers;

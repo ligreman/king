@@ -5,7 +5,7 @@ import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import * as Joi from 'joi';
-import { isEmpty as _isEmpty, size as _size, sortedUniq as _sortedUniq } from 'lodash';
+import { isEmpty as _isEmpty, orderBy as _orderBy, size as _size, sortedUniq as _sortedUniq } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { ApiService } from '../../services/api.service';
 import { DialogHelperService } from '../../services/dialog-helper.service';
@@ -171,6 +171,9 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
                     for (let serv of services['data']) {
                         this.servicesAvailable.push({id: serv.id, name: serv.name});
                     }
+
+                    // ordeno
+                    this.servicesAvailable = _orderBy(this.servicesAvailable, ['name'], ['asc']);
                 },
                 error: (error) => this.toast.error_general(error)
             });
