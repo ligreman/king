@@ -88,3 +88,7 @@ footer {
 ::-webkit-scrollbar-thumb {
     background: #009688;
 }
+
+.mat-grid-tile.custom .mat-grid-tile-content {
+    justify-content: start !important;
+}

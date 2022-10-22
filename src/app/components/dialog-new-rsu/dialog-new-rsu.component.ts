@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { isEmpty as _isEmpty, max as _max, min as _min, sortedUniq as _sortedUniq } from 'lodash';
+import { max as _max, min as _min, sortedUniq as _sortedUniq } from 'lodash';
 import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
 import { forkJoin } from 'rxjs';
 import { ApiService } from '../../services/api.service';
@@ -54,9 +54,7 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         }),
         upstream: this.fb.group({
             targets: [1, [CustomValidators.isNumber(), Validators.min(1)]]
-        }),
-
-        paths_validation: ['']
+        })
     }, {validators: [FinalFormValidator()]});
 
     constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private globals: GlobalsService, private toast: ToastService, public dialogRef: MatDialogRef<DialogNewRsuComponent>, private dialogHelper: DialogHelperService) { }
@@ -240,11 +238,6 @@ function FinalFormValidator(): ValidatorFn {
 
         const protos = fg.get('route.protocols').value;
         let valid = true;
-
-        // For http or https, at least one of methods or paths;
-        if ((protos.includes('http') || protos.includes('https')) && _isEmpty(fg.get('route.methods').value) && _isEmpty(fg.get('paths_validation').value)) {
-            valid = false;
-        }
 
         return valid ? null : {finalValidation: protos};
     };

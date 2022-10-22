@@ -11,6 +11,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -180,7 +181,8 @@ export function HttpLoaderFactory(http: HttpClient) {
             'countDuplicates': true,
             'progressBar': true,
             'positionClass': 'toast-bottom-right'
-        })
+        }),
+        MatGridListModule
     ],
     providers: [
         {
