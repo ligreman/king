@@ -43,9 +43,11 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
     /**
      * Recarga los datos de consumidores
      */
-    reloadData() {
+    reloadData(cleanFilter = false) {
         this.loading = true;
-        this.filter = '';
+        if (cleanFilter) {
+            this.filter = '';
+        }
 
         this.getAcls();
         this.getConsumers();
@@ -73,7 +75,10 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
                     this.dataSource.sort = this.sort;
                 },
                 error: () => this.toast.error('error.node_connection'),
-                complete: () => this.loading = false
+                complete: () => {
+                    this.loading = false;
+                    this.applyFilter();
+                }
             });
     }
 

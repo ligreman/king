@@ -129,11 +129,23 @@
                 </div>
                 <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
                     <!--Expresión-->
-                    <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="80">
                         <mat-label>{{'route.dialog.expression' | translate}}</mat-label>
                         <input aria-label="" formControlName="expression" matInput required type="text"/>
                         <mat-error *ngIf="routeExpressionField.invalid">
                             {{ 'error.field_required' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!--Priority-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="20">
+                        <mat-label>{{'route.dialog.priority' | translate}}</mat-label>
+                        <input aria-label="" formControlName="priority" matInput required type="number"/>
+                        <mat-error *ngIf="routePriorityField.hasError('required')">
+                            {{ 'error.field_required' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="routePriorityField.invalid">
+                            {{ 'route.dialog.error.regex_min_max' | translate }}
                         </mat-error>
                     </mat-form-field>
                 </div>

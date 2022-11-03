@@ -46,7 +46,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     // Plugins activos
     enabledPlugins = [];
     // Filtros del grafo
-    netFilter = {tag: '', element: 'all', mode: true};
+    netFilter = {tag: '', element: 'all', mode: false};
     // Posibles tipos de nodos que tienen acciones propias
     groupsInfo = ['service', 'route', 'upstream', 'target', 'plugin'];
     othersInfo = ['acl', 'key', 'jwt'];
@@ -286,16 +286,42 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: theTags}));
                 newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: theTags}));
                 newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: theTags}));
+
+                // Ahora añado las tags que son regExp
+                let regexpTags = [];
+                for (const tag of theTags) {
+                    if (tag.indexOf('*') !== -1) {
+                        regexpTags.push('#-#' + tag.replace(/\*/g, '(.*)'));
+                    }
+                }
+
+                for (const rTag of regexpTags) {
+                    newData.services = newData.services.concat(_filter(this.dataApi.services, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                    newData.routes = newData.routes.concat(_filter(this.dataApi.routes, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                    newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                    newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                    newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                }
             }
             // OR
             else {
-                theTags.forEach(tag => {
+                for (const tag of theTags) {
                     newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: [tag]}));
                     newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: [tag]}));
                     newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: [tag]}));
                     newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: [tag]}));
                     newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: [tag]}));
-                });
+
+                    if (tag.indexOf('*') !== -1) {
+                        const rTag = '#-#' + tag.replace(/\*/g, '(.*)');
+
+                        newData.services = newData.services.concat(_filter(this.dataApi.services, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                        newData.routes = newData.routes.concat(_filter(this.dataApi.routes, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                        newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                        newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                        newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                    }
+                }
 
                 // Elimino duplicados
                 newData.services = _uniq(newData.services);
@@ -1004,4 +1030,36 @@ function generateElement(arrayOfP) {
     });
 
     return element;
+}
+
+function filterRegExpTags(source, tags) {
+    // {tags: [tag]}
+    //    obj = {tags:[na, dos, tres]}
+    //     return true/false
+    //    Si obj.tags contiene las tags que le
+    let newSource = [];
+
+    let regexpTags = [];
+    for (const tag of tags) {
+        if (tag.indexOf('*') !== -1) {
+            regexpTags.push('/^' + tag.replace(/\*/g, '.*') + '/');
+        }
+    }
+    for (const rTag of regexpTags) {
+        _filter(source, function (o) {
+            return (new RegExp(rTag).test(o.tags));
+        });
+    }
+
+    for (const elem of source) {
+        for (const tag of tags) {
+            if (elem.tags.includes(tag)) {
+                _filter(elem.tags, function (o) {
+                    return (new RegExp('/^hh/').test(o.tags));
+                });
+            }
+        }
+    }
+
+    return newSource;
 }

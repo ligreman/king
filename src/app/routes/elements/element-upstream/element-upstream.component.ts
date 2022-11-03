@@ -36,19 +36,23 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
         this.reloadData();
     }
 
-    reloadData() {
+    reloadData(cleanFilter = false) {
         this.loading = true;
-        this.filter = '';
+        if (cleanFilter) {
+            this.filter = '';
+        }
 
         this.getData().then((value) => {
                 this.dataSource = new MatTableDataSource(value);
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.sort = this.sort;
                 this.loading = false;
+                this.applyFilter();
             },
             () => {
                 this.toast.error('error.node_connection');
                 this.loading = false;
+                this.applyFilter();
             });
     }
 
@@ -92,7 +96,15 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
      */
     addEdit(selected = null) {
         this.dialogHelper.addEdit(selected, 'upstream')
-            .then(() => { this.reloadData(); })
+            .then(() => {
+                if (selected) {
+                    // Edición
+                    this.reloadData();
+                } else {
+                    // Creación
+                    this.reloadData(true);
+                }
+            })
             .catch(() => {});
     }
 

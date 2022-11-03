@@ -220,6 +220,7 @@
         "center_network": "Ajustar grafo para abarcar todos los nodos",
         "refresh": "Refrescar grafo",
         "filter": "Filtrar por etiquetas, separadas por comas",
+        "filter_hint": "Puedes usar * como comodín para filtrar la etiqueta (ej. `app*` buscará todas las etiquetas empezadas por app)",
         "filter_tooltip": "Filtrar",
         "filter_clear": "Limpiar filtros",
         "filter_element_all": "Mostrar todos los elementos",

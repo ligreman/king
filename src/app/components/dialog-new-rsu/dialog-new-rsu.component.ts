@@ -42,6 +42,7 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         route: this.fb.group({
             protocols: ['', [Validators.required, CustomValidators.isProtocolListValidForRoute(this.validProtocols)]],
             expression: ['', [Validators.required]],
+            priority: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(999999)]],
             strip_path: [true]
         }),
         service: this.fb.group({
@@ -79,6 +80,8 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
     get routeProtocolsField() { return this.form.get('route.protocols'); }
 
     get routeExpressionField() { return this.form.get('route.expression'); }
+
+    get routePriorityField() { return this.form.get('route.priority'); }
 
     get targetsField() { return this.form.get('upstream.targets');}
 
@@ -218,6 +221,7 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
                 service: {id: ''},
                 protocols: body.route.protocols,
                 expression: body.route.expression,
+                priority: body.route.priority,
                 strip_path: body.route.strip_path,
                 tags: body.tags
             },

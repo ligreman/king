@@ -42,9 +42,11 @@ export class PluginListComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
-    reloadData(all: boolean) {
+    reloadData(all: boolean, cleanFilter: boolean = false) {
         this.loading = true;
-        this.filter = '';
+        if (cleanFilter) {
+            this.filter = '';
+        }
 
         this.getData(all)
             .subscribe({
@@ -67,7 +69,10 @@ export class PluginListComponent implements OnInit, OnDestroy {
                     }
                 },
                 error: () => this.toast.error('error.node_connection'),
-                complete: () => this.loading = false
+                complete: () => {
+                    this.loading = false;
+                    this.applyFilter();
+                }
             });
     }
 
@@ -105,7 +110,15 @@ export class PluginListComponent implements OnInit, OnDestroy {
      */
     addEditPlugin(selected = null) {
         this.dialogHelper.addEdit(selected, 'plugin')
-            .then(() => { this.reloadData(false); })
+            .then(() => {
+                if (selected) {
+                    // Edición
+                    this.reloadData(false);
+                } else {
+                    // Creación
+                    this.reloadData(false, true);
+                }
+            })
             .catch(() => {});
     }
 

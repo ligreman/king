@@ -48,9 +48,11 @@ export class CertificateSniComponent implements OnInit, OnDestroy, AfterViewInit
             });
     }
 
-    reloadData() {
+    reloadData(cleanFilter = false) {
         this.loading = true;
-        this.filter = '';
+        if (cleanFilter) {
+            this.filter = '';
+        }
 
         this.getSnis();
     }
@@ -64,7 +66,10 @@ export class CertificateSniComponent implements OnInit, OnDestroy, AfterViewInit
                     this.dataSource.sort = this.sort;
                 },
                 error: () => this.toast.error('error.node_connection'),
-                complete: () => this.loading = false
+                complete: () => {
+                    this.loading = false;
+                    this.applyFilter();
+                }
             });
     }
 
@@ -82,7 +87,15 @@ export class CertificateSniComponent implements OnInit, OnDestroy, AfterViewInit
      */
     addEditSni(selected = null) {
         this.dialogHelper.addEdit(selected, 'sni')
-            .then(() => { this.reloadData(); })
+            .then(() => {
+                if (selected) {
+                    // Edición
+                    this.reloadData();
+                } else {
+                    // Creación
+                    this.reloadData(true);
+                }
+            })
             .catch(() => {});
     }
 

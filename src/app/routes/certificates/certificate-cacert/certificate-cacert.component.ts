@@ -36,9 +36,11 @@ export class CertificateCacertComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
-    reloadData() {
+    reloadData(cleanFilter = false) {
         this.loading = true;
-        this.filter = '';
+        if (cleanFilter) {
+            this.filter = '';
+        }
 
         this.getCerts();
     }
@@ -52,7 +54,10 @@ export class CertificateCacertComponent implements OnInit, OnDestroy {
                     this.dataSource.sort = this.sort;
                 },
                 error: () => this.toast.error('error.node_connection'),
-                complete: () => this.loading = false
+                complete: () => {
+                    this.loading = false;
+                    this.applyFilter();
+                }
             });
     }
 
@@ -70,7 +75,15 @@ export class CertificateCacertComponent implements OnInit, OnDestroy {
      */
     addEditCert(selected = null) {
         this.dialogHelper.addEdit(selected, 'cacert')
-            .then(() => { this.reloadData(); })
+            .then(() => {
+                if (selected) {
+                    // Edición
+                    this.reloadData();
+                } else {
+                    // Creación
+                    this.reloadData(true);
+                }
+            })
             .catch(() => {});
     }
 

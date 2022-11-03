@@ -23,7 +23,8 @@
                         <span *ngIf="!netFilter.mode">OR</span>
                     </mat-slide-toggle>
                     <mat-label>{{ 'architect.filter' | translate}}</mat-label>
-                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput type="text">
+                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput matTooltip="{{ 'architect.filter_hint' | translate }}"
+                           matTooltipClass="tooltip-teal" type="text">
                     <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
                         <mat-icon>close</mat-icon>
                     </button>

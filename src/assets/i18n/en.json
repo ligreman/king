@@ -220,6 +220,7 @@
         "center_network": "Adjust graph to fit all nodes",
         "refresh": "Refresh graph",
         "filter": "Filter by tags, separated by commas",
+        "filter_hint": "You can use * as a wildcard for a tag (eg. `app*` will search all tags starting with app)",
         "filter_tooltip": "Filter",
         "filter_clear": "Reset filters",
         "filter_element_all": "Show all components",

@@ -39,9 +39,11 @@ export class ElementVaultComponent implements OnInit, OnDestroy, AfterViewInit {
         this.reloadData();
     }
 
-    reloadData() {
+    reloadData(cleanFilter = false) {
         this.loading = true;
-        this.filter = '';
+        if (cleanFilter) {
+            this.filter = '';
+        }
 
         this.api.getVaults()
             .subscribe({
@@ -51,7 +53,10 @@ export class ElementVaultComponent implements OnInit, OnDestroy, AfterViewInit {
                     this.dataSource.sort = this.sort;
                 },
                 error: () => this.toast.error('error.node_connection'),
-                complete: () => this.loading = false
+                complete: () => {
+                    this.loading = false;
+                    this.applyFilter();
+                }
             });
     }
 
@@ -73,7 +78,15 @@ export class ElementVaultComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     addEdit(selected = null) {
         this.dialogHelper.addEdit(selected, 'vault')
-            .then(() => { this.reloadData(); })
+            .then(() => {
+                if (selected) {
+                    // Edición
+                    this.reloadData();
+                } else {
+                    // Creación
+                    this.reloadData(true);
+                }
+            })
             .catch(() => {});
     }
 
