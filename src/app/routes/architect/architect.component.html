@@ -205,7 +205,7 @@
             </mat-list-item>
             <mat-list-item *ngIf="groupsAddPlugin.includes(selection.group)">
                 <div mat-line>
-                    <button (click)="addEditPlugin(selection)" mat-button>
+                    <button (click)="addEditPlugin(null, selection)" mat-button>
                         <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
                         {{'plugin.add' | translate}}
                     </button>

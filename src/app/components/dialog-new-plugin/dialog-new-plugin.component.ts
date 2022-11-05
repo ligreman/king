@@ -60,7 +60,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         tags: ['']
     });
 
-    constructor(@Inject(MAT_DIALOG_DATA) public pluginIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
+    constructor(@Inject(MAT_DIALOG_DATA) public pluginData: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
                 public dialogRef: MatDialogRef<DialogNewPluginComponent>) { }
 
     /*
@@ -95,14 +95,29 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             this.routesList = value.routes;
             this.consumersList = value.consumers;
             this.pluginsList = value.plugins.sort();
+
+            // ¿vienen datos extra con el service, route o consumer ya elegido?
+            if (this.pluginData !== null && this.pluginData.extras !== null) {
+                switch (this.pluginData.extras.group) {
+                    case 'route':
+                        this.routeField.setValue(this.pluginData.extras.id);
+                        break;
+                    case 'service':
+                        this.serviceField.setValue(this.pluginData.extras.id);
+                        break;
+                    case 'consumer':
+                        this.consumerField.setValue(this.pluginData.extras.id);
+                        break;
+                }
+            }
         });
 
         // Si viene un plugin para editar
-        if (this.pluginIdEdit !== null) {
+        if (this.pluginData !== null && this.pluginData.selectedId !== null) {
             this.editMode = true;
 
             // Rescato la info del servicio del api
-            this.api.getPlugin(this.pluginIdEdit)
+            this.api.getPlugin(this.pluginData.selectedId)
                 .subscribe({
                     next: (plugin) => {
                         // Primero he de disparar el evento de cambio de schema para que cargue los campos de formulario
@@ -149,7 +164,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         }
         // Si es que es edición
         else {
-            this.api.patchPlugin(this.pluginIdEdit, result)
+            this.api.patchPlugin(this.pluginData.selectedId, result)
                 .subscribe({
                     next: (value) => {
                         this.toast.success('text.id_extra', 'success.update_plugin', {msgExtra: value['id']});
@@ -250,6 +265,15 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         }
         if (this.consumerField.value === '' || this.consumerField.value === null) {
             body.consumer = null;
+        }
+
+        // Los campos que vengan como cadena vacía, los paso a null
+        if (body.config) {
+            Object.keys(body.config).forEach(field => {
+                if (body.config[field] === '') {
+                    body.config[field] = null;
+                }
+            });
         }
 
         // Campos array

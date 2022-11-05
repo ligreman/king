@@ -33,7 +33,7 @@ export class DialogHelperService {
     constructor(private dialog: MatDialog, private api: ApiService, private toast: ToastService, private globals: GlobalsService) { }
 
 
-    addEdit(selected, group) {
+    addEdit(selected, group, extras = null) {
         return new Promise<void>((resolve, reject) => {
             let selectedId = null;
             if (selected !== null) {
@@ -80,6 +80,7 @@ export class DialogHelperService {
                     break;
                 case 'plugin':
                     component = DialogNewPluginComponent;
+                    selectedId = {selectedId, extras};
                     break;
             }
 

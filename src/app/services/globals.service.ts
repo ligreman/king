@@ -10,34 +10,34 @@ export class GlobalsService {
     private _NETWORK_NODES = {
         font: {
             color: '#CCCCCC',
-            size: 12, // px
+            size: 12,
             face: 'Roboto',
             background: 'none',
-            strokeWidth: 1, // px
+            strokeWidth: 1,
             strokeColor: '#343434',
             align: 'center',
             multi: true,
             bold: {
                 color: '#CCCCCC',
-                size: 16, // px
+                size: 16,
                 face: 'Roboto',
                 mod: 'bold'
             },
             ital: {
                 color: '#CCCCCC',
-                size: 12, // px
+                size: 12,
                 face: 'Roboto',
                 mod: 'italic'
             },
             boldital: {
                 color: '#CCCCCC',
-                size: 12, // px
+                size: 12,
                 face: 'Roboto',
                 mod: 'bold italic'
             },
             mono: {
                 color: '#CCCCCC',
-                size: 15, // px
+                size: 15,
                 face: 'courier new',
                 mod: ''
             }
@@ -78,34 +78,34 @@ export class GlobalsService {
         dashes: false,
         font: {
             color: '#343434',
-            size: 14, // px
+            size: 14,
             face: 'Roboto',
             background: 'none',
-            strokeWidth: 2, // px
+            strokeWidth: 2,
             strokeColor: '#ffffff',
             align: 'horizontal',
             multi: false,
             bold: {
                 color: '#343434',
-                size: 14, // px
+                size: 14,
                 face: 'Roboto',
                 mod: 'bold'
             },
             ital: {
                 color: '#343434',
-                size: 14, // px
+                size: 14,
                 face: 'Roboto',
                 mod: 'italic'
             },
             boldital: {
                 color: '#343434',
-                size: 14, // px
+                size: 14,
                 face: 'Roboto',
                 mod: 'bold italic'
             },
             mono: {
                 color: '#343434',
-                size: 15, // px
+                size: 15,
                 face: 'courier new',
                 mod: ''
             }
@@ -117,8 +117,13 @@ export class GlobalsService {
     private _NETWORK_GROUPS = {
         kong: {
             labelHighlightBold: false,
-            shape: 'hexagon',
-            size: 15,
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'blur_on',
+                color: '#009789',
+                size: 50
+            },
             fixed: {
                 x: true,
                 y: true
