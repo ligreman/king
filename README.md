@@ -36,6 +36,16 @@ King for Kong has been developed to be compatible with Kong API Gateway 2.8.x ve
 
 Download the latest `.zip` [release package](https://github.com/ligreman/king/releases), and unzip it into a web application server ([Apache](https://httpd.apache.org/download.cgi), [Nginx](https://nginx.org/en/download.html)...).
 
+### Docker
+
+You can try King for Kong using [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) with the next command.
+
+```
+docker-compose up -d
+```
+
+This will create a Kong Api Gateway container, a Postgresql container and finally a King for king container. After that King for Kong will be available at `http://localhost:8080` in production mode
+
 ## Development
 
 ### Prepare environment
