@@ -1,0 +1,18 @@
+# ignore .git and .cache folders
+.git
+.cache
+
+# ignore all markdown files (md) beside all README*.md other than
+# README-secret.md
+*.md
+
+# ignore docs folders
+docs/
+
+# ignore Dockerfile and docker-compose files
+*Dockerfile*
+*docker-compose*
+
+# ignore node modules and logs
+node_modules/
+npm-debug.log
