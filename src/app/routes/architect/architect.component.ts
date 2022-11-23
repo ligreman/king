@@ -274,7 +274,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         if (tags === '') {
             newData = _cloneDeep(this.dataApi);
         } else {
-            let theTags = tags.split(',');
+            let theTags = splitter(tags, ',');
             theTags = _uniq(theTags);
             theTags = theTags.map(value => value.trim());
             newData = {services: [], routes: [], upstreams: [], plugins: [], consumers: []};
@@ -296,11 +296,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
 
                 for (const rTag of regexpTags) {
-                    newData.services = newData.services.concat(_filter(this.dataApi.services, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
-                    newData.routes = newData.routes.concat(_filter(this.dataApi.routes, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
-                    newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
-                    newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
-                    newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                    newData.services = newData.services.concat(_filter(this.dataApi.services, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
+                    newData.routes = newData.routes.concat(_filter(this.dataApi.routes, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
+                    newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
+                    newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
+                    newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
                 }
             }
             // OR
@@ -315,11 +315,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     if (tag.indexOf('*') !== -1) {
                         const rTag = '#-#' + tag.replace(/\*/g, '(.*)');
 
-                        newData.services = newData.services.concat(_filter(this.dataApi.services, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
-                        newData.routes = newData.routes.concat(_filter(this.dataApi.routes, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
-                        newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
-                        newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
-                        newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, function (o) { return (new RegExp(rTag).test('#-#' + o.tags.join('#-#'))); }));
+                        newData.services = newData.services.concat(_filter(this.dataApi.services, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
+                        newData.routes = newData.routes.concat(_filter(this.dataApi.routes, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
+                        newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
+                        newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
+                        newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
                     }
                 }
 
@@ -376,7 +376,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             this.data.nodes.add({
                 id: service.id,
                 label: service.name + '\n' + service.protocol + '://' + service.host + ':' + service.port + service.path,
-                title: this.translate.instant('service.label') + ': ' + service.id + '\n' + this.translate.instant('architect.labels') + ': ' + service.tags.join(', '),
+                title: this.translate.instant('service.label') + ': ' + service.id + '\n' + this.translate.instant('architect.labels') + ': ' + joiner(service.tags, ', '),
                 group: 'service',
                 data: service,
                 font: {color: scolor}
@@ -404,7 +404,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                         const hc = this.getHealthData(hu['data'].health);
 
                         // nodo del upstream
-                        const element = generateElement(['Upstream: ' + up.id, this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm, hc['label'], this.translate.instant('architect.labels') + ': ' + up.tags.join(', ')]);
+                        const element = generateElement(['Upstream: ' + up.id, this.translate.instant('upstream.dialog.algorithm') + ': ' + up.algorithm, hc['label'], this.translate.instant('architect.labels') + ': ' + joiner(up.tags, ', ')]);
                         this.data.nodes.add({
                             id: up.id,
                             label: up.name,
@@ -442,7 +442,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                             }
                         });
 
-                        const element = generateElement(['Target: ' + target.id, this.translate.instant('target.dialog.weight') + ': ' + target.weight, htc['label'], this.translate.instant('architect.labels') + ': ' + target.tags.join(', ')]);
+                        const element = generateElement(['Target: ' + target.id, this.translate.instant('target.dialog.weight') + ': ' + target.weight, htc['label'], this.translate.instant('architect.labels') + ': ' + joiner(target.tags, ', ')]);
                         this.data.nodes.add({
                             id: target.id,
                             label: target.target,
@@ -517,14 +517,14 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 }
             } else {
                 if (!_isEmpty(route.methods)) {
-                    extras.push(this.translate.instant('route.dialog.methods') + ': ' + route.methods.join(', '));
+                    extras.push(this.translate.instant('route.dialog.methods') + ': ' + joiner(route.methods, ', '));
                 }
                 if (!_isEmpty(route.hosts)) {
-                    extras.push(this.translate.instant('route.dialog.hosts') + ': ' + route.hosts.join(', '));
+                    extras.push(this.translate.instant('route.dialog.hosts') + ': ' + joiner(route.hosts, ', '));
                 }
                 if (!_isEmpty(route.paths)) {
-                    extras.push(this.translate.instant('route.dialog.paths') + ': ' + route.paths.join(', '));
-                    lbl = route.paths.join(', ');
+                    extras.push(this.translate.instant('route.dialog.paths') + ': ' + joiner(route.paths, ', '));
+                    lbl = joiner(route.paths, ', ');
                 }
                 if (!_isEmpty(route.headers)) {
                     extras.push(this.translate.instant('route.dialog.headers') + ': ' + JSON.stringify(route.headers));
@@ -536,11 +536,11 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             // Nodos de ruta
-            extras.push(this.translate.instant('architect.labels') + ': ' + route.tags.join(', '));
+            extras.push(this.translate.instant('architect.labels') + ': ' + joiner(route.tags, ', '));
             const element = generateElement(extras);
             this.data.nodes.add({
                 id: route.id,
-                label: route.name + '\n' + lbl + '\n' + prefix + '[' + route.protocols.join(', ') + ']',
+                label: route.name + '\n' + lbl + '\n' + prefix + '[' + joiner(route.protocols, ', ') + ']',
                 title: element,
                 group: 'route',
                 x: 300,
@@ -610,7 +610,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
 
             // Nodos de consumidor
-            extrasC.push(this.translate.instant('architect.labels') + ': ' + consumer.tags.join(', '));
+            extrasC.push(this.translate.instant('architect.labels') + ': ' + joiner(consumer.tags, ', '));
             const element = generateElement(extrasC);
 
             // Recojo en una lista los consumidores existentes
@@ -645,7 +645,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             const color = plugin.enabled ? '#7FCA33' : '#E53935';
 
             // Nodos de plugin
-            extrasP.push(this.translate.instant('architect.labels') + ': ' + plugin.tags.join(', '));
+            extrasP.push(this.translate.instant('architect.labels') + ': ' + joiner(plugin.tags, ', '));
             const element = generateElement(extrasP);
             this.data.nodes.add({
                 id: plugin.id,
@@ -727,7 +727,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.data.nodes.add({
                     id: upstream.id,
                     label: upstream.name,
-                    title: this.translate.instant('upstream.orphan') + '\n' + this.translate.instant('architect.labels') + ': ' + upstream.tags.join(', '),
+                    title: this.translate.instant('upstream.orphan') + '\n' + this.translate.instant('architect.labels') + ': ' + joiner(upstream.tags, ', '),
                     group: 'upstream',
                     data: upstream
                 });
@@ -1005,7 +1005,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      * @param selection
      */
     filterTag(selection) {
-        this.netFilter.tag = selection.data.tags.join(',');
+        this.netFilter.tag = joiner(selection.data.tags, ',');
         this.netFilter.element = 'all';
         this.netFilter.mode = false;
         this.filterGraphByTag();
@@ -1025,7 +1025,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      * Añade una tag a los filtros
      */
     addTagFilter(tag: any) {
-        let newTags = this.netFilter.tag.split(',');
+        let newTags = splitter(this.netFilter.tag, ',');
         newTags.push(tag);
 
         newTags = _remove(newTags, function (n) {
@@ -1061,6 +1061,30 @@ function generateElement(arrayOfP) {
     });
 
     return element;
+}
+
+/**
+ * Join an array of strings checking if it is not null
+ * @param array Array of tags or null
+ * @param joint String to join tags
+ */
+function joiner(array, joint) {
+    if (!array) {
+        return '';
+    }
+    return array.join(joint);
+}
+
+/**
+ * Splits a string
+ * @param string String to split
+ * @param separator String to split tags
+ */
+function splitter(string, separator) {
+    if (!string) {
+        return [];
+    }
+    return string.split(separator);
 }
 
 function filterRegExpTags(source, tags) {
