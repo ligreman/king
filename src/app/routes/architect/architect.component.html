@@ -1,17 +1,17 @@
 <div fxFlexFill fxLayout="row" id="net-reference">
-    <div [fxShow]="loading" fxFlex="75" fxLayoutAlign="center center">
+    <div [fxShow]="loading" fxFlex.gt-md="85" fxFlex.lt-lg="75" fxLayoutAlign="center center">
         <p fxFlex="50">
             <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </p>
     </div>
     <!-- Contenedor de grafo -->
-    <div [fxShow]="!loading" class="graph-container" fxFlex="75">
+    <div [fxShow]="!loading" class="graph-container" fxFlex.gt-md="85" fxFlex.lt-lg="75">
         <!-- Barra de herramientas horizontal -->
         <div *ngIf="showTools" fxLayout="row" fxLayoutAlign="space-between center" id="graph-tools">
             <div fxFlex="initial" fxLayout="row" fxLayoutAlign="center center">
                 <div class="filter" fxFlex>
                     <button (click)="drawer.toggle()" color="accent" mat-icon-button
-                            matTooltip="{{ 'architect.labels' | translate }}" matTooltipClass="tooltip-teal">
+                            matTooltip="{{ 'text.tags' | translate }}" matTooltipClass="tooltip-teal">
                         <mat-icon>label</mat-icon>
                     </button>
                 </div>
@@ -45,16 +45,16 @@
 
             <button (click)="cleanFilters()" color="accent" mat-stroked-button
                     matTooltip="{{'architect.filter_clear' | translate}}" matTooltipClass="tooltip-teal">
-                <mat-icon>search_off</mat-icon>
+                <mat-icon>delete</mat-icon>
             </button>
 
-            <button (click)="populateGraph()" [matTooltipShowDelay]="1000" color="accent"
+            <button (click)="populateGraph()" color="accent"
                     mat-icon-button
                     matTooltip="{{'architect.refresh' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>refresh</mat-icon>
             </button>
 
-            <button (click)="fitNetwork()" [matTooltipShowDelay]="1000" color="accent"
+            <button (click)="fitNetwork()" color="accent"
                     mat-icon-button
                     matTooltip="{{'architect.center_network' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>center_focus_strong</mat-icon>
@@ -62,8 +62,9 @@
         </div>
 
         <mat-drawer-container>
-            <mat-drawer #drawer id="graph-filters" mode="side">
-                <div fxLayout="column" fxLayoutAlign="start start">
+            <mat-drawer #drawer id="graph-filters" mode="side" opened>
+                <div fxLayout="column" fxLayoutAlign="start strecht">
+                    <p class="mat-subheader subheader margin-0-i padding-bottom-10 semi-bold">{{ 'text.tags' | translate }}</p>
                     <button (click)="addTagFilter(tag)" *ngFor="let tag of allTags"
                             [fxHide]="netFilter.tag.split(',').includes(tag)"
                             [ngClass]="{'line-small': chopTag(tag, 14).length>1}" color="accent" mat-button>
@@ -79,12 +80,13 @@
         </mat-drawer-container>
     </div>
     <!-- Contenedor de acciones derecho -->
-    <div fxFlex="25" id="graph-actions">
+    <div fxFlex.gt-md="15" fxFlex.lt-lg="25" id="graph-actions">
         <mat-list>
             <div class="subheader" mat-subheader>{{'architect.global_actions' | translate}}</div>
             <mat-list-item *ngIf="expressions">
                 <div mat-line>
-                    <button (click)="addEdit(null, 'rsu')" mat-button>
+                    <button (click)="addEdit(null, 'rsu')" mat-button matTooltip="{{ 'rsu.add_tooltip' | translate }}"
+                            matTooltipClass="tooltip-teal" matTooltipPosition="left">
                         <mat-icon class="color-route">timeline</mat-icon>&nbsp;
                         <mat-icon class="color-service">memory</mat-icon>&nbsp;
                         <mat-icon class="color-upstream">share</mat-icon>&nbsp;
@@ -94,17 +96,17 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button (click)="addEdit(null, 'service')" mat-button>
-                        <mat-icon class="color-service">memory</mat-icon>&nbsp;
-                        {{'service.add' | translate}}
+                    <button (click)="addEdit(null, 'route')" mat-button>
+                        <mat-icon class="color-route">timeline</mat-icon>&nbsp;
+                        {{'route.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button (click)="addEdit(null, 'route')" mat-button>
-                        <mat-icon class="color-route">timeline</mat-icon>&nbsp;
-                        {{'route.add' | translate}}
+                    <button (click)="addEdit(null, 'service')" mat-button>
+                        <mat-icon class="color-service">memory</mat-icon>&nbsp;
+                        {{'service.add' | translate}}
                     </button>
                 </div>
             </mat-list-item>

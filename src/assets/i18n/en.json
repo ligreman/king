@@ -60,6 +60,7 @@
         "search": "Search",
         "create": "Create",
         "info": "Information",
+        "info_short": "Info",
         "edit": "Edit",
         "delete": "Delete",
         "cancel": "Cancel",
@@ -285,7 +286,8 @@
         }
     },
     "rsu": {
-        "add": "Add R+S+U",
+        "add": "Wizard",
+        "add_tooltip": "Add Route + Service + Upstream",
         "dialog": {
             "create": "Create a new Route, Service and Upstream",
             "targets": "Targets expected that the upstream will have",

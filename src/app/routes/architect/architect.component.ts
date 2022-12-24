@@ -68,6 +68,14 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
     constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService,
                 private translate: TranslateService, private dialogHelper: DialogHelperService) {
+        const lastFilters = localStorage.getItem('kongLastFilters');
+        if (lastFilters && lastFilters !== '') {
+            try {
+                this.netFilter = JSON.parse(lastFilters);
+            } catch (e) {
+            }
+        }
+
     }
 
     ngOnInit(): void {
@@ -338,6 +346,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             newData.consumers = [];
             newData.plugins = [];
         }
+
+        const filterJson = JSON.stringify(this.netFilter);
+        localStorage.setItem('kongLastFilters', filterJson);
 
         // Ahora construyo los nodos y edges del grafo
         this.createGraphNodesAndEdges(newData).then(() => {

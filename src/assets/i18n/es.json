@@ -60,6 +60,7 @@
         "search": "Buscar",
         "create": "Crear",
         "info": "Información",
+        "info_short": "Info",
         "edit": "Editar",
         "delete": "Eliminar",
         "cancel": "Cancelar",
@@ -285,7 +286,8 @@
         }
     },
     "rsu": {
-        "add": "Añadir R+S+U",
+        "add": "Wizard",
+        "add_tooltip": "Añadir Ruta + Servicio + Upstream",
         "dialog": {
             "create": "Crear nueva Ruta, Servicio y Upstream",
             "targets": "Targets previstos que tendrá el upstream",
