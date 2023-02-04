@@ -51,24 +51,20 @@ export class GlobalsService {
         arrows: {
             to: {
                 enabled: true,
-                // imageHeight: undefined,
-                // imageWidth: undefined,
                 scaleFactor: 1,
-                // src: undefined,
                 type: 'arrow'
             },
             from: {
                 enabled: false,
-                // imageHeight: undefined,
-                // imageWidth: undefined,
                 scaleFactor: 1,
-                // src: undefined,
                 type: 'arrow'
             }
         },
         arrowStrikethrough: false,
         chosen: true,
-        smooth: true,
+        smooth: {
+            type: 'continuous'
+        },
         endPointOffset: {
             to: -10
         },

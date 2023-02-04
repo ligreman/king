@@ -119,14 +119,16 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     tooltipDelay: 300
                 },
                 physics: {
-                    minVelocity: 1.2,
+                    maxVelocity: 100,
+                    minVelocity: 2,
                     wind: {x: 2, y: 0},
                     barnesHut: {
                         theta: 0.8,
                         springLength: 150,
                         springConstant: 0.15,
                         avoidOverlap: 0.5
-                    }
+                    },
+                    timestep: 0.75
                 },
                 height: '80%'
             };
@@ -389,6 +391,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 label: service.name + '\n' + service.protocol + '://' + service.host + ':' + service.port + service.path,
                 title: this.translate.instant('service.label') + ': ' + service.id + '\n' + this.translate.instant('architect.labels') + ': ' + joiner(service.tags, ', '),
                 group: 'service',
+                x: 450,
+                y: 0,
                 data: service,
                 font: {color: scolor}
             });
