@@ -321,6 +321,30 @@ export class GlobalsService {
                 }
             }
         },
+        apiCluster: {
+            shape: 'icon',
+            icon: {
+                face: 'Material Icons',
+                code: 'token',
+                color: '#d500f9',
+                size: 50
+            },
+            borderWidth: 2,
+            borderWidthSelected: 3,
+            chosen: true,
+            color: {
+                border: '#8e24aa',
+                background: '#d500f9',
+                highlight: {
+                    border: '#8e24aa',
+                    background: '#e040fb'
+                },
+                hover: {
+                    border: '#8e24aa',
+                    background: '#e040fb'
+                }
+            }
+        },
         target: {
             shape: 'icon',
             icon: {

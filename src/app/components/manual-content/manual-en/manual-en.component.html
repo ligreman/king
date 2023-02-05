@@ -5,6 +5,7 @@
         <li><a (click)="scrollTo(m3)">Kong Components</a>
             <ol>
                 <li><a (click)="scrollTo(m31)">Traffic flow through Kong</a></li>
+                <li><a (click)="scrollTo(m32)">Group elements of the graph</a></li>
             </ol>
         </li>
         <li><a (click)="scrollTo(m4)">Plugins</a>
@@ -99,6 +100,17 @@
             <p>You can check the order of priority when verifying the Gateway Routes that match a request in the <a
                     href="https://docs.konghq.com/gateway-oss/2.3.x/proxy/#routes-and-matching-capabilities" rel="noopener noreferrer" target="_blank">official
                 documentation</a>.</p>
+        </section>
+
+        <h3 #m32 id="m32">3.2. Group elements of the graph</h3>
+        <section>
+            <p>To better organize the graph and facilitate the visualization of the different elements that make up the APIs, elements can be grouped into
+                clusters or groups so that the graph is cleaner.</p>
+            <p>To do this, we must label the different elements that we want to be part of the same group by means of a label, whose name begins with 'c-'. For
+                example, if I label the route, service, upstream and targets of an API with the <em>c-mi-api</em> tag, they will appear grouped in the graph,
+                making it easier to visualize.</p>
+            <p>To ungroup a group you have to double click on it. And if you do not want the elements to be grouped, you can deactivate this form of
+                visualization with the corresponding button located in the upper right part of the graph.</p>
         </section>
     </section>
 </div>

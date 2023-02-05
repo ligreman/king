@@ -2,9 +2,10 @@
     <ol class="padding-0">
         <li><a (click)="scrollTo(m1)">Conectando a un nodo de Kong</a></li>
         <li><a (click)="scrollTo(m2)">Información del nodo</a></li>
-        <li><a (click)="scrollTo(m3)">Componentes de Kong</a>
+        <li><a (click)="scrollTo(m3)">Elementos de Kong</a>
             <ol>
                 <li><a (click)="scrollTo(m31)">Fujo del tráfico a través de Kong</a></li>
+                <li><a (click)="scrollTo(m32)">Agrupar elementos del grafo</a></li>
             </ol>
         </li>
         <li><a (click)="scrollTo(m4)">Plugins</a>
@@ -74,11 +75,11 @@
 </div>
 
 <div #m3 class="manual-block" id="m3">
-    <h2>3. Componentes de Kong</h2>
+    <h2>3. Elementos de Kong</h2>
     <section>
-        <p>A la hora de gestionar el tráfico a través del API Gateway participan diferentes componentes:</p>
+        <p>A la hora de gestionar el tráfico a través del API Gateway participan diferentes elementos:</p>
         <ul>
-            <li><span class="bold">Servicios</span>: componente que abstrae y gestiona la API que se quiere publicar.</li>
+            <li><span class="bold">Servicios</span>: elemento que abstrae y gestiona la API que se quiere publicar.</li>
             <li><span class="bold">Rutas</span>: puntos de acceso para los clientes que envían peticiones a las APIs publicadas.
                 Las Rutas definen si se envían, y cómo, las peticiones recibidas a los Servicios. Un Servicio puede tener múltiples Rutas.
             </li>
@@ -107,6 +108,17 @@
             <p>Puedes consultar el orden de prioridad a la hora de verificar las Rutas del Gateway que encajan con una petición en la
                 <a href="https://docs.konghq.com/gateway-oss/2.3.x/proxy/#routes-and-matching-capabilities" rel="noopener noreferrer" target="_blank">documentación
                     oficial</a>.</p>
+        </section>
+
+        <h3 #m32 id="m32">3.2. Agrupar elementos del grafo</h3>
+        <section>
+            <p>Para organizar mejor el grafo y facilitar la visualización de los diferentes elementos que conforman las APIs, se pueden agrupar elementos en
+                clústers o grupos de forma que el grafo quede más limpio.</p>
+            <p>Para ello hay que etiquetar los diferentes elementos que queramos que formen parte de un mismo grupo mediante una etiqueta, cuyo nombre empiece
+                por 'c-'. Por ejemplo, si etiqueto la ruta, servicio, upstream y targets de una API con la etiqueta <em>c-mi-api</em> me aparecerán agrupados en
+                el grafo facilitando la visualización del mismo.</p>
+            <p>Para desagrupar un grupo hay que hacer doble click sobre él. Y si no deseas que los elementos se agrupen, puedes desactivar esta forma de
+                visualización con el botón correspondiente localizado en la parte superior derecha del grafo.</p>
         </section>
     </section>
 </div>

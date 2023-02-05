@@ -219,6 +219,8 @@
         "local_actions_target": "Actions on target",
         "local_actions_plugin": "Actions on plugin",
         "center_network": "Adjust graph to fit all nodes",
+        "clusterize_on": "Clusters enabled",
+        "clusterize_off": "Clusters disabled",
         "refresh": "Refresh graph",
         "filter": "Filter by tags, separated by commas",
         "filter_hint": "You can use * as a wildcard for a tag (eg. `app*` will search all tags starting with app)",
@@ -227,6 +229,7 @@
         "filter_element_all": "Show all components",
         "filter_element_mainonly": "Show only services, routes and upstreams",
         "filter_selected_tags": "Filter by its {{num}} tags",
+        "cluster_api": "Api",
         "cluster_consumers": "consumers",
         "cluster_title": "Double click to expand all elements",
         "labels": "Labels"

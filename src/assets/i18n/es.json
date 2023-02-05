@@ -219,6 +219,8 @@
         "local_actions_target": "Acciones sobre target",
         "local_actions_plugin": "Acciones sobre plugin",
         "center_network": "Ajustar grafo para abarcar todos los nodos",
+        "clusterize_on": "Clústers activados",
+        "clusterize_off": "Clústers desactivados",
         "refresh": "Refrescar grafo",
         "filter": "Filtrar por etiquetas, separadas por comas",
         "filter_hint": "Puedes usar * como comodín para filtrar la etiqueta (ej. `app*` buscará todas las etiquetas empezadas por app)",
@@ -227,6 +229,7 @@
         "filter_element_all": "Mostrar todos los elementos",
         "filter_element_mainonly": "Mostrar sólo servicios, rutas y upstreams",
         "filter_selected_tags": "Filtrar por sus {{num}} etiquetas",
+        "cluster_api": "Api",
         "cluster_consumers": "consumidores",
         "cluster_title": "Doble click para expandir todos los elementos",
         "labels": "Etiquetas"

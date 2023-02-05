@@ -43,6 +43,12 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     dataApi;
     // Las tags existentes en Kong
     allTags = [];
+    // Tags que son de clusterizado
+    clusterTags = [];
+    // Última tag desclusterizada para mantenerla en sucesivos refrescos del grafo
+    lastDeclusteredTag = '';
+    // Usar clusters en el grafo
+    clusterize = true;
     // Plugins activos
     enabledPlugins = [];
     // Filtros del grafo
@@ -76,6 +82,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
 
+        this.clusterize = (localStorage.getItem('kongClusteredPref') === 'false' ? false : true);
     }
 
     ngOnInit(): void {
@@ -120,7 +127,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 },
                 physics: {
                     maxVelocity: 100,
-                    minVelocity: 2,
+                    minVelocity: 1.5,
                     wind: {x: 2, y: 0},
                     barnesHut: {
                         theta: 0.8,
@@ -150,16 +157,18 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
                 this.network.on('doubleClick', info => {
                     if (info.nodes.length > 0) {
-                        this.selection = this.data.nodes.get(info.nodes[0]);
-
-                        // Info node
-                        if (this.selection !== null && this.groupsInfo.includes(this.selection.group)) {
-                            this.showInfo(this.selection);
-                        }
-
                         // Open cluster
                         if (this.network.isCluster(info.nodes[0])) {
+                            this.selection = '';
+                            this.lastDeclusteredTag = info.nodes[0].replace('api-cluster-', '');
                             this.network.openCluster(info.nodes[0]);
+                        } else {
+                            this.selection = this.data.nodes.get(info.nodes[0]);
+
+                            // Info node
+                            if (this.selection !== null && this.groupsInfo.includes(this.selection.group)) {
+                                this.showInfo(this.selection);
+                            }
                         }
                     } else {
                         this.selection = '';
@@ -258,10 +267,16 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
-                    this.allTags.push(data.tag);
+                    if (data.tag.startsWith('c-')) {
+                        this.clusterTags.push(data.tag);
+                    } else {
+                        this.allTags.push(data.tag);
+                    }
                 });
                 this.allTags.sort();
                 this.allTags = _sortedUniq(this.allTags);
+                this.clusterTags.sort();
+                this.clusterTags = _sortedUniq(this.clusterTags);
             });
     }
 
@@ -756,7 +771,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             }
         }
 
-        // this.clusterConsumers();
+        if (this.clusterize) {
+            // this.clusterConsumers();
+            this.clusterByTag();
+        }
     }
 
     fitNetwork() {
@@ -1016,6 +1034,36 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     }
 
     /**
+     * Clusteriza según las tags que empiezan por "c-"
+     */
+    clusterByTag() {
+        // por cada tag de cluster, creo uno
+        this.clusterTags.forEach(cTag => {
+            if (cTag === this.lastDeclusteredTag) {
+                return false;
+            }
+
+            const clusterOptionsByData = {
+                // Rules for clustering
+                joinCondition: function (childOptions) {
+                    if (childOptions.data && childOptions.data.tags) {
+                        return childOptions.data.tags.includes(cTag);
+                    } else {
+                        return false;
+                    }
+                },
+                clusterNodeProperties: {
+                    id: 'api-cluster-' + cTag,
+                    group: 'apiCluster',
+                    label: cTag,
+                    title: this.translate.instant('architect.cluster_title')
+                }
+            };
+            this.network.cluster(clusterOptionsByData);
+        });
+    }
+
+    /**
      * Ordena filtrar el grafo por unos valores concretos de etiqueta
      * @param selection
      */
@@ -1059,6 +1107,14 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      */
     chopTag(tag: any, length: number) {
         return tag.match(new RegExp('.{1,' + length + '}', 'g'));
+    }
+
+    /**
+     * Cambia el estado del uso de clusters en el grafo
+     */
+    changeClusterize() {
+        this.clusterize = !this.clusterize;
+        localStorage.setItem('kongClusteredPref', '' + this.clusterize);
     }
 }
 

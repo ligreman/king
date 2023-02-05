@@ -38,12 +38,14 @@
                 </mat-select>
             </mat-form-field>
 
-            <button (click)="filterGraphByTag()" color="accent" mat-stroked-button
+            <button (click)="filterGraphByTag()" color="accent"
+                    mat-icon-button
                     matTooltip="{{'architect.filter_tooltip' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>search</mat-icon>
             </button>
 
-            <button (click)="cleanFilters()" color="accent" mat-stroked-button
+            <button (click)="cleanFilters()" color="accent"
+                    mat-icon-button
                     matTooltip="{{'architect.filter_clear' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>delete</mat-icon>
             </button>
@@ -58,6 +60,14 @@
                     mat-icon-button
                     matTooltip="{{'architect.center_network' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>center_focus_strong</mat-icon>
+            </button>
+
+            <button (click)="changeClusterize()"
+                    color="accent"
+                    mat-icon-button
+                    matTooltip="{{ ((clusterize) ? 'architect.clusterize_on' : 'architect.clusterize_off') | translate}}"
+                    matTooltipClass="tooltip-teal">
+                <mat-icon [ngClass]="{'semiopacity': !clusterize}">token</mat-icon>
             </button>
         </div>
 
