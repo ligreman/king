@@ -416,6 +416,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             const serviceUpstream = _filter(data.upstreams, {name: service.host});
             if (serviceUpstream.length > 0) {
                 for (const up of serviceUpstream) {
+                    let upstreamJustCreated = false;
                     upstreamsWithParent.push(up.id);
 
                     // Si no he generado previamente el nodo de upstream ya
@@ -443,6 +444,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                             data: up,
                             font: {color: hc['color']}
                         });
+                        upstreamJustCreated = true;
                     }
 
                     // Edge desde el servicio al upstream
@@ -457,45 +459,48 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                         }
                     });
 
-                    // Busco los targets del upstream
-                    const targets = await firstValueFrom(this.api.getTargets(up.id));
+                    // Si no he generado previamente el nodo de upstream ya o lo acabo de crear, genero también los targets
+                    if (this.data.nodes.get(up.id) === null || upstreamJustCreated) {
+                        // Busco los targets del upstream
+                        const targets = await firstValueFrom(this.api.getTargets(up.id));
 
-                    // Por cada target creo un nodo
-                    for (const target of targets['data']) {
-                        // Health del upstream
-                        const ht = await firstValueFrom(this.api.getUpstreamTargetsHealth(up.id));
-                        let htc = {};
-                        // Busco el target concreto
-                        ht['data'].forEach(tg => {
-                            if (tg.id === target.id) {
-                                htc = this.getHealthData(tg.health);
-                            }
-                        });
+                        // Por cada target creo un nodo
+                        for (const target of targets['data']) {
+                            // Health del upstream
+                            const ht = await firstValueFrom(this.api.getUpstreamTargetsHealth(up.id));
+                            let htc = {};
+                            // Busco el target concreto
+                            ht['data'].forEach(tg => {
+                                if (tg.id === target.id) {
+                                    htc = this.getHealthData(tg.health);
+                                }
+                            });
 
-                        const element = generateElement(['Target: ' + target.id, this.translate.instant('target.dialog.weight') + ': ' + target.weight, htc['label'], this.translate.instant('architect.labels') + ': ' + joiner(target.tags, ', ')]);
-                        this.data.nodes.add({
-                            id: target.id,
-                            label: target.target,
-                            title: element,
-                            group: 'target',
-                            data: target,
-                            font: {color: htc['color']}
-                        });
+                            const element = generateElement(['Target: ' + target.id, this.translate.instant('target.dialog.weight') + ': ' + target.weight, htc['label'], this.translate.instant('architect.labels') + ': ' + joiner(target.tags, ', ')]);
+                            this.data.nodes.add({
+                                id: target.id,
+                                label: target.target,
+                                title: element,
+                                group: 'target',
+                                data: target,
+                                font: {color: htc['color']}
+                            });
 
-                        // Edge del upstream al target
-                        this.data.edges.add({
-                            from: up.id,
-                            to: target.id,
-                            width: 2,
-                            dashes: [2, 4],
-                            arrows: {to: {enabled: false}},
-                            background: {
-                                enabled: true,
-                                color: 'rgba(245,124,0,0.2)',
-                                size: 6,
-                                dashes: [2, 4]
-                            }
-                        });
+                            // Edge del upstream al target
+                            this.data.edges.add({
+                                from: up.id,
+                                to: target.id,
+                                width: 2,
+                                dashes: [2, 4],
+                                arrows: {to: {enabled: false}},
+                                background: {
+                                    enabled: true,
+                                    color: 'rgba(245,124,0,0.2)',
+                                    size: 6,
+                                    dashes: [2, 4]
+                                }
+                            });
+                        }
                     }
                 }
             }
@@ -772,7 +777,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         }
 
         if (this.clusterize) {
-            // this.clusterConsumers();
+            this.clusterConsumers();
             this.clusterByTag();
         }
     }
@@ -1140,10 +1145,16 @@ function generateElement(arrayOfP) {
  * @param joint String to join tags
  */
 function joiner(array, joint) {
+    let retValue = '';
+    try {
+        retValue = array.join(joint);
+    } catch (e) {
+        retValue = '';
+    }
     if (!array) {
         return '';
     }
-    return array.join(joint);
+    return retValue;
 }
 
 /**
