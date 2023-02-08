@@ -296,7 +296,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         const tags = this.netFilter.tag;
         let newData;
 
-        if (tags === '') {
+        if (tags === '' || tags === null) {
             newData = _cloneDeep(this.dataApi);
         } else {
             let theTags = splitter(tags, ',');
@@ -1146,13 +1146,14 @@ function generateElement(arrayOfP) {
  */
 function joiner(array, joint) {
     let retValue = '';
-    try {
-        retValue = array.join(joint);
-    } catch (e) {
+    if (Array.isArray(array)) {
+        try {
+            retValue = array.join(joint);
+        } catch (e) {
+            retValue = '';
+        }
+    } else {
         retValue = '';
-    }
-    if (!array) {
-        return '';
     }
     return retValue;
 }
