@@ -23,6 +23,8 @@ _King is not official, and does not have any affiliation with [Kong](https://www
 * Helpful and intuitive forms.
 * Monitor nodes using health checks.
 
+See some screenshots in the wiki: https://github.com/ligreman/king/wiki/Screenshots-of-features
+
 ## Compatibility
 
 King for Kong has been developed to be compatible with Kong API Gateway 2.8.x version. It may be compatible backwards, but it has not been tested.
