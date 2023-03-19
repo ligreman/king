@@ -400,10 +400,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         // Recorro los servicios creando los nodos de servicios
         for (let service of data.services) {
             const scolor = service.enabled ? '#CCCCCC' : '#E53935';
+            let sLabel = service.name + '\n' + service.protocol + '://' + service.host + ':' + service.port;
+            if (service.path && service.path !== '') {
+                sLabel += service.path;
+            }
+
             // Nodos de Servicio
             this.data.nodes.add({
                 id: service.id,
-                label: service.name + '\n' + service.protocol + '://' + service.host + ':' + service.port + service.path,
+                label: sLabel,
                 title: this.translate.instant('service.label') + ': ' + service.id + '\n' + this.translate.instant('architect.labels') + ': ' + joiner(service.tags, ', '),
                 group: 'service',
                 x: 450,
