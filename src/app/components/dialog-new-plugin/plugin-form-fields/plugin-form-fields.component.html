@@ -59,6 +59,63 @@
                                         [parentForm]="parentForm"></app-plugin-form-fields>
             </ng-container>
 
+
+            <div *ngIf="field.type === 'array_records'" class="margin-bottom-10">
+                <p>{{ formatText(field.field) | titlecase }}</p>
+                <div class="form-block padding-left-10">
+                    <!--    fila de campos-->
+                    <div class="three-columns">
+                        <div *ngFor="let childF of field.child_fields">
+                            <mat-form-field *ngIf="childF.type === 'string'" appearance="outline" color="accent">
+                                <mat-label>{{formatText(childF.name) | titlecase}}</mat-label>
+                                <mat-select [(ngModel)]="arrayRecordsFields[field.field][childF.name]" [ngModelOptions]="{standalone: true}"
+                                            [required]="childF.required">
+                                    <mat-option *ngIf="!childF.required" value=""></mat-option>
+                                    <mat-option *ngFor="let opt of childF.one_of" value="{{opt}}">{{opt}}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="childF.type === 'number'" appearance="outline" color="accent">
+                                <mat-label>{{formatText(childF.name) | titlecase}}</mat-label>
+                                <input [(ngModel)]="arrayRecordsFields[field.field][childF.name]" [ngModelOptions]="{standalone: true}"
+                                       [required]="childF.required" matInput type="number"/>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="childF.type === 'boolean'" appearance="outline" color="accent">
+                                <mat-checkbox [(ngModel)]="arrayRecordsFields[field.field][childF.name]" [ngModelOptions]="{standalone: true}"
+                                              [required]="childF.required">
+                                    {{formatText(childF.name) | titlecase}}</mat-checkbox>
+                            </mat-form-field>
+
+                            <mat-form-field *ngIf="childF.type === 'array'" appearance="outline" color="accent">
+                                <mat-label>{{formatText(childF.name) | titlecase}}</mat-label>
+                                <input [(ngModel)]="arrayRecordsFields[field.field][childF.name]" [ngModelOptions]="{standalone: true}"
+                                       [required]="childF.required" matInput type="text"/>
+                                <mat-hint>{{'plugin.dialog.comma_separated_hint' | translate}}</mat-hint>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div fxLayout="column">
+                        <div fxLayout="row">
+                            <button (click)="addToArrayRecord(field.field)" color="accent" fxFlex="75" mat-button matSuffix>
+                                {{ 'plugin.dialog.add_to_list' | translate }}
+                                <mat-icon>add</mat-icon>
+                            </button>
+                            <button (click)="cleanArrayRecords(field.field)" color="warn" fxFlex="25" mat-button matSuffix>
+                                {{ 'plugin.dialog.clean_list' | translate }}
+                                <mat-icon>clear</mat-icon>
+                            </button>
+                        </div>
+                        <!--    textarea de resultado (un json string por línea)-->
+                        <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                            <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
+                            <textarea [(ngModel)]="arrayRecordsValuesString[field.field]" [ngModelOptions]="{standalone: true}"
+                                      id="array-records-{{getIdArray(field.field)}}" matInput rows="5"></textarea>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+
         </ng-container>
     </div>
 </div>

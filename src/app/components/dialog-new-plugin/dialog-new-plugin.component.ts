@@ -4,6 +4,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import {
     get as _get,
     isArray as _isArray,
@@ -19,6 +20,7 @@ import { map } from 'rxjs/operators';
 import { ApiService } from '../../services/api.service';
 import { ToastService } from '../../services/toast.service';
 import { CustomValidators } from '../../shared/custom-validators';
+import { Utils } from '../../shared/utils';
 
 @AutoUnsubscribe()
 @Component({
@@ -39,7 +41,8 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     consumersList;
     pluginsList;
     pluginForm = [];
-    arrayFields = [];
+    arrayOfStrings = [];
+    arrayOfRecords = [];
     fieldTypes = {};
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -61,7 +64,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     });
 
     constructor(@Inject(MAT_DIALOG_DATA) public pluginData: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
-                public dialogRef: MatDialogRef<DialogNewPluginComponent>) { }
+                public dialogRef: MatDialogRef<DialogNewPluginComponent>, private translate: TranslateService) { }
 
     /*
         Getters de campos del formulario
@@ -227,9 +230,16 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         }
 
         // Campos array
-        this.arrayFields.forEach(field => {
+        this.arrayOfStrings.forEach(field => {
             // Cojo el array de valores
-            const fValue = _get(plugin, field, null);
+            let fValue = _get(plugin, field, null);
+
+            // Los maps
+            const confField = field.replace('config.', '');
+            if (fValue !== null && this.fieldTypes[confField] === 'map') {
+                fValue = this.flattenObj(fValue);
+            }
+
             if (fValue !== null && _isArray(fValue)) {
                 _set(plugin, field, fValue.join('\n'));
             } else if (fValue !== null && _isObject(fValue)) {
@@ -276,8 +286,8 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             });
         }
 
-        // Campos array
-        this.arrayFields.forEach(field => {
+        // Campos array de strings
+        this.arrayOfStrings.forEach(field => {
             const fValue = _get(body, field);
             // Si es nulo, vacío o undefined, o un array de un valor único que es vacío => le pongo de valor un array vacío
             if (fValue === '' || fValue === null || fValue === undefined || (_isArray(fValue) && fValue.length === 1 && fValue[0] === '')) {
@@ -297,9 +307,25 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                 else if (this.fieldTypes[confField] === 'map') {
                     output = {};
                     values.forEach(val => {
-                        const [a, b] = val.split(':');
+                        let [a, b] = val.split(':');
                         if (a !== undefined && b !== undefined) {
-                            output[a] = b;
+                            // Intento pasar a número si lo es
+                            let newB = parseInt(b);
+                            if (!isNaN(newB)) {
+                                b = newB;
+                            }
+
+                            // Sub-objects
+                            const sub = a.split('.');
+                            if (sub.length > 1) {
+                                const first = sub.shift();
+                                if (!output[first]) {
+                                    output[first] = {};
+                                }
+                                output[first][sub.join('.')] = b;
+                            } else {
+                                output[a] = b;
+                            }
                         }
                     });
                 } else {
@@ -310,6 +336,30 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             } else {
                 _set(body, field, fValue);
             }
+        });
+
+        // campos array de records
+        this.arrayOfRecords.forEach(field => {
+            // Se guarda en config.XXXX
+            const confField = field.replace('config.', '');
+            // id del elemento html de array-records
+            const id = 'array-records-' + Utils.calculateHash(confField);
+            const value = document.getElementById(id)['value'];
+            // Separo en líneas
+            const values = value.split('\n');
+            let output = [];
+            values.forEach(row => {
+                try {
+                    if (row !== '') {
+                        // Parseo cada línea
+                        output.push(JSON.parse(row));
+                    }
+                } catch (e) {
+                    this.toast.error_general(this.translate.instant('route.label'), {disableTimeOut: true});
+                }
+            });
+            // Lo guardo en el objeto de formulario "body"
+            _set(body, field, output);
         });
 
         return body;
@@ -323,7 +373,8 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         this.api.getPluginSchema(this.nameField.value)
             .subscribe((value) => {
                 const pluginSchemaFields = this.parseSchema(value);
-                this.arrayFields = [];
+                this.arrayOfStrings = [];
+                this.arrayOfRecords = [];
                 this.fieldTypes = {};
                 this.form.get('config').reset();
 
@@ -341,7 +392,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                     }, 0);
                 } else {
                     // De inicio pongo los valores de campos array como una entrada por línea
-                    this.arrayFields.forEach(field => {
+                    this.arrayOfStrings.forEach(field => {
                         let f = this.form.get(field);
                         if (f.value !== null) {
                             f.setValue(f.value.join('\n'));
@@ -462,11 +513,10 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
 
                     // Requerido
                     if (value.required) {
-                        // validators.push(Validators.required);
-                        validators.push(CustomValidators.isBoolean());
+                        validators.push(Validators.required);
                     }
 
-                    this.arrayFields.push(currentGroup + '.' + field);
+                    this.arrayOfStrings.push(currentGroup + '.' + field);
                     this.fieldTypes[field] = value.type;
 
                     dConfig.addControl(field, this.fb.control(value.default, validators));
@@ -482,6 +532,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                     let validators = [];
                     let tipo = 'array';
                     let opts = [];
+                    let childFields = null;
 
                     // Requerido
                     if (value.required) {
@@ -493,13 +544,28 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                         }
                     }
 
-                    // Si tiene one_of es un select
-                    if (value.elements && value.elements.one_of) {
-                        tipo = 'select';
-                        opts = value.elements.one_of;
-                    } else {
-                        // Es un array de strings (no hay de otro tipo)
-                        this.arrayFields.push(currentGroup + '.' + field);
+                    if (value.elements) {
+                        if (value.elements.one_of) {
+                            // Si tiene one_of es un select
+                            tipo = 'select';
+                            opts = value.elements.one_of;
+                        } else if (value.elements.type === 'string') {
+                            // It is an array of strings
+                            this.arrayOfStrings.push(currentGroup + '.' + field);
+                        } else if (value.elements.type === 'record') {
+                            tipo = 'array_records';
+                            // Preparo unos child fields especiales para este caso
+                            childFields = [];
+                            value.elements.fields.forEach(ff => {
+                                const ks = Object.getOwnPropertyNames(ff);
+                                let dt = ff[ks[0]];
+                                dt.name = ks[0];
+                                childFields.push(dt);
+                            });
+                            // pongo el tipo de los elementos como JSON stringify
+                            value.elements.type = 'json_stringify';
+                            this.arrayOfRecords.push(currentGroup + '.' + field);
+                        }
                     }
 
                     // Guardo el tipo
@@ -513,6 +579,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                         type: tipo,
                         required: value.required || false,
                         options: opts,
+                        child_fields: childFields,
                         multi: true
                     });
                 }
@@ -533,7 +600,6 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                 }
             }
         });
-
         return {dConfig, formFields};
     }
 
@@ -578,4 +644,30 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
 
         return url;
     }
+
+    flattenObj(ob) {
+
+        // The object which contains the final result
+        let result = {};
+
+        // loop through the object "ob"
+        for (const i in ob) {
+
+            // We check the type of the i using typeof() function and recursively call the function again
+            if ((typeof ob[i]) === 'object' && !Array.isArray(ob[i])) {
+                const temp = this.flattenObj(ob[i]);
+                for (const j in temp) {
+
+                    // Store temp in result
+                    result[i + '.' + j] = temp[j];
+                }
+            }
+
+            // Else store ob[i] in result directly
+            else {
+                result[i] = ob[i];
+            }
+        }
+        return result;
+    };
 }

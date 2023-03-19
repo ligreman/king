@@ -523,7 +523,10 @@
             "min": "Number greater than {{min}}",
             "max": "Number lower than {{max}}",
             "min_max": "Number between {{min}} and {{max}}",
-            "map": "Format to use -> field:expression"
+            "map": "Format to use -> field.subfield:valor",
+            "add_to_list": "Add to list",
+            "clean_list": "Empty list",
+            "comma_separated_hint": "Comma separated values"
         }
     },
     "target": {
