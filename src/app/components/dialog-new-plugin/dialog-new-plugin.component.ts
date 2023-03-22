@@ -549,8 +549,8 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                             // Si tiene one_of es un select
                             tipo = 'select';
                             opts = value.elements.one_of;
-                        } else if (value.elements.type === 'string') {
-                            // It is an array of strings
+                        } else if (value.elements.type === 'string' || value.elements.type === 'integer' || value.elements.type === 'number') {
+                            // It is an array of strings or integers
                             this.arrayOfStrings.push(currentGroup + '.' + field);
                         } else if (value.elements.type === 'record') {
                             tipo = 'array_records';
