@@ -42,8 +42,10 @@
 
             <!-- Name Column -->
             <ng-container matColumnDef="name">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.name' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{row.name}}</td>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>({{'text.name' | translate}}) {{'plugin.dialog.alias' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>
+                    ({{row.name}})<span *ngIf="row.instance_name!==null"> {{row.instance_name}}</span>
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="route">

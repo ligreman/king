@@ -1,6 +1,6 @@
 {
     "name": "king",
-    "version": "3.0.7",
+    "version": "3.0.8",
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
@@ -40,7 +40,7 @@
         "rxjs": "7.5.7",
         "tslib": "2.5.0",
         "vis-data": "7.1.6",
-        "vis-network": "9.1.5",
+        "vis-network": "9.1.6",
         "vis-util": "5.0.3",
         "zone.js": "0.12.0"
     },
@@ -53,7 +53,7 @@
         "@types/jasminewd2": "2.0.10",
         "@types/lodash": "4.14.191",
         "@types/luxon": "3.2.0",
-        "@types/node": "18.15.5",
+        "@types/node": "18.15.10",
         "codelyzer": "6.0.2",
         "jasmine-core": "4.6.0",
         "jasmine-spec-reporter": "7.0.0",

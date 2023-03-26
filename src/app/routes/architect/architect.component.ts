@@ -665,9 +665,15 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
 
         // Creo los nodos de plugin
         for (let plugin of data.plugins) {
-            let extrasP = [this.translate.instant('plugin.label') + ': ' + plugin.id];
+            let extrasP = [
+                this.translate.instant('plugin.label') + ': ' + plugin.id,
+                this.translate.instant('plugin.dialog.name') + ': ' + plugin.name
+            ];
             let pluginEdges = [];
 
+            if (plugin.instance_name) {
+                extrasP.push(this.translate.instant('plugin.dialog.alias') + ': ' + plugin.instance_name);
+            }
             if (plugin.route && !_isEmpty(plugin.route.id)) {
                 extrasP.push(this.translate.instant('route.label') + ': ' + plugin.route.id);
                 pluginEdges.push(plugin.route.id);
@@ -687,9 +693,16 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             // Nodos de plugin
             extrasP.push(this.translate.instant('architect.labels') + ': ' + joiner(plugin.tags, ', '));
             const element = generateElement(extrasP);
+
+            // Nombre
+            let thePName = '(' + plugin.name + ')';
+            if (plugin.instance_name) {
+                thePName += ' ' + plugin.instance_name;
+            }
+
             this.data.nodes.add({
                 id: plugin.id,
-                label: plugin.name,
+                label: thePName,
                 title: element,
                 group: 'plugin',
                 data: plugin,

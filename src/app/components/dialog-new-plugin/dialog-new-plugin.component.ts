@@ -48,6 +48,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
 
     form = this.fb.group({
         name: ['', [Validators.required]],
+        instance_name: ['', []],
         route: this.fb.group({
             id: []
         }),
@@ -70,6 +71,8 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         Getters de campos del formulario
      */
     get nameField() { return this.form.get('name'); }
+
+    get instanceNameField() { return this.form.get('instance_name'); }
 
     get serviceField() { return this.form.get('service.id'); }
 
@@ -275,6 +278,10 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         }
         if (this.consumerField.value === '' || this.consumerField.value === null) {
             body.consumer = null;
+        }
+
+        if (this.instanceNameField.value === '' || this.instanceNameField.value === null) {
+            body.instance_name = null;
         }
 
         // Los campos que vengan como cadena vacía, los paso a null

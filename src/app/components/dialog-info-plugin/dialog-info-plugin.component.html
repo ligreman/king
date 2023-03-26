@@ -26,8 +26,8 @@
         <mat-dialog-content *ngIf="plugin && !loading" class="margin-0-i">
             <div fxLayout="row">
                 <div fxFlex="50">
-                    <p class="title margin-0-i">{{'text.name' | translate}}</p>
-                    <p class="text margin-left-20-i">{{plugin['name']}}</p>
+                    <p class="title margin-0-i">({{'text.name' | translate}}) {{'plugin.dialog.alias' | translate}}</p>
+                    <p class="text margin-left-20-i">({{plugin['name']}}) <span *ngIf="plugin['instance_name']!==null">{{plugin['instance_name']}}</span></p>
                 </div>
                 <div fxFlex="50">
                     <p class="title margin-0-i">{{'text.id' | translate}}</p>

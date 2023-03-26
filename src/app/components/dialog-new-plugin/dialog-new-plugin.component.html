@@ -92,7 +92,14 @@
                 </div>
 
                 <div class="margin-bottom-20-i" fxLayout="row" fxLayoutAlign="space-between start">
-                    <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="35">
+                        <mat-label>{{'plugin.dialog.instance_name' | translate}}</mat-label>
+                        <input aria-label="" formControlName="instance_name" matInput
+                               placeholder="{{'plugin.dialog.alias' | translate}}" type="text"/>
+                        <mat-hint>{{'plugin.dialog.instance_name_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" color="accent" fxFlex="60">
                         <mat-chip-list #chipList aria-label="">
                             <mat-chip (removed)="removeTag(tag)"
                                       *ngFor="let tag of currentTags" removable="true">{{tag}}
