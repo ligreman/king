@@ -366,4 +366,23 @@ export class ApiService {
     public deleteConsumerJwtToken(consumer: string, token: string) {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + consumer + '/jwt/' + token).pipe(catchError(this.handleError));
     }
+
+
+    /*
+        OAUTH 2.0 AUTHENTICATION PLUGIN
+     */
+    public getOAuthApp() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/oauth2?size=1000').pipe(catchError(this.handleError));
+    }
+    public getConsumerOAuthApp(consumer: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers/' + consumer + '/oauth2').pipe(catchError(this.handleError));
+    }
+
+    public postConsumerOAuthApp(consumer: string, body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/consumers/' + consumer + '/oauth2 ', body).pipe(catchError(this.handleError));
+    }
+
+    public deleteConsumerOAuthApp(consumer: string, token: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + consumer + '/oauth2/' + token).pipe(catchError(this.handleError));
+    }
 }

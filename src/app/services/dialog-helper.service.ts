@@ -1,36 +1,38 @@
-import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfirmComponent } from '../components/dialog-confirm/dialog-confirm.component';
-import { DialogInfoAclComponent } from '../components/dialog-info-acl/dialog-info-acl.component';
-import { DialogInfoJwtComponent } from '../components/dialog-info-jwt/dialog-info-jwt.component';
-import { DialogInfoKeyComponent } from '../components/dialog-info-key/dialog-info-key.component';
-import { DialogInfoPluginComponent } from '../components/dialog-info-plugin/dialog-info-plugin.component';
-import { DialogInfoRouteComponent } from '../components/dialog-info-route/dialog-info-route.component';
-import { DialogInfoServiceComponent } from '../components/dialog-info-service/dialog-info-service.component';
-import { DialogInfoTargetComponent } from '../components/dialog-info-target/dialog-info-target.component';
-import { DialogInfoUpstreamComponent } from '../components/dialog-info-upstream/dialog-info-upstream.component';
-import { DialogInfoVaultComponent } from '../components/dialog-info-vault/dialog-info-vault.component';
-import { DialogNewCacertComponent } from '../components/dialog-new-cacert/dialog-new-cacert.component';
-import { DialogNewCertComponent } from '../components/dialog-new-cert/dialog-new-cert.component';
-import { DialogNewConsumerComponent } from '../components/dialog-new-consumer/dialog-new-consumer.component';
-import { DialogNewPluginComponent } from '../components/dialog-new-plugin/dialog-new-plugin.component';
-import { DialogNewRouteComponent } from '../components/dialog-new-route/dialog-new-route.component';
-import { DialogNewRsuComponent } from '../components/dialog-new-rsu/dialog-new-rsu.component';
-import { DialogNewServiceComponent } from '../components/dialog-new-service/dialog-new-service.component';
-import { DialogNewSniComponent } from '../components/dialog-new-sni/dialog-new-sni.component';
-import { DialogNewTargetComponent } from '../components/dialog-new-target/dialog-new-target.component';
-import { DialogNewUpstreamComponent } from '../components/dialog-new-upstream/dialog-new-upstream.component';
-import { DialogNewVaultComponent } from '../components/dialog-new-vault/dialog-new-vault.component';
-import { ApiService } from './api.service';
-import { GlobalsService } from './globals.service';
-import { ToastService } from './toast.service';
+import {Injectable} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogConfirmComponent} from '../components/dialog-confirm/dialog-confirm.component';
+import {DialogInfoAclComponent} from '../components/dialog-info-acl/dialog-info-acl.component';
+import {DialogInfoJwtComponent} from '../components/dialog-info-jwt/dialog-info-jwt.component';
+import {DialogInfoKeyComponent} from '../components/dialog-info-key/dialog-info-key.component';
+import {DialogInfoPluginComponent} from '../components/dialog-info-plugin/dialog-info-plugin.component';
+import {DialogInfoRouteComponent} from '../components/dialog-info-route/dialog-info-route.component';
+import {DialogInfoServiceComponent} from '../components/dialog-info-service/dialog-info-service.component';
+import {DialogInfoTargetComponent} from '../components/dialog-info-target/dialog-info-target.component';
+import {DialogInfoUpstreamComponent} from '../components/dialog-info-upstream/dialog-info-upstream.component';
+import {DialogInfoVaultComponent} from '../components/dialog-info-vault/dialog-info-vault.component';
+import {DialogNewCacertComponent} from '../components/dialog-new-cacert/dialog-new-cacert.component';
+import {DialogNewCertComponent} from '../components/dialog-new-cert/dialog-new-cert.component';
+import {DialogNewConsumerComponent} from '../components/dialog-new-consumer/dialog-new-consumer.component';
+import {DialogNewPluginComponent} from '../components/dialog-new-plugin/dialog-new-plugin.component';
+import {DialogNewRouteComponent} from '../components/dialog-new-route/dialog-new-route.component';
+import {DialogNewRsuComponent} from '../components/dialog-new-rsu/dialog-new-rsu.component';
+import {DialogNewServiceComponent} from '../components/dialog-new-service/dialog-new-service.component';
+import {DialogNewSniComponent} from '../components/dialog-new-sni/dialog-new-sni.component';
+import {DialogNewTargetComponent} from '../components/dialog-new-target/dialog-new-target.component';
+import {DialogNewUpstreamComponent} from '../components/dialog-new-upstream/dialog-new-upstream.component';
+import {DialogNewVaultComponent} from '../components/dialog-new-vault/dialog-new-vault.component';
+import {ApiService} from './api.service';
+import {GlobalsService} from './globals.service';
+import {ToastService} from './toast.service';
+import {DialogInfoOauth2Component} from "../components/dialog-info-oauth2/dialog-info-oauth2.component";
 
 @Injectable({
     providedIn: 'root'
 })
 export class DialogHelperService {
 
-    constructor(private dialog: MatDialog, private api: ApiService, private toast: ToastService, private globals: GlobalsService) { }
+    constructor(private dialog: MatDialog, private api: ApiService, private toast: ToastService, private globals: GlobalsService) {
+    }
 
 
     addEdit(selected, group, extras = null) {
@@ -149,6 +151,11 @@ export class DialogHelperService {
                 opt.data = select;
                 component = DialogInfoJwtComponent;
                 break;
+            case 'oauth2':
+                opt.data = select;
+                opt.minWidth = '95vw';
+                component = DialogInfoOauth2Component;
+                break;
         }
 
         this.dialog.open(component, opt);
@@ -234,6 +241,16 @@ export class DialogHelperService {
                     opt.data = {
                         title: 'dialog.confirm.delete_jwt_title',
                         content: 'dialog.confirm.delete_jwt',
+                        name: select.name,
+                        consumerId: select.consumerId,
+                        id: select.id,
+                        delete: true
+                    };
+                    break;
+                case 'oauth2':
+                    opt.data = {
+                        title: 'dialog.confirm.delete_oauth2_title',
+                        content: 'dialog.confirm.delete_oauth2',
                         name: select.name,
                         consumerId: select.consumerId,
                         id: select.id,
@@ -384,6 +401,17 @@ export class DialogHelperService {
                             break;
                         case 'jwt':
                             this.api.deleteConsumerJwtToken(select.consumerId, select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
+                            });
+                            break;
+                        case 'oauth2':
+                            this.api.deleteConsumerOAuthApp(select.consumerId, select.id).subscribe({
                                 next: () => {
                                     this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                     resolve();

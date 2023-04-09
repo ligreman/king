@@ -23,6 +23,7 @@
         "new_acl": "ACL creado",
         "new_key": "API Key creada",
         "new_jwt": "Token JWT creado",
+        "new_oauth2": "Token OAuth 2.0 creado",
         "update_service": "Servicio actualizado",
         "update_route": "Ruta actualizada",
         "update_upstream": "Upstream actualizado",
@@ -44,6 +45,7 @@
         "delete_cacert": "Certificado de CA {{extra}} eliminado",
         "delete_acl": "ACL {{extra}} eliminado",
         "delete_jwt": "Token JWT {{extra}} eliminado",
+        "delete_oauth2": "Token OAuth 2.0 {{extra}} eliminado",
         "delete_key": "API Key {{extra}} eliminada",
         "healthy_target": "Target {{extra}} marcado sano",
         "unhealthy_target": "Target {{extra}} marcado erróneo",
@@ -112,6 +114,8 @@
             "delete_acl": "¿Deseas eliminar este ACL?",
             "delete_jwt_title": "Eliminar token JWT",
             "delete_jwt": "¿Deseas eliminar esta validación de token JWT?",
+            "delete_oauth2_title": "Eliminar token OAuth 2.0",
+            "delete_oauth2": "¿Deseas eliminar este token OAuth 2.0?",
             "delete_key_title": "Eliminar API Key",
             "delete_key": "¿Deseas eliminar esta API Key?",
             "enable_plugin_title": "Activar plugin",
@@ -146,6 +150,7 @@
             "acls": "Grupos ACL",
             "keys": "API keys",
             "jwt": "Tokens JWT",
+            "oauth2": "Credenciales OAuth 2.0",
             "kong_node": "API de administración de un nodo de Kong",
             "kong_node_tooltip": "Introduce la URL y puerto",
             "kong_node_button_tooltip": "Conectar",
@@ -668,6 +673,29 @@
             "secret": "Secreto para firma",
             "error": {
             }
+        }
+    },
+    "oauth2": {
+        "add": "Añadir OAuth 2.0 Application",
+        "header": "Credenciales OAuth 2.0 válidas",
+        "explanation": "Para añadir nuevas credenciales OAuth 2.0 acude a la pantalla de consumidores",
+        "dialog": {
+            "info": "Credenciales OAuth 2.0 para el consumidor",
+            "add_name": "Nombre para las credenciales OAuth 2.0",
+            "add_name_hint": "En OAuth 2.0 es el nombre de la aplicación",
+            "add_id": "ID único de cliente",
+            "add_id_hint": "Dejar vacío para generar automáticamente",
+            "add_secret": "Secreto único del cliente",
+            "add_secret_hint": "Dejar vacío para generar automáticamente",
+            "add_uris": "URLs de redirección tras autentificación",
+            "add_uris_hint": "Array de una o más URLs a las que se redirigirá al cliente después de autentificarse. URLs separadas por comas o cada una en una línea",
+            "add_hash_secret": "Hashear secreto",
+            "add_hash_secret_tooltip": "Indica si el secreto del cliente se almacenará hasheado",
+            "name": "Nombre",
+            "client_id": "ID de cliente",
+            "client_secret": "Secreto de cliente",
+            "redirect_uris": "URLs de redirección",
+            "hash_secret": "Hashear secreto"
         }
     },
     "element": {

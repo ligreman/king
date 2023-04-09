@@ -81,6 +81,8 @@ import { NodeInformationComponent } from './routes/node-information/node-informa
 import { PageNotFoundComponent } from './routes/page-not-found/page-not-found.component';
 import { PluginListComponent } from './routes/plugins/plugin-list/plugin-list.component';
 import { MatPaginatorIntlSpanish } from './shared/spanish-paginator-intl';
+import { DialogInfoOauth2Component } from './components/dialog-info-oauth2/dialog-info-oauth2.component';
+import { AccessOauth2Component } from './routes/access/access-oauth2/access-oauth2.component';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -131,7 +133,9 @@ export function HttpLoaderFactory(http: HttpClient) {
         ManualEsComponent,
         DialogNewRsuComponent,
         AccessJwtComponent,
-        DialogInfoJwtComponent
+        DialogInfoJwtComponent,
+        DialogInfoOauth2Component,
+        AccessOauth2Component
     ],
     imports: [
         BrowserModule,

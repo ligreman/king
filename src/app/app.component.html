@@ -1,14 +1,17 @@
 <mat-toolbar color="primary" id="header-container">
-    <img alt="" class="logo" matTooltip="ROAR!" matTooltipClass="tooltip-teal" matTooltipShowDelay="2000" src="assets/img/logo.svg"/>
+    <img alt="" class="logo" matTooltip="ROAR!" matTooltipClass="tooltip-teal" matTooltipShowDelay="2000"
+         src="assets/img/logo.svg"/>
 
     <div [fxFlexOffset]="1"><a class="title" routerLink="/node-information">King for Kong</a></div>
 
     <div>
-        <button [disabled]="!isConnectedToNode()" [fxFlexOffset]="2" color="accent" mat-button routerLink="/architect" routerLinkActive="active-route">
+        <button [disabled]="!isConnectedToNode()" [fxFlexOffset]="2" color="accent" mat-button routerLink="/architect"
+                routerLinkActive="active-route">
             <mat-icon>architecture</mat-icon>
             {{ 'header.menu.graph' | translate | uppercase }}
         </button>
-        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuE" [ngClass]="isElementRouteActive()" color="accent" mat-button>
+        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuE" [ngClass]="isElementRouteActive()"
+                color="accent" mat-button>
             <mat-icon>category</mat-icon>
             {{ 'header.menu.elements' | translate | uppercase }}
         </button>
@@ -30,11 +33,13 @@
                 {{ 'header.menu.vaults' | translate | uppercase }}
             </button>
         </mat-menu>
-        <button [disabled]="!isConnectedToNode()" color="accent" mat-button routerLink="/plugin-list" routerLinkActive="active-route">
+        <button [disabled]="!isConnectedToNode()" color="accent" mat-button routerLink="/plugin-list"
+                routerLinkActive="active-route">
             <mat-icon>settings_input_component</mat-icon>
             {{ 'header.menu.plugins' | translate | uppercase }}
         </button>
-        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuD" [ngClass]="isAccessControlRouteActive()" color="accent" mat-button>
+        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuD" [ngClass]="isAccessControlRouteActive()"
+                color="accent" mat-button>
             <mat-icon>fingerprint</mat-icon>
             {{ 'header.menu.acl' | translate | uppercase }}
         </button>
@@ -55,8 +60,13 @@
                 <mat-icon>confirmation_number</mat-icon>
                 {{'header.menu.jwt' | translate | uppercase}}
             </button>
+            <button mat-menu-item routerLink="/access-oauth2" routerLinkActive="active-route">
+                <mat-icon>motion_photos_auto</mat-icon>
+                {{'header.menu.oauth2' | translate | uppercase}}
+            </button>
         </mat-menu>
-        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()" color="accent" mat-button>
+        <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()"
+                color="accent" mat-button>
             <mat-icon>security</mat-icon>
             {{ 'header.menu.certs' | translate | uppercase }}
         </button>
@@ -125,13 +135,15 @@
             {{'footer.manual' | translate}}
         </button>
     </div>
-    <a href="https://github.com/ligreman/king" mat-icon-button matTooltip="https://github.com/ligreman/king" matTooltipPosition="left" rel="noopener noreferrer"
+    <a href="https://github.com/ligreman/king" mat-icon-button matTooltip="https://github.com/ligreman/king"
+       matTooltipPosition="left" rel="noopener noreferrer"
        target="_blank">
         <img alt="GitHub" src="assets/img/github.png"/>
     </a>
 </footer>
 
-<div [fxShow]="openedManual" [ngClass]="{'showing': showManualText}" [ngStyle]="{'height.px': manualStyles.height, 'top.px': manualStyles.top}"
+<div [fxShow]="openedManual" [ngClass]="{'showing': showManualText}"
+     [ngStyle]="{'height.px': manualStyles.height, 'top.px': manualStyles.top}"
      id="manual-container">
     <div class="manual-text" id="manual-text">
         <mat-toolbar color="accent" fxLayout="row" fxLayoutAlign="space-between center">

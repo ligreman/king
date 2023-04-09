@@ -23,6 +23,7 @@
         "new_acl": "ACL created",
         "new_key": "API Key created",
         "new_jwt": "JWT token created",
+        "new_oauth2": "OAuth 2.0 token created",
         "update_service": "Service updated",
         "update_route": "Route updated",
         "update_upstream": "Upstream updated",
@@ -44,6 +45,7 @@
         "delete_cacert": "CA certificate {{extra}} deleted",
         "delete_acl": "ACL {{extra}} deleted",
         "delete_jwt": "JWT token {{extra}} removed",
+        "delete_oauth2": "OAuth 2.0 token {{extra}} removed",
         "delete_key": "API Key {{extra}} deleted",
         "healthy_target": "Target {{extra}} set as healthy",
         "unhealthy_target": "Target {{extra}} set as unhealthy",
@@ -112,6 +114,8 @@
             "delete_acl": "Do you want to delete this ACL?",
             "delete_jwt_title": "Delete JWT token",
             "delete_jwt": "Do you want to remove this JWT token validation?",
+            "delete_oauth2_title": "Eliminate the OAuth 2.0 token",
+            "delete_oauth2": "Do you want to remove this OAuth 2.0 token?",
             "delete_key_title": "Delete API Key",
             "delete_key": "Do you want to delete this API Key?",
             "enable_plugin_title": "Enable plugin",
@@ -146,6 +150,7 @@
             "acls": "ACL groups",
             "keys": "API keys",
             "jwt": "JWT tokens",
+            "oauth2": "OAuth 2.0 Credentials",
             "kong_node": "Kong node admin API",
             "kong_node_tooltip": "Type in the URL and port",
             "kong_node_button_tooltip": "Connect",
@@ -668,6 +673,29 @@
             "secret": "Singing secret",
             "error": {
             }
+        }
+    },
+    "oauth2": {
+        "add": "Add OAuth 2.0 Application",
+        "header": "Valid OAuth 2.0 credentials",
+        "explanation": "To add new OAuth 2.0 credentials go to the consumer screen",
+        "dialog": {
+            "info": "OAuth 2.0 credentials for the consumer",
+            "add_name": "Name for OAuth 2.0 credentials",
+            "add_name_hint": "In OAuth 2.0 it is the name of the application",
+            "add_id": "Unique client ID",
+            "add_id_hint": "Leave empty to generate automatically",
+            "add_secret": "Unique Client Secret",
+            "add_secret_hint": "Leave empty to generate automatically",
+            "add_uris": "URLs de redirección tras autentificación",
+            "add_uris_hint": "Array of one or more URLs to which the client will be redirected after authenticating. URLs separated by commas or each one on a line",
+            "add_hash_secret": "Hash secret",
+            "add_hash_secret_tooltip": "Indicates if the client secret will be stored hashed",
+            "name": "Name",
+            "client_id": "Client ID",
+            "client_secret": "Client secret",
+            "redirect_uris": "Redirect URLs",
+            "hash_secret": "Hash secret"
         }
     },
     "element": {

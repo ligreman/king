@@ -2,7 +2,7 @@
 <div [fxShow]="!loading" class="progress-placeholder"></div>
 
 <div class="padding-top-20" fxLayout="row" fxLayoutAlign="center center">
-    <h2 class="margin-0-i" fxFlex="90">{{ 'jwt.header' | translate}}</h2>
+    <h2 class="margin-0-i" fxFlex="90">{{ 'oauth2.header' | translate}}</h2>
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center start">
@@ -22,44 +22,30 @@
             </button>
         </div>
 
-        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="id" matSortDirection="asc"
+        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="name" matSortDirection="asc"
                matSortDisableClear>
-            <!-- ID Column -->
-            <ng-container matColumnDef="id">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.id' | translate}}</th>
-                <td *matCellDef="let row" class="text-small" mat-cell>{{row.id}}</td>
+            <ng-container matColumnDef="name">
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'oauth2.dialog.name' | translate}}</th>
+                <td *matCellDef="let row" mat-cell matTooltip="ID: {{row.id}}"
+                    matTooltipClass="tooltip-teal">{{row.name}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="key">
-                <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.key' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{row.key}}</td>
+            <ng-container matColumnDef="client_id">
+                <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.client_id' | translate}}</th>
+                <td *matCellDef="let row" mat-cell class="word-break-all text-small">{{row.client_id}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="algorithm">
-                <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.algorithm' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{row.algorithm}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="rsa_public_key">
-                <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.rsa' | translate}}</th>
-                <td *matCellDef="let row" mat-cell matTooltip="{{row.rsa_public_key}}"
-                    matTooltipClass="tooltip-teal tooltip-wide tooltip-multi">
-                    <span
-                        *ngIf="row.rsa_public_key">{{row.rsa_public_key.replace('-----BEGIN CERTIFICATE-----', '') | slice:0:20}}
-                        ...</span>
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="secret">
-                <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.secret' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>
-                    {{showKey(row.secret, row.hide || false)}}
-                    <button *ngIf="row.secret" (click)="row.hide=!row.hide" class="small-btn" mat-button
+            <ng-container matColumnDef="client_secret">
+                <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.client_secret' | translate}}</th>
+                <td *matCellDef="let row" mat-cell class="word-break-all text-small">
+                    {{showKey(row.client_secret, row.hide || false)}}
+                    <button *ngIf="row.client_secret" (click)="row.hide=!row.hide" class="small-btn" mat-button
                             mat-icon-button>
                         <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
                         <mat-icon *ngIf="!row.hide">visibility</mat-icon>
                     </button>
-                    <button *ngIf="row.secret" [cdkCopyToClipboard]="row.secret" class="small-btn" mat-button
+                    <button *ngIf="row.client_secret" [cdkCopyToClipboard]="row.client_secret" class="small-btn"
+                            mat-button
                             mat-icon-button
                             matTooltip="{{'dialog.copy_clipboard'|translate}}" matTooltipClass="tooltip-teal">
                         <mat-icon>content_copy</mat-icon>
@@ -67,13 +53,19 @@
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="created_at">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.created_at' | translate}}</th>
-                <td *matCellDef="let row" class="text-small" mat-cell>{{ (row.created_at * 1000) | date:'medium'}}</td>
+            <ng-container matColumnDef="redirect_uris">
+                <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.redirect_uris' | translate}}</th>
+                <td *matCellDef="let row" mat-cell
+                    class="word-break-word text-small">{{parseLines(row.redirect_uris)}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="hash_secret">
+                <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.hash_secret' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>{{row.hash_secret}}</td>
             </ng-container>
 
             <ng-container matColumnDef="tags">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'service.dialog.tags' | translate}}</th>
+                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.tags' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>{{(row.tags || []).join(', ')}}</td>
             </ng-container>
 
@@ -104,7 +96,7 @@
 
         <div class="margin-top-10" fxLayout="row" fxLayoutAlign="end center">
             <p>
-                {{ "jwt.explanation" | translate}}
+                {{ "oauth2.explanation" | translate}}
                 <button class="small-btn" mat-icon-button routerLink="/element-consumer">
                     <mat-icon>launch</mat-icon>
                 </button>

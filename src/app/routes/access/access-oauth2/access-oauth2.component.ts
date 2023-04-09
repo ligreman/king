@@ -1,23 +1,23 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator} from '@angular/material/paginator';
-import {MatSort} from '@angular/material/sort';
-import {MatTableDataSource} from '@angular/material/table';
-import {Router} from '@angular/router';
-import {TranslateService} from '@ngx-translate/core';
-import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
-import {ApiService} from '../../../services/api.service';
-import {DialogHelperService} from '../../../services/dialog-helper.service';
-import {ToastService} from '../../../services/toast.service';
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
+import {ApiService} from "../../../services/api.service";
+import {ToastService} from "../../../services/toast.service";
+import {Router} from "@angular/router";
+import {DialogHelperService} from "../../../services/dialog-helper.service";
+import {TranslateService} from "@ngx-translate/core";
+
 
 @AutoUnsubscribe()
 @Component({
-    selector: 'app-access-jwt',
-    templateUrl: './access-jwt.component.html',
-    styleUrls: ['./access-jwt.component.scss']
+    selector: 'app-access-oauth2',
+    templateUrl: './access-oauth2.component.html',
+    styleUrls: ['./access-oauth2.component.scss']
 })
-export class AccessJwtComponent implements OnInit, OnDestroy {
-
-    displayedColumns: string[] = ['id', 'key', 'algorithm', 'rsa_public_key', 'secret', 'tags', 'actions'];
+export class AccessOauth2Component implements OnInit, OnDestroy {
+    displayedColumns: string[] = ['name', 'client_id', 'client_secret', 'redirect_uris', 'hash_secret', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -34,7 +34,7 @@ export class AccessJwtComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // Aquí para que no error de ExpressionChangedAfterItHasBeenCheckedError
         this.loading = true;
-        this.getJwtTokens();
+        this.getOAuthApps();
         this.getConsumers();
     }
 
@@ -50,7 +50,7 @@ export class AccessJwtComponent implements OnInit, OnDestroy {
             this.filter = '';
         }
 
-        this.getJwtTokens();
+        this.getOAuthApps();
         this.getConsumers();
     }
 
@@ -73,8 +73,8 @@ export class AccessJwtComponent implements OnInit, OnDestroy {
     /**
      * Obtiene las API key
      */
-    getJwtTokens() {
-        this.api.getJwtTokens()
+    getOAuthApps() {
+        this.api.getOAuthApp()
             .subscribe({
                 next: (value) => {
                     this.dataSource = new MatTableDataSource(value['data']);
@@ -135,8 +135,8 @@ export class AccessJwtComponent implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement({
             id: select.id,
             consumerId: select.consumer.id,
-            name: this.showKey(select.key, false) + ' [' + this.translate.instant('text.username') + ' ' + this.consumers[select.consumer.id] + ']'
-        }, 'jwt')
+            name: select.name + ' [' + this.translate.instant('text.username') + ' ' + this.consumers[select.consumer.id] + ']'
+        }, 'oauth2')
             .then(() => {
                 this.reloadData();
             })
@@ -144,5 +144,12 @@ export class AccessJwtComponent implements OnInit, OnDestroy {
             });
     }
 
-}
 
+    parseLines(redirect_uris: any) {
+        let out = redirect_uris;
+        if (redirect_uris) {
+            out = redirect_uris.join('\n');
+        }
+        return out;
+    }
+}

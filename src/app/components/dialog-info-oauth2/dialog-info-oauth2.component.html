@@ -1,0 +1,140 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+        <span>{{'oauth2.dialog.info' | translate}}</span>
+
+        <span fxFlexAlign="end">
+            <a href="https://docs.konghq.com/hub/kong-inc/oauth2/" mat-button rel="noopener noreferrer" target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button (click)="downloadJson()" mat-icon-button
+                    matTooltip="{{'dialog.download_json' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>download</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        </p>
+    </div>
+
+    <div fxFlex>
+        <mat-dialog-content *ngIf="dataSource && !loading" class="margin-0-i">
+            <div fxFlex fxLayout="column">
+                <div>{{'oauth2.add' | translate}}</div>
+
+                <form [formGroup]="form" class="margin-bottom-30-i" fxFlex fxLayout="row"
+                      fxLayoutAlign="space-between center">
+                    <mat-form-field fxFlex="20">
+                        <mat-label>{{ 'oauth2.dialog.add_name' | translate}}</mat-label>
+                        <input formControlName="name" matInput type="text">
+                        <mat-hint>{{ 'oauth2.dialog.add_name_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="20">
+                        <mat-label>{{ 'oauth2.dialog.add_id' | translate}}</mat-label>
+                        <input formControlName="client_id" matInput type="text">
+                        <mat-hint>{{ 'oauth2.dialog.add_id_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="20">
+                        <mat-label>{{ 'oauth2.dialog.add_secret' | translate}}</mat-label>
+                        <input formControlName="client_secret" matInput type="text">
+                        <mat-hint>{{ 'oauth2.dialog.add_secret_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="20">
+                        <mat-label>{{ 'oauth2.dialog.add_uris' | translate}}</mat-label>
+                        <textarea formControlName="redirect_uris" matInput
+                                  placeholder="https://redirect.uri"></textarea>
+                        <mat-hint>{{ 'oauth2.dialog.add_uris_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+
+                    <div class="margin-bottom-10 padding-top-20" fxFlex="10" fxLayout="row"
+                         fxLayoutAlign="start center">
+                        <mat-checkbox matTooltip="{{'oauth2.dialog.add_hash_secret_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal"
+                                      formControlName="hash_secret">{{'oauth2.dialog.add_hash_secret' | translate}}</mat-checkbox>
+                    </div>
+
+                    <button (click)="onSubmit()" [disabled]="form.invalid" color="accent" fxFlex="5" mat-icon-button
+                            matTooltip="{{'oauth2.add' | translate}}" matTooltipClass="tooltip-teal">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </form>
+
+                <div>{{'oauth2.dialog.info' | translate}}: <span>{{consumerName}}</span></div>
+
+                <div fxLayout="row">
+                    <table [dataSource]="dataSource" fxFlex mat-table>
+                        <ng-container matColumnDef="name">
+                            <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.name' | translate}}</th>
+                            <td *matCellDef="let row" mat-cell matTooltip="ID: {{row.id}}"
+                                matTooltipClass="tooltip-teal">{{row.name}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="client_id">
+                            <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.client_id' | translate}}</th>
+                            <td *matCellDef="let row" mat-cell class="word-break-all text-small">{{row.client_id}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="client_secret">
+                            <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.client_secret' | translate}}</th>
+                            <td *matCellDef="let row" mat-cell
+                                class="word-break-all text-small">{{showKey(row.client_secret, row.hide || false)}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="redirect_uris">
+                            <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.redirect_uris' | translate}}</th>
+                            <td *matCellDef="let row" mat-cell
+                                class="word-break-word text-small">{{parseLines(row.redirect_uris)}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="hash_secret">
+                            <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.hash_secret' | translate}}</th>
+                            <td *matCellDef="let row" mat-cell>{{row.hash_secret}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="actions">
+                            <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
+                            <td *matCellDef="let row" mat-cell>
+                                <button (click)="row.hide=!row.hide" class="margin-left-20-i" mat-button
+                                        mat-icon-button>
+                                    <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
+                                    <mat-icon *ngIf="!row.hide">visibility</mat-icon>
+                                </button>
+                                <button (click)="deleteOauth2App(row)" color="warn" mat-button mat-icon-button
+                                        matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                        <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr *matNoDataRow class="mat-row">
+                            <td class="mat-cell" colspan="5">{{'element.no_data' | translate}}</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <mat-chip-list *ngIf="keys" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
+            <mat-chip *ngFor="let chip of keys['tags']" color="primary">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <div><!-- leave empty --></div>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null"
+                mat-flat-button>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>

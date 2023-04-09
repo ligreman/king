@@ -149,6 +149,16 @@ export class ElementConsumerComponent implements OnInit, OnDestroy {
     }
 
     /**
+     * Muestra la info de OAuth 2.0 Applications
+     * @param select Elemento a ver su info
+     */
+    infoOAuthApps(select) {
+        this.dialogHelper.showInfoElement(select, 'oauth2');
+    }
+
+
+
+    /**
      * Comprueba que un plugin esté activo
      * @param plugin Nombre del plugin
      */

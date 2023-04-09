@@ -22,7 +22,8 @@
             </button>
         </div>
 
-        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="consumer" matSortDirection="asc" matSortDisableClear>
+        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="consumer" matSortDirection="asc"
+               matSortDisableClear>
             <!-- ID Column -->
             <ng-container matColumnDef="id">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.id' | translate}}</th>
@@ -30,7 +31,7 @@
             </ng-container>
 
             <ng-container matColumnDef="key">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'apikey.dialog.key' | translate}}</th>
+                <th *matHeaderCellDef mat-header-cell>{{'apikey.dialog.key' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>
                     {{showKey(row.key, row.hide || false)}}
                     <button (click)="row.hide=!row.hide" class="small-btn" mat-button mat-icon-button>
@@ -56,9 +57,11 @@
             </ng-container>
 
             <ng-container matColumnDef="ttl">
-                <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'apikey.dialog.expiration_ttl' | translate}}</th>
+                <th *matHeaderCellDef mat-header-cell
+                    mat-sort-header>{{'apikey.dialog.expiration_ttl' | translate}}</th>
                 <td *matCellDef="let row" class="text-small" mat-cell>
-                    <span *ngIf="row.ttl > 0" matTooltip="{{ 'apikey.dialog.add_ttl' | translate }}: {{row.ttl}}s" matTooltipClass="tooltip-teal">
+                    <span *ngIf="row.ttl > 0" matTooltip="{{ 'apikey.dialog.add_ttl' | translate }}: {{row.ttl}}s"
+                          matTooltipClass="tooltip-teal">
                     {{(timeNow + (row.ttl * 1000)) | date:'medium'}}
                     </span>
                 </td>
@@ -72,7 +75,8 @@
             <ng-container matColumnDef="actions">
                 <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="delete(row)" color="warn" mat-icon-button matTooltip="{{'text.delete' | translate}}"
+                    <button (click)="delete(row)" color="warn" mat-icon-button
+                            matTooltip="{{'text.delete' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>delete</mat-icon>
                     </button>
@@ -85,7 +89,9 @@
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
                 <td *ngIf="input.value === ''" class="mat-cell" colspan="7">{{'element.no_data' | translate}}</td>
-                <td *ngIf="input.value !== ''" class="mat-cell" colspan="7">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
+                <td *ngIf="input.value !== ''" class="mat-cell" colspan="7">{{'element.no_data_search' | translate}}
+                    "{{input.value}}"
+                </td>
             </tr>
         </table>
 
