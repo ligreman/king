@@ -3,6 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {DialogConfirmComponent} from '../components/dialog-confirm/dialog-confirm.component';
 import {DialogInfoAclComponent} from '../components/dialog-info-acl/dialog-info-acl.component';
 import {DialogInfoJwtComponent} from '../components/dialog-info-jwt/dialog-info-jwt.component';
+import {DialogInfoBasicComponent} from '../components/dialog-info-basic/dialog-info-basic.component';
 import {DialogInfoKeyComponent} from '../components/dialog-info-key/dialog-info-key.component';
 import {DialogInfoPluginComponent} from '../components/dialog-info-plugin/dialog-info-plugin.component';
 import {DialogInfoRouteComponent} from '../components/dialog-info-route/dialog-info-route.component';
@@ -143,6 +144,10 @@ export class DialogHelperService {
                 opt.data = select;
                 component = DialogInfoAclComponent;
                 break;
+            case 'basic':
+                opt.data = select;
+                component = DialogInfoBasicComponent;
+                break;
             case 'key':
                 opt.data = select;
                 component = DialogInfoKeyComponent;
@@ -213,6 +218,16 @@ export class DialogHelperService {
                         title: 'dialog.confirm.delete_plugin_title',
                         content: 'dialog.confirm.delete_plugin',
                         name: select.name,
+                        id: select.id,
+                        delete: true
+                    };
+                    break;
+                case 'basic':
+                    opt.data = {
+                        title: 'dialog.confirm.delete_basic_title',
+                        content: 'dialog.confirm.delete_basic',
+                        name: select.name,
+                        consumerId: select.consumerId,
                         id: select.id,
                         delete: true
                     };
@@ -379,6 +394,17 @@ export class DialogHelperService {
                             break;
                         case 'acl':
                             this.api.deleteConsumerAcl(select.consumerId, select.id).subscribe({
+                                next: () => {
+                                    this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
+                                    resolve();
+                                }, error: (error) => {
+                                    this.toast.error_general(error, {disableTimeOut: true});
+                                    reject();
+                                }
+                            });
+                            break;
+                        case 'basic':
+                            this.api.deleteConsumerBasicAuth(select.consumerId, select.id).subscribe({
                                 next: () => {
                                     this.toast.success('text.id_extra', 'success.delete_' + group, {msgExtra: select.name});
                                     resolve();

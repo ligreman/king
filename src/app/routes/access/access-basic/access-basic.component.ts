@@ -4,6 +4,7 @@ import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
+import {DateTime} from 'luxon';
 import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
 import {ApiService} from '../../../services/api.service';
 import {DialogHelperService} from '../../../services/dialog-helper.service';
@@ -11,12 +12,13 @@ import {ToastService} from '../../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
-    selector: 'app-access-acls',
-    templateUrl: './access-acls.component.html',
-    styleUrls: ['./access-acls.component.scss']
+    selector: 'app-access-basic',
+    templateUrl: './access-basic.component.html',
+    styleUrls: ['./access-basic.component.scss']
 })
-export class AccessAclsComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['id', 'group', 'consumer', 'created_at', 'tags', 'actions'];
+export class AccessBasicComponent implements OnInit, OnDestroy {
+
+    displayedColumns: string[] = ['id', 'username', 'consumer', 'created_at', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -25,6 +27,7 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
     loading = false;
     filter = '';
     consumers = {};
+    timeNow = DateTime.now();
 
     constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService,
                 private translate: TranslateService) {
@@ -33,7 +36,7 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         // Aquí para que no error de ExpressionChangedAfterItHasBeenCheckedError
         this.loading = true;
-        this.getAcls();
+        this.getBasicAuths();
         this.getConsumers();
     }
 
@@ -49,15 +52,27 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
             this.filter = '';
         }
 
-        this.getAcls();
+        this.getBasicAuths();
         this.getConsumers();
+        this.getNow();
     }
 
     /**
-     * Obtiene los acl
+     * Obtiene el tiempo actual en milisegundos
      */
-    getAcls() {
-        this.api.getAcls()
+    getNow() {
+        this.timeNow = DateTime.now();
+    }
+
+    getConsumer(id) {
+        return this.consumers[id];
+    }
+
+    /**
+     * Obtiene las API key
+     */
+    getBasicAuths() {
+        this.api.getBasicAuths()
             .subscribe({
                 next: (value) => {
                     this.dataSource = new MatTableDataSource(value['data']);
@@ -118,8 +133,8 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement({
             id: select.id,
             consumerId: select.consumer.id,
-            name: select.group + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumers[select.consumer.id] + ']'
-        }, 'acl')
+            name: select.username + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumers[select.consumer.id] + ']'
+        }, 'basic')
             .then(() => {
                 this.reloadData();
             })

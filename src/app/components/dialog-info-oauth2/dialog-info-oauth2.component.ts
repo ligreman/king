@@ -130,7 +130,7 @@ export class DialogInfoOauth2Component implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement({
             id: oauth.id,
             consumerId: this.consumerId,
-            name: oauth.name + ' [' + this.translate.instant('text.username') + ' ' + this.consumerName + ']'
+            name: oauth.name + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumerName + ']'
         }, 'oauth2')
             .then(() => {
                 this.getOAuth2Apps();

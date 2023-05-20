@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { DateTime } from 'luxon';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../../services/api.service';
-import { DialogHelperService } from '../../../services/dialog-helper.service';
-import { ToastService } from '../../../services/toast.service';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
+import {DateTime} from 'luxon';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../../services/api.service';
+import {DialogHelperService} from '../../../services/dialog-helper.service';
+import {ToastService} from '../../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -149,10 +149,13 @@ export class AccessKeyComponent implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement({
             id: select.id,
             consumerId: select.consumer.id,
-            name: this.showKey(select.key, false) + ' [' + this.translate.instant('text.username') + ' ' + this.consumers[select.consumer.id] + ']'
+            name: this.showKey(select.key, false) + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumers[select.consumer.id] + ']'
         }, 'key')
-            .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .then(() => {
+                this.reloadData();
+            })
+            .catch(error => {
+            });
     }
 
 }

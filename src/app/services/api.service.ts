@@ -1,15 +1,16 @@
-import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { GlobalsService } from './globals.service';
+import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {throwError} from 'rxjs';
+import {catchError} from 'rxjs/operators';
+import {GlobalsService} from './globals.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ApiService {
 
-    constructor(private httpClient: HttpClient, private globals: GlobalsService) { }
+    constructor(private httpClient: HttpClient, private globals: GlobalsService) {
+    }
 
     /*
       Manage the errors
@@ -329,6 +330,25 @@ export class ApiService {
     }
 
     /*
+        BASIC AUTH PLUGIN
+     */
+    public getBasicAuths() {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/basic-auths?size=1000').pipe(catchError(this.handleError));
+    }
+
+    public getConsumerBasicAuths(consumer: string) {
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers/' + consumer + '/basic-auth').pipe(catchError(this.handleError));
+    }
+
+    public postConsumerBasicAuth(consumer: string, body) {
+        return this.httpClient.post(this.globals.NODE_API_URL + '/consumers/' + consumer + '/basic-auth', body).pipe(catchError(this.handleError));
+    }
+
+    public deleteConsumerBasicAuth(consumer: string, key: string) {
+        return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + consumer + '/basic-auth/' + key).pipe(catchError(this.handleError));
+    }
+
+    /*
         API KEY PLUGIN
      */
     public getApiKeys() {
@@ -374,6 +394,7 @@ export class ApiService {
     public getOAuthApp() {
         return this.httpClient.get(this.globals.NODE_API_URL + '/oauth2?size=1000').pipe(catchError(this.handleError));
     }
+
     public getConsumerOAuthApp(consumer: string) {
         return this.httpClient.get(this.globals.NODE_API_URL + '/consumers/' + consumer + '/oauth2').pipe(catchError(this.handleError));
     }

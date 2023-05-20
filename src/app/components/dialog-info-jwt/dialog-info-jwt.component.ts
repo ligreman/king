@@ -1,14 +1,14 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
-import { TranslateService } from '@ngx-translate/core';
-import { saveAs } from 'file-saver';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../services/api.service';
-import { DialogHelperService } from '../../services/dialog-helper.service';
-import { ToastService } from '../../services/toast.service';
-import { CustomValidators } from '../../shared/custom-validators';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {MatTableDataSource} from '@angular/material/table';
+import {TranslateService} from '@ngx-translate/core';
+import {saveAs} from 'file-saver';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../services/api.service';
+import {DialogHelperService} from '../../services/dialog-helper.service';
+import {ToastService} from '../../services/toast.service';
+import {CustomValidators} from '../../shared/custom-validators';
 
 @AutoUnsubscribe()
 @Component({
@@ -34,7 +34,8 @@ export class DialogInfoJwtComponent implements OnInit, OnDestroy {
     });
 
     constructor(@Inject(MAT_DIALOG_DATA) public consumer: string, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
-                private dialogHelper: DialogHelperService, private translate: TranslateService) { }
+                private dialogHelper: DialogHelperService, private translate: TranslateService) {
+    }
 
     ngOnInit(): void {
         this.consumerId = this.consumer['id'];
@@ -122,9 +123,12 @@ export class DialogInfoJwtComponent implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement({
             id: token.id,
             consumerId: this.consumerId,
-            name: this.showKey(token.key, false) + ' [' + this.translate.instant('text.username') + ' ' + this.consumerName + ']'
+            name: this.showKey(token.key, false) + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumerName + ']'
         }, 'jwt')
-            .then(() => { this.getJwtTokens(); })
-            .catch(error => {});
+            .then(() => {
+                this.getJwtTokens();
+            })
+            .catch(error => {
+            });
     }
 }

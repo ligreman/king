@@ -3,6 +3,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {ConnectedGuard} from './guards/connected.guard';
 import {AccessAclsComponent} from './routes/access/access-acls/access-acls.component';
 import {AccessJwtComponent} from './routes/access/access-jwt/access-jwt.component';
+import {AccessBasicComponent} from './routes/access/access-basic/access-basic.component';
 import {AccessKeyComponent} from './routes/access/access-key/access-key.component';
 import {AccessOauth2Component} from './routes/access/access-oauth2/access-oauth2.component';
 import {ElementConsumerComponent} from './routes/access/element-consumer/element-consumer.component';
@@ -29,6 +30,7 @@ const routes: Routes = [
     {path: 'element-consumer', component: ElementConsumerComponent, canActivate: [ConnectedGuard]},
     {path: 'element-vault', component: ElementVaultComponent, canActivate: [ConnectedGuard]},
     {path: 'access-acls', component: AccessAclsComponent, canActivate: [ConnectedGuard]},
+    {path: 'access-basic', component: AccessBasicComponent, canActivate: [ConnectedGuard]},
     {path: 'access-key', component: AccessKeyComponent, canActivate: [ConnectedGuard]},
     {path: 'access-jwt', component: AccessJwtComponent, canActivate: [ConnectedGuard]},
     {path: 'access-oauth2', component: AccessOauth2Component, canActivate: [ConnectedGuard]},

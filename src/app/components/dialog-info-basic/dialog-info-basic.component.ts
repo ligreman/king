@@ -9,15 +9,15 @@ import {ToastService} from '../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
-    selector: 'app-dialog-info-key',
-    templateUrl: './dialog-info-key.component.html',
-    styleUrls: ['./dialog-info-key.component.scss']
+    selector: 'app-dialog-info-basic',
+    templateUrl: './dialog-info-basic.component.html',
+    styleUrls: ['./dialog-info-basic.component.scss']
 })
-export class DialogInfoKeyComponent implements OnInit, OnDestroy {
-    keys;
+export class DialogInfoBasicComponent implements OnInit, OnDestroy {
+    auths;
     loading = true;
-    key = '';
-    ttl = 0;
+    user = '';
+    pass = '';
     consumerId;
     consumerName;
 
@@ -28,7 +28,7 @@ export class DialogInfoKeyComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.consumerId = this.consumer['id'];
         this.consumerName = this.consumer['username'];
-        this.getApiKeys();
+        this.getBasicAuths();
     }
 
     ngOnDestroy(): void {
@@ -37,14 +37,14 @@ export class DialogInfoKeyComponent implements OnInit, OnDestroy {
     /**
      * Obtengo los acls
      */
-    getApiKeys() {
+    getBasicAuths() {
         this.loading = true;
 
         // Recojo los datos del api
-        this.api.getConsumerApiKeys(this.consumerId)
+        this.api.getConsumerBasicAuths(this.consumerId)
             .subscribe({
-                next: (keys) => {
-                    this.keys = keys['data'];
+                next: (auths) => {
+                    this.auths = auths['data'];
                 },
                 error: (error) => this.toast.error_general(error),
                 complete: () =>
@@ -53,49 +53,33 @@ export class DialogInfoKeyComponent implements OnInit, OnDestroy {
     }
 
     /**
-     * Muestra u oculta la api key
-     * @param key Clave
-     * @param hide Mostrar u ocultar
-     */
-    showKey(key, hide) {
-        if (key === null) {
-            return '';
-        }
-
-        if (!hide) {
-            key = key.substring(0, 5).padEnd(key.length, '*');
-        }
-        return key;
-    }
-
-    /**
      * Descarga en formato JSON los datos
      */
     downloadJson() {
-        const blob = new Blob([JSON.stringify(this.keys, null, 2)], {type: 'text/json'});
-        saveAs(blob, 'apikey.consumer_' + this.consumerName + '.json');
+        const blob = new Blob([JSON.stringify(this.auths, null, 2)], {type: 'text/json'});
+        saveAs(blob, 'basicauth.consumer_' + this.consumerName + '.json');
     }
 
     /**
      * Añade un api key al consumidor
      */
-    addApiKeyToConsumer() {
+    addBasicAuthToConsumer() {
         let body = {};
-        if (this.key !== '') {
-            body['key'] = this.key;
+        if (this.user !== '') {
+            body['username'] = this.user;
         }
-        if (this.ttl > 0) {
-            body['ttl'] = this.ttl;
+        if (this.pass !== '') {
+            body['password'] = this.pass;
         }
 
         // Guardo el acl en el consumidor
-        this.api.postConsumerApiKey(this.consumerId, body)
+        this.api.postConsumerBasicAuth(this.consumerId, body)
             .subscribe({
                 next: (res) => {
-                    this.toast.success('text.id_extra', 'success.new_key', {msgExtra: res['id']});
-                    this.getApiKeys();
-                    this.key = '';
-                    this.ttl = 0;
+                    this.toast.success('text.id_extra', 'success.new_basic', {msgExtra: res['id']});
+                    this.getBasicAuths();
+                    this.user = '';
+                    this.pass = '';
                 },
                 error: (error) =>
                     this.toast.error_general(error, {disableTimeOut: true})
@@ -104,16 +88,16 @@ export class DialogInfoKeyComponent implements OnInit, OnDestroy {
 
     /**
      * Elimina un api key
-     * @param apikey api key
+     * @param auth api key
      */
-    deleteApiKey(apikey) {
+    deleteBasicAuth(auth) {
         this.dialogHelper.deleteElement({
-            id: apikey.id,
+            id: auth.id,
             consumerId: this.consumerId,
-            name: this.showKey(apikey.key, false) + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumerName + ']'
-        }, 'key')
+            name: auth.username + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumerName + ']'
+        }, 'basic')
             .then(() => {
-                this.getApiKeys();
+                this.getBasicAuths();
             })
             .catch(() => {
             });

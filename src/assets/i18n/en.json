@@ -21,6 +21,7 @@
         "new_cert": "Certificate created",
         "new_cacert": "CA certificate created",
         "new_acl": "ACL created",
+        "new_basic": "Basic Credential created",
         "new_key": "API Key created",
         "new_jwt": "JWT token created",
         "new_oauth2": "OAuth 2.0 token created",
@@ -44,6 +45,7 @@
         "delete_cert": "Certificate {{extra}} deleted",
         "delete_cacert": "CA certificate {{extra}} deleted",
         "delete_acl": "ACL {{extra}} deleted",
+        "delete_basic": "Basic Credential {{extra}} deleted",
         "delete_jwt": "JWT token {{extra}} removed",
         "delete_oauth2": "OAuth 2.0 token {{extra}} removed",
         "delete_key": "API Key {{extra}} deleted",
@@ -78,7 +80,7 @@
         "enabled": "Habilitado",
         "seconds": "seconds",
         "to": "until",
-        "username": "Username"
+        "consumer": "Consumer"
     },
     "pagination": {
         "itemsPerPageLabel": "Items per page:",
@@ -112,6 +114,8 @@
             "delete_plugin": "Do you want to delete this plugin?",
             "delete_acl_title": "Delete ACL",
             "delete_acl": "Do you want to delete this ACL?",
+            "delete_basic_title": "Delete Basic Auth Credential",
+            "delete_basic": "Do you want to remove this Basic Auth Credential?",
             "delete_jwt_title": "Delete JWT token",
             "delete_jwt": "Do you want to remove this JWT token validation?",
             "delete_oauth2_title": "Eliminate the OAuth 2.0 token",
@@ -148,6 +152,7 @@
             "snis": "SNIs",
             "acl": "Access control",
             "acls": "ACL groups",
+            "basic": "Basic Auth Credentials",
             "keys": "API keys",
             "jwt": "JWT tokens",
             "oauth2": "OAuth 2.0 Credentials",
@@ -631,6 +636,21 @@
             }
         }
     },
+    "basicauth": {
+        "add": "Add Basic Auth",
+        "header": "Basic Auth Credentials",
+        "delete_key": "Remove the Basic Auth Credentials from the consumer",
+        "delete_key_content": "Confirm that you want to remove this Basic Auth Credentials from the consumer.",
+        "explanation": "To add Basic Auth Credentials go to the consumers section",
+        "dialog": {
+            "info": "Consumer`s Basic Auth Credentials",
+            "keys": "Basic Auth Credentials assigned to the consumer",
+            "add_user": "Username",
+            "add_pass": "Password",
+            "error": {
+            }
+        }
+    },
     "apikey": {
         "add": "Add Api Key",
         "header": "API Keys",
@@ -704,6 +724,7 @@
         "no_data_search": "No data matching the filter",
         "explanation": "To add an ACL, API Key or JWT token, you must first add the corresponding plugin to some element",
         "actions": "Actions",
+        "credentials": "Credentials",
         "reload": "Reload data",
         "ssl": "Certificates"
     },

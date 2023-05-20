@@ -135,7 +135,7 @@ export class AccessJwtComponent implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement({
             id: select.id,
             consumerId: select.consumer.id,
-            name: this.showKey(select.key, false) + ' [' + this.translate.instant('text.username') + ' ' + this.consumers[select.consumer.id] + ']'
+            name: this.showKey(select.key, false) + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumers[select.consumer.id] + ']'
         }, 'jwt')
             .then(() => {
                 this.reloadData();

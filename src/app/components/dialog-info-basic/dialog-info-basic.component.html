@@ -1,0 +1,79 @@
+<div fxLayout="column" fxLayoutAlign="start stretch">
+    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+        <span>{{'basicauth.dialog.info' | translate}}</span>
+
+        <span fxFlexAlign="end">
+            <a href="https://docs.konghq.com/hub/kong-inc/basic-auth/" mat-button rel="noopener noreferrer"
+               target="_blank">
+                {{'text.documentation' | translate}}
+                <mat-icon class="mini-icon">open_in_new</mat-icon>
+            </a>
+            <button (click)="downloadJson()" mat-icon-button
+                    matTooltip="{{'dialog.download_json' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>download</mat-icon>
+            </button>
+        </span>
+    </h2>
+
+    <mat-divider class="margin-bottom-20-i"></mat-divider>
+
+    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
+        <p fxFlex="50">
+            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+        </p>
+    </div>
+
+    <div fxFlex>
+        <mat-dialog-content *ngIf="auths && !loading" class="margin-0-i">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div>{{'basicauth.dialog.keys' | translate}}: <span>{{consumerName}}</span></div>
+
+                <div fxFlex="75" fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-form-field fxFlex="40">
+                        <mat-label>{{ 'basicauth.dialog.add_user' | translate}}</mat-label>
+                        <input [(ngModel)]="user" matInput type="text">
+                    </mat-form-field>
+
+                    <mat-form-field fxFlex="40">
+                        <mat-label>{{ 'basicauth.dialog.add_pass' | translate}}</mat-label>
+                        <input [(ngModel)]="pass" matInput type="password">
+                    </mat-form-field>
+
+                    <button (click)="addBasicAuthToConsumer()" color="accent" mat-icon-button
+                            [disabled]="user==='' || pass===''"
+                            matTooltip="{{'basicauth.add' | translate}}"
+                            matTooltipClass="tooltip-teal">
+                        <mat-icon>add</mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <div fxLayout="row">
+                <mat-list fxFlex>
+                    <mat-list-item *ngFor="let auth of auths">
+                        <mat-icon mat-list-icon>face</mat-icon>
+                        <div mat-line>
+                            <span matTooltip="ID: {{auth.id}}"
+                                  matTooltipClass="tooltip-teal">{{auth.username}}</span>
+                            <button (click)="deleteBasicAuth(auth)" color="warn" mat-button mat-icon-button
+                                    matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </mat-dialog-content>
+    </div>
+
+    <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+        <mat-chip-list *ngIf="auths" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
+            <mat-chip *ngFor="let chip of auths['tags']" color="primary">{{chip}}</mat-chip>
+        </mat-chip-list>
+        <div><!-- leave empty --></div>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null"
+                mat-flat-button>{{'text.accept' | translate}}</button>
+    </mat-dialog-actions>
+</div>

@@ -1,11 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { saveAs } from 'file-saver';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../services/api.service';
-import { DialogHelperService } from '../../services/dialog-helper.service';
-import { ToastService } from '../../services/toast.service';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {saveAs} from 'file-saver';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../services/api.service';
+import {DialogHelperService} from '../../services/dialog-helper.service';
+import {ToastService} from '../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -23,7 +23,8 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy {
     consumerName;
 
     constructor(@Inject(MAT_DIALOG_DATA) public consumer: string, private api: ApiService, private toast: ToastService,
-                private dialogHelper: DialogHelperService, private translate: TranslateService) { }
+                private dialogHelper: DialogHelperService, private translate: TranslateService) {
+    }
 
     ngOnInit(): void {
         this.consumerId = this.consumer['id'];
@@ -60,7 +61,9 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy {
                 next: (acls) => {
                     this.acls = acls['data'];
                     let yatengo = [];
-                    this.acls.forEach(one => {yatengo.push(one.group);});
+                    this.acls.forEach(one => {
+                        yatengo.push(one.group);
+                    });
 
                     // Recojo también todos los acls existentes para rellenar el autocomplete
                     this.api.getAcls()
@@ -119,10 +122,13 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement({
             id: acl.id,
             consumerId: this.consumerId,
-            name: acl.group + ' [' + this.translate.instant('text.username') + ' ' + this.consumerName + ']'
+            name: acl.group + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumerName + ']'
         }, 'acl')
-            .then(() => { this.getAcls(); })
-            .catch(error => {});
+            .then(() => {
+                this.getAcls();
+            })
+            .catch(error => {
+            });
     }
 
     private _filterAcls(value) {

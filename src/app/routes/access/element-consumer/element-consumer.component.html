@@ -16,7 +16,8 @@
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>
-            <button (click)="addEditConsumer()" color="accent" fxFlexOffset="5" mat-icon-button matTooltip="{{'consumer.add'| translate}}"
+            <button (click)="addEditConsumer()" color="accent" fxFlexOffset="5" mat-icon-button
+                    matTooltip="{{'consumer.add'| translate}}"
                     matTooltipClass="tooltip-teal">
                 <mat-icon>add</mat-icon>
             </button>
@@ -26,7 +27,8 @@
             </button>
         </div>
 
-        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="username" matSortDirection="asc" matSortDisableClear>
+        <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="username" matSortDirection="asc"
+               matSortDisableClear>
             <!-- ID Column -->
             <ng-container matColumnDef="id">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'text.id' | translate}}</th>
@@ -48,15 +50,17 @@
                 <td *matCellDef="let row" mat-cell>{{(row.tags || []).join(', ')}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="actions">
-                <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
+            <ng-container matColumnDef="credentials">
+                <th *matHeaderCellDef mat-header-cell>{{'element.credentials' | translate}}</th>
                 <td *matCellDef="let row" mat-cell>
-                    <button (click)="infoAcls(row)" [disabled]="!isPluginActive('acl')" mat-icon-button
-                            matTooltip="{{'acl.dialog.info' | translate}}"
+                    <button (click)="infoBasicAuth(row)"
+                            [disabled]="!(isPluginActive('basic-auth'))" mat-icon-button
+                            matTooltip="{{'basicauth.dialog.info' | translate}}"
                             matTooltipClass="tooltip-teal">
-                        <mat-icon>people</mat-icon>
+                        <mat-icon>face</mat-icon>
                     </button>
-                    <button (click)="infoApiKeys(row)" [disabled]="!(isPluginActive('key-auth') || isPluginActive('key-auth-enc'))" mat-icon-button
+                    <button (click)="infoApiKeys(row)"
+                            [disabled]="!(isPluginActive('key-auth') || isPluginActive('key-auth-enc'))" mat-icon-button
                             matTooltip="{{'apikey.dialog.info' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>vpn_key</mat-icon>
@@ -71,11 +75,24 @@
                             matTooltipClass="tooltip-teal">
                         <mat-icon>motion_photos_auto</mat-icon>
                     </button>
-                    <button (click)="addEditConsumer(row)" color="accent" mat-icon-button matTooltip="{{'text.edit' | translate}}"
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="actions">
+                <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
+                <td *matCellDef="let row" mat-cell>
+                    <button (click)="infoAcls(row)" [disabled]="!isPluginActive('acl')" mat-icon-button
+                            matTooltip="{{'acl.dialog.info' | translate}}"
+                            matTooltipClass="tooltip-teal">
+                        <mat-icon>people</mat-icon>
+                    </button>
+                    <button (click)="addEditConsumer(row)" color="accent" mat-icon-button
+                            matTooltip="{{'text.edit' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <button (click)="delete(row)" color="warn" mat-icon-button matTooltip="{{'text.delete' | translate}}"
+                    <button (click)="delete(row)" color="warn" mat-icon-button
+                            matTooltip="{{'text.delete' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>delete</mat-icon>
                     </button>
@@ -88,7 +105,9 @@
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
                 <td *ngIf="input.value === ''" class="mat-cell" colspan="5">{{'element.no_data' | translate}}</td>
-                <td *ngIf="input.value !== ''" class="mat-cell" colspan="5">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
+                <td *ngIf="input.value !== ''" class="mat-cell" colspan="5">{{'element.no_data_search' | translate}}
+                    "{{input.value}}"
+                </td>
             </tr>
         </table>
 

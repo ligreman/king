@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../../services/api.service';
-import { DialogHelperService } from '../../../services/dialog-helper.service';
-import { ToastService } from '../../../services/toast.service';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {Router} from '@angular/router';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../../services/api.service';
+import {DialogHelperService} from '../../../services/dialog-helper.service';
+import {ToastService} from '../../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -15,7 +15,7 @@ import { ToastService } from '../../../services/toast.service';
     styleUrls: ['./element-consumer.component.scss']
 })
 export class ElementConsumerComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['id', 'username', 'custom_id', 'tags', 'actions'];
+    displayedColumns: string[] = ['id', 'username', 'custom_id', 'tags', 'credentials', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -111,7 +111,8 @@ export class ElementConsumerComponent implements OnInit, OnDestroy {
                     this.reloadData(true);
                 }
             })
-            .catch(error => {});
+            .catch(error => {
+            });
     }
 
     /**
@@ -120,8 +121,11 @@ export class ElementConsumerComponent implements OnInit, OnDestroy {
      */
     delete(select) {
         this.dialogHelper.deleteElement(select, 'consumer')
-            .then(() => { this.reloadData(); })
-            .catch(error => {});
+            .then(() => {
+                this.reloadData();
+            })
+            .catch(error => {
+            });
     }
 
     /**
@@ -130,6 +134,14 @@ export class ElementConsumerComponent implements OnInit, OnDestroy {
      */
     infoAcls(select) {
         this.dialogHelper.showInfoElement(select, 'acl');
+    }
+
+    /**
+     * Muestra la info de Basic Auth del elemento seleccionado
+     * @param select Elemento a ver su info
+     */
+    infoBasicAuth(select) {
+        this.dialogHelper.showInfoElement(select, 'basic');
     }
 
     /**
@@ -155,7 +167,6 @@ export class ElementConsumerComponent implements OnInit, OnDestroy {
     infoOAuthApps(select) {
         this.dialogHelper.showInfoElement(select, 'oauth2');
     }
-
 
 
     /**

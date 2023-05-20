@@ -135,7 +135,7 @@ export class AccessOauth2Component implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement({
             id: select.id,
             consumerId: select.consumer.id,
-            name: select.name + ' [' + this.translate.instant('text.username') + ' ' + this.consumers[select.consumer.id] + ']'
+            name: select.name + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumers[select.consumer.id] + ']'
         }, 'oauth2')
             .then(() => {
                 this.reloadData();
