@@ -47,7 +47,9 @@ jobs:
         docker rm king-export
 
     - name: Create zip file
-      run: zip -r ${{ github.workspace }}/King-for-Kong-${{ steps.taggerDryRun.outputs.new_tag }}.zip ${{ github.workspace }}/dist/*
+      run: |
+        cd ${{ github.workspace }}/dist/
+        zip -r ${{ github.workspace }}/King-for-Kong-${{ steps.taggerDryRun.outputs.new_tag }}.zip
     # Build
 
     - name: Minor version for each merge
