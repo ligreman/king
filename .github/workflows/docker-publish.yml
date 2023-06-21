@@ -1,0 +1,36 @@
+name: Docker Publish
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Configure Docker login for GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Extract tag name
+        id: extract_tag
+        run: echo "::set-output name=tag::${GITHUB_REF#refs/tags/}"
+
+      - name: Build and push Docker image
+        env:
+          IMAGE_NAME: king-for-kong
+          DOCKER_REPO: ghcr.io/${{ github.repository_owner }}/${{ github.repository_name }}
+          TAG: ${{ steps.extract_tag.outputs.tag }}
+        run: |
+          docker buildx create --use
+          docker buildx build --platform linux/amd64,linux/arm64 --push -t $DOCKER_REPO:$TAG .
+
