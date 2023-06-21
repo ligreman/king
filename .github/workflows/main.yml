@@ -47,7 +47,7 @@ jobs:
         docker rm king-export
 
     - name: Create zip file
-      run: zip -r -j King-for-Kong-v0.2.3.zip ${{ github.workspace }}/dist/*
+      run: zip -r King-for-Kong-v0.2.3.zip ${{ github.workspace }}/dist/*
     # Build
 
     - name: Minor version for each merge
