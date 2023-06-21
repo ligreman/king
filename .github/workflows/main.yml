@@ -43,8 +43,11 @@ jobs:
         docker build -t $DOCKER_REPO/$IMAGE_NAME:$TAG .
         docker push $DOCKER_REPO/$IMAGE_NAME:$TAG
         docker create --name king-export $DOCKER_REPO/$IMAGE_NAME:$TAG
-        docker cp king-export:/usr/share/nginx/html - | zip -r -q -@ King-for-Kong-$TAG.zip
+        docker cp king-export:/usr/share/nginx/html ${{ github.workspace }}/dist
         docker rm king-export
+
+    - name: Create zip file
+      run: zip -r -j King-for-Kong-v0.2.3.zip ${{ github.workspace }}/dist/*
     # Build
 
     - name: Minor version for each merge
