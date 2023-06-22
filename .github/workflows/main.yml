@@ -43,8 +43,12 @@ jobs:
         docker build -t $DOCKER_REPO/$IMAGE_NAME:$TAG .
         docker push $DOCKER_REPO/$IMAGE_NAME:$TAG
         docker create --name king-export $DOCKER_REPO/$IMAGE_NAME:$TAG
-        docker cp king-export:/usr/share/nginx/html/* - | zip > King-for-Kong-$TAG.zip
+        docker cp king-export:/usr/share/nginx/html ./dist
         docker rm king-export
+
+    - name: zip folder
+      run: |
+        (cd ./dist && zip -r ../King-for-Kong-${{ steps.taggerDryRun.outputs.new_tag }}.zip .)
     # Build
 
     - name: Minor version for each merge
@@ -62,4 +66,4 @@ jobs:
         prerelease: false
         title: "Release ${{ steps.taggerDryRun.outputs.new_tag }}"
         files: |
-          King-for-Kong-${{ steps.taggerDryRun.outputs.new_tag }}.zip
+          ./King-for-Kong-${{ steps.taggerDryRun.outputs.new_tag }}.zip
