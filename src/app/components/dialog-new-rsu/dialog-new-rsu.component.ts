@@ -1,17 +1,18 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { max as _max, min as _min, sortedUniq as _sortedUniq } from 'lodash';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { forkJoin } from 'rxjs';
-import { ApiService } from '../../services/api.service';
-import { DialogHelperService } from '../../services/dialog-helper.service';
-import { GlobalsService } from '../../services/globals.service';
-import { ToastService } from '../../services/toast.service';
-import { CustomValidators } from '../../shared/custom-validators';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {max as _max, min as _min, sortedUniq as _sortedUniq} from 'lodash';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {forkJoin} from 'rxjs';
+import {ApiService} from '../../services/api.service';
+import {DialogHelperService} from '../../services/dialog-helper.service';
+import {GlobalsService} from '../../services/globals.service';
+import {ToastService} from '../../services/toast.service';
+import {CustomValidators} from '../../shared/custom-validators';
+import {Utils} from '../../shared/utils';
 
 @AutoUnsubscribe()
 @Component({
@@ -58,32 +59,55 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         })
     }, {validators: [FinalFormValidator()]});
 
-    constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private globals: GlobalsService, private toast: ToastService, public dialogRef: MatDialogRef<DialogNewRsuComponent>, private dialogHelper: DialogHelperService) { }
+    constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private globals: GlobalsService, private toast: ToastService, public dialogRef: MatDialogRef<DialogNewRsuComponent>, private dialogHelper: DialogHelperService) {
+    }
 
     /*
         Getters de campos del formulario
      */
-    get nameField() { return this.form.get('name'); }
+    get nameField() {
+        return this.form.get('name');
+    }
 
-    get serviceProtocolField() { return this.form.get('service.protocol'); }
+    get serviceProtocolField() {
+        return this.form.get('service.protocol');
+    }
 
-    get serviceHostField() { return this.form.get('service.host'); }
+    get serviceHostField() {
+        return this.form.get('service.host');
+    }
 
-    get servicePortField() { return this.form.get('service.port'); }
+    get servicePortField() {
+        return this.form.get('service.port');
+    }
 
-    get servicePathField() { return this.form.get('service.path'); }
+    get servicePathField() {
+        return this.form.get('service.path');
+    }
 
-    get serviceRetriesField() { return this.form.get('service.retries'); }
+    get serviceRetriesField() {
+        return this.form.get('service.retries');
+    }
 
-    get serviceTimeoutsField() { return this.form.get('service.timeouts'); }
+    get serviceTimeoutsField() {
+        return this.form.get('service.timeouts');
+    }
 
-    get routeProtocolsField() { return this.form.get('route.protocols'); }
+    get routeProtocolsField() {
+        return this.form.get('route.protocols');
+    }
 
-    get routeExpressionField() { return this.form.get('route.expression'); }
+    get routeExpressionField() {
+        return this.form.get('route.expression');
+    }
 
-    get routePriorityField() { return this.form.get('route.priority'); }
+    get routePriorityField() {
+        return this.form.get('route.priority');
+    }
 
-    get targetsField() { return this.form.get('upstream.targets');}
+    get targetsField() {
+        return this.form.get('upstream.targets');
+    }
 
     ngOnInit(): void {
         this.dialogHelper.getRouterMode().then(() => {
@@ -166,12 +190,15 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         }
     }
 
-    btnExp(transform, field, op, value): void {
+    btnExp(transform, field, op, value, type): void {
         let out = '';
 
         value = value.replace(/"/g, '').replace(/'/g, '');
-        // Si no tiene comillas dobles las añado
-        value = '"' + value + '"';
+
+        if (type === 'string') {
+            // Si no tiene comillas dobles las añado, si es un string lo esperado
+            value = '"' + value + '"';
+        }
 
         if (field && op && value) {
             out = field;
@@ -202,6 +229,11 @@ export class DialogNewRsuComponent implements OnInit, OnDestroy {
         let slotis = body.upstream.targets * 100;
         slotis = _max([10, slotis]);
         slotis = _min([65536, slotis]);
+
+        // If host is an IP the upstream creation will fail. I convert it to a hostname
+        if (Utils.isIp(body.service.host)) {
+            body.service.host += '.upstream';
+        }
 
         return {
             service: {

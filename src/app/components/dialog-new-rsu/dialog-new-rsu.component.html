@@ -1,17 +1,20 @@
 <h2 class="margin-bottom-5-i" fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
     <span>{{'rsu.dialog.create' | translate}}</span>
     <span>
-        <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-route" mat-button rel="noopener noreferrer" target="_blank">
+        <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-route" mat-button rel="noopener noreferrer"
+                 target="_blank">
         {{'text.documentation' | translate}}
             <mat-icon class="mini-icon color-route">timeline</mat-icon>
             <mat-icon class="mini-icon">open_in_new</mat-icon>
         </a></span>
-        <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-service" mat-button rel="noopener noreferrer" target="_blank">
+        <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-service" mat-button
+                 rel="noopener noreferrer" target="_blank">
         {{'text.documentation' | translate}}
             <mat-icon class="mini-icon color-service">memory</mat-icon>
             <mat-icon class="mini-icon">open_in_new</mat-icon>
         </a></span>
-        <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-upstream" mat-button rel="noopener noreferrer" target="_blank">
+        <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-upstream" mat-button
+                 rel="noopener noreferrer" target="_blank">
         {{'text.documentation' | translate}}
             <mat-icon class="mini-icon color-upstream">share</mat-icon>
             <mat-icon class="mini-icon">open_in_new</mat-icon>
@@ -30,7 +33,8 @@
 
                     <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="50">
                         <mat-label>{{'text.name' | translate}}</mat-label>
-                        <input aria-label="" cdkFocusInitial formControlName="name" matInput placeholder="{{'text.name' | translate}}"
+                        <input aria-label="" cdkFocusInitial formControlName="name" matInput
+                               placeholder="{{'text.name' | translate}}"
                                required type="text"/>
                         <mat-error *ngIf="nameField.hasError('required')">
                             {{ 'error.field_required' | translate }}
@@ -85,9 +89,11 @@
 
                     <!--    Strip path-->
                     <div class="margin-bottom-10" fxFlex="23" fxLayout="row" fxLayoutAlign="start center">
-                        <mat-checkbox formControlName="strip_path">{{'route.dialog.strip_path' | translate}}</mat-checkbox>
+                        <mat-checkbox
+                            formControlName="strip_path">{{'route.dialog.strip_path' | translate}}</mat-checkbox>
                         <mat-icon class="margin-left-10" matSuffix
-                                  matTooltip="{{'route.dialog.strip_path_tooltip' | translate}}" matTooltipClass="tooltip-teal">info_outline
+                                  matTooltip="{{'route.dialog.strip_path_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
                         </mat-icon>
                     </div>
                 </div>
@@ -103,20 +109,26 @@
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="standard" color="accent" fxFlex="15">
-                        <mat-select #efield (selectionChange)="changeEField(efield.value)" placeholder="{{ 'route.dialog.field' | translate}}">
-                            <mat-option *ngFor="let proto of validEFields" [value]="proto">{{ 'route.dialog.field_' + proto | translate}}</mat-option>
+                        <mat-select #efield (selectionChange)="changeEField(efield.value)"
+                                    placeholder="{{ 'route.dialog.field' | translate}}">
+                            <mat-option *ngFor="let proto of validEFields"
+                                        [value]="proto">{{ 'route.dialog.field_' + proto | translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="standard" color="accent" fxFlex="10">
                         <mat-select #eop placeholder="{{ 'route.dialog.operator' | translate}}">
-                            <mat-option *ngFor="let proto of validEOpsStrings" [fxShow]="eType==='string'" [value]="proto">{{proto}}</mat-option>
-                            <mat-option *ngFor="let proto of validEOpsIntegers" [fxShow]="eType==='int'" [value]="proto">{{proto}}</mat-option>
+                            <mat-option *ngFor="let proto of validEOpsStrings" [fxShow]="eType==='string'"
+                                        [value]="proto">{{proto}}</mat-option>
+                            <mat-option *ngFor="let proto of validEOpsIntegers" [fxShow]="eType==='int'"
+                                        [value]="proto">{{proto}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <mat-form-field appearance="standard" color="accent" fxFlex="25">
-                        <input #evalue aria-label="" matInput placeholder="{{ 'route.dialog.value' | translate}}" type="text"/>
+                        <input #evalue aria-label="" matInput placeholder="{{ 'route.dialog.value' | translate}}"
+                               type="text"/>
                     </mat-form-field>
-                    <button (click)="btnExp(etransform.value,efield.value,eop.value,evalue.value)" color="accent" mat-icon-button>
+                    <button (click)="btnExp(etransform.value,efield.value,eop.value,evalue.value, eType)" color="accent"
+                            mat-icon-button>
                         <mat-icon>add</mat-icon>
                     </button>
                     <button (click)="btnAppend('(')" aria-label="" color="accent" mat-icon-button>(</button>
@@ -165,7 +177,8 @@
                     </mat-form-field>
                     <mat-form-field appearance="outline" color="accent" fxFlex="35">
                         <mat-label>{{'service.dialog.host' | translate}}</mat-label>
-                        <input aria-label="" formControlName="host" matInput placeholder="{{'service.dialog.host_example' | translate}}" required
+                        <input aria-label="" formControlName="host" matInput
+                               placeholder="{{'service.dialog.host_example' | translate}}" required
                                type="text"/>
                         <mat-error *ngIf="serviceHostField.invalid">
                             {{ 'error.field_required' | translate }}
@@ -173,7 +186,8 @@
                     </mat-form-field>
                     <mat-form-field appearance="outline" color="accent" fxFlex="15">
                         <mat-label>{{'service.dialog.port' | translate}}</mat-label>
-                        <input aria-label="" formControlName="port" matInput placeholder="{{'service.dialog.port_example' | translate}}" required
+                        <input aria-label="" formControlName="port" matInput
+                               placeholder="{{'service.dialog.port_example' | translate}}" required
                                type="number"/>
                         <mat-error *ngIf="servicePortField.invalid">
                             {{ 'service.dialog.error.port_min_max' | translate }}
@@ -181,7 +195,8 @@
                     </mat-form-field>
                     <mat-form-field appearance="outline" color="accent" fxFlex="30">
                         <mat-label>{{'service.dialog.path' | translate}}</mat-label>
-                        <input aria-label="" formControlName="path" matInput placeholder="{{'service.dialog.path_example' | translate}}"
+                        <input aria-label="" formControlName="path" matInput
+                               placeholder="{{'service.dialog.path_example' | translate}}"
                                type="text"/>
                         <mat-error *ngIf="servicePathField.invalid">
                             {{ 'service.dialog.error.path_pattern' | translate }}

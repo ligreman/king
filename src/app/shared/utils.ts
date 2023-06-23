@@ -1,3 +1,5 @@
+import * as Joi from "joi";
+
 export class Utils {
     static calculateHash(text: string) {
         let hash = 0;
@@ -9,5 +11,22 @@ export class Utils {
         }
 
         return hash;
+    }
+
+
+    // Comprueba si es una IP
+    static isIp(value: string, allowEmpty?: boolean): boolean {
+        let valid = true;
+
+        try {
+            if (allowEmpty) {
+                Joi.assert(value, Joi.string().ip().allow(''));
+            } else {
+                Joi.assert(value, Joi.string().ip());
+            }
+        } catch (e) {
+            valid = false;
+        }
+        return valid;
     }
 }
