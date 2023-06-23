@@ -12,15 +12,20 @@
 
             <mat-form-field *ngIf="field.type === 'string'" appearance="outline" color="accent" fxFlex="100">
                 <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
-                <input [formControl]="getField(field.field)" [required]="field.required" matInput type="{{ isPassword(field.field) ? 'password' : 'text' }}"/>
+                <input [formControl]="getField(field.field)" [required]="field.required" matInput
+                       type="{{ isPassword(field.field) ? 'password' : 'text' }}"/>
             </mat-form-field>
 
             <mat-form-field *ngIf="field.type === 'number'" appearance="outline" color="accent" fxFlex="100">
                 <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
                 <input [formControl]="getField(field.field)" [required]="field.required" matInput type="number"/>
                 <mat-hint *ngIf="field.hint">
-                    <span *ngIf="field.hint[0]==null && field.hint[1]!==null">{{ 'plugin.dialog.max' | translate:{max: field.hint[1]} }}. </span>
-                    <span *ngIf="field.hint[0]!==null && field.hint[1]==null">{{ 'plugin.dialog.min' | translate:{min: field.hint[0]} }}. </span>
+                    <span
+                        *ngIf="field.hint[0]==null && field.hint[1]!==null">{{ 'plugin.dialog.max' | translate:{max: field.hint[1]} }}
+                        . </span>
+                    <span
+                        *ngIf="field.hint[0]!==null && field.hint[1]==null">{{ 'plugin.dialog.min' | translate:{min: field.hint[0]} }}
+                        . </span>
                     <span *ngIf="field.hint[0]!==null && field.hint[1]!==null">
                         {{ 'plugin.dialog.min_max' | translate:{min: field.hint[0], max: field.hint[1]} }}</span>
                 </mat-hint>
@@ -34,14 +39,16 @@
                 </mat-select>
             </mat-form-field>
 
-            <div *ngIf="field.type === 'boolean'" class="margin-bottom-20-i" fxFlex="100" fxLayout="row" fxLayoutAlign="start center">
-                <mat-checkbox [formControl]="getField(field.field)">{{formatText(field.field) | titlecase}}</mat-checkbox>
+            <div *ngIf="field.type === 'boolean'" class="margin-bottom-20-i" fxFlex="100" fxLayout="row"
+                 fxLayoutAlign="start center">
+                <mat-checkbox
+                    [formControl]="getField(field.field)">{{formatText(field.field) | titlecase}}</mat-checkbox>
             </div>
 
             <ng-container *ngIf="field.type === 'map'">
                 <mat-form-field appearance="outline" color="accent" fxFlex="100">
                     <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
-                    <textarea [formControl]="getField(field.field)" [required]="field.required" matInput></textarea>
+                    <input [formControl]="getField(field.field)" [required]="field.required" matInput/>
                     <mat-hint>{{ 'plugin.dialog.map' | translate }}</mat-hint>
                 </mat-form-field>
             </ng-container>
@@ -55,7 +62,8 @@
 
             <ng-container *ngIf="field.type === 'record'">
                 <!-- Recursivo, concatenando el grupo -->
-                <app-plugin-form-fields [currentGroup]="field.field" [fields]="field.child_fields" [group]="group + '.' + field.field"
+                <app-plugin-form-fields [currentGroup]="field.field" [fields]="field.child_fields"
+                                        [group]="group + '.' + field.field"
                                         [parentForm]="parentForm"></app-plugin-form-fields>
             </ng-container>
 
@@ -68,7 +76,8 @@
                         <div *ngFor="let childF of field.child_fields">
                             <mat-form-field *ngIf="childF.type === 'string'" appearance="outline" color="accent">
                                 <mat-label>{{formatText(childF.name) | titlecase}}</mat-label>
-                                <mat-select [(ngModel)]="arrayRecordsFields[field.field][childF.name]" [ngModelOptions]="{standalone: true}"
+                                <mat-select [(ngModel)]="arrayRecordsFields[field.field][childF.name]"
+                                            [ngModelOptions]="{standalone: true}"
                                             [required]="childF.required">
                                     <mat-option *ngIf="!childF.required" value=""></mat-option>
                                     <mat-option *ngFor="let opt of childF.one_of" value="{{opt}}">{{opt}}</mat-option>
@@ -77,19 +86,22 @@
 
                             <mat-form-field *ngIf="childF.type === 'number'" appearance="outline" color="accent">
                                 <mat-label>{{formatText(childF.name) | titlecase}}</mat-label>
-                                <input [(ngModel)]="arrayRecordsFields[field.field][childF.name]" [ngModelOptions]="{standalone: true}"
+                                <input [(ngModel)]="arrayRecordsFields[field.field][childF.name]"
+                                       [ngModelOptions]="{standalone: true}"
                                        [required]="childF.required" matInput type="number"/>
                             </mat-form-field>
 
                             <mat-form-field *ngIf="childF.type === 'boolean'" appearance="outline" color="accent">
-                                <mat-checkbox [(ngModel)]="arrayRecordsFields[field.field][childF.name]" [ngModelOptions]="{standalone: true}"
+                                <mat-checkbox [(ngModel)]="arrayRecordsFields[field.field][childF.name]"
+                                              [ngModelOptions]="{standalone: true}"
                                               [required]="childF.required">
                                     {{formatText(childF.name) | titlecase}}</mat-checkbox>
                             </mat-form-field>
 
                             <mat-form-field *ngIf="childF.type === 'array'" appearance="outline" color="accent">
                                 <mat-label>{{formatText(childF.name) | titlecase}}</mat-label>
-                                <input [(ngModel)]="arrayRecordsFields[field.field][childF.name]" [ngModelOptions]="{standalone: true}"
+                                <input [(ngModel)]="arrayRecordsFields[field.field][childF.name]"
+                                       [ngModelOptions]="{standalone: true}"
                                        [required]="childF.required" matInput type="text"/>
                                 <mat-hint>{{'plugin.dialog.comma_separated_hint' | translate}}</mat-hint>
                             </mat-form-field>
@@ -97,11 +109,13 @@
                     </div>
                     <div fxLayout="column">
                         <div fxLayout="row">
-                            <button (click)="addToArrayRecord(field.field)" color="accent" fxFlex="75" mat-button matSuffix>
+                            <button (click)="addToArrayRecord(field.field)" color="accent" fxFlex="75" mat-button
+                                    matSuffix>
                                 {{ 'plugin.dialog.add_to_list' | translate }}
                                 <mat-icon>add</mat-icon>
                             </button>
-                            <button (click)="cleanArrayRecords(field.field)" color="warn" fxFlex="25" mat-button matSuffix>
+                            <button (click)="cleanArrayRecords(field.field)" color="warn" fxFlex="25" mat-button
+                                    matSuffix>
                                 {{ 'plugin.dialog.clean_list' | translate }}
                                 <mat-icon>clear</mat-icon>
                             </button>
@@ -109,7 +123,8 @@
                         <!--    textarea de resultado (un json string por línea)-->
                         <mat-form-field appearance="outline" color="accent" fxFlex="100">
                             <mat-label>{{formatText(field.field) | titlecase}}</mat-label>
-                            <textarea [(ngModel)]="arrayRecordsValuesString[field.field]" [ngModelOptions]="{standalone: true}"
+                            <textarea [(ngModel)]="arrayRecordsValuesString[field.field]"
+                                      [ngModelOptions]="{standalone: true}"
                                       id="array-records-{{getIdArray(field.field)}}" matInput rows="5"></textarea>
                         </mat-form-field>
                     </div>

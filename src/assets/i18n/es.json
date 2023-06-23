@@ -536,10 +536,14 @@
             "min": "Número mayor de {{min}}",
             "max": "Número menor de {{max}}",
             "min_max": "Número entre {{min}} y {{max}}",
-            "map": "Formato a usar -> campo.subcampo:valor",
+            "map": "Formato JSON. Ejemplo -> {\"request.headers\":\"return nil\"}",
             "add_to_list": "Añadir a la lista",
             "clean_list": "Vaciar la lista",
             "comma_separated_hint": "Valores separados por comas"
+        },
+        "error": {
+            "map": "El campo {{field}} debe ser un JSON válido",
+            "readMap": "Error leyendo el campo {{field}}: no es un JSON válido"
         }
     },
     "target": {
