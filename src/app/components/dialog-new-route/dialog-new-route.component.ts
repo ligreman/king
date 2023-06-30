@@ -32,13 +32,13 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
     validEOpsIntegers = ['==', '!=', '>', '>=', '<', '<='];
     eType = 'string';
     allTags = [];
+    routes = [];
     currentTags = [];
     currentHosts = [];
     currentPaths = [];
     currentHeaders = {};
     currentSources = [];
     currentDestinations = [];
-
     servicesAvailable = [];
     snisAvailable = [];
     editMode = false;
@@ -78,6 +78,24 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
         sources: [''],
         destinations: ['']
     }, {validators: [FinalFormValidator(this.expressions)]});
+
+    onRouteChange(event) {
+        // Find the selected route in the routes array
+        const selectedRoute = this.routes.find(route => route.id === event.value);
+        const selectedRouteCopy = { ...selectedRoute };
+
+        if (selectedRoute) {
+            // Prepare the data for the form based on the selected route
+            const formData = this.prepareDataForForm(selectedRouteCopy);
+    
+            // Update the form with the data from the selected route
+            if (this.expressions) {
+                this.formE.patchValue(formData);
+            } else {
+                this.formNE.patchValue(formData);
+            }
+        }
+    }
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
@@ -220,6 +238,15 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
                 this.allTags.sort();
                 this.allTags = _sortedUniq(this.allTags);
             });
+        
+        // Retrieve the list of routes
+        this.api.getRoutes()
+        .subscribe({
+            next: (routes) => {
+                this.routes = routes['data'];
+            },
+            error: (error) => this.toast.error_general(error)
+        });
     }
 
     /*

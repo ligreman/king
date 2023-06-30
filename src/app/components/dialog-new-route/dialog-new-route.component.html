@@ -11,10 +11,21 @@
 <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="90">
         <form [formGroup]="expressions?formE:formNE">
+            <div class="margin-bottom-10" fxLayout="column" *ngIf="!editMode">
+            <!-- Dropdown for Route names -->
+            <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="50">
+                <mat-label>{{'Templates' | translate}}</mat-label>
+                <mat-select (selectionChange)="onRouteChange($event)">
+                    <mat-option *ngFor="let route of routes" [value]="route.id">
+                        {{route.name}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            </div>
+
             <!--Nombre-->
             <div class="margin-bottom-10" fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="space-between start">
-
                     <!--NAME-->
                     <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="50">
                         <mat-label>{{'route.dialog.name' | translate}}</mat-label>

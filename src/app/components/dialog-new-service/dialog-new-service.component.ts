@@ -26,6 +26,7 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
     allTags = [];
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+    services = [];
 
     form = this.fb.group({
         name: ['', [Validators.required, CustomValidators.isAlphaNum()]],
@@ -46,6 +47,20 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
         ca_certificates: [''],
         tags: ['']
     }, {validators: [ProtocolPathValidator()]});
+
+    onServiceChange(event) {
+        // Find the selected route in the routes array
+        const selectedService = this.services.find(svc => svc.id === event.value);
+        const selectedServiceCopy = { ...selectedService };
+
+        if (selectedService) {
+            // Prepare the data for the form based on the selected route
+            const formData = this.prepareDataForForm(selectedServiceCopy);
+    
+            // Update the form with the data from the selected route
+            this.form.patchValue(formData);
+        }
+    }
 
     constructor(@Inject(MAT_DIALOG_DATA) public serviceIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
                 public dialogRef: MatDialogRef<DialogNewServiceComponent>) { }
@@ -134,6 +149,15 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
                 });
                 this.allTags.sort();
                 this.allTags = _sortedUniq(this.allTags);
+            });
+
+        // Retrieve the list of services
+        this.api.getServices()
+            .subscribe({
+                next: (ss) => {
+                    this.services = ss['data'];
+                },
+                error: () => this.toast.error('error.node_connection'),
             });
     }
 
