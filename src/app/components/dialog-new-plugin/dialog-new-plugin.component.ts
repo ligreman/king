@@ -45,7 +45,21 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     arrayOfRecords = [];
     mapFields = [];
     fieldTypes = {};
+    plugins = [];
+
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+    onPluginChange(event) {
+        // Find the selected route in the routes array
+        const selectedPlugin = this.plugins.find(plugin => plugin.id === event.value);
+        const selectedPluginCopy = { ...selectedPlugin };
+
+        if (selectedPlugin) {
+            // Prepare the data for the form based on the selected route
+            this.nameField.setValue(selectedPluginCopy['name']);
+            this.pluginChange(selectedPluginCopy);
+        }
+    }
 
     form = this.fb.group({
         name: ['', [Validators.required]],
@@ -102,14 +116,16 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             this.api.getServices(),
             this.api.getRoutes(),
             this.api.getConsumers(),
-            this.api.getPluginsEnabled()
-        ]).pipe(map(([services, routes, consumers, plugins]) => {
+            this.api.getPluginsEnabled(),
+            this.api.getPlugins()
+        ]).pipe(map(([services, routes, consumers, pluginsList, plugins]) => {
             // forkJoin returns an array of values, here we map those values to an object
             return {
                 services: services['data'],
                 routes: routes['data'],
                 consumers: consumers['data'],
-                plugins: plugins['enabled_plugins']
+                pluginsList: pluginsList['enabled_plugins'],
+                plugins: plugins['data']
             };
         })).subscribe((value) => {
             value.services = _orderBy(value.services, ['name'], ['asc']);
@@ -119,7 +135,8 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             this.servicesList = value.services;
             this.routesList = value.routes;
             this.consumersList = value.consumers;
-            this.pluginsList = value.plugins.sort();
+            this.pluginsList = value.pluginsList.sort();
+            this.plugins = value.plugins;
 
             // ¿vienen datos extra con el service, route o consumer ya elegido?
             if (this.pluginData !== null && this.pluginData.extras !== null) {
@@ -436,7 +453,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         // Genero el formulario dinámico
         let dConfig = this.fb.group({});
         let formFields = [];
-
+        
         schema.forEach(element => {
             const keys = Object.getOwnPropertyNames(element);
             const field = keys[0];
@@ -567,7 +584,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                     // Requerido
                     if (value.required) {
                         // Si el valor por defecto es un array vacío, quito el requerido
-                        if (value.default.length === 0) {
+                        if (value.default !== undefined && value.default !== null && value.default.length === 0) {
                             value.required = false;
                         } else {
                             validators.push(Validators.required);
@@ -639,7 +656,6 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         this.routeField.enable();
         this.consumerField.enable();
         this.validProtocols = this.defaultProtocols;
-
         schema.fields.forEach(field => {
             if (field['protocols'] && field['protocols']['elements'] && field['protocols']['elements']['one_of']) {
                 this.validProtocols = field['protocols']['elements']['one_of'];
@@ -657,12 +673,14 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                 res = field['config'].fields;
             }
         });
-
         return res;
     }
 
     createDocLink(plugin: string): string {
         let url = 'https://docs.konghq.com/hub/kong-inc/' + plugin;
+        if (plugin === 'jwt-keycloak'){
+            url = 'https://github.com/hanfi/kong-plugin-jwt-keycloak/blob/master/README.md';
+        }
 
         if (plugin === 'proxy-cache-redis') {
             url = 'https://github.com/ligreman/kong-proxy-cache-redis-plugin/blob/master/README.md';

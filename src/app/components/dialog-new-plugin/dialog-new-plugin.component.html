@@ -11,6 +11,17 @@
 <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="90">
         <form [formGroup]="form">
+            <!-- Dropdown for Plugin names -->
+            <div class="margin-bottom-10" fxLayout="column" *ngIf="!editMode">
+                <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="50">
+                    <mat-label>{{'Templates' | translate}}</mat-label>
+                    <mat-select (selectionChange)="onPluginChange($event)">
+                        <mat-option *ngFor="let plugin of plugins" [value]="plugin.id">
+                            {{plugin.instance_name}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
             <!--Nombre-->
             <div class="margin-bottom-10" fxLayout="column">
                 <div fxLayout="row" fxLayoutAlign="space-between center">
