@@ -80,7 +80,9 @@
         "enabled": "Habilitado",
         "seconds": "segundos",
         "to": "hasta",
-        "consumer": "Consumidor"
+        "consumer": "Consumidor",
+        "templates": "Plantillas disponibles",
+        "templates_hint": "Puedes usar un elemento creado previamente como plantilla para el nuevo"
     },
     "pagination": {
         "itemsPerPageLabel": "Elementos por página:",

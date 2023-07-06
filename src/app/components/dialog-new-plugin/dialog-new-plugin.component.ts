@@ -39,7 +39,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     servicesList;
     routesList;
     consumersList;
-    pluginsList;
+    pluginsEnabled;
     pluginForm = [];
     arrayOfStrings = [];
     arrayOfRecords = [];
@@ -52,7 +52,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     onPluginChange(event) {
         // Find the selected route in the routes array
         const selectedPlugin = this.plugins.find(plugin => plugin.id === event.value);
-        const selectedPluginCopy = { ...selectedPlugin };
+        const selectedPluginCopy = {...selectedPlugin};
 
         if (selectedPlugin) {
             // Prepare the data for the form based on the selected route
@@ -118,13 +118,13 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             this.api.getConsumers(),
             this.api.getPluginsEnabled(),
             this.api.getPlugins()
-        ]).pipe(map(([services, routes, consumers, pluginsList, plugins]) => {
+        ]).pipe(map(([services, routes, consumers, pluginsEnabled, plugins]) => {
             // forkJoin returns an array of values, here we map those values to an object
             return {
                 services: services['data'],
                 routes: routes['data'],
                 consumers: consumers['data'],
-                pluginsList: pluginsList['enabled_plugins'],
+                pluginsEnabled: pluginsEnabled['enabled_plugins'],
                 plugins: plugins['data']
             };
         })).subscribe((value) => {
@@ -135,7 +135,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             this.servicesList = value.services;
             this.routesList = value.routes;
             this.consumersList = value.consumers;
-            this.pluginsList = value.pluginsList.sort();
+            this.pluginsEnabled = value.pluginsEnabled.sort();
             this.plugins = value.plugins;
 
             // ¿vienen datos extra con el service, route o consumer ya elegido?
@@ -453,7 +453,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
         // Genero el formulario dinámico
         let dConfig = this.fb.group({});
         let formFields = [];
-        
+
         schema.forEach(element => {
             const keys = Object.getOwnPropertyNames(element);
             const field = keys[0];
@@ -678,7 +678,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
 
     createDocLink(plugin: string): string {
         let url = 'https://docs.konghq.com/hub/kong-inc/' + plugin;
-        if (plugin === 'jwt-keycloak'){
+        if (plugin === 'jwt-keycloak') {
             url = 'https://github.com/hanfi/kong-plugin-jwt-keycloak/blob/master/README.md';
         }
 

@@ -80,7 +80,9 @@
         "enabled": "Habilitado",
         "seconds": "seconds",
         "to": "until",
-        "consumer": "Consumer"
+        "consumer": "Consumer",
+        "templates": "Templates available",
+        "templates_hint": "You can use a previously created element as a template for the new one"
     },
     "pagination": {
         "itemsPerPageLabel": "Items per page:",
