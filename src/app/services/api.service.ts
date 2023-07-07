@@ -29,6 +29,7 @@ export class ApiService {
         NODES ENDPOINTS
      */
     public getNodeInformation() {
+        // return this.httpClient.get(this.globals.NODE_API_URL + '/', {headers: {'apikey': '12345'}}).pipe(catchError(this.handleError));
         return this.httpClient.get(this.globals.NODE_API_URL + '/').pipe(catchError(this.handleError));
     }
 

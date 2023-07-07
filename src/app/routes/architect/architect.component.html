@@ -18,12 +18,14 @@
             </div>
             <div fxFlex="35" fxLayout="row" fxLayoutAlign="start center">
                 <mat-form-field color="accent" fxFlex>
-                    <mat-slide-toggle (change)="netFilter.mode = !netFilter.mode" [checked]="netFilter.mode" class="margin-right-20" matPrefix>
+                    <mat-slide-toggle (change)="netFilter.mode = !netFilter.mode" [checked]="netFilter.mode"
+                                      class="margin-right-20" matPrefix>
                         <span *ngIf="netFilter.mode">AND</span>
                         <span *ngIf="!netFilter.mode">OR</span>
                     </mat-slide-toggle>
                     <mat-label>{{ 'architect.filter' | translate}}</mat-label>
-                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput matTooltip="{{ 'architect.filter_hint' | translate }}"
+                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput
+                           matTooltip="{{ 'architect.filter_hint' | translate }}"
                            matTooltipClass="tooltip-teal" type="text">
                     <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
                         <mat-icon>close</mat-icon>
@@ -41,7 +43,7 @@
             <button (click)="filterGraphByTag()" color="accent"
                     mat-icon-button
                     matTooltip="{{'architect.filter_tooltip' | translate}}" matTooltipClass="tooltip-teal">
-                <mat-icon>search</mat-icon>
+                <mat-icon>filter_alt</mat-icon>
             </button>
 
             <button (click)="cleanFilters()" color="accent"
@@ -89,9 +91,23 @@
             </mat-drawer-content>
         </mat-drawer-container>
     </div>
+
     <!-- Contenedor de acciones derecho -->
-    <div fxFlex.gt-md="15" fxFlex.lt-lg="25" id="graph-actions">
+    <div fxFlex.gt-md="15" fxFlex.lt-lg="25" id="graph-actions" class="scroller">
         <mat-list>
+
+            <!--<mat-list-item class="margin-top-5">
+                <mat-form-field color="accent" fxFlex>
+                    <mat-label>{{ 'architect.global_search' | translate}}</mat-label>
+                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput
+                           matTooltip="{{ 'architect.global_search_hint' | translate }}"
+                           matTooltipClass="tooltip-teal" type="text">
+                    <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
+                        <mat-icon>search</mat-icon>
+                    </button>
+                </mat-form-field>
+            </mat-list-item>-->
+
             <div class="subheader" mat-subheader>{{'architect.global_actions' | translate}}</div>
             <mat-list-item *ngIf="expressions">
                 <div mat-line>
@@ -145,10 +161,12 @@
                 </div>
             </mat-list-item>
 
-            <mat-divider *ngIf="groupsAll.includes(selection.group)" class="margin-top-10 margin-bottom-10"></mat-divider>
+            <mat-divider *ngIf="groupsAll.includes(selection.group)"
+                         class="margin-top-10 margin-bottom-10"></mat-divider>
 
             <div *ngIf="groupsAll.includes(selection.group)" class="subheader" mat-subheader>
-                {{'architect.local_actions_' + selection.group | translate }}:&nbsp;<span class="italic">{{ selection.label.split('\n')[0] }}</span>
+                {{'architect.local_actions_' + selection.group | translate }}:&nbsp;<span
+                class="italic">{{ selection.label.split('\n')[0] }}</span>
             </div>
             <mat-list-item *ngIf="groupsInfo.includes(selection.group)">
                 <div mat-line>
@@ -162,7 +180,8 @@
             <!-- filtro por tag -->
             <mat-list-item *ngIf="groupsInfo.includes(selection.group) && (selection.data.tags.length > 0)">
                 <div mat-line>
-                    <button (click)="filterTag(selection)" mat-button matTooltip="{{selection.data.tags.join(', ')}}" matTooltipClass="tooltip-teal">
+                    <button (click)="filterTag(selection)" mat-button matTooltip="{{selection.data.tags.join(', ')}}"
+                            matTooltipClass="tooltip-teal">
                         <mat-icon>filter_alt</mat-icon>
                         {{'architect.filter_selected_tags' | translate:{num: selection.data.tags.length} }}
                     </button>
@@ -173,7 +192,8 @@
 
             <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('acl')">
                 <div mat-line>
-                    <button (click)="showInfo({id: selection.consumerId, group: 'acl', username: selection.label})" mat-button>
+                    <button (click)="showInfo({id: selection.consumerId, group: 'acl', username: selection.label})"
+                            mat-button>
                         <mat-icon>people</mat-icon>
                         {{'acl.dialog.info' | translate}}
                     </button>
@@ -182,7 +202,8 @@
 
             <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('key-auth')">
                 <div mat-line>
-                    <button (click)="showInfo({id: selection.consumerId, group: 'key', username: selection.label})" mat-button>
+                    <button (click)="showInfo({id: selection.consumerId, group: 'key', username: selection.label})"
+                            mat-button>
                         <mat-icon>vpn_key</mat-icon>
                         {{'apikey.dialog.info' | translate}}
                     </button>
@@ -191,7 +212,8 @@
 
             <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('jwt')">
                 <div mat-line>
-                    <button (click)="showInfo({id: selection.consumerId, group: 'jwt', username: selection.label})" mat-button>
+                    <button (click)="showInfo({id: selection.consumerId, group: 'jwt', username: selection.label})"
+                            mat-button>
                         <mat-icon>confirmation_number</mat-icon>
                         {{'jwt.dialog.info' | translate}}
                     </button>

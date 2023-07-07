@@ -49,18 +49,6 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    onPluginChange(event) {
-        // Find the selected route in the routes array
-        const selectedPlugin = this.plugins.find(plugin => plugin.id === event.value);
-        const selectedPluginCopy = {...selectedPlugin};
-
-        if (selectedPlugin) {
-            // Prepare the data for the form based on the selected route
-            this.nameField.setValue(selectedPluginCopy['name']);
-            this.pluginChange(selectedPluginCopy);
-        }
-    }
-
     form = this.fb.group({
         name: ['', [Validators.required]],
         instance_name: ['', []],
@@ -186,6 +174,18 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+    }
+
+    onPluginChange(event) {
+        // Find the selected route in the routes array
+        const selectedPlugin = this.plugins.find(plugin => plugin.id === event.value);
+        const selectedPluginCopy = {...selectedPlugin};
+
+        if (selectedPlugin) {
+            // Prepare the data for the form based on the selected route
+            this.nameField.setValue(selectedPluginCopy['name']);
+            this.pluginChange(selectedPluginCopy);
+        }
     }
 
     /*

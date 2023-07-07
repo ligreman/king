@@ -244,7 +244,9 @@
         "cluster_api": "Api",
         "cluster_consumers": "consumers",
         "cluster_title": "Double click to expand all elements",
-        "labels": "Labels"
+        "labels": "Labels",
+        "global_search": "Global search",
+        "global_search_hint": "Search for any element by its ID or name"
     },
     "service": {
         "label": "Service",

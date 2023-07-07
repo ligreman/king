@@ -56,3 +56,9 @@ div#node-network:focus {
 .semiopacity {
     opacity: .35;
 }
+
+.scroller {
+    max-height: 100%;
+    height: 100%;
+    overflow: auto;
+}

@@ -1,17 +1,17 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import * as Joi from 'joi';
-import { isEmpty as _isEmpty, orderBy as _orderBy, size as _size, sortedUniq as _sortedUniq } from 'lodash';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../services/api.service';
-import { DialogHelperService } from '../../services/dialog-helper.service';
-import { GlobalsService } from '../../services/globals.service';
-import { ToastService } from '../../services/toast.service';
-import { CustomValidators } from '../../shared/custom-validators';
+import {isEmpty as _isEmpty, orderBy as _orderBy, size as _size, sortedUniq as _sortedUniq} from 'lodash';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../services/api.service';
+import {DialogHelperService} from '../../services/dialog-helper.service';
+import {GlobalsService} from '../../services/globals.service';
+import {ToastService} from '../../services/toast.service';
+import {CustomValidators} from '../../shared/custom-validators';
 
 @AutoUnsubscribe()
 @Component({
@@ -79,27 +79,11 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
         destinations: ['']
     }, {validators: [FinalFormValidator(this.expressions)]});
 
-    onRouteChange(event) {
-        // Find the selected route in the routes array
-        const selectedRoute = this.routes.find(route => route.id === event.value);
-        const selectedRouteCopy = { ...selectedRoute };
-
-        if (selectedRoute) {
-            // Prepare the data for the form based on the selected route
-            const formData = this.prepareDataForForm(selectedRouteCopy);
-    
-            // Update the form with the data from the selected route
-            if (this.expressions) {
-                this.formE.patchValue(formData);
-            } else {
-                this.formNE.patchValue(formData);
-            }
-        }
-    }
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
-                public dialogRef: MatDialogRef<DialogNewRouteComponent>, private globals: GlobalsService, private dialogHelper: DialogHelperService) { }
+                public dialogRef: MatDialogRef<DialogNewRouteComponent>, private globals: GlobalsService, private dialogHelper: DialogHelperService) {
+    }
 
     /*
         Getters de campos del formulario
@@ -181,6 +165,24 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
+    onRouteChange(event) {
+        // Find the selected route in the routes array
+        const selectedRoute = this.routes.find(route => route.id === event.value);
+        const selectedRouteCopy = {...selectedRoute};
+
+        if (selectedRoute) {
+            // Prepare the data for the form based on the selected route
+            const formData = this.prepareDataForForm(selectedRouteCopy);
+
+            // Update the form with the data from the selected route
+            if (this.expressions) {
+                this.formE.patchValue(formData);
+            } else {
+                this.formNE.patchValue(formData);
+            }
+        }
+    }
+
     loadData() {
         // Recupero la lista de servicios
         this.api.getServices()
@@ -238,15 +240,15 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
                 this.allTags.sort();
                 this.allTags = _sortedUniq(this.allTags);
             });
-        
+
         // Retrieve the list of routes
         this.api.getRoutes()
-        .subscribe({
-            next: (routes) => {
-                this.routes = routes['data'];
-            },
-            error: (error) => this.toast.error_general(error)
-        });
+            .subscribe({
+                next: (routes) => {
+                    this.routes = routes['data'];
+                },
+                error: (error) => this.toast.error_general(error)
+            });
     }
 
     /*

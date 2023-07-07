@@ -48,24 +48,6 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
         tags: ['']
     }, {validators: [ProtocolPathValidator()]});
 
-    onServiceChange(event) {
-        // Find the selected route in the routes array
-        const selectedService = this.services.find(svc => svc.id === event.value);
-        const selectedServiceCopy = {...selectedService};
-
-        if (selectedService) {
-            // Prepare the data for the form based on the selected route
-            const formData = this.prepareDataForForm(selectedServiceCopy);
-
-            // Update the form with the data from the selected route
-            this.form.patchValue(formData);
-
-            // Enable fields
-            this.form.controls['input_method'].setValue('complete');
-            this.changeRadio();
-        }
-    }
-
     constructor(@Inject(MAT_DIALOG_DATA) public serviceIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
                 public dialogRef: MatDialogRef<DialogNewServiceComponent>) {
     }
@@ -195,6 +177,24 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+    }
+
+    onServiceChange(event) {
+        // Find the selected route in the routes array
+        const selectedService = this.services.find(svc => svc.id === event.value);
+        const selectedServiceCopy = {...selectedService};
+
+        if (selectedService) {
+            // Prepare the data for the form based on the selected route
+            const formData = this.prepareDataForForm(selectedServiceCopy);
+
+            // Update the form with the data from the selected route
+            this.form.patchValue(formData);
+
+            // Enable fields
+            this.form.controls['input_method'].setValue('complete');
+            this.changeRadio();
+        }
     }
 
     /*

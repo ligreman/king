@@ -50,6 +50,7 @@ body {
     display: flex;
     flex-direction: column;
     overflow-x: hidden;
+    overflow: hidden;
 }
 
 app-root {
@@ -59,9 +60,23 @@ app-root {
 }
 
 app-root > *:nth-child(3) {
-    display: flex;
+    /*display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    flex-grow: 1;*/
+    height: 83vh;
+    overflow: auto;
+}
+
+#header-container {
+    height: 10vh;
+}
+
+#body-container {
+
+}
+
+#footer-container {
+    height: 7vh;
 }
 
 .flex-row-parent {
