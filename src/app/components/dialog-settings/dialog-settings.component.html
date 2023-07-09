@@ -1,0 +1,110 @@
+<h2 class="margin-bottom-5-i" fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+    <span>{{'dialog.settings.header' | translate}}</span>
+</h2>
+
+<mat-divider class="margin-bottom-20-i"></mat-divider>
+
+<mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
+    <div fxFlex>
+        <mat-tab-group dynamicHeight mat-stretch-tabs color="accent">
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="tab-icon">settings</mat-icon>
+                    {{ 'dialog.settings.config' | translate }}</ng-template>
+
+                <form [formGroup]="form" class="padding-30">
+                    <div class="margin-bottom-10" fxLayout="column">
+                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between center">
+                            <mat-form-field appearance="outline" color="accent" fxFlex="75">
+                                <mat-label>{{'dialog.settings.config_url' | translate}}</mat-label>
+                                <input formControlName="config_url" matInput type="text"
+                                       placeholder="https://host:8443/config.json"/>
+                                <mat-hint>
+                                    <mat-error *ngIf="form.hasError('configUrlValidation'); else hintAlone">
+                                        {{ 'dialog.settings.error.config_url' | translate }}
+                                    </mat-error>
+                                    <ng-template #hintAlone>
+                                        {{ 'dialog.settings.config_url_hint' | translate }}</ng-template>
+                                </mat-hint>
+                            </mat-form-field>
+                            <span><a mat-button rel="noopener noreferrer" target="_blank"
+                                     href="https://github.com/ligreman/king/blob/main/README.md#configuration">
+                            {{'dialog.settings.documentation' | translate}}
+                                <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
+                        </div>
+                    </div>
+                </form>
+            </mat-tab>
+
+            <!--<mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="tab-icon">loop</mat-icon>
+                    {{ 'dialog.settings.loopback' | translate }}</ng-template>
+                <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-consumer" mat-button
+                         rel="noopener noreferrer"
+                         target="_blank">
+    {{'text.documentation' | translate}}
+                    <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
+                <form [formGroup]="form">
+                    <div class="margin-bottom-10" fxLayout="column">
+                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                            <mat-form-field appearance="outline" color="accent" fxFlex="48">
+                                <mat-label>{{'consumer.dialog.username' | translate}}</mat-label>
+                                <input formControlName="username" matInput type="text"/>
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" color="accent" fxFlex="48">
+                                <mat-label>{{'consumer.dialog.custom_id' | translate}}</mat-label>
+                                <input formControlName="custom_id" matInput type="text"/>
+                                <mat-icon matSuffix matTooltip="{{'consumer.dialog.custom_id_tooltip' | translate}}"
+                                          matTooltipClass="tooltip-teal">info_outline
+                                </mat-icon>
+                            </mat-form-field>
+                        </div>
+
+                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                            <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                                <mat-chip-list #chipList aria-label="">
+                                    <mat-chip (removed)="removeTag(tag)"
+                                              *ngFor="let tag of currentTags" removable="true">{{tag}}
+                                        <mat-icon matChipRemove>cancel</mat-icon>
+                                    </mat-chip>
+                                    <input (matChipInputTokenEnd)="addTag($event)"
+                                           [matAutocomplete]="auto"
+                                           [matChipInputFor]="chipList"
+                                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                           formControlName="tags"
+                                           matChipInputAddOnBlur="true"
+                                           placeholder="{{'service.dialog.tags' | translate}}"/>
+                                </mat-chip-list>
+                                <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                                    <mat-option *ngFor="let tag of allTags" [value]="tag">
+                                        {{tag}}
+                                    </mat-option>
+                                </mat-autocomplete>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </form>
+            </mat-tab>-->
+        </mat-tab-group>
+    </div>
+</mat-dialog-content>
+
+<mat-divider class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between start">
+    <div>
+        <mat-error *ngIf="form.invalid">
+            {{ 'dialog.settings.error.general' | translate }}
+        </mat-error>
+    </div>
+    <div>
+        <button color="warn" mat-button mat-dialog-close="null">{{'text.cancel' | translate}}</button>
+        <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
+        <button (click)="onSubmit()" [disabled]="form.invalid" color="accent" mat-flat-button>
+            <span>{{'dialog.settings.save' | translate}}</span>
+        </button>
+    </div>
+</mat-dialog-actions>

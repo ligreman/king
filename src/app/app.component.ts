@@ -1,14 +1,16 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { DialogAboutComponent } from './components/dialog-about/dialog-about.component';
-import { ApiService } from './services/api.service';
-import { GlobalsService } from './services/globals.service';
-import { NodeService } from './services/node.service';
-import { ToastService } from './services/toast.service';
+import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, FormControl, Validators} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {DialogAboutComponent} from './components/dialog-about/dialog-about.component';
+import {ApiService} from './services/api.service';
+import {GlobalsService} from './services/globals.service';
+import {NodeService} from './services/node.service';
+import {ToastService} from './services/toast.service';
+import {DialogSettingsComponent} from "./components/dialog-settings/dialog-settings.component";
+import {firstValueFrom} from "rxjs";
 
 @AutoUnsubscribe()
 @Component({
@@ -59,24 +61,89 @@ export class AppComponent implements OnInit, OnDestroy {
             this.formNodes.setValue({node: last});
             this.globals.NODE_API_URL = last;
         }
-    }
 
-    // GETTERS
-    get nodeField() { return this.formNodes.get('node'); }
-
-    ngOnInit(): void {
-        // Conecto al nodo y si no lo consigo voy a landing
-        if (this.globals.NODE_API_URL !== '' && this.globals.ROUTER_MODE === '') {
-            this.api.getNodeInformation()
-                .subscribe({
-                    next: (res) => {
-                        this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
-                    }, error: () => this.route.navigate(['/landing'])
-                });
+        // Cargo del localStorage los datos del LoopBack
+        let loop = localStorage.getItem('kongLoopback');
+        if (loop) {
+            try {
+                loop = atob(loop);
+                // Pongo el valor
+                this.globals.LOOPBACK = JSON.parse(loop);
+            } catch (e) {
+                this.toast.error('error.load_loopback')
+            }
         }
     }
 
+    // GETTERS
+    get nodeField() {
+        return this.formNodes.get('node');
+    }
+
+    ngOnInit(): void {
+        const confFile = localStorage.getItem('kongConfigFileUrl');
+        if (confFile !== undefined && confFile !== null && confFile !== '') {
+            this.globals.CONFIG_URL = confFile;
+        }
+
+        // Get config
+        this.loadConfig().then(value => {
+            if (value !== null) {
+                this.globals.NODE_API_URL = value['kongNodeUrl'];
+            }
+
+            // TODO si está loopback activo, abro la pantalla de setting para que metas las credenciales y conectes
+            // Conecto al nodo y si no lo consigo voy a landing
+            if (this.globals.NODE_API_URL !== '' && this.globals.ROUTER_MODE === '') {
+                this.api.getNodeInformation()
+                    .subscribe({
+                        next: (res) => {
+                            this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
+                            this.connectToNode();
+                        }, error: () => this.route.navigate(['/landing'])
+                    });
+            }
+        });
+    }
+
     ngOnDestroy(): void {
+    }
+
+    async loadConfig() {
+        let config = null, cfg = undefined;
+        try {
+            if (this.globals.CONFIG_URL !== '') {
+                cfg = await firstValueFrom(this.api.getConfig());
+            }
+        } catch (e) {
+        }
+
+        // If not found online, try to get local
+        if (cfg === undefined || cfg === null) {
+            cfg = localStorage.getItem('kongConfig');
+            if (cfg !== undefined && cfg !== null && cfg !== '') {
+                config = JSON.parse(atob(cfg));
+            }
+        } else {
+            config = cfg;
+            // Save in local too
+            localStorage.setItem('kongConfig', btoa(JSON.stringify(cfg)));
+        }
+
+        return config;
+    }
+
+    connectSettings() {
+        const dialogRef = this.dialog.open(DialogSettingsComponent, {
+            minWidth: '80vw',
+            minHeight: '50vh',
+            data: {}
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result !== null && result !== 'null') {
+            } else {
+            }
+        });
     }
 
     /**
@@ -158,7 +225,8 @@ export class AppComponent implements OnInit, OnDestroy {
             this.showManualText = false;
 
             // Reset scroll
-            window.onscroll = () => {};
+            window.onscroll = () => {
+            };
 
             // Animation for manual close
             setTimeout(() => {

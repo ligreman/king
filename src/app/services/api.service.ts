@@ -38,6 +38,13 @@ export class ApiService {
     }
 
     /*
+        GENERAL ENDPOINTS
+     */
+    public getConfig() {
+        return this.httpClient.get(this.globals.CONFIG_URL).pipe(catchError(this.handleError));
+    }
+
+    /*
         TAGS ENDPOINTS
      */
     public getTags() {

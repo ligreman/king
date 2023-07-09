@@ -98,6 +98,11 @@
     <span fxFlex></span>
 
     <form [formGroup]="formNodes" fxFlex.gt-md="25" fxFlex.lt-lg="40">
+        <button (click)="connectSettings()" [matTooltipShowDelay]="1000" color="accent"
+                mat-icon-button matTooltipClass="tooltip-teal"
+                matTooltip="{{'header.menu.settings_tooltip' | translate}}">
+            <mat-icon>settings</mat-icon>
+        </button>
         <mat-form-field class="small-font" color="accent" fxFlex>
             <input [matAutocomplete]="auto" [matTooltipShowDelay]="1000" aria-label=""
                    formControlName="node"
@@ -114,6 +119,7 @@
             <mat-error *ngIf="nodeField.invalid && (nodeField.dirty || nodeField.touched)">
                 <div *ngIf="nodeField.errors.required">{{ 'header.menu.error_node_field' | translate }}</div>
             </mat-error>
+            <mat-hint>{{'header.menu.kong_node_hint' | translate}}</mat-hint>
         </mat-form-field>
         <button (click)="connectToNode()" [matTooltipShowDelay]="1000" color="accent"
                 mat-icon-button

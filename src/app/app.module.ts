@@ -87,6 +87,7 @@ import {PluginListComponent} from './routes/plugins/plugin-list/plugin-list.comp
 import {MatPaginatorIntlSpanish} from './shared/spanish-paginator-intl';
 import {DialogInfoOauth2Component} from './components/dialog-info-oauth2/dialog-info-oauth2.component';
 import {AccessOauth2Component} from './routes/access/access-oauth2/access-oauth2.component';
+import {DialogSettingsComponent} from "./components/dialog-settings/dialog-settings.component";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -124,6 +125,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         DialogNewSniComponent,
         DialogNewCertComponent,
         DialogNewCacertComponent,
+        DialogSettingsComponent,
         PluginListComponent,
         DialogInfoPluginComponent,
         PluginFormFieldsComponent,

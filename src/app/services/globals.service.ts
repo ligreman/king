@@ -1,11 +1,19 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GlobalsService {
     private _NODE_API_URL = '';
+    private _CONFIG_URL = '';
     private _ROUTER_MODE = '';
+    private _LOOPBACK = {
+        url: '',
+        enabled: false,
+        keyField: '',
+        keyLocation: ''
+    };
+
     // NETWORK GRAPH
     private _NETWORK_NODES = {
         font: {
@@ -483,5 +491,21 @@ export class GlobalsService {
 
     get GRAPH_SCHEME(): string[] {
         return this._GRAPH_SCHEME;
+    }
+
+    get CONFIG_URL(): string {
+        return this._CONFIG_URL;
+    }
+
+    set CONFIG_URL(value: string) {
+        this._CONFIG_URL = value;
+    }
+
+    get LOOPBACK(): { keyField: string; keyLocation: string; url: string; enabled: boolean } {
+        return this._LOOPBACK;
+    }
+
+    set LOOPBACK(value: { keyField: string; keyLocation: string; url: string; enabled: boolean }) {
+        this._LOOPBACK = value;
     }
 }
