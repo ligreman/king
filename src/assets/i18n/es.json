@@ -143,6 +143,8 @@
             "config": "General",
             "config_url": "Url del fichero de configuración",
             "config_url_hint": "Url que apunta a un fichero .json de configuración",
+            "cannot_change_config_url_hint": "Nota: No se puede modificar la url del fichero de configuración",
+            "allow_kong_url": "Permitir que se modifique la url de conexión al nodo de Kong",
             "documentation": "Ver más documentación",
             "loopback": "Kong API Loopback",
             "error": {
@@ -150,7 +152,7 @@
                 "config_url": "Debe ser una url válida apuntando a un fichero .json"
             },
             "save": "Guardar configuración",
-            "saved": "Configuración actualizada"
+            "saved": "Configuración actualizada. Puede que tengas que recargar la página (F5) para que surtan efecto algunos cambios."
         }
     },
     "header": {
@@ -176,6 +178,7 @@
             "settings_tooltip": "Configuración de King",
             "kong_node": "API de administración de un nodo de Kong",
             "kong_node_hint": "Indica la ruta a la api de administración de Kong",
+            "kong_node_disabled_hint": "No se permite modificar el nodo de conexión a Kong",
             "kong_node_tooltip": "Introduce la URL y puerto",
             "kong_node_button_tooltip": "Conectar",
             "error_node_field": "Introduce una url válida. Formato: http(s)://<admin-api>:<port>"

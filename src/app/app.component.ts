@@ -22,8 +22,10 @@ export class AppComponent implements OnInit, OnDestroy {
     lang = new FormControl('');
     openedManual = false;
     showManualText = false;
+    enableKongUrl = true;
     manualStyles = {'height': 0, 'top': 0};
     enabledPlugins = [];
+    allowConfig = false;
 
     formNodes = this.fb.group({
         node: ['', Validators.required]
@@ -73,32 +75,43 @@ export class AppComponent implements OnInit, OnDestroy {
                 this.toast.error('error.load_loopback')
             }
         }
+
+        this.allowConfig = this.globals.ALLOW_CONFIG;
     }
 
-    // GETTERS
+    ngOnDestroy(): void {
+    }
+
+    ngOnInit(): void {
+        this.getConfig();
+    }
+
     get nodeField() {
         return this.formNodes.get('node');
     }
 
-    ngOnInit(): void {
+    getConfig() {
         const confFile = localStorage.getItem('kongConfigFileUrl');
         if (confFile !== undefined && confFile !== null && confFile !== '') {
             this.globals.CONFIG_URL = confFile;
         }
 
-        // Get config
+        this.enableKongUrl = this.globals.ALLOW_CHANGE_KONG_URL;
+
         this.loadConfig().then(value => {
             if (value !== null) {
                 this.globals.NODE_API_URL = value['kongNodeUrl'];
             }
 
             // TODO si está loopback activo, abro la pantalla de setting para que metas las credenciales y conectes
-            // Conecto al nodo y si no lo consigo voy a landing
+
+            // I connect to the node and if I don't get it I'm going to landing
             if (this.globals.NODE_API_URL !== '' && this.globals.ROUTER_MODE === '') {
                 this.api.getNodeInformation()
                     .subscribe({
                         next: (res) => {
                             this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
+                            this.formNodes.setValue({node: this.globals.NODE_API_URL});
                             this.connectToNode();
                         }, error: () => this.route.navigate(['/landing'])
                     });
@@ -106,16 +119,14 @@ export class AppComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
-    }
-
     async loadConfig() {
         let config = null, cfg = undefined;
         try {
             if (this.globals.CONFIG_URL !== '') {
-                cfg = await firstValueFrom(this.api.getConfig());
+                cfg = await firstValueFrom(this.api.getConfiguration());
             }
         } catch (e) {
+            console.error('Error loading config file from ' + this.globals.CONFIG_URL);
         }
 
         // If not found online, try to get local
@@ -133,7 +144,7 @@ export class AppComponent implements OnInit, OnDestroy {
         return config;
     }
 
-    connectSettings() {
+    settingsDialog() {
         const dialogRef = this.dialog.open(DialogSettingsComponent, {
             minWidth: '80vw',
             minHeight: '50vh',
@@ -141,31 +152,31 @@ export class AppComponent implements OnInit, OnDestroy {
         });
         dialogRef.afterClosed().subscribe(result => {
             if (result !== null && result !== 'null') {
-            } else {
+                this.getConfig();
             }
         });
     }
 
     /**
-     Conecta al nodo de Kong, pidiendo su información básica
+     Connects to Kong's node, asking for his basic information
      */
     connectToNode() {
         if (this.formNodes.invalid) {
             return;
         }
 
-        // Recojo el valor
+        // Collect the value
         let node = this.nodeField.value;
         node = node.replace(new RegExp('/$'), '');
 
-        // Guardo el nodo como valor para conectar
+        // save node as value to connect
         this.globals.NODE_API_URL = node;
 
-        // Conecto al nodo de Kong elegido
+        // Connect to the chosen Kong node
         this.api.getNodeInformation()
             .subscribe({
                 next: (res) => {
-                    // Si ha ido bien la conexión guardo como nodo esta url
+                    // If the connection went well, I save this url as a node
                     if (!this.node_list.includes(node)) {
                         this.node_list.push(node);
                         localStorage.setItem('kongNodes', btoa(this.node_list.join(',')));
@@ -173,23 +184,23 @@ export class AppComponent implements OnInit, OnDestroy {
                     localStorage.setItem('kongLastNode', btoa(node));
                     this.toast.success('header.node_connected', '', {msgExtra: node});
 
-                    // Aviso del cambio de nodo
+                    // Notice of node change
                     this.nodeWatcher.changeNode(node);
 
-                    // Recojo los plugins activos para habilitar las secciones
+                    // collect the active plugins to enable the sections
                     this.enabledPlugins = res['plugins']['enabled_in_cluster'];
 
-                    // Modo del router
+                    // ROUTER MODE
                     this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
 
-                    // Voy a la página de información de nodos
+                    // go to the node information page
                     this.route.navigate(['/node-information']);
                 }, error: (error) => this.toast.error('error.node_connection')
             });
     }
 
     /**
-     Cambia el idioma
+     Change the language
      */
     changeLang(newLang: string) {
         this.lang.setValue(newLang);
@@ -198,10 +209,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     /**
-     Muestra u oculta el manual de usuario
+     Show or hide the user manual
      */
     toggleManual() {
-        // Si voy a mostrar el manual
         if (!this.openedManual) {
             this.openedManual = !this.openedManual;
 

@@ -14,12 +14,13 @@
 
                 <form [formGroup]="form" class="padding-30">
                     <div class="margin-bottom-10" fxLayout="column">
-                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between center">
+                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="allowChangeConfigFile">
                             <mat-form-field appearance="outline" color="accent" fxFlex="75">
                                 <mat-label>{{'dialog.settings.config_url' | translate}}</mat-label>
                                 <input formControlName="config_url" matInput type="text"
+                                       [readonly]="!allowChangeConfigFile"
                                        placeholder="https://host:8443/config.json"/>
-                                <mat-hint>
+                                <mat-hint *ngIf="allowChangeConfigFile">
                                     <mat-error *ngIf="form.hasError('configUrlValidation'); else hintAlone">
                                         {{ 'dialog.settings.error.config_url' | translate }}
                                     </mat-error>
@@ -31,6 +32,9 @@
                                      href="https://github.com/ligreman/king/blob/main/README.md#configuration">
                             {{'dialog.settings.documentation' | translate}}
                                 <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
+                        </div>
+                        <div>
+                        <p *ngIf="!allowChangeConfigFile">{{ 'dialog.settings.cannot_change_config_url_hint' | translate }}: {{config_file_url}}</p>
                         </div>
                     </div>
                 </form>

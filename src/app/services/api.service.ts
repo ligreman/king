@@ -40,7 +40,7 @@ export class ApiService {
     /*
         GENERAL ENDPOINTS
      */
-    public getConfig() {
+    public getConfiguration() {
         return this.httpClient.get(this.globals.CONFIG_URL).pipe(catchError(this.handleError));
     }
 

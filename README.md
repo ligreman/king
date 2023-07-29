@@ -54,8 +54,8 @@ application server ([Apache](https://httpd.apache.org/download.cgi), [Nginx](htt
 
 King for Kong is an Angular web application without a backend. This is a limitation when you want to have configuration
 parameters persisted among sessions. To cover part of this feature you can have a JSON config file served by an
-application server (apache, nginx... maybe the same that is serving King) as a static file. Then you can set in King
-the "Config File Url" parameter to point to that config file, and King will load it on start.
+application server (apache, nginx... maybe the same server serving King) as a static file. Then you can set in King
+the url to access this configuration file, and King will load it on start.
 
 Steps to set this up:
 
@@ -63,11 +63,35 @@ Steps to set this up:
 2) Serve it with your web server as an static file. For improved security make sure that only the web server is able to
    access the file.
 3) Open the settings dialog (gear icon on the left of the Kong nodw url field in the header).
-4) Set the config file url up.
+4) Type the config file url.
 
-Fields allowed in the config file:
+Note: If no config url is set, King by default will look for the config file at <king url>/config.json. Example: if you are accessing King at http://king.com:8080, King will look for the file at http://king.com:8080/config.json.  
 
-* kongNodeUrl: used if you want to set a default kong url node.
+Field description of the config file:
+
+* kongNodeUrl: default kong url node to connect to.
+
+### King Globals configuration
+
+Some parameters can be set at code level (they are hardcoded in the source files). You can change them to change King's default behaviour to a certain level. 
+
+The file containing the global configuration is located at `src/app/services/globals.service.ts`
+
+There you have these variables:
+
+```
+// Default url for the configuration JSON file
+private _CONFIG_URL = '/config.json';
+
+// Enable or disable the config dialog in the interface
+private _ALLOW_CONFIG = false;
+
+// Allow users to change the url of the Kong node to connect to
+private _ALLOW_CHANGE_KONG_URL = true;
+
+// Allow users to change the url of the JSON configuration file to load
+private _ALLOW_CHANGE_CONFIG_FILE_URL = true;
+```
 
 ## Development
 

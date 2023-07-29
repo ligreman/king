@@ -5,7 +5,15 @@ import {Injectable} from '@angular/core';
 })
 export class GlobalsService {
     private _NODE_API_URL = '';
-    private _CONFIG_URL = '';
+    // Default url for the configuration JSON file
+    private _CONFIG_URL = '/config.json';
+    // Enable or disable the config dialog in the interface
+    private _ALLOW_CONFIG = true;
+    // Allow users to change the url of the Kong node to connect to
+    private _ALLOW_CHANGE_KONG_URL = true;
+    // Allow users to change the url of the JSON configuration file to load
+    private _ALLOW_CHANGE_CONFIG_FILE_URL = true;
+
     private _ROUTER_MODE = '';
     private _LOOPBACK = {
         url: '',
@@ -507,5 +515,19 @@ export class GlobalsService {
 
     set LOOPBACK(value: { keyField: string; keyLocation: string; url: string; enabled: boolean }) {
         this._LOOPBACK = value;
+    }
+
+
+    get ALLOW_CHANGE_KONG_URL(): boolean {
+        return this._ALLOW_CHANGE_KONG_URL;
+    }
+
+
+    get ALLOW_CHANGE_CONFIG_FILE_URL(): boolean {
+        return this._ALLOW_CHANGE_CONFIG_FILE_URL;
+    }
+
+    get ALLOW_CONFIG(): boolean {
+        return this._ALLOW_CONFIG;
     }
 }

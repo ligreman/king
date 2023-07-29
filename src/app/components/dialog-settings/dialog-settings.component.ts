@@ -6,6 +6,7 @@ import {ApiService} from '../../services/api.service';
 import {ToastService} from '../../services/toast.service';
 import * as Joi from "joi";
 import {CustomValidators} from "../../shared/custom-validators";
+import {GlobalsService} from "../../services/globals.service";
 
 @AutoUnsubscribe()
 @Component({
@@ -15,21 +16,22 @@ import {CustomValidators} from "../../shared/custom-validators";
 })
 export class DialogSettingsComponent implements OnInit, OnDestroy {
     formValid = false;
-    editMode = false;
+    allowChangeConfigFile = true;
+    config_file_url = '';
 
     form = this.fb.group({
         config_url: ['', []]
     }, {validators: [ConfigFormValidator()]});
 
     formLoop = this.fb.group({
-        enabled: ['false', [CustomValidators.isBoolean(false)]],
+        enabled: [false, [CustomValidators.isBoolean(false)]],
         where: ['', [Validators.required]],
         key_field: ['', [Validators.required]],
         token: ['', [Validators.required]]
     }, {});
 
     constructor(@Inject(MAT_DIALOG_DATA) public consumerIdEdit: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogSettingsComponent>,
-                private api: ApiService, private toast: ToastService) {
+                private api: ApiService, private toast: ToastService, private globals: GlobalsService,) {
         /* TODO
             check enable or not
             where: header, query, body
@@ -50,11 +52,14 @@ export class DialogSettingsComponent implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
-        const confFile = localStorage.getItem('kongConfigFileUrl');
-        if (confFile !== null && confFile !== undefined) {
-            this.form.setValue({config_url: confFile});
+        // Config file URL
+        let confFileUrl = localStorage.getItem('kongConfigFileUrl');
+        if (confFileUrl === null || confFileUrl === undefined) {
+            confFileUrl = this.globals.CONFIG_URL;
         }
-
+        this.config_file_url = confFileUrl;
+        this.form.setValue({config_url: confFileUrl});
+        this.allowChangeConfigFile = this.globals.ALLOW_CHANGE_CONFIG_FILE_URL;
     }
 
     ngOnDestroy(): void {
@@ -64,12 +69,13 @@ export class DialogSettingsComponent implements OnInit, OnDestroy {
       Submit del formulario
    */
     onSubmit() {
-        // CONFIG
-        localStorage.setItem('kongConfigFileUrl', this.form.value.config_url);
+        // If i can save the config file url
+        if (this.allowChangeConfigFile) {
+            // CONFIG
+            localStorage.setItem('kongConfigFileUrl', this.form.value.config_url);
+        }
 
-        // LOOPBACK
-
-        this.toast.success('dialog.settings.saved', '');
+        this.toast.success('dialog.settings.saved', '', {timeout:5000});
         this.dialogRef.close();
     }
 }
@@ -81,11 +87,11 @@ export class DialogSettingsComponent implements OnInit, OnDestroy {
 function ConfigFormValidator(): ValidatorFn {
     return (fg: AbstractControl): ValidationErrors => {
         let valid = true;
-        let data = {configUrlValidation: false};
+        let data = {configUrlValidation: false, confKongAllow: false};
 
-        const schema = Joi.string().uri().allow('');
-        const {error, value} = schema.validate(fg.get('config_url').value);
-        if (error) {
+        const schema = Joi.string().uri().allow('').allow('/config.json');
+        const validation = schema.validate(fg.get('config_url').value);
+        if (validation.error) {
             valid = false;
             data.configUrlValidation = true;
         }
