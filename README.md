@@ -28,9 +28,8 @@ See some screenshots in the wiki: https://github.com/ligreman/king/wiki/Screensh
 
 ## Compatibility
 
-King for Kong has been developed to be compatible with Kong API Gateway 2.8.x version. It may be compatible backwards,
-but it has not been tested.
-It supports Kong 3.X new features like the new router flavour "expressions".
+King for Kong has been developed to be compatible with Kong API Gateway 2.8.x version and newer. It may be compatible backwards,
+but it has not been tested. It supports Kong 3.X new features like the new router flavour "expressions".
 
 ### Supported Authentication plugins
 
@@ -69,7 +68,7 @@ Note: If no config url is set, King by default will look for the config file at 
 
 Field description of the config file:
 
-* kongNodeUrl: default kong url node to connect to.
+* kong_admin_url: default kong url node to connect to.
 
 ### King Globals configuration
 

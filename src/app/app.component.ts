@@ -100,7 +100,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.loadConfig().then(value => {
             if (value !== null) {
-                this.globals.NODE_API_URL = value['kongNodeUrl'];
+                this.globals.NODE_API_URL = value['kong_admin_url'];
             }
 
             // TODO si está loopback activo, abro la pantalla de setting para que metas las credenciales y conectes
