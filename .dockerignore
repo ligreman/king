@@ -1,0 +1,9 @@
+.git
+.cache
+.angular
+dist
+docs/
+*Dockerfile*
+*docker-compose*
+node_modules/
+npm-debug.log

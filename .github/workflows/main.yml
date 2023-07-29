@@ -1,0 +1,69 @@
+name: Build, Tag and create release
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    permissions: write-all
+    name: Runs build tagging and release creation
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+    - name: Minor version for each merge
+      id: taggerDryRun
+      uses: anothrNick/github-tag-action@1.36.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+        DEFAULT_BUMP: patch
+        DRY_RUN: true
+    - name: echo new tag
+      run: |
+        echo "The next tag version will be: ${{ steps.taggerDryRun.outputs.new_tag }}"
+    - name: echo tag
+      run: |
+        echo "The current tag is: ${{ steps.taggerDryRun.outputs.tag }}"
+    - name: echo part
+      run: |
+        echo "The version increment was: ${{ steps.taggerDryRun.outputs.part }}"
+
+    # Build
+    - name: Configure Docker login for GitHub Container Registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Build and push Docker image
+      env:
+        IMAGE_NAME: king-for-kong
+        DOCKER_REPO: ghcr.io/${{ github.repository_owner }}${{ github.repository_name }}
+        TAG: ${{ steps.taggerDryRun.outputs.new_tag }}
+      run: |
+        docker build -t $DOCKER_REPO/$IMAGE_NAME:$TAG .
+        docker push $DOCKER_REPO/$IMAGE_NAME:$TAG
+        docker create --name king-export $DOCKER_REPO/$IMAGE_NAME:$TAG
+        docker cp king-export:/usr/share/nginx/html ./dist
+        docker rm king-export
+
+    - name: zip folder
+      run: |
+        (cd ./dist && zip -r ../King-for-Kong-${{ steps.taggerDryRun.outputs.new_tag }}.zip .)
+    # Build
+
+    - name: Minor version for each merge
+      id: taggerFinal
+      uses: anothrNick/github-tag-action@1.36.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        WITH_V: true
+        DEFAULT_BUMP: patch
+
+    - uses: "marvinpinto/action-automatic-releases@latest"
+      with:
+        repo_token: "${{ secrets.GITHUB_TOKEN }}"
+        automatic_release_tag: "latest"
+        prerelease: false
+        title: "Release ${{ steps.taggerDryRun.outputs.new_tag }}"
+        files: |
+          ./King-for-Kong-${{ steps.taggerDryRun.outputs.new_tag }}.zip
