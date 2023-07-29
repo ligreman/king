@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  kong-database:
+    image: postgres:15.1-alpine
+    container_name: kong-database
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+      - POSTGRES_PASSWORD=kong
+    volumes:
+      - "db-data-kong-postgres:/var/lib/postgresql/data"
+  kong-migrations:
+    image: kong:3.0.1-alpine
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+      - KONG_PG_PASSWORD=kong
+    command: kong migrations bootstrap
+    restart: on-failure
+  kong:
+    image: kong:3.0.1-alpine
+    container_name: kong
+    environment:
+      - KONG_PG_HOST=kong-database
+      - KONG_PG_USER=kong
+      - KONG_PG_PASSWORD=kong
+      - KONG_PROXY_ACCESS_LOG=/dev/stdout
+      - KONG_ADMIN_ACCESS_LOG=/dev/stdout
+      - KONG_PROXY_ERROR_LOG=/dev/stderr
+      - KONG_ADMIN_ERROR_LOG=/dev/stderr
+      - KONG_PROXY_LISTEN=0.0.0.0:8000
+      - KONG_PROXY_LISTEN_SSL=0.0.0.0:8443
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001
+      - KONG_CUSTOM_PLUGINS=kong-plugin-moesif
+    restart: on-failure
+    ports:
+      - 8000:8000
+      - 8443:8443
+      - 8001:8001
+  king:
+    build:
+      context: .
+    container_name: king
+    restart: on-failure
+    ports:
+      - 8080:80
+
+volumes:
+  db-data-kong-postgres:
