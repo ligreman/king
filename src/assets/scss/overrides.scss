@@ -18,15 +18,16 @@
     outline: none !important;
 }
 
-.mat-chip.mat-primary {
+.mat-mdc-chip.mat-primary {
     background: mat-color($mat-gray, 700) !important;
 }
 
-.mat-input-element, .mat-input-element::-webkit-search-cancel-button, .mat-input-element::-webkit-search-decoration, .mat-input-element::-webkit-search-results-button, .mat-input-element::-webkit-search-results-decoration {
+.mat-mdc-input-element, .mat-input-element::-webkit-search-cancel-button, .mat-input-element::-webkit-search-decoration, .mat-input-element::-webkit-search-results-button, .mat-input-element::-webkit-search-results-decoration {
     -webkit-appearance: textfield !important;
     -moz-appearance: textfield !important;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-label {
     color: rgba(255, 255, 255, 0.5) !important;
 }
@@ -35,15 +36,15 @@
     background-color: mat-color($mat-gray, 900);
 }
 
-.mat-tooltip.tooltip-teal {
+.mat-mdc-tooltip.tooltip-teal {
     background: mat-color($mat-teal, 800);
 }
 
-.mat-tooltip.tooltip-multi {
+.mat-mdc-tooltip.tooltip-multi {
     white-space: pre-line !important;
 }
 
-.mat-tooltip.tooltip-wide {
+.mat-mdc-tooltip.tooltip-wide {
     max-width: 500px !important;
 }
 
@@ -60,27 +61,28 @@
     line-height: 24px;
 }
 
-.mat-chip.mat-primary {
+.mat-mdc-chip.mat-primary {
     background: mat-color($mat-gray, 800);
 }
 
-.mat-chip.mat-accent {
+.mat-mdc-chip.mat-accent {
     background: mat-color($mat-teal, 500);
 }
 
-.mat-icon-button.small-btn {
+.mat-mdc-icon-button.small-btn {
     width: 30px;
     height: 30px;
     line-height: 30px;
 }
 
-.mat-icon-button.small-btn mat-icon {
+.mat-mdc-icon-button.small-btn mat-icon {
     width: 16px;
     height: 16px;
     line-height: 16px;
     font-size: 16px;
 }
 
+/* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
 mat-dialog-content div div {
     overflow-wrap: break-word;
 }

@@ -90,9 +90,9 @@
     <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
     <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
-        <mat-chip-list *ngIf="plugin" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
-            <mat-chip *ngFor="let chip of plugin['tags']" color="primary">{{chip}}</mat-chip>
-        </mat-chip-list>
+        <mat-chip-listbox *ngIf="plugin" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
+            <mat-chip-option *ngFor="let chip of plugin['tags']" color="primary">{{chip}}</mat-chip-option>
+        </mat-chip-listbox>
         <div><!-- leave empty --></div>
         <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>

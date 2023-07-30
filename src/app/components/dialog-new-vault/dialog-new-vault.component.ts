@@ -1,15 +1,20 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {
+    MatAutocompleteSelectedEvent
+} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {
+    MAT_DIALOG_DATA,
+    MatDialogRef
+} from '@angular/material/dialog';
 import * as Joi from 'joi';
-import { size as _size, sortedUniq as _sortedUniq } from 'lodash';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../services/api.service';
-import { ToastService } from '../../services/toast.service';
-import { CustomValidators } from '../../shared/custom-validators';
+import {size as _size, sortedUniq as _sortedUniq} from 'lodash';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../services/api.service';
+import {ToastService} from '../../services/toast.service';
+import {CustomValidators} from '../../shared/custom-validators';
 
 @AutoUnsubscribe()
 @Component({
@@ -122,6 +127,7 @@ export class DialogNewVaultComponent implements OnInit, OnDestroy {
         // Add
         if (error === undefined) {
             this.currentConfigs[keyInput.value] = valInput.value === '' ? null : valInput.value;
+            // @ts-ignore
             this.form.get('config').setValue('true');
 
             keyInput.value = '';

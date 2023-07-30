@@ -104,7 +104,8 @@
                 *ngIf="allowConfig">
             <mat-icon>settings</mat-icon>
         </button>
-        <mat-form-field class="small-font" color="accent" fxFlex>
+        <mat-form-field class="small-font" appearance="outline" color="accent" fxFlex>
+            <mat-label>{{'header.menu.kong_node' | translate}}</mat-label>
             <input [matAutocomplete]="auto" [matTooltipShowDelay]="1000" aria-label=""
                    formControlName="node"
                    matInput

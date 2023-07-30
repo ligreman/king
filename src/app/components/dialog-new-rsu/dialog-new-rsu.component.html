@@ -45,11 +45,11 @@
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" color="accent" fxFlex="45">
-                        <mat-chip-list #chipList aria-label="">
-                            <mat-chip (removed)="removeTag(tag)"
+                        <mat-chip-grid #chipList aria-label="">
+                            <mat-chip-row (removed)="removeTag(tag)"
                                       *ngFor="let tag of currentTags" removable="true">{{tag}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
-                            </mat-chip>
+                            </mat-chip-row>
                             <input (matChipInputTokenEnd)="addTag($event)"
                                    [matAutocomplete]="auto"
                                    [matChipInputFor]="chipList"
@@ -57,7 +57,7 @@
                                    formControlName="tags"
                                    matChipInputAddOnBlur="true"
                                    placeholder="{{'service.dialog.tags' | translate}}">
-                        </mat-chip-list>
+                        </mat-chip-grid>
                         <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
                             <mat-option *ngFor="let tag of allTags" [value]="tag">
@@ -99,7 +99,7 @@
                 </div>
 
                 <div fxLayout="row" fxLayoutAlign="space-between center">
-                    <mat-form-field appearance="standard" color="accent" fxFlex="15">
+                    <mat-form-field color="accent" fxFlex="15">
                         <mat-select #etransform placeholder="{{ 'route.dialog.transform' | translate}}">
                             <mat-option [value]=""></mat-option>
                             <mat-option *ngFor="let proto of validETransformsStrings" [fxShow]="eType==='string'"
@@ -108,14 +108,14 @@
                                         [value]="proto">{{'route.dialog.transform_' + proto | translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="standard" color="accent" fxFlex="15">
+                    <mat-form-field color="accent" fxFlex="15">
                         <mat-select #efield (selectionChange)="changeEField(efield.value)"
                                     placeholder="{{ 'route.dialog.field' | translate}}">
                             <mat-option *ngFor="let proto of validEFields"
                                         [value]="proto">{{ 'route.dialog.field_' + proto | translate}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="standard" color="accent" fxFlex="10">
+                    <mat-form-field color="accent" fxFlex="10">
                         <mat-select #eop placeholder="{{ 'route.dialog.operator' | translate}}">
                             <mat-option *ngFor="let proto of validEOpsStrings" [fxShow]="eType==='string'"
                                         [value]="proto">{{proto}}</mat-option>
@@ -123,7 +123,7 @@
                                         [value]="proto">{{proto}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field appearance="standard" color="accent" fxFlex="25">
+                    <mat-form-field color="accent" fxFlex="25">
                         <input #evalue aria-label="" matInput placeholder="{{ 'route.dialog.value' | translate}}"
                                type="text"/>
                     </mat-form-field>

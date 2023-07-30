@@ -33,11 +33,11 @@
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" color="accent" fxFlex="35">
-                        <mat-chip-list #chipList aria-label="">
-                            <mat-chip (removed)="removeTag(tag)"
+                        <mat-chip-grid #chipList aria-label="">
+                            <mat-chip-row (removed)="removeTag(tag)"
                                       *ngFor="let tag of currentTags" removable="true">{{tag}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
-                            </mat-chip>
+                            </mat-chip-row>
                             <input (matChipInputTokenEnd)="addTag($event)"
                                    [matAutocomplete]="auto"
                                    [matChipInputFor]="chipList"
@@ -45,7 +45,7 @@
                                    formControlName="tags"
                                    matChipInputAddOnBlur="true"
                                    placeholder="{{'service.dialog.tags' | translate}}">
-                        </mat-chip-list>
+                        </mat-chip-grid>
                         <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
                             <mat-option *ngFor="let tag of allTags" [value]="tag">
@@ -64,12 +64,12 @@
 
                 <div fxLayout="row" fxLayoutAlign="space-between start">
                     <div fxFlex="55" fxLayout="row" fxLayoutAlign="space-between center">
-                        <mat-form-field appearance="standard" class="margin-bottom-10" color="accent" fxFlex="40">
+                        <mat-form-field class="margin-bottom-10" color="accent" fxFlex="40">
                             <mat-label>{{'vault.dialog.config_param' | translate}}</mat-label>
                             <input #hKey matInput type="text"/>
                         </mat-form-field>
 
-                        <mat-form-field appearance="standard" class="margin-bottom-10" color="accent" fxFlex="40">
+                        <mat-form-field class="margin-bottom-10" color="accent" fxFlex="40">
                             <mat-label>{{'vault.dialog.config_value' | translate}}</mat-label>
                             <input #hVal matInput type="text"/>
                             <mat-hint>{{ 'vault.dialog.config_value_hint' | translate}}</mat-hint>

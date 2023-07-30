@@ -53,11 +53,11 @@
 
                 <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
                     <mat-form-field appearance="outline" color="accent" fxFlex="100">
-                        <mat-chip-list #chipList aria-label="">
-                            <mat-chip (removed)="removeTag(tag)"
+                        <mat-chip-grid #chipList aria-label="">
+                            <mat-chip-row (removed)="removeTag(tag)"
                                       *ngFor="let tag of currentTags" removable="true">{{tag}}
                                 <mat-icon matChipRemove>cancel</mat-icon>
-                            </mat-chip>
+                            </mat-chip-row>
                             <input (matChipInputTokenEnd)="addTag($event)"
                                    [matAutocomplete]="auto"
                                    [matChipInputFor]="chipList"
@@ -65,7 +65,7 @@
                                    formControlName="tags"
                                    matChipInputAddOnBlur="true"
                                    placeholder="{{'service.dialog.tags' | translate}}"/>
-                        </mat-chip-list>
+                        </mat-chip-grid>
                         <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
                         <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
                             <mat-option *ngFor="let tag of allTags" [value]="tag">

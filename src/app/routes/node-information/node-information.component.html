@@ -85,12 +85,12 @@
             </mat-toolbar>
 
             <div class="padding-20">
-                <mat-chip-list *ngIf="data['plugins']">
-                    <mat-chip *ngFor="let plug of data['plugins']" [color]="plug['used']?'accent':'primary'" [fxShow]="plug['available']"
+                <mat-chip-listbox *ngIf="data['plugins']">
+                    <mat-chip-option *ngFor="let plug of data['plugins']" [color]="plug['used']?'accent':'primary'" [fxShow]="plug['available']"
                               matTooltip="{{ (plug['used'] ? 'information.used' : 'information.available') | translate}}" matTooltipClass="tooltip-teal">
                         {{plug.name}}
-                    </mat-chip>
-                </mat-chip-list>
+                    </mat-chip-option>
+                </mat-chip-listbox>
             </div>
         </div>
         <div *ngIf="data['files']" class="block-25" gdArea="files">
