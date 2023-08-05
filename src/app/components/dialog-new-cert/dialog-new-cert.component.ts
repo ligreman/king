@@ -1,13 +1,13 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { sortedUniq as _sortedUniq } from 'lodash';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../services/api.service';
-import { ToastService } from '../../services/toast.service';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {sortedUniq as _sortedUniq} from 'lodash';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../services/api.service';
+import {ToastService} from '../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -141,6 +141,13 @@ export class DialogNewCertComponent implements OnInit, OnDestroy {
             body.tags = this.currentTags;
         } else {
             body.tags = [];
+        }
+
+        if (body.cert_alt === ''){
+            delete body.cert_alt;
+        }
+        if (body.key_alt === ''){
+            delete body.key_alt;
         }
 
         return body;
