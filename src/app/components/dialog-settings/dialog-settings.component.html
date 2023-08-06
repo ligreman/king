@@ -1,4 +1,4 @@
-<h2 class="margin-bottom-5-i" fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+<h2 class="margin-bottom-5-i" mat-dialog-title>
     <span>{{'dialog.settings.header' | translate}}</span>
 </h2>
 
@@ -14,7 +14,8 @@
 
                 <form [formGroup]="form" class="padding-30">
                     <div class="margin-bottom-10" fxLayout="column">
-                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between center" *ngIf="allowChangeConfigFile">
+                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between center"
+                             *ngIf="allowChangeConfigFile">
                             <mat-form-field appearance="outline" color="accent" fxFlex="75">
                                 <mat-label>{{'dialog.settings.config_url' | translate}}</mat-label>
                                 <input formControlName="config_url" matInput type="text"
@@ -28,13 +29,17 @@
                                         {{ 'dialog.settings.config_url_hint' | translate }}</ng-template>
                                 </mat-hint>
                             </mat-form-field>
-                            <span><a mat-button rel="noopener noreferrer" target="_blank"
-                                     href="https://github.com/ligreman/king/blob/main/README.md#configuration">
-                            {{'dialog.settings.documentation' | translate}}
-                                <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
+                            <span>
+                                <a mat-button rel="noopener noreferrer" target="_blank"
+                                   href="https://github.com/ligreman/king/blob/main/README.md#configuration">
+                                    <span>{{'dialog.settings.documentation' | translate}}</span>
+                                    <mat-icon iconPositionEnd class="mini-icon">open_in_new</mat-icon>
+                                </a>
+                            </span>
                         </div>
                         <div>
-                        <p *ngIf="!allowChangeConfigFile">{{ 'dialog.settings.cannot_change_config_url_hint' | translate }}: {{config_file_url}}</p>
+                            <p *ngIf="!allowChangeConfigFile">{{ 'dialog.settings.cannot_change_config_url_hint' | translate }}
+                                : {{config_file_url}}</p>
                         </div>
                     </div>
                 </form>
