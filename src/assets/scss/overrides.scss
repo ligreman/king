@@ -69,19 +69,6 @@
     background: mat-color($mat-teal, 500);
 }
 
-.mat-mdc-icon-button.small-btn {
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-}
-
-.mat-mdc-icon-button.small-btn mat-icon {
-    width: 16px;
-    height: 16px;
-    line-height: 16px;
-    font-size: 16px;
-}
-
 /* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
 mat-dialog-content div div {
     overflow-wrap: break-word;

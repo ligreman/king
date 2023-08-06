@@ -1,11 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="start stretch">
-    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+    <h2 class="margin-bottom-5-i" fxFlex mat-dialog-title>
         <span>{{'oauth2.dialog.info' | translate}}</span>
 
-        <span fxFlexAlign="end">
+        <span class="btn-double-doc-right" fxLayout="row" fxLayoutAlign="start center">
             <a href="https://docs.konghq.com/hub/kong-inc/oauth2/" mat-button rel="noopener noreferrer" target="_blank">
                 {{'text.documentation' | translate}}
-                <mat-icon class="mini-icon">open_in_new</mat-icon>
+                <mat-icon class="mini-icon" iconPositionEnd>open_in_new</mat-icon>
             </a>
             <button (click)="downloadJson()" mat-icon-button
                     matTooltip="{{'dialog.download_json' | translate}}" matTooltipClass="tooltip-teal">
@@ -29,25 +29,25 @@
 
                 <form [formGroup]="form" class="margin-bottom-30-i" fxFlex fxLayout="row"
                       fxLayoutAlign="space-between center">
-                    <mat-form-field fxFlex="20">
+                    <mat-form-field fxFlex="20" appearance="outline" color="accent">
                         <mat-label>{{ 'oauth2.dialog.add_name' | translate}}</mat-label>
                         <input formControlName="name" matInput type="text">
                         <mat-hint>{{ 'oauth2.dialog.add_name_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
-                    <mat-form-field fxFlex="20">
+                    <mat-form-field fxFlex="20" appearance="outline" color="accent">
                         <mat-label>{{ 'oauth2.dialog.add_id' | translate}}</mat-label>
                         <input formControlName="client_id" matInput type="text">
                         <mat-hint>{{ 'oauth2.dialog.add_id_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
-                    <mat-form-field fxFlex="20">
+                    <mat-form-field fxFlex="20" appearance="outline" color="accent">
                         <mat-label>{{ 'oauth2.dialog.add_secret' | translate}}</mat-label>
                         <input formControlName="client_secret" matInput type="text">
                         <mat-hint>{{ 'oauth2.dialog.add_secret_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
-                    <mat-form-field fxFlex="20">
+                    <mat-form-field fxFlex="20" appearance="outline" color="accent">
                         <mat-label>{{ 'oauth2.dialog.add_uris' | translate}}</mat-label>
                         <textarea formControlName="redirect_uris" matInput
                                   placeholder="https://redirect.uri"></textarea>
@@ -69,7 +69,7 @@
 
                 <div>{{'oauth2.dialog.info' | translate}}: <span>{{consumerName}}</span></div>
 
-                <div fxLayout="row">
+                <div fxLayout="row" class="margin-top-10">
                     <table [dataSource]="dataSource" fxFlex mat-table>
                         <ng-container matColumnDef="name">
                             <th *matHeaderCellDef mat-header-cell>{{'oauth2.dialog.name' | translate}}</th>
@@ -107,7 +107,7 @@
                                     <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
                                     <mat-icon *ngIf="!row.hide">visibility</mat-icon>
                                 </button>
-                                <button (click)="deleteOauth2App(row)" color="warn" mat-button mat-icon-button
+                                <button (click)="deleteOauth2App(row)" color="warn" mat-icon-button
                                         matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
                                     <mat-icon>delete</mat-icon>
                                 </button>
@@ -129,12 +129,13 @@
 
     <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between start">
         <mat-chip-listbox *ngIf="keys" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip-option *ngFor="let chip of keys['tags']" color="primary">{{chip}}</mat-chip-option>
         </mat-chip-listbox>
         <div><!-- leave empty --></div>
         <button cdkFocusInitial color="accent" mat-dialog-close="null"
+                class="margin-right-20"
                 mat-flat-button>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>
 </div>

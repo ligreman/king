@@ -112,8 +112,8 @@ export class AppComponent implements OnInit, OnDestroy {
                         next: (res) => {
                             this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
                             this.formNodes.setValue({node: this.globals.NODE_API_URL});
-                            this.connectToNode();
-                        }, error: () => this.route.navigate(['/landing'])
+                            this.connectToNode(false);
+                        }, error: () => this.route.navigate(['/landing']).then()
                     });
             }
         });
@@ -160,7 +160,7 @@ export class AppComponent implements OnInit, OnDestroy {
     /**
      Connects to Kong's node, asking for his basic information
      */
-    connectToNode() {
+    connectToNode(navigate=true) {
         if (this.formNodes.invalid) {
             return;
         }
@@ -194,7 +194,9 @@ export class AppComponent implements OnInit, OnDestroy {
                     this.globals.ROUTER_MODE = res['configuration']['router_flavor'];
 
                     // go to the node information page
-                    this.route.navigate(['/node-information']);
+                    if (navigate) {
+                        this.route.navigate(['/node-information']).then();
+                    }
                 }, error: (error) => this.toast.error('error.node_connection')
             });
     }

@@ -1,11 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="start stretch">
-    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+    <h2 class="margin-bottom-5-i" mat-dialog-title>
         <span>{{'acl.dialog.info' | translate}}</span>
 
-        <span fxFlexAlign="end">
+        <span class="btn-double-doc-right" fxLayout="row" fxLayoutAlign="start center">
             <a href="https://docs.konghq.com/hub/kong-inc/acl/" mat-button rel="noopener noreferrer" target="_blank">
                 {{'text.documentation' | translate}}
-                <mat-icon class="mini-icon">open_in_new</mat-icon>
+                <mat-icon class="mini-icon" iconPositionEnd>open_in_new</mat-icon>
             </a>
             <button (click)="downloadJson()" mat-icon-button
                     matTooltip="{{'dialog.download_json' | translate}}" matTooltipClass="tooltip-teal">
@@ -28,10 +28,10 @@
                 <div fxFlex="50">{{'acl.dialog.groups' | translate}}: <span>{{consumerName}}</span></div>
 
                 <div fxFlex="50">
-                    <mat-form-field fxFlex>
+                    <mat-form-field fxFlex appearance="outline" color="accent">
                         <mat-label>{{ 'acl.dialog.add_group' | translate}}</mat-label>
                         <input (ngModelChange)="valueChanged()" [(ngModel)]="group" [matAutocomplete]="auto" matInput type="text">
-                        <button (click)="group='';valueChanged()" mat-button mat-icon-button matSuffix>
+                        <button (click)="group='';valueChanged()" mat-icon-button matSuffix>
                             <mat-icon>close</mat-icon>
                         </button>
                         <mat-autocomplete #auto="matAutocomplete">
@@ -55,7 +55,7 @@
                              <mat-icon mat-list-icon>people</mat-icon>
                              <div mat-line matTooltip="ID: {{acl.id}}" matTooltipClass="tooltip-teal">{{acl.group}}</div>
                              <div class="text-small" mat-line>{{ (acl.created_at * 1000) | date:'medium'}}</div>
-                             <button (click)="deleteAcl(acl)" class="margin-left-20-i" color="warn" mat-button mat-icon-button
+                             <button (click)="deleteAcl(acl)" class="margin-left-20-i" color="warn" mat-icon-button
                                      matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
                                  <mat-icon>delete</mat-icon>
                              </button>
@@ -63,12 +63,12 @@
                      </mat-list>-->
                     <mat-grid-list cols="2" rowHeight="2em">
                         <mat-grid-tile *ngFor="let acl of acls" class="custom">
-                            <mat-icon color="accent" mat-list-icon matTooltip="{{ (acl.created_at * 1000) | date:'medium'}}" matTooltipClass="tooltip-teal">
+                            <mat-icon color="accent" matTooltip="{{ (acl.created_at * 1000) | date:'medium'}}" matTooltipClass="tooltip-teal">
                                 event
                             </mat-icon>
-                            <mat-icon mat-list-icon>people</mat-icon>
+                            <mat-icon>people</mat-icon>
                             <div matTooltip="ID: {{acl.id}}" matTooltipClass="tooltip-teal">{{acl.group}}</div>
-                            <button (click)="deleteAcl(acl)" class="margin-left-20-i" color="warn" mat-button mat-icon-button
+                            <button (click)="deleteAcl(acl)" class="margin-left-20-i" color="warn" mat-icon-button
                                     matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal" matTooltipPosition="right">
                                 <mat-icon>delete</mat-icon>
                             </button>
@@ -81,11 +81,13 @@
 
     <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+    <mat-dialog-actions *ngIf="!loading"  fxLayout="row" fxLayoutAlign="space-between start">
         <mat-chip-listbox *ngIf="acls" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip-option *ngFor="let chip of acls['tags']" color="primary">{{chip}}</mat-chip-option>
         </mat-chip-listbox>
         <div><!-- leave empty --></div>
-        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null"
+                class="margin-right-20"
+                mat-flat-button>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>
 </div>

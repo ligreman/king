@@ -142,6 +142,14 @@ mat-icon.link {
     margin-left: 20px !important;
 }
 
+.margin-right-5 {
+    margin-right: 5px;
+}
+
+.margin-right-10 {
+    margin-right: 10px;
+}
+
 .margin-right-20 {
     margin-right: 20px;
 }
@@ -180,4 +188,9 @@ mat-icon.link {
     float: right;
     position: relative;
     top: 15px;
+}
+.btn-double-doc-right {
+    float: right;
+    position: relative;
+    top: 9px;
 }

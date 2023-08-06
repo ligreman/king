@@ -1,18 +1,18 @@
 <mat-progress-bar mode="indeterminate" color="accent" [fxShow]="loading"></mat-progress-bar>
 <div class="progress-placeholder" [fxShow]="!loading"></div>
 
-<div fxLayout="row" fxLayoutAlign="center center" class="padding-top-20">
+<div fxLayout="row" fxLayoutAlign="center center" class="padding-top-20 margin-bottom-10">
     <h2 fxFlex="90" class="margin-0-i">{{ 'sni.header' | translate}}</h2>
 </div>
 
 <div fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="90" fxLayout="column">
         <div fxLayout="row" fxLayoutAlign="start end">
-            <mat-form-field color="accent" fxFlex>
+            <mat-form-field color="accent" appearance="outline" fxFlex>
                 <mat-label>{{ 'text.search' | translate }}</mat-label>
                 <input matInput (keyup)="applyFilter()" placeholder="{{'element.text_search' | translate}}"
                        #input [(ngModel)]="filter">
-                <button mat-button *ngIf="filter" matSuffix mat-icon-button (click)="filter=''; applyFilter()">
+                <button *ngIf="filter" matSuffix mat-icon-button (click)="filter=''; applyFilter()">
                     <mat-icon>close</mat-icon>
                 </button>
             </mat-form-field>

@@ -1,11 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="start stretch">
-    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+    <h2 class="margin-bottom-5-i" fxFlex mat-dialog-title>
         <span>{{'jwt.dialog.info' | translate}}</span>
 
-        <span fxFlexAlign="end">
+        <span class="btn-double-doc-right" fxLayout="row" fxLayoutAlign="start center">
             <a href="https://docs.konghq.com/hub/kong-inc/jwt/" mat-button rel="noopener noreferrer" target="_blank">
                 {{'text.documentation' | translate}}
-                <mat-icon class="mini-icon">open_in_new</mat-icon>
+                <mat-icon class="mini-icon" iconPositionEnd>open_in_new</mat-icon>
             </a>
             <button (click)="downloadJson()" mat-icon-button
                     matTooltip="{{'dialog.download_json' | translate}}" matTooltipClass="tooltip-teal">
@@ -28,13 +28,13 @@
                 <div>{{'jwt.add' | translate}}</div>
 
                 <form [formGroup]="form" class="margin-bottom-30-i" fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-                    <mat-form-field fxFlex="20">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="20">
                         <mat-label>{{ 'jwt.dialog.add_jwt' | translate}}</mat-label>
                         <input formControlName="key" matInput type="text">
                         <mat-hint>{{ 'jwt.dialog.add_jwt_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
-                    <mat-form-field class="margin-left-10" fxFlex="15">
+                    <mat-form-field appearance="outline" color="accent" class="margin-left-10" fxFlex="15">
                         <mat-label>{{ 'jwt.dialog.add_alg' | translate}}</mat-label>
                         <mat-select formControlName="algorithm">
                             <mat-option *ngFor="let alg of validAlgorithms" [value]="alg">{{alg}}</mat-option>
@@ -42,13 +42,13 @@
                         <mat-hint>{{ 'jwt.dialog.add_alg_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
-                    <mat-form-field fxFlex="20">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="20">
                         <mat-label>{{ 'jwt.dialog.add_rsa' | translate}}</mat-label>
                         <textarea formControlName="rsa_public_key" matInput placeholder="PEM PUBLIC KEY"></textarea>
                         <mat-hint>{{ 'jwt.dialog.add_rsa_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
-                    <mat-form-field fxFlex="20" matTooltip="{{'jwt.dialog.add_secret_tooltip' | translate}}" matTooltipClass="tooltip-teal">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="20" matTooltip="{{'jwt.dialog.add_secret_tooltip' | translate}}" matTooltipClass="tooltip-teal">
                         <mat-label>{{ 'jwt.dialog.add_secret' | translate}}</mat-label>
                         <input formControlName="secret" matInput type="text">
                         <mat-hint>{{ 'jwt.dialog.add_secret_hint' | translate}}</mat-hint>
@@ -62,7 +62,7 @@
 
                 <div>{{'jwt.dialog.info' | translate}}: <span>{{consumerName}}</span></div>
 
-                <div fxLayout="row">
+                <div fxLayout="row" class="margin-top-10">
                     <table [dataSource]="dataSource" fxFlex mat-table>
                         <ng-container matColumnDef="key">
                             <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.key' | translate}}</th>
@@ -87,11 +87,11 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="row.hide=!row.hide" class="margin-left-20-i" mat-button mat-icon-button>
+                                <button (click)="row.hide=!row.hide" class="margin-left-20-i" mat-icon-button>
                                     <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
                                     <mat-icon *ngIf="!row.hide">visibility</mat-icon>
                                 </button>
-                                <button (click)="deleteJwtToken(row)" color="warn" mat-button mat-icon-button
+                                <button (click)="deleteJwtToken(row)" color="warn" mat-icon-button
                                         matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
                                     <mat-icon>delete</mat-icon>
                                 </button>
@@ -113,11 +113,13 @@
 
     <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between">
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between start">
         <mat-chip-listbox *ngIf="keys" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip-option *ngFor="let chip of keys['tags']" color="primary">{{chip}}</mat-chip-option>
         </mat-chip-listbox>
         <div><!-- leave empty --></div>
-        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null"
+                class="margin-right-20"
+                mat-flat-button>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>
 </div>
