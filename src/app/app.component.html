@@ -97,14 +97,15 @@
 
     <span fxFlex></span>
 
-    <form [formGroup]="formNodes" fxFlex.gt-md="25" fxFlex.lt-lg="40">
+    <form [formGroup]="formNodes" fxFlex.gt-md="30" fxFlex.lt-lg="40">
         <button (click)="settingsDialog()" [matTooltipShowDelay]="1000" color="accent"
                 mat-icon-button matTooltipClass="tooltip-teal"
                 matTooltip="{{'header.menu.settings_tooltip' | translate}}"
                 *ngIf="allowConfig">
             <mat-icon>settings</mat-icon>
         </button>
-        <mat-form-field class="small-font" appearance="outline" color="accent" fxFlex>
+
+        <mat-form-field class="small-font connection-box" appearance="outline" color="accent" fxFlex>
             <mat-label>{{'header.menu.kong_node' | translate}}</mat-label>
             <input [matAutocomplete]="auto" [matTooltipShowDelay]="1000" aria-label=""
                    formControlName="node"

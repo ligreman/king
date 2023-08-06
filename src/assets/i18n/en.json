@@ -177,7 +177,7 @@
             "oauth2": "OAuth 2.0 Credentials",
             "settings_tooltip": "King configuration",
             "kong_node": "Kong node admin API",
-            "kong_node_hint": "Type the path to the Kong admin api",
+            "kong_node_hint": "Format: http(s)://<admin-api>:<port>",
             "kong_node_disabled_hint": "Modifying the connection node to Kong is not allowed",
             "kong_node_tooltip": "Type in the URL and port",
             "kong_node_button_tooltip": "Connect",

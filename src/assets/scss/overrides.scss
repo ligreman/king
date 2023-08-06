@@ -48,16 +48,16 @@
     max-width: 500px !important;
 }
 
-.mat-button-toggle {
+.mat-button-toggle-group .mat-button-toggle-appearance-standard {
     background-color: mat-color($mat-gray, 900);
 
 }
 
-.mat-button-toggle-checked {
+.mat-button-toggle-group .mat-button-toggle-appearance-standard.mat-button-toggle-checked {
     background-color: mat-color($mat-teal, 900);
 }
 
-.mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
+.mat-button-toggle-group .mat-button-toggle-appearance-standard .mat-button-toggle-label-content {
     line-height: 24px;
 }
 
@@ -86,6 +86,35 @@
 mat-dialog-content div div {
     overflow-wrap: break-word;
 }
+
+/* Input box node connection */
+.connection-box {
+    line-height: 20px;
+    height: 20px;
+}
+
+.connection-box .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding-top: 12px;
+    padding-bottom: 0;
+}
+
+.connection-box .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label{
+    top:20px;
+}
+.connection-box .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
+    top:26px;
+}
+.connection-box .mat-mdc-text-field-wrapper {
+    height: 40px;
+}
+.connection-box mat-hint {
+    font-weight: 200;
+}
+.connection-box .mat-mdc-form-field-error-wrapper .ng-star-inserted{
+    position: absolute;
+    top:0;
+}
+
 
 /*
     NGX-CHARTS

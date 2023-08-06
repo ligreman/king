@@ -3,10 +3,15 @@
 @import '@angular/material/theming';
 // Plus imports for other components in your app.
 
+$custom-typography: mat-typography-config(
+    $font-family: 'Roboto'
+);
+
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
 // Be sure that you only ever include this mixin once!
 @include mat-core();
+@include angular-material-typography($custom-typography);
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
@@ -39,7 +44,6 @@ $king-theme: mat-dark-theme((
 @import 'assets/scss/colors';
 @import 'assets/scss/common';
 
-
 html, body {
     height: 100%;
 }
@@ -49,7 +53,7 @@ body {
     margin: 0;
     display: flex;
     flex-direction: column;
-    overflow-x: hidden;
+    //overflow-x: hidden;
     overflow: hidden;
 }
 
@@ -111,3 +115,4 @@ footer {
 .mat-ink-bar {
     height: 4px !important;
 }
+

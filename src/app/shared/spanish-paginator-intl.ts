@@ -1,9 +1,9 @@
 /**
  * Sobrescribo la clase original para añadir los textos en español
  */
-import { Injectable } from '@angular/core';
-import { MatPaginatorIntl } from '@angular/material/paginator';
-import { TranslateService } from '@ngx-translate/core';
+import {Injectable} from '@angular/core';
+import {MatPaginatorIntl} from '@angular/material/paginator';
+import {TranslateService} from '@ngx-translate/core';
 
 @Injectable({
     providedIn: 'root'
