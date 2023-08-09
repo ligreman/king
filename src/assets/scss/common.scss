@@ -10,8 +10,16 @@ mat-icon.link {
     vertical-align: middle;
 }
 
+.text-align-center {
+    text-align: center;
+}
+
 .text-align-right {
     text-align: right;
+}
+
+.text-align-right-i {
+    text-align: right !important;
 }
 
 .monospace {
@@ -114,6 +122,14 @@ mat-icon.link {
     padding: 40px;
 }
 
+.padding-top-10 {
+    padding-top: 10px;
+}
+
+.padding-top-10-i {
+    padding-top: 10px !important;
+}
+
 .padding-top-20 {
     padding-top: 20px;
 }
@@ -170,6 +186,10 @@ mat-icon.link {
     padding-right: 20px;
 }
 
+.width-100 {
+    width: 100%;
+}
+
 .mini-icon {
     font-size: 1rem;
     vertical-align: text-top;
@@ -189,8 +209,15 @@ mat-icon.link {
     position: relative;
     top: 15px;
 }
+
 .btn-double-doc-right {
     float: right;
     position: relative;
     top: 9px;
+}
+
+.mat-paginator-sticky {
+    bottom: 0px;
+    position: sticky;
+    z-index: 10;
 }

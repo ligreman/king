@@ -74,6 +74,17 @@ mat-dialog-content div div {
     overflow-wrap: break-word;
 }
 
+mat-hint.grey-hint {
+    font-weight: 200;
+    color: mat-color($mat-grey, 500);
+}
+
+button.small-btn-icon {
+    font-size: 12px;
+    color: mat-color($mat-teal, 300);
+    font-weight: bold;
+}
+
 /* Input box node connection */
 .connection-box {
     line-height: 20px;
@@ -85,21 +96,25 @@ mat-dialog-content div div {
     padding-bottom: 0;
 }
 
-.connection-box .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label{
-    top:20px;
+.connection-box .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {
+    top: 20px;
 }
+
 .connection-box .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mdc-notched-outline--upgraded .mdc-floating-label--float-above {
-    top:26px;
+    top: 26px;
 }
+
 .connection-box .mat-mdc-text-field-wrapper {
     height: 40px;
 }
+
 .connection-box mat-hint {
     font-weight: 200;
 }
-.connection-box .mat-mdc-form-field-error-wrapper .ng-star-inserted{
+
+.connection-box .mat-mdc-form-field-error-wrapper .ng-star-inserted {
     position: absolute;
-    top:0;
+    top: 0;
 }
 
 

@@ -75,7 +75,7 @@ export class DialogSettingsComponent implements OnInit, OnDestroy {
             localStorage.setItem('kongConfigFileUrl', this.form.value.config_url);
         }
 
-        this.toast.success('dialog.settings.saved', '', {timeout:5000});
+        this.toast.success('dialog.settings.saved', '', {timeOut:5000});
         this.dialogRef.close();
     }
 }

@@ -11,12 +11,20 @@
     height: 60%;
 }
 
+.toolbar-color{
+    background-color: mat-color($mat-blue-gray, 900);
+}
+
 .small-font {
     font-size: .8rem;
 }
 
 .active-route {
     color: mat-color($mat-teal, A400);
+}
+
+.grey-color {
+    color: #ccc;
 }
 
 #manual-container {

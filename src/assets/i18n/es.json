@@ -63,6 +63,8 @@
         "documentation": "Documentación",
         "advanced_fields": "Campos avanzados",
         "search": "Buscar",
+        "search_table": "Buscar en la tabla",
+        "filter": "Filtrar",
         "create": "Crear",
         "info": "Información",
         "info_short": "Info",
@@ -747,13 +749,24 @@
         }
     },
     "element": {
+        "search_tags": "Buscar por etiquetas",
+        "search_tags_placeholder": "Etiqueta a buscar...",
+        "current_search": "Búsqueda actual",
+        "filter_table": "Filtrar tabla",
         "text_search": "texto a buscar",
+        "new_search": "Nueva búsqueda",
+        "new_search_tooltip": "Reinicia la búsqueda y los datos de la tabla",
+        "load_1000": "1000 +",
+        "load_1000_tooltip": "Cargar los siguientes 1000 elementos",
+        "load_all": "Cargar todo",
+        "load_all_tooltip": "Cargar el resto de elementos",
         "no_data": "No hay resultados",
         "no_data_search": "No hay resultados buscando por",
         "explanation": "Para agregar un ACL, API Key o token JWT, primero debe agregar el plugin correspondiente a algún elemento",
         "actions": "Acciones",
         "credentials": "Credenciales",
         "reload": "Recargar los datos",
+        "need_to_reload": "Los cambios realizados no se reflejarán en la tabla hasta que realice una nueva búsqueda",
         "ssl": "Certificados"
     },
     "manual": {

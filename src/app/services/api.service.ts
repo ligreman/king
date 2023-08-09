@@ -155,8 +155,20 @@ export class ApiService {
     /*
         CONSUMERS ENDPOINTS
      */
-    public getConsumers() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers?size=1000').pipe(catchError(this.handleError));
+    public getConsumers(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        let offsetQuery = '';
+        if (offset !== null) {
+            offsetQuery = '&offset=' + offset;
+        }
+        let tagsQuery = '';
+        if (tags !== null && tags.length > 0) {
+            if (tagsAnd) {
+                tagsQuery = '&tags=' + tags.join(',');
+            } else {
+                tagsQuery = '&tags=' + tags.join('/');
+            }
+        }
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumer(id: string) {

@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" id="header-container">
+<mat-toolbar class="toolbar-color" id="header-container">
     <img alt="" class="logo" matTooltip="ROAR!" matTooltipClass="tooltip-teal" matTooltipShowDelay="2000"
          src="assets/img/logo.svg"/>
 
@@ -123,8 +123,8 @@
             <mat-error *ngIf="nodeField.invalid && (nodeField.dirty || nodeField.touched)">
                 <div *ngIf="nodeField.errors.required">{{ 'header.menu.error_node_field' | translate }}</div>
             </mat-error>
-            <mat-hint *ngIf="!enableKongUrl">{{'header.menu.kong_node_disabled_hint' | translate}}</mat-hint>
-            <mat-hint *ngIf="enableKongUrl">{{'header.menu.kong_node_hint' | translate}}</mat-hint>
+            <mat-hint class="grey-color" *ngIf="!enableKongUrl">{{'header.menu.kong_node_disabled_hint' | translate}}</mat-hint>
+            <mat-hint class="grey-color" *ngIf="enableKongUrl">{{'header.menu.kong_node_hint' | translate}}</mat-hint>
         </mat-form-field>
         <button (click)="connectToNode()" [matTooltipShowDelay]="1000" color="accent"
                 mat-icon-button
