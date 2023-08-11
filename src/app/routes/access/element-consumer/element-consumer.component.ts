@@ -70,7 +70,7 @@ export class ElementConsumerComponent implements OnInit, OnDestroy {
 
                 this.filteredTags = this.tagCtrl.valueChanges.pipe(
                     startWith(null),
-                    map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
+                    map((tag: string | null) => (tag ? this._filter(tag) : this._filter(''))),
                 );
             });
     }
@@ -280,6 +280,7 @@ export class ElementConsumerComponent implements OnInit, OnDestroy {
         const index = this.currentTags.indexOf(tag);
         if (index >= 0) {
             this.currentTags.splice(index, 1);
+            this.tagCtrl.setValue(null);
         }
     }
 
@@ -296,6 +297,8 @@ export class ElementConsumerComponent implements OnInit, OnDestroy {
      */
     private _filter(value: string): string[] {
         const filterValue = value.toLowerCase();
-        return this.allTags.filter(tag => tag.toLowerCase().includes(filterValue));
+        return this.allTags.filter(tag => {
+            return tag === '' || (tag.toLowerCase().includes(filterValue) && !this.currentTags.includes(tag.toLowerCase()));
+        });
     }
 }

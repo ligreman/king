@@ -759,7 +759,7 @@
         "load_1000": "1000 +",
         "load_1000_tooltip": "Cargar los siguientes 1000 elementos",
         "load_all": "Cargar todo",
-        "load_all_tooltip": "Cargar el resto de elementos",
+        "load_all_tooltip": "Cargar el resto de elementos. Puede llevar tiempo",
         "no_data": "No hay resultados",
         "no_data_search": "No hay resultados buscando por",
         "explanation": "Para agregar un ACL, API Key o token JWT, primero debe agregar el plugin correspondiente a algún elemento",

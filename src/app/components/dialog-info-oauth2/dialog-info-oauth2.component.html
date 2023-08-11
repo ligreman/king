@@ -102,8 +102,7 @@
                         <ng-container matColumnDef="actions">
                             <th *matHeaderCellDef mat-header-cell>{{'element.actions' | translate}}</th>
                             <td *matCellDef="let row" mat-cell>
-                                <button (click)="row.hide=!row.hide" class="margin-left-20-i" mat-button
-                                        mat-icon-button>
+                                <button (click)="row.hide=!row.hide" class="margin-left-20-i" mat-icon-button>
                                     <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
                                     <mat-icon *ngIf="!row.hide">visibility</mat-icon>
                                 </button>

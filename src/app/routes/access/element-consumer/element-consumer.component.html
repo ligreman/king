@@ -33,15 +33,19 @@
                         {{tag}}
                     </mat-option>
                 </mat-autocomplete>
-                <mat-hint class="grey-hint">{{'service.dialog.tags_hint' | translate}}. {{'element.current_search' | translate}}: {{(currentSearch!=='')?currentSearch:''}}</mat-hint>
+                <mat-hint class="grey-hint">{{'service.dialog.tags_hint' | translate}}
+                    . {{'element.current_search' | translate}}
+                    : {{(currentSearch !== '') ? currentSearch : ''}}</mat-hint>
             </mat-form-field>
 
-            <button class="margin-left-20" (click)="newSearch()" color="accent" mat-flat-button
-                    matTooltip="{{'element.new_search_tooltip' | translate}}"
-                    matTooltipClass="tooltip-teal">
-                <mat-icon iconPositionEnd>search</mat-icon>
-                {{ 'element.new_search' | translate }}
-            </button>
+            <div fxFlex="20" fxLayoutAlign="end center">
+                <button (click)="newSearch()" color="accent" mat-flat-button
+                        matTooltip="{{'element.new_search_tooltip' | translate}}"
+                        matTooltipClass="tooltip-teal">
+                    <mat-icon iconPositionEnd>search</mat-icon>
+                    {{ 'element.new_search' | translate }}
+                </button>
+            </div>
         </div>
 
 
@@ -50,10 +54,10 @@
 
             <ng-container matColumnDef="new-element">
                 <th *matHeaderCellDef mat-header-cell>
-                <button (click)="addEditConsumer()" color="accent" mat-stroked-button>
-                    <mat-icon iconPositionEnd>add</mat-icon>
-                    {{ 'consumer.add' | translate }}
-                </button>
+                    <button (click)="addEditConsumer()" color="accent" mat-stroked-button>
+                        <mat-icon iconPositionEnd>add</mat-icon>
+                        {{ 'consumer.add' | translate }}
+                    </button>
                 </th>
             </ng-container>
 

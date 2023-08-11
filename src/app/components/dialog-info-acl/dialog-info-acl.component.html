@@ -50,17 +50,6 @@
 
             <div fxLayout="row">
                 <div fxFlex>
-                    <!-- <mat-list>
-                         <mat-list-item *ngFor="let acl of acls">
-                             <mat-icon mat-list-icon>people</mat-icon>
-                             <div mat-line matTooltip="ID: {{acl.id}}" matTooltipClass="tooltip-teal">{{acl.group}}</div>
-                             <div class="text-small" mat-line>{{ (acl.created_at * 1000) | date:'medium'}}</div>
-                             <button (click)="deleteAcl(acl)" class="margin-left-20-i" color="warn" mat-icon-button
-                                     matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal">
-                                 <mat-icon>delete</mat-icon>
-                             </button>
-                         </mat-list-item>
-                     </mat-list>-->
                     <mat-grid-list cols="2" rowHeight="2em">
                         <mat-grid-tile *ngFor="let acl of acls" class="custom">
                             <mat-icon color="accent" matTooltip="{{ (acl.created_at * 1000) | date:'medium'}}" matTooltipClass="tooltip-teal">

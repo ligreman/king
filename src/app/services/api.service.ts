@@ -330,11 +330,11 @@ export class ApiService {
         ACL PLUGIN
      */
     public getAcls() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/acls?size=1000').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/acls').pipe(catchError(this.handleError));
     }
 
     public getConsumerAcls(consumer: string) {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers/' + consumer + '/acls?size=1000').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers/' + consumer + '/acls').pipe(catchError(this.handleError));
     }
 
     public postConsumerAcl(consumer: string, body) {

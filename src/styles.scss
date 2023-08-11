@@ -17,7 +17,7 @@ $custom-typography: mat-typography-config(
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $king-primary: mat-palette($mat-blue-gray, 400);
-$king-accent: mat-palette($mat-teal);
+$king-accent: mat-palette($mat-teal, 400);
 
 // The warn palette is optional (defaults to red).
 $king-warn: mat-palette($mat-red, 600);
