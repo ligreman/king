@@ -62,7 +62,7 @@
                             </mat-autocomplete>
                         </mat-form-field>
 
-                        <button (click)="addAclToConsumer()" color="accent" mat-icon-button
+                        <button (click)="addAclToConsumer()" color="accent" mat-icon-button [disabled]="isDisabled()"
                                 matTooltip="{{'acl.add' | translate}}" matTooltipClass="tooltip-teal">
                             <mat-icon>add</mat-icon>
                         </button>

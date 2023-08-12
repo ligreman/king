@@ -23,7 +23,6 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy, AfterViewInit 
     total_acls: string[] = [];
     filteredAcls: string[] = [];
     loading = true;
-    // group = '';
     consumerId;
     consumerName;
     currentTags = [];
@@ -73,7 +72,7 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     /**
-     * Obtengo los acls
+     * Recargo
      */
     loadData() {
         this.loading = true;
@@ -172,6 +171,10 @@ export class DialogInfoAclComponent implements OnInit, OnDestroy, AfterViewInit 
         const filterValue = value.toLowerCase();
 
         return this.total_acls.filter(option => option.toLowerCase().includes(filterValue));
+    }
+
+    isDisabled() {
+        return this.form.controls.group.value === ''
     }
 
 

@@ -45,20 +45,6 @@
                     {{ 'element.new_search' | translate }}
                 </button>
             </div>
-            <!--
-                        <mat-form-field color="accent" appearance="outline" fxFlex>
-                            <mat-label>{{ 'text.search' | translate }}</mat-label>
-                            <input #input (keyup)="applyFilter()" [(ngModel)]="filter"
-                                   matInput placeholder="{{'element.text_search' | translate}}">
-                            <button (click)="filter=''; applyFilter()" *ngIf="filter" mat-icon-button matSuffix>
-                                <mat-icon>close</mat-icon>
-                            </button>
-                        </mat-form-field>
-                        <button (click)="loadData()" color="accent" mat-icon-button matTooltip="{{'element.reload' | translate}}"
-                                matTooltipClass="tooltip-teal">
-                            <mat-icon>refresh</mat-icon>
-                        </button>
-                        -->
         </div>
 
         <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="group"
