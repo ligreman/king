@@ -2,12 +2,18 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {sortedUniq as _sortedUniq} from 'lodash';
 import {ApiService} from '../../../services/api.service';
 import {DialogHelperService} from '../../../services/dialog-helper.service';
 import {ToastService} from '../../../services/toast.service';
+import {Observable, startWith} from "rxjs";
+import {FormControl} from "@angular/forms";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {map} from "rxjs/operators";
+import {MatChipInputEvent} from "@angular/material/chips";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 
 @AutoUnsubscribe()
 @Component({
@@ -21,13 +27,30 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    data;
+    // current table data
+    data = [];
+    // api offset of the next data
+    nextData = null;
     loading = false;
+    // tag search input
+    search = [];
+    searchAnd = true;
+    // currently searching this
+    currentSearch = '';
+    // current content of the table filter input
+    input = '';
+    // table filter input
     filter = '';
     consumers = {};
 
-    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService,
-                private translate: TranslateService) {
+    allTags = [];
+    currentTags = [];
+    filteredTags: Observable<string[]>;
+    tagCtrl = new FormControl('');
+
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+
+    constructor(private api: ApiService, private toast: ToastService, private dialogHelper: DialogHelperService, private translate: TranslateService) {
     }
 
     ngOnInit(): void {
@@ -35,35 +58,74 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
         this.loading = true;
         this.getAcls();
         this.getConsumers();
+
+        // Lista de tags
+        this.api.getTags()
+            .subscribe((res) => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
+
+                this.filteredTags = this.tagCtrl.valueChanges.pipe(
+                    startWith(null),
+                    map((tag: string | null) => (tag ? this._filter(tag) : this._filter(''))),
+                );
+            });
     }
 
     ngOnDestroy(): void {
     }
 
     /**
-     * Recarga los datos de consumidores
+     * Starts a new clean the table data
      */
-    reloadData(cleanFilter = false) {
+    newSearch() {
+        // Table data and offset
+        this.nextData = null;
+        this.data = [];
+
+        // Search string and tag filter
+        this.search = this.currentTags;
+        this.currentSearch = this.searchAnd ? this.search.join(' AND ') : this.search.join(' OR ');
+        this.loadData(true);
+    }
+
+    /**
+     * Recarga los datos
+     */
+    loadData(cleanFilter = false, loadAll = false) {
         this.loading = true;
         if (cleanFilter) {
             this.filter = '';
         }
 
-        this.getAcls();
-        this.getConsumers();
+        this.getAcls(loadAll);
     }
 
     /**
      * Obtiene los acl
      */
-    getAcls() {
-        this.api.getAcls()
+    getAcls(loadAll = false) {
+        this.api.getAcls(1000, this.nextData, this.search, this.searchAnd)
             .subscribe({
                 next: (value) => {
-                    this.dataSource = new MatTableDataSource(value['data']);
+                    this.data = this.data.concat(value['data']);
+
+                    // is there more data?
+                    if (value['offset'] !== null && value['offset'] !== undefined) {
+                        this.nextData = value['offset'];
+                    } else {
+                        this.nextData = null;
+                    }
+
+                    // update the table with the new data loaded
+                    this.dataSource = new MatTableDataSource(this.data);
                     this.dataSource.paginator = this.paginator;
-                    // Accessor para poder ordenar por la columna consumer, cuyo campo para ordenar está anidado
-                    // por defecto no ordena en campos anidados
+
+                    // Accessor para poder ordenar por la columna consumer, cuyo campo para ordenar está anidado por defecto no ordena en campos anidados
                     this.dataSource.sortingDataAccessor = (item, property) => {
                         switch (property) {
                             case 'consumer':
@@ -76,23 +138,32 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
                 },
                 error: () => this.toast.error('error.node_connection'),
                 complete: () => {
-                    this.loading = false;
-                    this.applyFilter();
+                    // load all till the end?
+                    if (loadAll && this.nextData !== null) {
+                        this.getAcls(true);
+                    } else {
+                        this.loading = false;
+                        this.applyFilter();
+                    }
                 }
             });
     }
 
     /**
-     * Obtiene la información del nodo
+     * Obtiene todos los consumidores
      */
-    getConsumers() {
-        this.api.getConsumers()
+    getConsumers(offset = null) {
+        this.api.getConsumers(1000, offset)
             .subscribe({
                 next: (res) => {
                     // Recojo los consumidores
                     res['data'].forEach(consumer => {
                         this.consumers[consumer.id] = consumer.username;
                     });
+
+                    if (res['offset'] && res['offset'] !== null) {
+                        this.getConsumers(res['offset']);
+                    }
                 },
                 error: () => this.toast.error('error.node_connection')
             });
@@ -103,6 +174,7 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
      */
     applyFilter() {
         const filterValue = this.filter;
+        this.input = this.filter;
         this.dataSource.filter = filterValue.trim().toLowerCase();
 
         if (this.dataSource.paginator) {
@@ -121,10 +193,72 @@ export class AccessAclsComponent implements OnInit, OnDestroy {
             name: select.group + ' [' + this.translate.instant('text.consumer') + ' ' + this.consumers[select.consumer.id] + ']'
         }, 'acl')
             .then(() => {
-                this.reloadData();
+                this.toast.info('element.need_to_reload', '', {timeOut: 8000, extendedTimeOut: 15000});
             })
             .catch(error => {
             });
     }
 
+
+    /**
+     * Change the tag search mode from AND to OR
+     */
+    changeSearchAnd() {
+        this.searchAnd = !this.searchAnd;
+    }
+
+    /**
+     * Get the current paginator size
+     */
+    getPaginatorLength() {
+        return this.paginator !== undefined ? this.paginator.pageSize : 0;
+    }
+
+    /**
+     * Add a tag to the selector
+     */
+    addTag(event: MatChipInputEvent): void {
+        const input = event.chipInput.inputElement;
+        const value = event.value.trim();
+
+        // Add our tag
+        if ((value || '') && /^[\w.\-_~]+$/.test(value)) {
+            this.currentTags.push(value);
+
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
+            this.tagCtrl.setValue(null);
+        }
+    }
+
+    /**
+     * Removes a tag from the selector
+     */
+    removeTag(tag: string): void {
+        const index = this.currentTags.indexOf(tag);
+        if (index >= 0) {
+            this.currentTags.splice(index, 1);
+            this.tagCtrl.setValue(null);
+        }
+    }
+
+    /**
+     * When a tag is selected from the dropdown
+     */
+    selectedTag($event: MatAutocompleteSelectedEvent) {
+        this.currentTags.push($event.option.viewValue);
+        this.tagCtrl.setValue(null);
+    }
+
+    /**
+     * Filter the tags dropdown
+     */
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        return this.allTags.filter(tag => {
+            return tag === '' || (tag.toLowerCase().includes(filterValue) && !this.currentTags.includes(tag.toLowerCase()));
+        });
+    }
 }

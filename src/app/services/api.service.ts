@@ -25,6 +25,22 @@ export class ApiService {
         return throwError({code: error.status, message: errorMessage});
     }
 
+    parseOffsetAndTags(offset, tags,tagsAnd) {
+        let offsetQuery = '';
+        if (offset !== null) {
+            offsetQuery = '&offset=' + offset;
+        }
+        let tagsQuery = '';
+        if (tags !== null && tags.length > 0) {
+            if (tagsAnd) {
+                tagsQuery = '&tags=' + tags.join(',');
+            } else {
+                tagsQuery = '&tags=' + tags.join('/');
+            }
+        }
+        return {offsetQuery,tagsQuery};
+    }
+
     /*
         NODES ENDPOINTS
      */
@@ -156,18 +172,7 @@ export class ApiService {
         CONSUMERS ENDPOINTS
      */
     public getConsumers(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
-        let offsetQuery = '';
-        if (offset !== null) {
-            offsetQuery = '&offset=' + offset;
-        }
-        let tagsQuery = '';
-        if (tags !== null && tags.length > 0) {
-            if (tagsAnd) {
-                tagsQuery = '&tags=' + tags.join(',');
-            } else {
-                tagsQuery = '&tags=' + tags.join('/');
-            }
-        }
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
         return this.httpClient.get(this.globals.NODE_API_URL + '/consumers?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
@@ -329,8 +334,9 @@ export class ApiService {
     /*
         ACL PLUGIN
      */
-    public getAcls() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/acls').pipe(catchError(this.handleError));
+    public getAcls(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery,tagsQuery} = this.parseOffsetAndTags(offset,tags,tagsAnd);
+        return this.httpClient.get(this.globals.NODE_API_URL + '/acls?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumerAcls(consumer: string) {

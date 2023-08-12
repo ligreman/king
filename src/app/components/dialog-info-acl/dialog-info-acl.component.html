@@ -24,41 +24,67 @@
 
     <div fxFlex>
         <mat-dialog-content *ngIf="acls && !loading" class="margin-0-i">
-            <div fxLayout="row" fxLayoutAlign="space-between center">
-                <div fxFlex="50">{{'acl.dialog.groups' | translate}}: <span>{{consumerName}}</span></div>
+            <form [formGroup]="form">
+                <div fxLayout="row" fxLayoutAlign="space-between center">
+                    <div fxFlex="45">
+                        <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                            <mat-chip-grid #chipList aria-label="">
+                                <mat-chip-row (removed)="removeTag(tag)"
+                                              *ngFor="let tag of currentTags" removable="true">{{tag}}
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </mat-chip-row>
+                                <input (matChipInputTokenEnd)="addTag($event)"
+                                       [matAutocomplete]="auto"
+                                       [matChipInputFor]="chipList"
+                                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                       formControlName="tags"
+                                       matChipInputAddOnBlur="true"
+                                       placeholder="{{'service.dialog.tags' | translate}}"/>
+                            </mat-chip-grid>
+                            <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                                <mat-option *ngFor="let tag of allTags" [value]="tag">
+                                    {{tag}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
 
-                <div fxFlex="50">
-                    <mat-form-field fxFlex appearance="outline" color="accent">
-                        <mat-label>{{ 'acl.dialog.add_group' | translate}}</mat-label>
-                        <input (ngModelChange)="valueChanged()" [(ngModel)]="group" [matAutocomplete]="auto" matInput type="text">
-                        <button (click)="group='';valueChanged()" mat-icon-button matSuffix>
-                            <mat-icon>close</mat-icon>
+                    <div fxFlex="45">
+                        <mat-form-field fxFlex appearance="outline" color="accent">
+                            <mat-label>{{ 'acl.dialog.add_group' | translate}}</mat-label>
+                            <input formControlName="group" [matAutocomplete]="autogroup"
+                                   matInput type="text">
+                            <mat-autocomplete #autogroup="matAutocomplete">
+                                <mat-option *ngFor="let option of filteredAcls" [value]="option">
+                                    {{option}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+
+                        <button (click)="addAclToConsumer()" color="accent" mat-icon-button
+                                matTooltip="{{'acl.add' | translate}}" matTooltipClass="tooltip-teal">
+                            <mat-icon>add</mat-icon>
                         </button>
-                        <mat-autocomplete #auto="matAutocomplete">
-                            <mat-option *ngFor="let option of filteredAcls" [value]="option">
-                                {{option}}
-                            </mat-option>
-                        </mat-autocomplete>
-                    </mat-form-field>
-
-                    <button (click)="addAclToConsumer()" [disabled]="group===''" color="accent" mat-icon-button
-                            matTooltip="{{'acl.add' | translate}}" matTooltipClass="tooltip-teal">
-                        <mat-icon>add</mat-icon>
-                    </button>
+                    </div>
                 </div>
-            </div>
+            </form>
+
+            <h1 class="margin-top-20-i">{{'acl.dialog.groups' | translate}}: <span>{{consumerName}}</span></h1>
 
             <div fxLayout="row">
                 <div fxFlex>
                     <mat-grid-list cols="2" rowHeight="2em">
                         <mat-grid-tile *ngFor="let acl of acls" class="custom">
-                            <mat-icon color="accent" matTooltip="{{ (acl.created_at * 1000) | date:'medium'}}" matTooltipClass="tooltip-teal">
+                            <mat-icon color="accent" matTooltip="{{ (acl.created_at * 1000) | date:'medium'}}"
+                                      matTooltipClass="tooltip-teal">
                                 event
                             </mat-icon>
                             <mat-icon>people</mat-icon>
                             <div matTooltip="ID: {{acl.id}}" matTooltipClass="tooltip-teal">{{acl.group}}</div>
                             <button (click)="deleteAcl(acl)" class="margin-left-20-i" color="warn" mat-icon-button
-                                    matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal" matTooltipPosition="right">
+                                    matTooltip="{{'text.delete' | translate}}" matTooltipClass="tooltip-teal"
+                                    matTooltipPosition="right">
                                 <mat-icon>delete</mat-icon>
                             </button>
                         </mat-grid-tile>
@@ -70,7 +96,7 @@
 
     <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions *ngIf="!loading"  fxLayout="row" fxLayoutAlign="space-between start">
+    <mat-dialog-actions *ngIf="!loading" fxLayout="row" fxLayoutAlign="space-between start">
         <mat-chip-listbox *ngIf="acls" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip-option *ngFor="let chip of acls['tags']" color="primary">{{chip}}</mat-chip-option>
         </mat-chip-listbox>
