@@ -25,49 +25,74 @@
     <div fxFlex>
         <mat-dialog-content *ngIf="dataSource && !loading" class="margin-0-i">
             <div fxFlex fxLayout="column">
-                <div>{{'oauth2.add' | translate}}</div>
+                <h2>{{'oauth2.add' | translate}}</h2>
 
-                <form [formGroup]="form" class="margin-bottom-30-i" fxFlex fxLayout="row"
-                      fxLayoutAlign="space-between center">
-                    <mat-form-field fxFlex="20" appearance="outline" color="accent">
-                        <mat-label>{{ 'oauth2.dialog.add_name' | translate}}</mat-label>
-                        <input formControlName="name" matInput type="text">
-                        <mat-hint>{{ 'oauth2.dialog.add_name_hint' | translate}}</mat-hint>
-                    </mat-form-field>
+                <form [formGroup]="form" class="margin-bottom-30-i" fxFlex fxLayout="column">
+                    <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                        <mat-form-field fxFlex="30" appearance="outline" color="accent">
+                            <mat-label>{{ 'oauth2.dialog.add_name' | translate}}</mat-label>
+                            <input formControlName="name" matInput type="text">
+                            <mat-hint>{{ 'oauth2.dialog.add_name_hint' | translate}}</mat-hint>
+                        </mat-form-field>
 
-                    <mat-form-field fxFlex="20" appearance="outline" color="accent">
-                        <mat-label>{{ 'oauth2.dialog.add_id' | translate}}</mat-label>
-                        <input formControlName="client_id" matInput type="text">
-                        <mat-hint>{{ 'oauth2.dialog.add_id_hint' | translate}}</mat-hint>
-                    </mat-form-field>
+                        <mat-form-field fxFlex="30" appearance="outline" color="accent">
+                            <mat-label>{{ 'oauth2.dialog.add_id' | translate}}</mat-label>
+                            <input formControlName="client_id" matInput type="text">
+                            <mat-hint>{{ 'oauth2.dialog.add_id_hint' | translate}}</mat-hint>
+                        </mat-form-field>
 
-                    <mat-form-field fxFlex="20" appearance="outline" color="accent">
-                        <mat-label>{{ 'oauth2.dialog.add_secret' | translate}}</mat-label>
-                        <input formControlName="client_secret" matInput type="text">
-                        <mat-hint>{{ 'oauth2.dialog.add_secret_hint' | translate}}</mat-hint>
-                    </mat-form-field>
+                        <mat-form-field fxFlex="30" appearance="outline" color="accent">
+                            <mat-label>{{ 'oauth2.dialog.add_secret' | translate}}</mat-label>
+                            <input formControlName="client_secret" matInput type="text">
+                            <mat-hint>{{ 'oauth2.dialog.add_secret_hint' | translate}}</mat-hint>
+                        </mat-form-field>
 
-                    <mat-form-field fxFlex="20" appearance="outline" color="accent">
-                        <mat-label>{{ 'oauth2.dialog.add_uris' | translate}}</mat-label>
-                        <textarea formControlName="redirect_uris" matInput
-                                  placeholder="https://redirect.uri"></textarea>
-                        <mat-hint>{{ 'oauth2.dialog.add_uris_hint' | translate}}</mat-hint>
-                    </mat-form-field>
-
-                    <div class="margin-bottom-10 padding-top-20" fxFlex="10" fxLayout="row"
-                         fxLayoutAlign="start center">
-                        <mat-checkbox matTooltip="{{'oauth2.dialog.add_hash_secret_tooltip' | translate}}"
-                                      matTooltipClass="tooltip-teal"
-                                      formControlName="hash_secret">{{'oauth2.dialog.add_hash_secret' | translate}}</mat-checkbox>
+                        <div fxFlex="5">
+                            <button (click)="onSubmit()" [disabled]="form.invalid" color="accent" mat-icon-button
+                                    matTooltip="{{'oauth2.add' | translate}}" matTooltipClass="tooltip-teal">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
                     </div>
+                    <div class="margin-top-10" fxLayout="row" fxLayoutAlign="space-between center">
+                        <mat-form-field appearance="outline" color="accent" fxFlex="30">
+                            <mat-chip-grid #chipList aria-label="">
+                                <mat-chip-row (removed)="removeTag(tag)"
+                                              *ngFor="let tag of currentTags" removable="true">{{tag}}
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </mat-chip-row>
+                                <input (matChipInputTokenEnd)="addTag($event)"
+                                       [matAutocomplete]="auto"
+                                       [matChipInputFor]="chipList"
+                                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                       formControlName="tags"
+                                       matChipInputAddOnBlur="true"
+                                       placeholder="{{'service.dialog.tags' | translate}}"/>
+                            </mat-chip-grid>
+                            <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                                <mat-option *ngFor="let tag of allTags" [value]="tag">
+                                    {{tag}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                        <mat-form-field fxFlex="50" appearance="outline" color="accent">
+                            <mat-label>{{ 'oauth2.dialog.add_uris' | translate}}</mat-label>
+                            <textarea formControlName="redirect_uris" matInput
+                                      placeholder="https://redirect.uri"></textarea>
+                            <mat-hint>{{ 'oauth2.dialog.add_uris_hint' | translate}}</mat-hint>
+                        </mat-form-field>
 
-                    <button (click)="onSubmit()" [disabled]="form.invalid" color="accent" fxFlex="5" mat-icon-button
-                            matTooltip="{{'oauth2.add' | translate}}" matTooltipClass="tooltip-teal">
-                        <mat-icon>add</mat-icon>
-                    </button>
+                        <div class="margin-bottom-10 padding-top-20" fxFlex="15" fxLayout="row"
+                             fxLayoutAlign="start center">
+                            <mat-checkbox matTooltip="{{'oauth2.dialog.add_hash_secret_tooltip' | translate}}"
+                                          matTooltipClass="tooltip-teal"
+                                          formControlName="hash_secret">{{'oauth2.dialog.add_hash_secret' | translate}}</mat-checkbox>
+                        </div>
+                    </div>
                 </form>
 
-                <div>{{'oauth2.dialog.info' | translate}}: <span>{{consumerName}}</span></div>
+                <h2>{{'oauth2.dialog.info' | translate}}: <span>{{consumerName}}</span></h2>
 
                 <div fxLayout="row" class="margin-top-10">
                     <table [dataSource]="dataSource" fxFlex mat-table>

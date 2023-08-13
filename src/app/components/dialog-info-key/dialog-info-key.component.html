@@ -24,22 +24,43 @@
 
     <div fxFlex>
         <mat-dialog-content *ngIf="keys && !loading" class="margin-0-i">
-            <div fxLayout="row" fxLayoutAlign="space-between center">
-                <div>{{'apikey.dialog.keys' | translate}}: <span>{{consumerName}}</span></div>
+            <form [formGroup]="form">
 
-                <div fxFlex="50" fxLayout="row" fxLayoutAlign="end center">
+            <div fxLayout="row" fxLayoutAlign="space-between center">
+                <div fxFlex="30">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="100">
+                        <mat-chip-grid #chipList aria-label="">
+                            <mat-chip-row (removed)="removeTag(tag)"
+                                          *ngFor="let tag of currentTags" removable="true">{{tag}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip-row>
+                            <input (matChipInputTokenEnd)="addTag($event)"
+                                   [matAutocomplete]="auto"
+                                   [matChipInputFor]="chipList"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   formControlName="tags"
+                                   matChipInputAddOnBlur="true"
+                                   placeholder="{{'service.dialog.tags' | translate}}"/>
+                        </mat-chip-grid>
+                        <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                            <mat-option *ngFor="let tag of allTags" [value]="tag">
+                                {{tag}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+
+                <div fxFlex="70" fxLayout="row" fxLayoutAlign="end center">
                     <mat-form-field fxFlex="50" appearance="outline" color="accent">
                         <mat-label>{{ 'apikey.dialog.add_key' | translate}}</mat-label>
-                        <input [(ngModel)]="key" matInput type="text">
-                        <button (click)="key=''" *ngIf="key" mat-icon-button matSuffix>
-                            <mat-icon>close</mat-icon>
-                        </button>
+                        <input formControlName="key" matInput type="text">
                         <mat-hint>{{ 'apikey.dialog.add_key_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
                     <mat-form-field class="margin-left-10" fxFlex="30" appearance="outline" color="accent">
                         <mat-label>{{ 'apikey.dialog.add_ttl' | translate}}</mat-label>
-                        <input [(ngModel)]="ttl" matInput type="number">
+                        <input formControlName="ttl"  matInput type="number">
                         <mat-hint>{{ 'apikey.dialog.add_ttl_hint' | translate}}</mat-hint>
                     </mat-form-field>
 
@@ -49,11 +70,14 @@
                     </button>
                 </div>
             </div>
+            </form>
+
+            <h2 class="margin-top-20-i">{{'apikey.dialog.keys' | translate}}: <span>{{consumerName}}</span></h2>
 
             <div fxLayout="row">
                 <mat-list fxFlex>
                     <mat-list-item *ngFor="let apikey of keys">
-                        <mat-icon mat-list-icon>vpn_key</mat-icon>
+                        <mat-icon matListItemIcon>vpn_key</mat-icon>
                         <div mat-line>
                             <span matTooltip="ID: {{apikey.id}}" matTooltipClass="tooltip-teal">{{showKey(apikey.key, apikey.hide || false)}}</span>
                             <button (click)="apikey.hide=!apikey.hide" class="margin-left-20-i" mat-icon-button>

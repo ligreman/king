@@ -215,7 +215,6 @@ export class AccessBasicComponent implements OnInit, OnDestroy {
     }
 
 
-
     /**
      * Change the tag search mode from AND to OR
      */

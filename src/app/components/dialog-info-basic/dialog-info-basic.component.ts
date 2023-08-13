@@ -28,7 +28,6 @@ export class DialogInfoBasicComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-
     form = this.fb.group({
         user: [''],
         pass: [''],
@@ -91,10 +90,10 @@ export class DialogInfoBasicComponent implements OnInit, OnDestroy {
      */
     addBasicAuthToConsumer() {
         let body = {};
-        if (this.form.controls.user.value !== '') {
+        if (this.form.controls.user.value !== '' && this.form.controls.user.value !== null) {
             body['username'] = this.form.controls.user.value;
         }
-        if (this.form.controls.pass.value !== '') {
+        if (this.form.controls.pass.value !== '' && this.form.controls.pass.value !== null) {
             body['password'] = this.form.controls.pass.value;
         }
         body['tags'] = this.currentTags;
@@ -106,6 +105,7 @@ export class DialogInfoBasicComponent implements OnInit, OnDestroy {
                     this.toast.success('text.id_extra', 'success.new_basic', {msgExtra: res['id']});
                     this.getBasicAuths();
                     this.form.reset();
+                    this.currentTags = [];
                 },
                 error: (error) =>
                     this.toast.error_general(error, {disableTimeOut: true})

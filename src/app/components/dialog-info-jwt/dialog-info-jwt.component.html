@@ -25,48 +25,78 @@
     <div fxFlex>
         <mat-dialog-content *ngIf="dataSource && !loading" class="margin-0-i">
             <div fxFlex fxLayout="column">
-                <div>{{'jwt.add' | translate}}</div>
+                <h2>{{'jwt.add' | translate}}</h2>
 
-                <form [formGroup]="form" class="margin-bottom-30-i" fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-                    <mat-form-field appearance="outline" color="accent" fxFlex="20">
-                        <mat-label>{{ 'jwt.dialog.add_jwt' | translate}}</mat-label>
-                        <input formControlName="key" matInput type="text">
-                        <mat-hint>{{ 'jwt.dialog.add_jwt_hint' | translate}}</mat-hint>
-                    </mat-form-field>
+                <form [formGroup]="form" class="margin-bottom-30-i" fxFlex fxLayout="column">
+                    <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+                        <mat-form-field appearance="outline" color="accent" fxFlex="20">
+                            <mat-label>{{ 'jwt.dialog.add_jwt' | translate}}</mat-label>
+                            <input formControlName="key" matInput type="text">
+                            <mat-hint>{{ 'jwt.dialog.add_jwt_hint' | translate}}</mat-hint>
+                        </mat-form-field>
 
-                    <mat-form-field appearance="outline" color="accent" class="margin-left-10" fxFlex="15">
-                        <mat-label>{{ 'jwt.dialog.add_alg' | translate}}</mat-label>
-                        <mat-select formControlName="algorithm">
-                            <mat-option *ngFor="let alg of validAlgorithms" [value]="alg">{{alg}}</mat-option>
-                        </mat-select>
-                        <mat-hint>{{ 'jwt.dialog.add_alg_hint' | translate}}</mat-hint>
-                    </mat-form-field>
+                        <mat-form-field appearance="outline" color="accent" class="margin-left-10" fxFlex="15">
+                            <mat-label>{{ 'jwt.dialog.add_alg' | translate}}</mat-label>
+                            <mat-select formControlName="algorithm">
+                                <mat-option *ngFor="let alg of validAlgorithms" [value]="alg">{{alg}}</mat-option>
+                            </mat-select>
+                            <mat-hint>{{ 'jwt.dialog.add_alg_hint' | translate}}</mat-hint>
+                        </mat-form-field>
 
-                    <mat-form-field appearance="outline" color="accent" fxFlex="20">
-                        <mat-label>{{ 'jwt.dialog.add_rsa' | translate}}</mat-label>
-                        <textarea formControlName="rsa_public_key" matInput placeholder="PEM PUBLIC KEY"></textarea>
-                        <mat-hint>{{ 'jwt.dialog.add_rsa_hint' | translate}}</mat-hint>
-                    </mat-form-field>
+                        <mat-form-field appearance="outline" color="accent" fxFlex="20">
+                            <mat-label>{{ 'jwt.dialog.add_rsa' | translate}}</mat-label>
+                            <textarea formControlName="rsa_public_key" matInput placeholder="PEM PUBLIC KEY"></textarea>
+                            <mat-hint>{{ 'jwt.dialog.add_rsa_hint' | translate}}</mat-hint>
+                        </mat-form-field>
 
-                    <mat-form-field appearance="outline" color="accent" fxFlex="20" matTooltip="{{'jwt.dialog.add_secret_tooltip' | translate}}" matTooltipClass="tooltip-teal">
-                        <mat-label>{{ 'jwt.dialog.add_secret' | translate}}</mat-label>
-                        <input formControlName="secret" matInput type="text">
-                        <mat-hint>{{ 'jwt.dialog.add_secret_hint' | translate}}</mat-hint>
-                    </mat-form-field>
+                        <mat-form-field appearance="outline" color="accent" fxFlex="20"
+                                        matTooltip="{{'jwt.dialog.add_secret_tooltip' | translate}}"
+                                        matTooltipClass="tooltip-teal">
+                            <mat-label>{{ 'jwt.dialog.add_secret' | translate}}</mat-label>
+                            <input formControlName="secret" matInput type="text">
+                            <mat-hint>{{ 'jwt.dialog.add_secret_hint' | translate}}</mat-hint>
+                        </mat-form-field>
 
-                    <button (click)="onSubmit()" [disabled]="form.invalid" color="accent" fxFlex="5" mat-icon-button
-                            matTooltip="{{'jwt.add' | translate}}" matTooltipClass="tooltip-teal">
-                        <mat-icon>add</mat-icon>
-                    </button>
+                        <div fxFlex="5">
+                            <button (click)="onSubmit()" [disabled]="form.invalid" color="accent" mat-icon-button
+                                    matTooltip="{{'jwt.add' | translate}}" matTooltipClass="tooltip-teal">
+                                <mat-icon>add</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="margin-top-10">
+                        <mat-form-field appearance="outline" color="accent" fxFlex="90">
+                            <mat-chip-grid #chipList aria-label="">
+                                <mat-chip-row (removed)="removeTag(tag)"
+                                              *ngFor="let tag of currentTags" removable="true">{{tag}}
+                                    <mat-icon matChipRemove>cancel</mat-icon>
+                                </mat-chip-row>
+                                <input (matChipInputTokenEnd)="addTag($event)"
+                                       [matAutocomplete]="auto"
+                                       [matChipInputFor]="chipList"
+                                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                       formControlName="tags"
+                                       matChipInputAddOnBlur="true"
+                                       placeholder="{{'service.dialog.tags' | translate}}"/>
+                            </mat-chip-grid>
+                            <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                                <mat-option *ngFor="let tag of allTags" [value]="tag">
+                                    {{tag}}
+                                </mat-option>
+                            </mat-autocomplete>
+                        </mat-form-field>
+                    </div>
                 </form>
 
-                <div>{{'jwt.dialog.info' | translate}}: <span>{{consumerName}}</span></div>
+                <h2>{{'jwt.dialog.info' | translate}}: <span>{{consumerName}}</span></h2>
 
                 <div fxLayout="row" class="margin-top-10">
                     <table [dataSource]="dataSource" fxFlex mat-table>
                         <ng-container matColumnDef="key">
                             <th *matHeaderCellDef mat-header-cell>{{'jwt.dialog.key' | translate}}</th>
-                            <td *matCellDef="let row" mat-cell matTooltip="ID: {{row.id}}" matTooltipClass="tooltip-teal">{{row.key}}</td>
+                            <td *matCellDef="let row" mat-cell matTooltip="ID: {{row.id}}"
+                                matTooltipClass="tooltip-teal">{{row.key}}</td>
                         </ng-container>
 
                         <ng-container matColumnDef="algorithm">

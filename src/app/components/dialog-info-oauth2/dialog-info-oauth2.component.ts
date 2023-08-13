@@ -3,11 +3,15 @@ import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
 import {MatTableDataSource} from "@angular/material/table";
 import {FormBuilder, Validators} from "@angular/forms";
 import {saveAs} from 'file-saver';
+import {sortedUniq as _sortedUniq} from 'lodash';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {ApiService} from "../../services/api.service";
 import {ToastService} from "../../services/toast.service";
 import {DialogHelperService} from "../../services/dialog-helper.service";
 import {TranslateService} from "@ngx-translate/core";
+import {MatChipInputEvent} from "@angular/material/chips";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
 
 @AutoUnsubscribe()
 @Component({
@@ -22,13 +26,18 @@ export class DialogInfoOauth2Component implements OnInit, OnDestroy {
     loading = true;
     consumerId;
     consumerName;
+    currentTags = [];
+    allTags = [];
+
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     form = this.fb.group({
         name: ['', [Validators.required]],
         client_id: [''],
         client_secret: [''],
         redirect_uris: ['', [Validators.required]],
-        hash_secret: [false, [Validators.required]]
+        hash_secret: [false, [Validators.required]],
+        tags: []
     });
 
     constructor(@Inject(MAT_DIALOG_DATA) public consumer: string, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
@@ -39,6 +48,17 @@ export class DialogInfoOauth2Component implements OnInit, OnDestroy {
         this.consumerId = this.consumer['id'];
         this.consumerName = this.consumer['username'];
         this.getOAuth2Apps();
+
+        // Lista de tags
+        this.api.getTags()
+            .subscribe((res) => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
+            });
     }
 
     ngOnDestroy(): void {
@@ -91,15 +111,14 @@ export class DialogInfoOauth2Component implements OnInit, OnDestroy {
      */
     onSubmit() {
         let body = this.form.value;
-        if (body['client_id'] === '') {
+        if (body['client_id'] === '' || body['client_id'] === null) {
             delete body['client_id'];
         }
-        if (body['client_secret'] === '') {
+        if (body['client_secret'] === '' || body['client_secret'] === null) {
             delete body['client_secret'];
         }
-        if (body['redirect_uris'] !== '') {
+        if (body['redirect_uris'] !== '' && body['redirect_uris'] !== null) {
             let newValue;
-            console.log(body['redirect_uris']);
             if (body['redirect_uris'].includes('\n')) {
                 newValue = body['redirect_uris'].split('\n');
             } else {
@@ -108,7 +127,7 @@ export class DialogInfoOauth2Component implements OnInit, OnDestroy {
             delete body['redirect_uris'];
             body['redirect_uris'] = newValue;
         }
-        console.log(body);
+        body['tags'] = this.currentTags;
 
         // Guardo el acl en el consumidor
         this.api.postConsumerOAuthApp(this.consumerId, body)
@@ -117,6 +136,7 @@ export class DialogInfoOauth2Component implements OnInit, OnDestroy {
                     this.toast.success('text.id_extra', 'success.new_oauth2', {msgExtra: res['id']});
                     this.getOAuth2Apps();
                     this.form.reset();
+                    this.currentTags = [];
                 },
                 error: (error) => this.toast.error_general(error, {disableTimeOut: true})
             });
@@ -145,6 +165,35 @@ export class DialogInfoOauth2Component implements OnInit, OnDestroy {
             out = redirect_uris.join('\n');
         }
         return out;
+    }
+
+    /*
+        Gestión de tags
+     */
+    addTag(event: MatChipInputEvent): void {
+        const input = event.chipInput.inputElement;
+        const value = event.value.trim();
+
+        // Add our tag
+        if ((value || '') && /^[\w.\-_~]+$/.test(value)) {
+            this.currentTags.push(value);
+
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
+        }
+    }
+
+    removeTag(tag): void {
+        const index = this.currentTags.indexOf(tag);
+        if (index >= 0) {
+            this.currentTags.splice(index, 1);
+        }
+    }
+
+    selectedTag($event: MatAutocompleteSelectedEvent) {
+        this.currentTags.push($event.option.viewValue);
     }
 }
 

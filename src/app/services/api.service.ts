@@ -399,8 +399,10 @@ export class ApiService {
     /*
         JWT TOKEN PLUGIN
      */
-    public getJwtTokens() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/jwts?size=1000').pipe(catchError(this.handleError));
+    public getJwtTokens(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery,tagsQuery} = this.parseOffsetAndTags(offset,tags,tagsAnd);
+
+        return this.httpClient.get(this.globals.NODE_API_URL + '/jwts?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumerJwtTokens(consumer: string) {
