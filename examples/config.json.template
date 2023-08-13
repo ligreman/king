@@ -1,3 +1,4 @@
 {
-    "kong_admin_url": "http://foo-hostname.com"
+    "kong_admin_url": "http://foo-hostname.com",
+    "kong_admin_authorization": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
 }

@@ -1,7 +1,10 @@
 # build environment
 FROM node:20 as build
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
+ENV PATH=/app/node_modules/.bin:$PATH
+# Example of Authorization variables for development. Do not use in production (use secrets instead)
+#ENV AUTH_TYPE="Basic"
+#ENV AUTH_TOKEN="dXNlcm5hbWU6cGFzc3dvcmQ="
 COPY package*.json ./
 RUN npm ci --silent
 COPY . ./

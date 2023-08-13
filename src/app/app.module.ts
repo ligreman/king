@@ -1,5 +1,5 @@
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -88,6 +88,7 @@ import {MatPaginatorIntlSpanish} from './shared/spanish-paginator-intl';
 import {DialogInfoOauth2Component} from './components/dialog-info-oauth2/dialog-info-oauth2.component';
 import {AccessOauth2Component} from './routes/access/access-oauth2/access-oauth2.component';
 import {DialogSettingsComponent} from "./components/dialog-settings/dialog-settings.component";
+import {AppHttpInterceptor} from "./services/app-http.interceptor";
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -200,7 +201,12 @@ export function HttpLoaderFactory(http: HttpClient) {
         {
             provide: MatPaginatorIntl,
             useClass: MatPaginatorIntlSpanish
-        }
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AppHttpInterceptor,
+            multi: true
+        },
     ],
     bootstrap: [AppComponent]
 })

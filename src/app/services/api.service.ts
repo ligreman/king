@@ -25,7 +25,7 @@ export class ApiService {
         return throwError({code: error.status, message: errorMessage});
     }
 
-    parseOffsetAndTags(offset, tags,tagsAnd) {
+    parseOffsetAndTags(offset, tags, tagsAnd) {
         let offsetQuery = '';
         if (offset !== null) {
             offsetQuery = '&offset=' + offset;
@@ -38,7 +38,7 @@ export class ApiService {
                 tagsQuery = '&tags=' + tags.join('/');
             }
         }
-        return {offsetQuery,tagsQuery};
+        return {offsetQuery, tagsQuery};
     }
 
     /*
@@ -335,7 +335,7 @@ export class ApiService {
         ACL PLUGIN
      */
     public getAcls(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
-        const {offsetQuery,tagsQuery} = this.parseOffsetAndTags(offset,tags,tagsAnd);
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
         return this.httpClient.get(this.globals.NODE_API_URL + '/acls?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
@@ -359,7 +359,7 @@ export class ApiService {
         BASIC AUTH PLUGIN
      */
     public getBasicAuths(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
-        const {offsetQuery,tagsQuery} = this.parseOffsetAndTags(offset,tags,tagsAnd);
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
         return this.httpClient.get(this.globals.NODE_API_URL + '/basic-auths?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
@@ -380,7 +380,7 @@ export class ApiService {
         API KEY PLUGIN
      */
     public getApiKeys(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
-        const {offsetQuery,tagsQuery} = this.parseOffsetAndTags(offset,tags,tagsAnd);
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
         return this.httpClient.get(this.globals.NODE_API_URL + '/key-auths?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
@@ -402,7 +402,7 @@ export class ApiService {
         JWT TOKEN PLUGIN
      */
     public getJwtTokens(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
-        const {offsetQuery,tagsQuery} = this.parseOffsetAndTags(offset,tags,tagsAnd);
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
         return this.httpClient.get(this.globals.NODE_API_URL + '/jwts?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
@@ -424,7 +424,7 @@ export class ApiService {
         OAUTH 2.0 AUTHENTICATION PLUGIN
      */
     public getOAuthApp(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
-        const {offsetQuery,tagsQuery} = this.parseOffsetAndTags(offset,tags,tagsAnd);
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
         return this.httpClient.get(this.globals.NODE_API_URL + '/oauth2?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }

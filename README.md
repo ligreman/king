@@ -69,6 +69,7 @@ Note: If no config url is set, King by default will look for the config file at 
 Field description of the config file:
 
 * kong_admin_url: default kong url node to connect to.
+* kong_admin_authorization: authorization token for the admin url. Can be used to send Basic or Bearer tokens in base64 encoding. If provided, King will send this as an Authorization header. Format: 'Basic <insert here base64 token calculated like base64(username:password)>'. Example: 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='.
 
 ### King Globals configuration
 

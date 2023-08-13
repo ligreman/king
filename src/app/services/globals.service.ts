@@ -4,7 +4,9 @@ import {Injectable} from '@angular/core';
     providedIn: 'root'
 })
 export class GlobalsService {
+    // Node Admin url
     private _NODE_API_URL = '';
+    private _AUTH_HEADER = '';
     // Default url for the configuration JSON file
     private _CONFIG_URL = '/config.json';
     // Enable or disable the config dialog in the interface
@@ -475,6 +477,14 @@ export class GlobalsService {
 
     set NODE_API_URL(value: string) {
         this._NODE_API_URL = value;
+    }
+
+    get AUTH_HEADER(): string {
+        return this._AUTH_HEADER;
+    }
+
+    set AUTH_HEADER(value: string) {
+        this._AUTH_HEADER = value;
     }
 
     get ROUTER_MODE(): string {
