@@ -2,7 +2,6 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {DateTime} from 'luxon';
 import {sortedUniq as _sortedUniq} from 'lodash';
@@ -54,7 +53,7 @@ export class AccessKeyComponent implements OnInit, OnDestroy {
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
-    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService,
+    constructor(private api: ApiService, private toast: ToastService, private dialogHelper: DialogHelperService,
                 private translate: TranslateService) {
     }
 
@@ -107,7 +106,7 @@ export class AccessKeyComponent implements OnInit, OnDestroy {
             this.filter = '';
         }
 
-        this.getApiKeys();
+        this.getApiKeys(loadAll);
         this.getNow();
     }
 

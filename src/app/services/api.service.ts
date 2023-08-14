@@ -25,7 +25,7 @@ export class ApiService {
         return throwError({code: error.status, message: errorMessage});
     }
 
-    parseOffsetAndTags(offset, tags, tagsAnd) {
+    parseOffsetAndTags(offset, tags=null, tagsAnd=true) {
         let offsetQuery = '';
         if (offset !== null) {
             offsetQuery = '&offset=' + offset;
@@ -148,8 +148,10 @@ export class ApiService {
     /*
         VAULT ENDPOINTS
      */
-    public getVaults() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/vaults?size=1000').pipe(catchError(this.handleError));
+    public getVaults( size: number = 1000, offset: string | null = null) {
+            const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset);
+
+            return this.httpClient.get(this.globals.NODE_API_URL + '/vaults?size=' + size + offsetQuery).pipe(catchError(this.handleError));
     }
 
     public getVault(id: string) {

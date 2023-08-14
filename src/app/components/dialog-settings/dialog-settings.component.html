@@ -45,7 +45,7 @@
                 </form>
             </mat-tab>
 
-            <!--<mat-tab>
+            <mat-tab>
                 <ng-template mat-tab-label>
                     <mat-icon class="tab-icon">loop</mat-icon>
                     {{ 'dialog.settings.loopback' | translate }}</ng-template>
@@ -70,33 +70,9 @@
                                 </mat-icon>
                             </mat-form-field>
                         </div>
-
-                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
-                            <mat-form-field appearance="outline" color="accent" fxFlex="100">
-                                <mat-chip-list #chipList aria-label="">
-                                    <mat-chip (removed)="removeTag(tag)"
-                                              *ngFor="let tag of currentTags" removable="true">{{tag}}
-                                        <mat-icon matChipRemove>cancel</mat-icon>
-                                    </mat-chip>
-                                    <input (matChipInputTokenEnd)="addTag($event)"
-                                           [matAutocomplete]="auto"
-                                           [matChipInputFor]="chipList"
-                                           [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                                           formControlName="tags"
-                                           matChipInputAddOnBlur="true"
-                                           placeholder="{{'service.dialog.tags' | translate}}"/>
-                                </mat-chip-list>
-                                <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
-                                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
-                                    <mat-option *ngFor="let tag of allTags" [value]="tag">
-                                        {{tag}}
-                                    </mat-option>
-                                </mat-autocomplete>
-                            </mat-form-field>
-                        </div>
                     </div>
                 </form>
-            </mat-tab>-->
+            </mat-tab>
         </mat-tab-group>
     </div>
 </mat-dialog-content>

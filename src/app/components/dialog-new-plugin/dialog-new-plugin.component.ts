@@ -46,6 +46,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     mapFields = [];
     fieldTypes = {};
     plugins = [];
+    loading = false;
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -99,6 +100,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.loading = true;
         // Recojo del api los datos
         forkJoin([
             this.api.getServices(),
@@ -140,6 +142,8 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                         break;
                 }
             }
+
+            this.loading = false;
         });
 
         // Si viene un plugin para editar
@@ -156,6 +160,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
 
                         // Como estoy en modo edición, no permito cambiar el tipo de plugin
                         this.nameField.disable();
+                        this.loading = false;
                     },
                     error: (error) => this.toast.error_general(error)
                 });

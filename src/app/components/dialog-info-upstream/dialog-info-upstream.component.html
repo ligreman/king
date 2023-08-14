@@ -1,11 +1,11 @@
 <div fxLayout="column" fxLayoutAlign="start stretch">
-    <h2 class="margin-bottom-5-i" fxFlex fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+    <h2 class="margin-bottom-5-i" fxFlex mat-dialog-title>
         <span>{{'upstream.dialog.info' | translate}}</span>
 
-        <span fxFlexAlign="end">
+        <span class="btn-double-doc-right" fxLayout="row" fxLayoutAlign="start center">
             <a href="https://docs.konghq.com/gateway/latest/admin-api/#upstream-object" mat-button rel="noopener noreferrer" target="_blank">
                 {{'text.documentation' | translate}}
-                <mat-icon class="mini-icon">open_in_new</mat-icon>
+                <mat-icon class="mini-icon"iconPositionEnd >open_in_new</mat-icon>
             </a>
             <button (click)="downloadJson()" mat-icon-button
                     matTooltip="{{'dialog.download_json' | translate}}" matTooltipClass="tooltip-teal">

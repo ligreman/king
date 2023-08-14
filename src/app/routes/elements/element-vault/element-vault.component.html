@@ -20,7 +20,7 @@
                     matTooltipClass="tooltip-teal">
                 <mat-icon>add</mat-icon>
             </button>
-            <button (click)="reloadData()" color="accent" mat-icon-button matTooltip="{{'element.reload' | translate}}"
+            <button (click)="loadData(false,false,true)" color="accent" mat-icon-button matTooltip="{{'element.reload' | translate}}"
                     matTooltipClass="tooltip-teal">
                 <mat-icon>refresh</mat-icon>
             </button>
@@ -86,8 +86,8 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
-                <td *ngIf="input.value === ''" class="mat-cell" colspan="9">{{'element.no_data' | translate}}</td>
-                <td *ngIf="input.value !== ''" class="mat-cell" colspan="9">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
+                <td *ngIf="input.value === ''" class="mat-cell" colspan="7">{{'element.no_data' | translate}}</td>
+                <td *ngIf="input.value !== ''" class="mat-cell" colspan="7">{{'element.no_data_search' | translate}} "{{input.value}}"</td>
             </tr>
         </table>
 

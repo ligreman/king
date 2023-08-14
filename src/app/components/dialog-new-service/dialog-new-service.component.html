@@ -1,10 +1,10 @@
-<h2 class="margin-bottom-5-i" fxLayout="row" fxLayoutAlign="space-between start" mat-dialog-title>
+<h2 class="margin-bottom-5-i"  mat-dialog-title>
     <span *ngIf="!editMode">{{'service.dialog.create' | translate}}</span>
     <span *ngIf="editMode">{{'service.dialog.edit' | translate}}</span>
-    <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-service" mat-button rel="noopener noreferrer"
+    <span class="btn-doc-right"><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-service" mat-button rel="noopener noreferrer"
              target="_blank">
     {{'text.documentation' | translate}}
-        <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
+        <mat-icon class="mini-icon" iconPositionEnd>open_in_new</mat-icon></a></span>
 </h2>
 
 <mat-divider class="margin-bottom-20-i"></mat-divider>
@@ -138,14 +138,14 @@
             <mat-accordion displayMode="flat" hideToggle multi>
                 <mat-expansion-panel #matExp disabled>
                     <mat-expansion-panel-header class="margin-bottom-20-i">
-                        <mat-panel-description fxLayout="row" fxLayoutAlign="center start">
-                            <button (click)="matExp.toggle(); $event.stopPropagation();" color="primary" fxFlex="50"
-                                    mat-flat-button>
+                        <mat-panel-description fxLayout="row"  fxLayoutAlign="center start">
+                            <button (click)="matExp.toggle(); $event.stopPropagation();"  fxFlex="50" color="accent"
+                                    mat-stroked-button>
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
                                 <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
                                 {{'text.advanced_fields' | translate}}
-                                <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
-                                <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'" iconPositionEnd>expand_more</mat-icon>
+                                <mat-icon class="marleft" [fxShow]="matExp._getExpandedState()==='expanded'" iconPositionEnd>expand_less</mat-icon>
                             </button>
                         </mat-panel-description>
                     </mat-expansion-panel-header>
