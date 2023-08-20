@@ -1,17 +1,17 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import * as Joi from 'joi';
-import { size as _size, sortedUniq as _sortedUniq, startsWith as _startsWith } from 'lodash';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ApiService } from '../../services/api.service';
-import { ToastService } from '../../services/toast.service';
-import { CustomValidators } from '../../shared/custom-validators';
+import {size as _size, sortedUniq as _sortedUniq, startsWith as _startsWith} from 'lodash';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {forkJoin} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {ApiService} from '../../services/api.service';
+import {ToastService} from '../../services/toast.service';
+import {CustomValidators} from '../../shared/custom-validators';
 
 @AutoUnsubscribe()
 @Component({
@@ -60,6 +60,7 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
         slots: [10000, [CustomValidators.isNumber(), Validators.min(10), Validators.max(65536)]],
         host_header: ['', [CustomValidators.isHost(true)]],
         client_certificate: [''],
+        use_srv_name: [false, CustomValidators.isBoolean()],
         tags: [''],
         // HEALTHCHECKS
         healthchecks: this.fb.group({
@@ -103,67 +104,118 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
 
 
     constructor(@Inject(MAT_DIALOG_DATA) public upstreamIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
-                public dialogRef: MatDialogRef<DialogNewUpstreamComponent>) { }
+                public dialogRef: MatDialogRef<DialogNewUpstreamComponent>) {
+    }
 
     /*
         Getters de campos del formulario
      */
-    get nameField() { return this.form.get('name'); }
+    get nameField() {
+        return this.form.get('name');
+    }
 
-    get slotsField() { return this.form.get('slots'); }
+    get slotsField() {
+        return this.form.get('slots');
+    }
 
-    get hashOnHeaderField() { return this.form.get('hash_on_header'); }
+    get hashOnHeaderField() {
+        return this.form.get('hash_on_header');
+    }
 
-    get hashFallbakHeaderField() { return this.form.get('hash_fallback_header'); }
+    get hashFallbakHeaderField() {
+        return this.form.get('hash_fallback_header');
+    }
 
-    get hashOnQueryArg() { return this.form.get('hash_on_query_arg'); }
+    get hashOnQueryArg() {
+        return this.form.get('hash_on_query_arg');
+    }
 
-    get hashFallbakQueryArg() { return this.form.get('hash_fallback_query_arg'); }
+    get hashFallbakQueryArg() {
+        return this.form.get('hash_fallback_query_arg');
+    }
 
-    get hashOnUriCapture() { return this.form.get('hash_on_uri_capture'); }
+    get hashOnUriCapture() {
+        return this.form.get('hash_on_uri_capture');
+    }
 
-    get hashFallbakUriCapture() { return this.form.get('hash_fallback_uri_capture'); }
+    get hashFallbakUriCapture() {
+        return this.form.get('hash_fallback_uri_capture');
+    }
 
-    get hashOnCookieField() { return this.form.get('hash_on_cookie'); }
+    get hashOnCookieField() {
+        return this.form.get('hash_on_cookie');
+    }
 
-    get hashOnCookiePathField() { return this.form.get('hash_on_cookie_path'); }
+    get hashOnCookiePathField() {
+        return this.form.get('hash_on_cookie_path');
+    }
 
-    get haHttpPathField() { return this.form.get('healthchecks.active.http_path'); }
+    get haHttpPathField() {
+        return this.form.get('healthchecks.active.http_path');
+    }
 
-    get httpsSniField() { return this.form.get('healthchecks.active.https_sni'); }
+    get httpsSniField() {
+        return this.form.get('healthchecks.active.https_sni');
+    }
 
-    get timeoutActiveField() { return this.form.get('healthchecks.active.timeout'); }
+    get timeoutActiveField() {
+        return this.form.get('healthchecks.active.timeout');
+    }
 
-    get activeHeadersField() { return this.form.get('healthchecks.active.headers'); }
+    get activeHeadersField() {
+        return this.form.get('healthchecks.active.headers');
+    }
 
-    get concurrencyField() { return this.form.get('healthchecks.active.concurrency'); }
+    get concurrencyField() {
+        return this.form.get('healthchecks.active.concurrency');
+    }
 
-    get httpStatusesAHField() { return this.form.get('healthchecks.active.healthy.http_statuses'); }
+    get httpStatusesAHField() {
+        return this.form.get('healthchecks.active.healthy.http_statuses');
+    }
 
-    get successesAHField() { return this.form.get('healthchecks.active.healthy.successes'); }
+    get successesAHField() {
+        return this.form.get('healthchecks.active.healthy.successes');
+    }
 
-    get intervalAHField() { return this.form.get('healthchecks.active.healthy.interval'); }
+    get intervalAHField() {
+        return this.form.get('healthchecks.active.healthy.interval');
+    }
 
-    get httpStatusesAUHField() { return this.form.get('healthchecks.active.unhealthy.http_statuses'); }
+    get httpStatusesAUHField() {
+        return this.form.get('healthchecks.active.unhealthy.http_statuses');
+    }
 
-    get httpFailuresAUHField() { return this.form.get('healthchecks.active.unhealthy.http_failures'); }
+    get httpFailuresAUHField() {
+        return this.form.get('healthchecks.active.unhealthy.http_failures');
+    }
 
-    get tcpFailuresAUHField() { return this.form.get('healthchecks.active.unhealthy.tcp_failures'); }
+    get tcpFailuresAUHField() {
+        return this.form.get('healthchecks.active.unhealthy.tcp_failures');
+    }
 
-    get intervalAUHField() { return this.form.get('healthchecks.active.unhealthy.interval'); }
+    get intervalAUHField() {
+        return this.form.get('healthchecks.active.unhealthy.interval');
+    }
 
-    get timeoutsAUHField() { return this.form.get('healthchecks.active.unhealthy.timeouts'); }
+    get timeoutsAUHField() {
+        return this.form.get('healthchecks.active.unhealthy.timeouts');
+    }
 
-    get thresholdField() { return this.form.get('healthchecks.threshold'); }
+    get thresholdField() {
+        return this.form.get('healthchecks.threshold');
+    }
 
-    get hostHeaderField() { return this.form.get('host_header'); }
+    get hostHeaderField() {
+        return this.form.get('host_header');
+    }
 
     ngOnInit(): void {
         forkJoin([
-            this.api.getServices(),
-            this.api.getCertificates(),
-            this.api.getUpstreams()
-        ]).pipe(map(([services, certs, upstreams]) => {
+            this.api.getAllServices(null, [], ['id', 'name', 'host']),
+            this.api.getAllCertificates(null, [], ['id']),
+            this.api.getAllUpstreams(null, [], ['id', 'name'])
+        ]).pipe(map<any, any>(([services, certs, upstreams]) => {
             // forkJoin returns an array of values, here we map those values to an object
             return {services: services['data'], certs: certs['data'], upstreams: upstreams['data']};
         })).subscribe({
@@ -189,26 +241,34 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
                 this.servicesAvailable = new Map([...this.servicesAvailable.entries()].sort());
             },
             error: (error) => this.toast.error_general(error),
-            complete: () => this.loading = false
+            complete: () => {
+
+                // Si viene un upstream para editar
+                if (this.upstreamIdEdit !== null) {
+                    this.editMode = true;
+
+                    // Rescato la info del upstream del api
+                    this.api.getUpstream(this.upstreamIdEdit)
+                        .subscribe({
+                            next: (upstream) => {
+                                // Añado el Host a la lista de válidos ya que lo estoy editando
+                                this.servicesAvailable.set('up', upstream['name']);
+
+                                // Cambios especiales para representarlos en el formulario
+                                this.form.setValue(this.prepareDataForForm(upstream));
+                            },
+                            error: (error) => this.toast.error_general(error),
+                            complete: () => {
+                                this.loading = false;
+                                this.selectHost();
+                            }
+                        });
+                } else {
+                    this.loading = false;
+                    this.selectHost();
+                }
+            }
         });
-
-        // Si viene un upstream para editar
-        if (this.upstreamIdEdit !== null) {
-            this.editMode = true;
-
-            // Rescato la info del upstream del api
-            this.api.getUpstream(this.upstreamIdEdit)
-                .subscribe({
-                    next: (upstream) => {
-                        // Añado el Host a la lista de válidos ya que lo estoy editando
-                        this.servicesAvailable.set('up', upstream['name']);
-
-                        // Cambios especiales para representarlos en el formulario
-                        this.form.setValue(this.prepareDataForForm(upstream));
-                    },
-                    error: (error) => this.toast.error_general(error)
-                });
-        }
 
         // Lista de tags
         this.api.getTags()
@@ -223,6 +283,15 @@ export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+    }
+
+    // Select the [up] host
+    selectHost() {
+        this.servicesAvailable.forEach((value, key) => {
+            if (key === 'up') {
+                this.nameField.setValue(value.toString());
+            }
+        });
     }
 
     /*

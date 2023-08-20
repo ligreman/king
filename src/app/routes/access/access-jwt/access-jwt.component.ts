@@ -24,7 +24,7 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 })
 export class AccessJwtComponent implements OnInit, OnDestroy {
 
-    displayedColumns: string[] = ['id', 'key', 'algorithm', 'rsa_public_key', 'secret', 'tags', 'actions'];
+    displayedColumns: string[] = ['key', 'algorithm', 'rsa_public_key', 'secret', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

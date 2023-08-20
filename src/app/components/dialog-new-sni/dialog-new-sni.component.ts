@@ -1,13 +1,13 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { sortedUniq as _sortedUniq } from 'lodash';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../services/api.service';
-import { ToastService } from '../../services/toast.service';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {FormBuilder, Validators} from '@angular/forms';
+import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {sortedUniq as _sortedUniq} from 'lodash';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../services/api.service';
+import {ToastService} from '../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -33,37 +33,44 @@ export class DialogNewSniComponent implements OnInit, OnDestroy {
     });
 
     constructor(@Inject(MAT_DIALOG_DATA) public sniIdEdit: any, private fb: FormBuilder, public dialogRef: MatDialogRef<DialogNewSniComponent>,
-                private api: ApiService, private toast: ToastService) { }
+                private api: ApiService, private toast: ToastService) {
+    }
 
-    get nameField() { return this.form.get('name'); }
+    get nameField() {
+        return this.form.get('name');
+    }
 
-    get certificateField() { return this.form.get('certificate.id'); }
+    get certificateField() {
+        return this.form.get('certificate.id');
+    }
 
     ngOnInit(): void {
-        this.api.getCertificates()
-            .subscribe({
-                next: (certs) => {
-                    for (let cert of certs['data']) {
-                        this.certificatesAvailable.push(cert.id);
-                    }
-                },
-                error: (error) => this.toast.error_general(error),
-                complete: () => this.loading = false
+        this.api.getAllCertificates(null, [], ['id'])
+            .then((certs) => {
+                for (let cert of certs['data']) {
+                    this.certificatesAvailable.push(cert.id);
+                }
+
+                // Si viene un servicio para editar
+                if (this.sniIdEdit !== null) {
+                    this.editMode = true;
+
+                    // Rescato la info del servicio del api
+                    this.api.getSni(this.sniIdEdit)
+                        .subscribe({
+                            next: route => {
+                                // Relleno el formuarlio
+                                this.form.setValue(this.prepareDataForForm(route));
+                                this.loading = false
+                            }, error: (error) => this.toast.error_general(error)
+                        });
+                } else {
+                    this.loading = false
+                }
+            })
+            .catch(error => {
+                this.toast.error_general(error);
             });
-
-        // Si viene un servicio para editar
-        if (this.sniIdEdit !== null) {
-            this.editMode = true;
-
-            // Rescato la info del servicio del api
-            this.api.getSni(this.sniIdEdit)
-                .subscribe({
-                    next: route => {
-                        // Relleno el formuarlio
-                        this.form.setValue(this.prepareDataForForm(route));
-                    }, error: (error) => this.toast.error_general(error)
-                });
-        }
 
         // Lista de tags
         this.api.getTags()

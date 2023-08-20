@@ -1,6 +1,6 @@
 import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {throwError} from 'rxjs';
+import {firstValueFrom, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {GlobalsService} from './globals.service';
 
@@ -25,7 +25,7 @@ export class ApiService {
         return throwError({code: error.status, message: errorMessage});
     }
 
-    parseOffsetAndTags(offset, tags=null, tagsAnd=true) {
+    parseOffsetAndTags(offset, tags = null, tagsAnd = true) {
         let offsetQuery = '';
         if (offset !== null) {
             offsetQuery = '&offset=' + offset;
@@ -39,6 +39,18 @@ export class ApiService {
             }
         }
         return {offsetQuery, tagsQuery};
+    }
+
+    cherrypickData(data, fields = []) {
+        let r = [];
+        for (const d in data) {
+            let elem = {};
+            fields.forEach(field => {
+                elem[field] = data[d][field];
+            });
+            r.push(elem);
+        }
+        return r;
     }
 
     /*
@@ -70,8 +82,10 @@ export class ApiService {
     /*
         SERVICE ENDPOINTS
      */
-    public getServices() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/services?size=1000').pipe(catchError(this.handleError));
+    public getServices(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+
+        return this.httpClient.get(this.globals.NODE_API_URL + '/services?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getService(id: string) {
@@ -90,11 +104,34 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/services/' + id).pipe(catchError(this.handleError));
     }
 
+    async getAllServices(offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getServices(1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllServices(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /*
         ROUTE ENDPOINTS
      */
-    public getRoutes() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/routes?size=1000').pipe(catchError(this.handleError));
+    public getRoutes(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+
+        return this.httpClient.get(this.globals.NODE_API_URL + '/routes?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getRoute(id: string) {
@@ -113,11 +150,34 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/routes/' + id).pipe(catchError(this.handleError));
     }
 
+    async getAllRoutes(offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getRoutes(1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllRoutes(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /*
         UPSTREAMS ENDPOINTS
      */
-    public getUpstreams() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams?size=1000').pipe(catchError(this.handleError));
+    public getUpstreams(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getUpstream(id: string) {
@@ -129,8 +189,10 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id + '/health', {params: params}).pipe(catchError(this.handleError));
     }
 
-    public getUpstreamTargetsHealth(id: string) {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id + '/health').pipe(catchError(this.handleError));
+    public getUpstreamTargetsHealth(id: string, size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id + '/health?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public postNewUpstream(body) {
@@ -145,13 +207,35 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/upstreams/' + id).pipe(catchError(this.handleError));
     }
 
+    async getAllUpstreams(offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getUpstreams(1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllUpstreams(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
     /*
         VAULT ENDPOINTS
      */
-    public getVaults( size: number = 1000, offset: string | null = null) {
-            const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset);
+    public getVaults(size: number = 1000, offset: string | null = null) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset);
 
-            return this.httpClient.get(this.globals.NODE_API_URL + '/vaults?size=' + size + offsetQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/vaults?size=' + size + offsetQuery).pipe(catchError(this.handleError));
     }
 
     public getVault(id: string) {
@@ -194,11 +278,33 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + id).pipe(catchError(this.handleError));
     }
 
+    async getAllConsumers(offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getConsumers(1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllConsumers(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /*
         TARGET ENDPOINTS
      */
-    public getTargets(upstreamId: string) {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets?size=1000').pipe(catchError(this.handleError));
+    public getTargets(upstreamId: string, size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public postNewTarget(body, upstreamId: string) {
@@ -225,11 +331,35 @@ export class ApiService {
         return this.httpClient.put(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets/' + id + '/' + address + '/unhealthy', {}).pipe(catchError(this.handleError));
     }
 
+    async getAllTargets(upId, offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getTargets(upId, 1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllTargets(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
     /*
        CERTIFICATE ENDPOINTS
     */
-    public getCertificates() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/certificates?size=1000').pipe(catchError(this.handleError));
+    public getCertificates(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+
+        return this.httpClient.get(this.globals.NODE_API_URL + '/certificates?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getCertificate(certId: string) {
@@ -248,11 +378,35 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/certificates/' + id).pipe(catchError(this.handleError));
     }
 
+    async getAllCertificates(offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getCertificates( 1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllCertificates(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
     /*
        CA CERTIFICATE ENDPOINTS
     */
-    public getCACertificates() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/ca_certificates?size=1000').pipe(catchError(this.handleError));
+    public getCACertificates(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+
+        return this.httpClient.get(this.globals.NODE_API_URL + '/ca_certificates?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getCACertificate(certId: string) {
@@ -271,12 +425,34 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/ca_certificates/' + id).pipe(catchError(this.handleError));
     }
 
+    async getAllCACertificates(offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getCACertificates( 1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllCACertificates(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
 
     /*
        SNI ENDPOINTS
     */
-    public getSnis() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/snis?size=1000').pipe(catchError(this.handleError));
+    public getSnis(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+        return this.httpClient.get(this.globals.NODE_API_URL + '/snis?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getSni(id: string) {
@@ -295,11 +471,33 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/snis/' + id).pipe(catchError(this.handleError));
     }
 
+    async getAllSnis(offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getSnis(1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllSnis(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
     /*
         PLUGIN ENDPOINTS
      */
-    public getPlugins() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins?size=1000').pipe(catchError(this.handleError));
+    public getPlugins(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
+        const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
+        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getPlugin(id: string) {
@@ -331,6 +529,27 @@ export class ApiService {
 
     public getPluginSchema(plugin: string) {
         return this.httpClient.get(this.globals.NODE_API_URL + '/schemas/plugins/' + plugin).pipe(catchError(this.handleError));
+    }
+
+    async getAllPlugins(offset = null, results = [], fields = []) {
+        try {
+            const page = await firstValueFrom(this.getPlugins(1000, offset));
+
+            if (fields.length > 0) {
+                results.push(...this.cherrypickData(page['data'], fields));
+            } else {
+                results.push(...page['data']);
+            }
+
+            // is there more data?
+            if (page['offset'] !== null && page['offset'] !== undefined) {
+                return this.getAllPlugins(page['offset'], results, fields);
+            } else {
+                return {data: results, total: results.length};
+            }
+        } catch (err) {
+            throw err;
+        }
     }
 
     /*

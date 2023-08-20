@@ -50,7 +50,7 @@
         <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="consumer" matSortDirection="asc"
                matSortDisableClear>
             <ng-container matColumnDef="filter-table">
-                <th *matHeaderCellDef mat-header-cell colspan="4" class="padding-top-10-i">
+                <th *matHeaderCellDef mat-header-cell colspan="3" class="padding-top-10-i">
                     <mat-form-field color="primary" appearance="fill" class="width-100">
                         <mat-label>{{ 'element.filter_table' | translate }}</mat-label>
                         <input (keyup)="applyFilter()" [(ngModel)]="filter"
@@ -88,7 +88,8 @@
 
             <ng-container matColumnDef="username">
                 <th *matHeaderCellDef mat-header-cell>{{'basicauth.dialog.add_user' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{row.username}}</td>
+                <td *matCellDef="let row" mat-cell
+                    matTooltip="ID: {{row.id}}" matTooltipClass="tooltip-teal">{{row.username}}</td>
             </ng-container>
 
             <ng-container matColumnDef="consumer">
@@ -125,8 +126,8 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
-                <td *ngIf="input === ''" class="mat-cell" colspan="6">{{'element.no_data' | translate}}</td>
-                <td *ngIf="input !== ''" class="mat-cell" colspan="6">{{'element.no_data_search' | translate}}
+                <td *ngIf="input === ''" class="mat-cell" colspan="5">{{'element.no_data' | translate}}</td>
+                <td *ngIf="input !== ''" class="mat-cell" colspan="5">{{'element.no_data_search' | translate}}
                     "{{input}}"
                 </td>
             </tr>

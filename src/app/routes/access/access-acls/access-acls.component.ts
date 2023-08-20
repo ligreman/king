@@ -22,7 +22,7 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
     styleUrls: ['./access-acls.component.scss']
 })
 export class AccessAclsComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['id', 'group', 'consumer', 'created_at', 'tags', 'actions'];
+    displayedColumns: string[] = ['group', 'consumer', 'created_at', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

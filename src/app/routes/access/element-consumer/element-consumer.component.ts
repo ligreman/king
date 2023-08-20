@@ -21,7 +21,7 @@ import {map} from "rxjs/operators";
     styleUrls: ['./element-consumer.component.scss']
 })
 export class ElementConsumerComponent implements OnInit, OnDestroy {
-    displayedColumns: string[] = ['id', 'username', 'custom_id', 'tags', 'credentials', 'actions'];
+    displayedColumns: string[] = ['username', 'custom_id', 'tags', 'credentials', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

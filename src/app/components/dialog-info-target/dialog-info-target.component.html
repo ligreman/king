@@ -3,7 +3,8 @@
         <span>{{'target.dialog.info' | translate}}</span>
 
         <span class="btn-double-doc-right" fxLayout="row" fxLayoutAlign="start center">
-            <a href="https://docs.konghq.com/gateway/latest/admin-api/#target-object" mat-button rel="noopener noreferrer" target="_blank">
+            <a href="https://docs.konghq.com/gateway/latest/admin-api/#target-object" mat-button
+               rel="noopener noreferrer" target="_blank">
                 {{'text.documentation' | translate}}
                 <mat-icon class="mini-icon" iconPositionEnd>open_in_new</mat-icon>
             </a>
@@ -56,8 +57,9 @@
             <p class="margin-top-10-i">{{'target.info_health' | translate}}</p>
             <div class="padding-left-20" fxLayout="row" fxLayoutAlign="start center">
                 <div fxFlex="25">
-                    <p class="text" matTooltip="{{target?.health}}" matTooltipClass="tooltip-teal">
-                        <span [className]="getColor(target?.health)">{{ 'target.health_' + target?.health | translate}}</span>
+                    <p class="text" matTooltip="{{target?.health}}{{target.data.dns ? ': ' + target.data.dns : ''}}" matTooltipClass="tooltip-teal">
+                        <span
+                            [className]="getColor(target?.health)">{{ 'target.health_' + target?.health | translate}}</span>
                     </p>
                 </div>
                 <div fxFlex="25">
@@ -73,7 +75,8 @@
                     </p>
                 </div>
                 <div fxFlex="40">
-                    <mat-progress-bar [value]="getWeigth()" color="{{getColor(target?.health)}}" matTooltip="{{'target.addresses_percent' | translate}}"
+                    <mat-progress-bar [value]="getWeigth()" color="{{getColor(target?.health)}}"
+                                      matTooltip="{{'target.addresses_percent' | translate}}"
                                       matTooltipClass="tooltip-teal"
                                       mode="determinate"></mat-progress-bar>
                 </div>
@@ -81,21 +84,26 @@
             <div class="padding-left-20">
                 <p class="title margin-0-i">{{'address.label' | translate}}</p>
                 <mat-list role="list">
-                    <mat-list-item *ngFor="let add of target.data.addresses" role="listitem">
+                    <mat-list-item *ngFor="let add of target.data.addresses | keyvalue" role="listitem">
                         <div fxFlex fxLayout="row" fxLayoutAlign="start center">
-                            <div fxFlex="25"><p class="text monospace">{{ add.ip + ':' + add.port}}</p></div>
-                            <div fxFlex="25"><p class="text text-small">{{ 'target.dialog.weight' | translate }}: {{ add.weight }}</p></div>
-                            <div fxFlex="25" matTooltip="{{add.health}}" matTooltipClass="tooltip-teal"><p class="text text-small">
-                                <span [className]="getColor(add.health)">{{ 'target.health_' + add.health | translate}}</span>
+                            <div fxFlex="25"><p class="text monospace">{{ add.value.ip + ':' + add.value.port}}</p></div>
+                            <div fxFlex="25"><p class="text text-small">{{ 'target.dialog.weight' | translate }}
+                                : {{ add.value.weight }}</p></div>
+                            <div fxFlex="25" matTooltip="{{add.value.health}}"
+                                 matTooltipClass="tooltip-teal"><p class="text text-small">
+                                <span
+                                    [className]="getColor(add.value.health)">{{ 'target.health_' + add.value.health | translate}}</span>
                             </p></div>
                             <div fxFlex="25">
                                 <p>
-                                    <button (click)="setAddressHealthy(add.ip, add.port)" mat-icon-button
-                                            matTooltip="{{'target.set_healthy' | translate}}" matTooltipClass="tooltip-teal">
+                                    <button (click)="setAddressHealthy(add.value.ip, add.value.port)" mat-icon-button
+                                            matTooltip="{{'target.set_healthy' | translate}}"
+                                            matTooltipClass="tooltip-teal">
                                         <mat-icon class="color-healthy">power</mat-icon>
                                     </button>
-                                    <button (click)="setAddressUnhealthy(add.ip, add.port)" mat-icon-button
-                                            matTooltip="{{'target.set_unhealthy' | translate}}" matTooltipClass="tooltip-teal">
+                                    <button (click)="setAddressUnhealthy(add.value.ip, add.value.port)" mat-icon-button
+                                            matTooltip="{{'target.set_unhealthy' | translate}}"
+                                            matTooltipClass="tooltip-teal">
                                         <mat-icon class="color-unhealthy">power_off</mat-icon>
                                     </button>
                                 </p>
@@ -114,6 +122,7 @@
             <mat-chip-option *ngFor="let chip of target['tags']" color="primary">{{chip}}</mat-chip-option>
         </mat-chip-listbox>
         <div><!-- leave empty --></div>
-        <button cdkFocusInitial color="accent" mat-dialog-close="null" mat-flat-button>{{'text.accept' | translate}}</button>
+        <button cdkFocusInitial color="accent" mat-dialog-close="null"
+                mat-flat-button>{{'text.accept' | translate}}</button>
     </mat-dialog-actions>
 </div>

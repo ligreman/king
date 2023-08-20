@@ -101,14 +101,15 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loading = true;
+
         // Recojo del api los datos
         forkJoin([
-            this.api.getServices(),
-            this.api.getRoutes(),
-            this.api.getConsumers(),
+            this.api.getAllServices(null, [], ['id', 'name']),
+            this.api.getAllRoutes(null, [], ['id', 'name']),
+            this.api.getAllConsumers(null, [], ['id', 'username']),
             this.api.getPluginsEnabled(),
-            this.api.getPlugins()
-        ]).pipe(map(([services, routes, consumers, pluginsEnabled, plugins]) => {
+            this.api.getAllPlugins(null, [], ['id', 'name'])
+        ]).pipe(map<any, any>(([services, routes, consumers, pluginsEnabled, plugins]) => {
             // forkJoin returns an array of values, here we map those values to an object
             return {
                 services: services['data'],
@@ -143,28 +144,29 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                 }
             }
 
-            this.loading = false;
+
+            // Si viene un plugin para editar
+            if (this.pluginData !== null && this.pluginData.selectedId !== null) {
+                this.editMode = true;
+
+                // Rescato la info del servicio del api
+                this.api.getPlugin(this.pluginData.selectedId)
+                    .subscribe({
+                        next: (plugin) => {
+                            // Primero he de disparar el evento de cambio de schema para que cargue los campos de formulario
+                            this.nameField.setValue(plugin['name']);
+                            this.pluginChange(plugin);
+
+                            // Como estoy en modo edición, no permito cambiar el tipo de plugin
+                            this.nameField.disable();
+                            this.loading = false;
+                        },
+                        error: (error) => this.toast.error_general(error)
+                    });
+            } else {
+                this.loading = false;
+            }
         });
-
-        // Si viene un plugin para editar
-        if (this.pluginData !== null && this.pluginData.selectedId !== null) {
-            this.editMode = true;
-
-            // Rescato la info del servicio del api
-            this.api.getPlugin(this.pluginData.selectedId)
-                .subscribe({
-                    next: (plugin) => {
-                        // Primero he de disparar el evento de cambio de schema para que cargue los campos de formulario
-                        this.nameField.setValue(plugin['name']);
-                        this.pluginChange(plugin);
-
-                        // Como estoy en modo edición, no permito cambiar el tipo de plugin
-                        this.nameField.disable();
-                        this.loading = false;
-                    },
-                    error: (error) => this.toast.error_general(error)
-                });
-        }
 
         // Lista de tags
         this.api.getTags()

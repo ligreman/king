@@ -24,7 +24,7 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 })
 export class AccessKeyComponent implements OnInit, OnDestroy {
 
-    displayedColumns: string[] = ['id', 'key', 'consumer', 'created_at', 'ttl', 'tags', 'actions'];
+    displayedColumns: string[] = ['key', 'consumer', 'created_at', 'ttl', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;

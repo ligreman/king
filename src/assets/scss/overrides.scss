@@ -90,6 +90,19 @@ button.small-btn-icon {
     font-weight: bold;
 }
 
+button.small-btn.mat-mdc-icon-button.mat-mdc-button-base {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    margin-right: 10px;
+    margin-bottom: 5px;
+}
+
+.mat-mdc-menu-panel.menu-wider {
+    max-width: 500px;
+}
+
+
 /* Input box node connection */
 .connection-box {
     line-height: 20px;
@@ -99,6 +112,15 @@ button.small-btn-icon {
 .connection-box .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
     padding-top: 12px;
     padding-bottom: 0;
+}
+
+.connection-box.no-pad .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
+    padding-top: 8px;
+    padding-bottom: 0;
+}
+
+.connection-box.height-40 .mat-mdc-form-field-infix{
+    min-height: 40px;
 }
 
 .connection-box .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-floating-label {

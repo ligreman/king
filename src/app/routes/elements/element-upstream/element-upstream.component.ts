@@ -1,30 +1,55 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
-import { ApiService } from '../../../services/api.service';
-import { DialogHelperService } from '../../../services/dialog-helper.service';
-import { ToastService } from '../../../services/toast.service';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {firstValueFrom, Observable, startWith} from 'rxjs';
+import {sortedUniq as _sortedUniq} from 'lodash';
+import {ApiService} from '../../../services/api.service';
+import {DialogHelperService} from '../../../services/dialog-helper.service';
+import {ToastService} from '../../../services/toast.service';
+import {AutoUnsubscribe} from "ngx-auto-unsubscribe";
+import {FormControl} from "@angular/forms";
+import {COMMA, ENTER} from "@angular/cdk/keycodes";
+import {map} from "rxjs/operators";
+import {MatChipInputEvent} from "@angular/material/chips";
+import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 
+@AutoUnsubscribe()
 @Component({
     selector: 'app-element-upstream',
     templateUrl: './element-upstream.component.html',
     styleUrls: ['./element-upstream.component.scss']
 })
 export class ElementUpstreamComponent implements OnInit, AfterViewInit {
-    displayedColumns: string[] = ['id', 'name', 'algorithm', 'hash_on', 'hash_fallback', 'health', 'tags', 'actions'];
+    displayedColumns: string[] = ['name', 'algorithm', 'hash_on', 'hash_fallback', 'health', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    data;
+    // current table data
+    data = [];
+    // api offset of the next data
+    nextData = null;
     loading = false;
+    // tag search input
+    search = [];
+    searchAnd = true;
+    // currently searching this
+    currentSearch = '';
+    // current content of the table filter input
+    input = '';
+    // table filter input
     filter = '';
+
+    allTags = [];
+    currentTags = [];
+    filteredTags: Observable<string[]>;
+    tagCtrl = new FormControl('');
+
+    readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     healths = {};
 
-    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
+    constructor(private api: ApiService, private toast: ToastService, private dialogHelper: DialogHelperService) {
     }
 
     ngOnInit(): void {
@@ -32,36 +57,91 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
         this.loading = true;
     }
 
-    ngAfterViewInit() {
-        this.reloadData();
+    ngOnDestroy(): void {
     }
 
-    reloadData(cleanFilter = false) {
+    ngAfterViewInit() {
+        this.loadData();
+
+        // Lista de tags
+        this.api.getTags()
+            .subscribe((res) => {
+                // Recojo las tags
+                res['data'].forEach(data => {
+                    this.allTags.push(data.tag);
+                });
+                this.allTags.sort();
+                this.allTags = _sortedUniq(this.allTags);
+
+                this.filteredTags = this.tagCtrl.valueChanges.pipe(
+                    startWith(null),
+                    map((tag: string | null) => (tag ? this._filter(tag) : this._filter(''))),
+                );
+            });
+    }
+
+    /**
+     * Starts a new clean the table data
+     */
+    newSearch() {
+        // Table data and offset
+        this.nextData = null;
+        this.data = [];
+
+        // Search string and tag filter
+        this.search = this.currentTags;
+        this.currentSearch = this.searchAnd ? this.search.join(' AND ') : this.search.join(' OR ');
+        this.loadData(true);
+    }
+
+    loadData(cleanFilter = false, loadAll = false) {
         this.loading = true;
         if (cleanFilter) {
             this.filter = '';
         }
 
-        this.getData().then((value) => {
-                this.dataSource = new MatTableDataSource(value);
-                this.dataSource.paginator = this.paginator;
-                this.dataSource.sort = this.sort;
-                this.loading = false;
-                this.applyFilter();
-            },
-            () => {
-                this.toast.error('error.node_connection');
-                this.loading = false;
-                this.applyFilter();
+        this.getUpstreams(loadAll);
+    }
+
+    getUpstreams(loadAll = false) {
+        this.api.getUpstreams(1000, this.nextData, this.search, this.searchAnd)
+            .subscribe({
+                next: async (value) => {
+                    // is there more data?
+                    if (value['offset'] !== null && value['offset'] !== undefined) {
+                        this.nextData = value['offset'];
+                    } else {
+                        this.nextData = null;
+                    }
+
+                    let otherData = await this.getHealthData(value);
+                    this.data = this.data.concat(otherData['data']);
+
+                    this.dataSource = new MatTableDataSource(this.data);
+                    this.dataSource.paginator = this.paginator;
+                    this.dataSource.sort = this.sort;
+
+                    value=null;
+                    otherData=null;
+
+                    if (loadAll && this.nextData !== null) {
+                        this.getUpstreams(true);
+                    } else {
+                        this.loading = false;
+                        this.applyFilter();
+                    }
+                },
+                error: () => {
+                    this.toast.error('error.node_connection')
+                    this.loading = false;
+                }
             });
     }
 
     /*
-        Obtener los datos de forma asíncrona
+        Completa los datos de upstreams
      */
-    async getData() {
-        const upstreams = await firstValueFrom(this.api.getUpstreams());
-
+    async getHealthData(upstreams) {
         for (const [idx, up] of upstreams['data'].entries()) {
             let h;
             try {
@@ -75,15 +155,16 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
                 }
             }
 
-            const t = await firstValueFrom(this.api.getTargets(up['id']));
+            const t = await this.api.getAllTargets(up['id']);
             upstreams['data'][idx]['targets'] = t['data'];
         }
 
-        return upstreams['data'];
+        return upstreams;
     }
 
     applyFilter() {
         const filterValue = this.filter;
+        this.input = this.filter;
         this.dataSource.filter = filterValue.trim().toLowerCase();
 
         if (this.dataSource.paginator) {
@@ -99,10 +180,10 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
             .then(() => {
                 if (selected) {
                     // Edición
-                    this.reloadData();
+                    this.toast.info('element.need_to_reload', '', {timeOut: 8000, extendedTimeOut: 15000});
                 } else {
                     // Creación
-                    this.reloadData(true);
+                    this.toast.info('element.need_to_reload', '', {timeOut: 8000, extendedTimeOut: 15000});
                 }
             })
             .catch(() => {});
@@ -120,7 +201,9 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
      */
     delete(select) {
         this.dialogHelper.deleteElement(select, 'upstream')
-            .then(() => { this.reloadData(); })
+            .then(() => {
+                this.toast.info('element.need_to_reload', '', {timeOut: 8000, extendedTimeOut: 15000});
+                            })
             .catch(() => {});
     }
 
@@ -139,7 +222,69 @@ export class ElementUpstreamComponent implements OnInit, AfterViewInit {
         event.stopPropagation();
 
         this.dialogHelper.deleteElement(target, 'target')
-            .then(() => { this.reloadData(); })
+            .then(() => { this.loadData(); })
             .catch(() => {});
+    }
+
+    /**
+     * Change the tag search mode from AND to OR
+     */
+    changeSearchAnd() {
+        this.searchAnd = !this.searchAnd;
+    }
+
+    /**
+     * Get the current paginator size
+     */
+    getPaginatorLength() {
+        return this.paginator !== undefined ? this.paginator.pageSize : 0;
+    }
+
+    /**
+     * Add a tag to the selector
+     */
+    addTag(event: MatChipInputEvent): void {
+        const input = event.chipInput.inputElement;
+        const value = event.value.trim();
+
+        // Add our tag
+        if ((value || '') && /^[\w.\-_~]+$/.test(value)) {
+            this.currentTags.push(value);
+
+            // Reset the input value
+            if (input) {
+                input.value = '';
+            }
+            this.tagCtrl.setValue(null);
+        }
+    }
+
+    /**
+     * Removes a tag from the selector
+     */
+    removeTag(tag: string): void {
+        const index = this.currentTags.indexOf(tag);
+        if (index >= 0) {
+            this.currentTags.splice(index, 1);
+            this.tagCtrl.setValue(null);
+        }
+    }
+
+    /**
+     * When a tag is selected from the dropdown
+     */
+    selectedTag($event: MatAutocompleteSelectedEvent) {
+        this.currentTags.push($event.option.viewValue);
+        this.tagCtrl.setValue(null);
+    }
+
+    /**
+     * Filter the tags dropdown
+     */
+    private _filter(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        return this.allTags.filter(tag => {
+            return tag === '' || (tag.toLowerCase().includes(filterValue) && !this.currentTags.includes(tag.toLowerCase()));
+        });
     }
 }

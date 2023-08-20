@@ -7,7 +7,7 @@
     <!-- Contenedor de grafo -->
     <div [fxShow]="!loading" class="graph-container" fxFlex.gt-md="85" fxFlex.lt-lg="75">
         <!-- Barra de herramientas horizontal -->
-        <div *ngIf="showTools" fxLayout="row" fxLayoutAlign="space-between center" id="graph-tools">
+        <div *ngIf="showTools" fxLayout="row" fxLayoutAlign="space-between start" id="graph-tools">
             <div fxFlex="initial" fxLayout="row" fxLayoutAlign="center center">
                 <div class="filter" fxFlex>
                     <button (click)="drawer.toggle()" color="accent" mat-icon-button
@@ -16,24 +16,23 @@
                     </button>
                 </div>
             </div>
-            <div fxFlex="35" fxLayout="row" fxLayoutAlign="start center">
-                <mat-form-field color="accent" fxFlex>
-                    <mat-slide-toggle (change)="netFilter.mode = !netFilter.mode" [checked]="netFilter.mode"
-                                      class="margin-right-20" matPrefix>
+            <div fxFlex="35" fxLayout="row" fxLayoutAlign="start center" class="margin-top-8">
+                <mat-form-field color="accent" appearance="outline" fxFlex class="connection-box height-40">
+                    <button (click)="netFilter.mode = !netFilter.mode" class="small-btn-icon" mat-icon-button matPrefix>
                         <span *ngIf="netFilter.mode">AND</span>
                         <span *ngIf="!netFilter.mode">OR</span>
-                    </mat-slide-toggle>
+                    </button>
                     <mat-label>{{ 'architect.filter' | translate}}</mat-label>
                     <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput
                            matTooltip="{{ 'architect.filter_hint' | translate }}"
                            matTooltipClass="tooltip-teal" type="text">
-                    <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
+                    <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix class="small-btn">
                         <mat-icon>close</mat-icon>
                     </button>
                 </mat-form-field>
             </div>
 
-            <mat-form-field color="accent" fxFlex="30">
+            <mat-form-field color="accent" appearance="outline" fxFlex="30" class="connection-box no-pad height-40 margin-top-8">
                 <mat-select (selectionChange)="filterGraphByTag()" [(ngModel)]="netFilter.element">
                     <mat-option value="all">{{'architect.filter_element_all' | translate}}</mat-option>
                     <mat-option value="mainonly">{{'architect.filter_element_mainonly' | translate}}</mat-option>

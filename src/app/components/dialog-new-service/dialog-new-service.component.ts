@@ -113,25 +113,25 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         // Recupero la lista de certificados
-        this.api.getCertificates()
-            .subscribe({
-                next: (certs) => {
-                    for (let cert of certs['data']) {
-                        this.certificatesAvailable.push(cert.id);
-                    }
-                },
-                error: (error) => this.toast.error_general(error)
+        this.api.getAllCertificates(null, [], ['id'])
+            .then((certs) => {
+                for (let cert of certs['data']) {
+                    this.certificatesAvailable.push(cert.id);
+                }
+            })
+            .catch(error=>{
+                this.toast.error_general(error);
             });
 
         // Recupero la lista de certificados
-        this.api.getCACertificates()
-            .subscribe({
-                next: (cacerts) => {
-                    for (let cert of cacerts['data']) {
-                        this.caCertificatesAvailable.push(cert.id);
-                    }
-                },
-                error: (error) => this.toast.error_general(error)
+        this.api.getAllCACertificates(null, [], ['id'])
+            .then((cacerts) => {
+                for (let cert of cacerts['data']) {
+                    this.caCertificatesAvailable.push(cert.id);
+                }
+            })
+            .catch(error=>{
+                this.toast.error_general(error);
             });
 
         // Si viene un servicio para editar
@@ -167,12 +167,12 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
             });
 
         // Retrieve the list of services
-        this.api.getServices()
-            .subscribe({
-                next: (ss) => {
-                    this.services = ss['data'];
-                },
-                error: () => this.toast.error('error.node_connection'),
+        this.api.getAllServices()
+            .then((services) => {
+                this.services = services['data'];
+            })
+            .catch(error=>{
+                this.toast.error_general(error);
             });
     }
 

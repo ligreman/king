@@ -62,7 +62,7 @@
             </ng-container>
 
             <ng-container matColumnDef="filter-table">
-                <th *matHeaderCellDef mat-header-cell colspan="4" class="padding-top-10-i">
+                <th *matHeaderCellDef mat-header-cell colspan="3" class="padding-top-10-i">
                     <mat-form-field color="primary" appearance="fill" class="width-100">
                         <mat-label>{{ 'element.filter_table' | translate }}</mat-label>
                         <input (keyup)="applyFilter()" [(ngModel)]="filter"
@@ -100,7 +100,8 @@
 
             <ng-container matColumnDef="username">
                 <th *matHeaderCellDef mat-header-cell mat-sort-header>{{'consumer.dialog.username' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>{{row.username}}</td>
+                <td *matCellDef="let row" mat-cell
+                matTooltip="ID: {{row.id}}" matTooltipClass="tooltip-teal">{{row.username}}</td>
             </ng-container>
 
             <ng-container matColumnDef="custom_id">

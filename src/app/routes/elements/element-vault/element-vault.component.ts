@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/c
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
-import {Router} from '@angular/router';
 import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
 import {ApiService} from '../../../services/api.service';
 import {DialogHelperService} from '../../../services/dialog-helper.service';
@@ -15,7 +14,7 @@ import {ToastService} from '../../../services/toast.service';
     styleUrls: ['./element-vault.component.scss']
 })
 export class ElementVaultComponent implements OnInit, OnDestroy, AfterViewInit {
-    displayedColumns: string[] = ['id', 'name', 'prefix', 'description', 'config', 'tags', 'actions'];
+    displayedColumns: string[] = ['name', 'prefix', 'description', 'config', 'tags', 'actions'];
     dataSource: MatTableDataSource<any>;
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
@@ -25,10 +24,12 @@ export class ElementVaultComponent implements OnInit, OnDestroy, AfterViewInit {
     // api offset of the next data
     nextData = null;
     loading = false;
+    // current content of the table filter input
+    input = '';
     // table filter input
     filter = '';
 
-    constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
+    constructor(private api: ApiService, private toast: ToastService, private dialogHelper: DialogHelperService) {
     }
 
     ngOnInit(): void {
@@ -83,6 +84,7 @@ export class ElementVaultComponent implements OnInit, OnDestroy, AfterViewInit {
 
     applyFilter() {
         const filterValue = this.filter;
+        this.input = this.filter;
         this.dataSource.filter = filterValue.trim().toLowerCase();
 
         if (this.dataSource.paginator) {

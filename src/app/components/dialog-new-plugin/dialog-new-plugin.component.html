@@ -85,7 +85,7 @@
                             <mat-select formControlName="id">
                                 <mat-option [value]="null"></mat-option>
                                 <mat-option *ngFor="let route of routesList" value="{{route.id}}">
-                                    {{route.name}} -> <span class="text-small">{{route.id}}</span></mat-option>
+                                    {{route.name}}</mat-option>
                             </mat-select>
                             <mat-icon matSuffix matTooltip="{{'plugin.dialog.route_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
@@ -98,7 +98,7 @@
                             <mat-select formControlName="id">
                                 <mat-option [value]="null"></mat-option>
                                 <mat-option *ngFor="let serv of servicesList" value="{{serv.id}}">
-                                    {{serv.name}} -> <span class="text-small">{{serv.id}}</span></mat-option>
+                                    {{serv.name}}</mat-option>
                             </mat-select>
                             <mat-icon matSuffix matTooltip="{{'plugin.dialog.service_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline
@@ -111,7 +111,7 @@
                             <mat-select formControlName="id">
                                 <mat-option [value]="null"></mat-option>
                                 <mat-option *ngFor="let cons of consumersList" value="{{cons.id}}">
-                                    {{cons.username}} -> <span class="text-small">{{cons.id}}</span></mat-option>
+                                    {{cons.username}}</mat-option>
                             </mat-select>
                             <mat-icon matSuffix matTooltip="{{'plugin.dialog.consumer_tooltip' | translate}}"
                                       matTooltipClass="tooltip-teal">info_outline

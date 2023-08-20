@@ -70,13 +70,13 @@
                     </mat-form-field>
                 </div>
 
-                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                <div class="margin-bottom-10 margin-top-10" fxLayout="row" fxLayoutAlign="space-between start">
                     <!--Servicio-->
                     <mat-form-field appearance="outline" color="accent" fxFlex="50">
                         <mat-label>{{'service.label' | translate}}</mat-label>
                         <mat-select formControlName="service" required>
                             <mat-option *ngFor="let serv of servicesAvailable" value="{{serv.id}}">
-                                {{serv.name}} -> <span class="text-small">{{serv.id}}</span></mat-option>
+                                {{serv.name}}</mat-option>
                         </mat-select>
                         <mat-error *ngIf="serviceField.invalid">
                             {{ 'error.field_required' | translate }}

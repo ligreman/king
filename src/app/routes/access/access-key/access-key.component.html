@@ -50,7 +50,7 @@
         <table [dataSource]="dataSource" fxFlex mat-table matSort matSortActive="consumer" matSortDirection="asc"
                matSortDisableClear>
             <ng-container matColumnDef="filter-table">
-                <th *matHeaderCellDef mat-header-cell colspan="4" class="padding-top-10-i">
+                <th *matHeaderCellDef mat-header-cell colspan="3" class="padding-top-10-i">
                     <mat-form-field color="primary" appearance="fill" class="width-100">
                         <mat-label>{{ 'element.filter_table' | translate }}</mat-label>
                         <input (keyup)="applyFilter()" [(ngModel)]="filter"
@@ -64,7 +64,7 @@
             </ng-container>
 
             <ng-container matColumnDef="table-actions">
-                <th *matHeaderCellDef mat-header-cell class="text-align-right-i" colspan="2">
+                <th *matHeaderCellDef mat-header-cell class="text-align-right-i" colspan="3">
                     <button class="margin-left-20" (click)="loadData()" color="accent" mat-stroked-button
                             [disabled]="(nextData === null) || loading"
                             matTooltip="{{'element.load_1000_tooltip' | translate}}"
@@ -88,7 +88,8 @@
 
             <ng-container matColumnDef="key">
                 <th *matHeaderCellDef mat-header-cell>{{'apikey.dialog.key' | translate}}</th>
-                <td *matCellDef="let row" mat-cell>
+                <td *matCellDef="let row" mat-cell
+                    matTooltip="ID: {{row.id}}" matTooltipClass="tooltip-teal">
                     {{showKey(row.key, row.hide || false)}}
                     <button (click)="row.hide=!row.hide" mat-icon-button>
                         <mat-icon *ngIf="row.hide">visibility_off</mat-icon>
@@ -146,8 +147,8 @@
 
             <!-- Row shown when there is no matching data. -->
             <tr *matNoDataRow class="mat-row">
-                <td *ngIf="input === ''" class="mat-cell" colspan="7">{{'element.no_data' | translate}}</td>
-                <td *ngIf="input !== ''" class="mat-cell" colspan="7">{{'element.no_data_search' | translate}}
+                <td *ngIf="input === ''" class="mat-cell" colspan="6">{{'element.no_data' | translate}}</td>
+                <td *ngIf="input !== ''" class="mat-cell" colspan="6">{{'element.no_data_search' | translate}}
                     "{{input}}"
                 </td>
             </tr>

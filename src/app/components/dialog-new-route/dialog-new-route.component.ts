@@ -185,33 +185,33 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
 
     loadData() {
         // Recupero la lista de servicios
-        this.api.getServices()
-            .subscribe({
-                next: (services) => {
-                    for (let serv of services['data']) {
-                        this.servicesAvailable.push({id: serv.id, name: serv.name});
-                    }
+        this.api.getAllServices(null, [], ['id','name'])
+            .then((services) => {
+                for (let serv of services['data']) {
+                    this.servicesAvailable.push({id: serv.id, name: serv.name});
+                }
 
-                    // ordeno
-                    this.servicesAvailable = _orderBy(this.servicesAvailable, ['name'], ['asc']);
-                },
-                error: (error) => this.toast.error_general(error)
+                // ordeno
+                this.servicesAvailable = _orderBy(this.servicesAvailable, ['name'], ['asc']);
+            })
+            .catch(error=>{
+                this.toast.error_general(error);
             });
 
         if (!this.expressions) {
             // La lista de SNIs
-            this.api.getSnis()
-                .subscribe({
-                    next: (snis) => {
-                        for (let sni of snis['data']) {
-                            this.snisAvailable.push({id: sni.id, name: sni.name});
-                        }
-                    },
-                    error: (error) => this.toast.error_general(error)
+            this.api.getAllSnis(null, [], ['id', 'name'])
+                .then((snis) => {
+                    for (let sni of snis['data']) {
+                        this.snisAvailable.push({id: sni.id, name: sni.name});
+                    }
+                })
+                .catch(error=>{
+                    this.toast.error_general(error);
                 });
         }
 
-        // Si viene un servicio para editar
+        // Si viene un route para editar
         if (this.routeIdEdit !== null) {
             this.editMode = true;
 
@@ -242,12 +242,12 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             });
 
         // Retrieve the list of routes
-        this.api.getRoutes()
-            .subscribe({
-                next: (routes) => {
-                    this.routes = routes['data'];
-                },
-                error: (error) => this.toast.error_general(error)
+        this.api.getAllRoutes()
+            .then((routes) => {
+                this.routes = routes['data'];
+            })
+            .catch(error=>{
+                this.toast.error_general(error);
             });
     }
 

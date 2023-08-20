@@ -7,28 +7,40 @@
 
 <div fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex="90" fxLayout="column">
-        <div fxLayout="row" fxLayoutAlign="start end">
-            <mat-form-field color="accent" appearance="outline" fxFlex>
-                <mat-label>{{ 'text.search' | translate }}</mat-label>
-                <input matInput (keyup)="applyFilter()" placeholder="{{'element.text_search' | translate}}"
-                       #input [(ngModel)]="filter">
-                <button *ngIf="filter" matSuffix mat-icon-button (click)="filter=''; applyFilter()">
-                    <mat-icon>close</mat-icon>
-                </button>
-            </mat-form-field>
-            <button mat-icon-button (click)="addEditCert()" color="accent" fxFlexOffset="5"
-                    matTooltip="{{'cacert.add'| translate}}"
-                    matTooltipClass="tooltip-teal">
-                <mat-icon>add</mat-icon>
-            </button>
-            <button mat-icon-button (click)="reloadData()" color="accent" matTooltip="{{'element.reload' | translate}}"
-                    matTooltipClass="tooltip-teal">
-                <mat-icon>refresh</mat-icon>
-            </button>
-        </div>
-
         <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear
                fxFlex>
+            <ng-container matColumnDef="new-element">
+                <th *matHeaderCellDef mat-header-cell>
+                    <button (click)="addEditCert()" color="accent" mat-stroked-button>
+                        <mat-icon iconPositionEnd>add</mat-icon>
+                        {{ 'cacert.add' | translate }}
+                    </button>
+                </th>
+            </ng-container>
+
+            <ng-container matColumnDef="filter-table">
+                <th *matHeaderCellDef mat-header-cell colspan="3" class="padding-top-10-i">
+                    <mat-form-field color="primary" appearance="fill" class="width-100">
+                        <mat-label>{{ 'element.filter_table' | translate }}</mat-label>
+                        <input (keyup)="applyFilter()" [(ngModel)]="filter"
+                               matInput placeholder="{{'element.text_search' | translate}}">
+                        <button (click)="filter=''; applyFilter()" *ngIf="filter" mat-icon-button matSuffix
+                                color="primary">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </th>
+            </ng-container>
+
+            <ng-container matColumnDef="table-actions">
+                <th *matHeaderCellDef mat-header-cell class="text-align-right-i" colspan="1">
+                    <button (click)="reloadData()" color="accent" mat-icon-button matTooltip="{{'element.reload' | translate}}"
+                            matTooltipClass="tooltip-teal">
+                        <mat-icon>refresh</mat-icon>
+                    </button>
+                </th>
+            </ng-container>
+
             <!-- ID Column -->
             <ng-container matColumnDef="id">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'text.id' | translate}}</th>
@@ -74,18 +86,22 @@
                 </td>
             </ng-container>
 
+            <tr mat-header-row *matHeaderRowDef="['new-element', 'filter-table', 'table-actions']">
+            </tr>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
             <!-- Row shown when there is no matching data. -->
             <tr class="mat-row" *matNoDataRow>
-                <td class="mat-cell" colspan="10" *ngIf="input.value === ''">{{'element.no_data' | translate}}</td>
-                <td class="mat-cell" colspan="10" *ngIf="input.value !== ''">{{'element.no_data_search' | translate}}
-                    "{{input.value}}"
+                <td class="mat-cell" colspan="5" *ngIf="input === ''">{{'element.no_data' | translate}}</td>
+                <td class="mat-cell" colspan="5" *ngIf="input !== ''">{{'element.no_data_search' | translate}}
+                    "{{input}}"
                 </td>
             </tr>
         </table>
 
-        <mat-paginator color="accent" [pageSizeOptions]="[10, 25, 100]"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[10, 25, 100, 250]" showFirstLastButtons
+                       [ngClass]="{'mat-paginator-sticky': getPaginatorLength() >= 100 }"
+                       color="accent"></mat-paginator>
     </div>
 </div>

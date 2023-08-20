@@ -24,7 +24,7 @@
         <form [formGroup]="form">
             <!--Nombre-->
             <div class="margin-bottom-10" fxLayout="column">
-                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                <div class="margin-bottom-20-i" fxLayout="row" fxLayoutAlign="space-between start">
                     <mat-form-field appearance="outline" color="accent" fxFlex="49">
                         <mat-label>{{'upstream.dialog.name' | translate}}</mat-label>
                         <mat-select cdkFocusInitial formControlName="name" required>
@@ -209,7 +209,7 @@
 
                 <div fxLayout="row" fxLayoutAlign="space-between start">
                     <!--Certificado cliente-->
-                    <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="49">
+                    <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="40">
                         <mat-label>{{'service.dialog.certificate' | translate}}</mat-label>
                         <mat-select [disabled]="certificatesAvailable.length === 0" formControlName="client_certificate">
                             <mat-option *ngFor="let cert of certificatesAvailable" value="{{cert}}">{{cert}}</mat-option>
@@ -219,7 +219,7 @@
                         </mat-icon>
                     </mat-form-field>
 
-                    <mat-form-field appearance="outline" color="accent" fxFlex="49">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="39">
                         <mat-label>{{'service.dialog.host' | translate}}</mat-label>
                         <input aria-label="" formControlName="host_header" matInput placeholder="{{'service.dialog.host_example' | translate}}"
                                type="text"/>
@@ -230,6 +230,14 @@
                             {{ 'upstream.dialog.error.host_format' | translate }}
                         </mat-error>
                     </mat-form-field>
+
+                    <div class="margin-top-15" fxFlex="19">
+                        <mat-checkbox formControlName="use_srv_name"
+                                      matTooltip="{{'upstream.dialog.use_srv_name_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">
+                            {{ 'upstream.dialog.use_srv_name' | translate}}
+                        </mat-checkbox>
+                    </div>
                 </div>
             </div>
 

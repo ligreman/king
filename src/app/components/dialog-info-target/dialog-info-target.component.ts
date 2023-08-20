@@ -1,11 +1,11 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateService } from '@ngx-translate/core';
-import { saveAs } from 'file-saver';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../services/api.service';
-import { DialogHelperService } from '../../services/dialog-helper.service';
-import { ToastService } from '../../services/toast.service';
+import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {TranslateService} from '@ngx-translate/core';
+import {saveAs} from 'file-saver';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../services/api.service';
+import {DialogHelperService} from '../../services/dialog-helper.service';
+import {ToastService} from '../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -20,7 +20,8 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
     loading = true;
 
     constructor(@Inject(MAT_DIALOG_DATA) public data: string, private api: ApiService, private toast: ToastService,
-                private translate: TranslateService, private dialogHelper: DialogHelperService) { }
+                private translate: TranslateService, private dialogHelper: DialogHelperService) {
+    }
 
     ngOnInit(): void {
         const aux = this.data.split('#');
@@ -33,20 +34,27 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
-    getData() {
+    getData(nextData = null) {
         // Recojo los datos del api de los target en el endpoint de health que me viene todo
-        this.api.getUpstreamTargetsHealth(this.upstreamId)
+        this.api.getUpstreamTargetsHealth(this.upstreamId, 1000, nextData)
             .subscribe({
                 next: (up) => {
+                    let found = false;
                     // Busco el target concreto
                     up['data'].forEach(tg => {
                         if (tg.id === this.targetId) {
                             this.target = tg;
+                            found = true;
                         }
                     });
+
+                    if (up['offset'] !== undefined && up['offset'] !== null && !found) {
+                        this.getData(up['offset']);
+                    } else {
+                        this.loading = false
+                    }
                 },
-                error: (error) => this.toast.error_general(error),
-                complete: () => this.loading = false
+                error: (error) => this.toast.error_general(error)
             });
     }
 
@@ -97,7 +105,8 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
                         error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     setTargetUnhealthy() {
@@ -120,7 +129,8 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
                         error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     setAddressHealthy(addr, port) {
@@ -143,7 +153,8 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
                         error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     setAddressUnhealthy(addr, port) {
@@ -166,6 +177,7 @@ export class DialogInfoTargetComponent implements OnInit, OnDestroy {
                         error: error => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 }

@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { Router } from '@angular/router';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { ApiService } from '../../../services/api.service';
-import { DialogHelperService } from '../../../services/dialog-helper.service';
-import { ToastService } from '../../../services/toast.service';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatSort} from '@angular/material/sort';
+import {MatTableDataSource} from '@angular/material/table';
+import {Router} from '@angular/router';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {ApiService} from '../../../services/api.service';
+import {DialogHelperService} from '../../../services/dialog-helper.service';
+import {ToastService} from '../../../services/toast.service';
 
 @AutoUnsubscribe()
 @Component({
@@ -22,6 +22,8 @@ export class CertificateCacertComponent implements OnInit, OnDestroy {
 
     data;
     loading = false;
+    // current content of the table filter input
+    input = '';
     filter = '';
 
     constructor(private api: ApiService, private toast: ToastService, private route: Router, private dialogHelper: DialogHelperService) {
@@ -46,23 +48,24 @@ export class CertificateCacertComponent implements OnInit, OnDestroy {
     }
 
     getCerts() {
-        this.api.getCACertificates()
-            .subscribe({
-                next: (value) => {
-                    this.dataSource = new MatTableDataSource(value['data']);
-                    this.dataSource.paginator = this.paginator;
-                    this.dataSource.sort = this.sort;
-                },
-                error: () => this.toast.error('error.node_connection'),
-                complete: () => {
-                    this.loading = false;
-                    this.applyFilter();
-                }
+        this.api.getAllCACertificates()
+            .then((value) => {
+                this.dataSource = new MatTableDataSource(value['data']);
+                this.dataSource.paginator = this.paginator;
+                this.dataSource.sort = this.sort;
+            })
+            .catch(error=>{
+                this.toast.error('error.node_connection');
+            })
+            .finally(()=>{
+                this.loading = false;
+                this.applyFilter();
             });
     }
 
     applyFilter() {
         const filterValue = this.filter;
+        this.input = this.filter;
         this.dataSource.filter = filterValue.trim().toLowerCase();
 
         if (this.dataSource.paginator) {
@@ -94,5 +97,12 @@ export class CertificateCacertComponent implements OnInit, OnDestroy {
         this.dialogHelper.deleteElement(select, 'cacert')
             .then(() => { this.reloadData(); })
             .catch(() => {});
+    }
+
+    /**
+     * Get the current paginator size
+     */
+    getPaginatorLength() {
+        return this.paginator !== undefined ? this.paginator.pageSize : 0;
     }
 }
