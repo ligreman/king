@@ -278,5 +278,9 @@ export class AccessJwtComponent implements OnInit, OnDestroy {
             return tag === '' || (tag.toLowerCase().includes(filterValue) && !this.currentTags.includes(tag.toLowerCase()));
         });
     }
+
+    scrollTo(element) {
+        element.scrollIntoView();
+    }
 }
 

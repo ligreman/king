@@ -1,7 +1,7 @@
 <mat-progress-bar [fxShow]="loading" color="accent" mode="indeterminate"></mat-progress-bar>
 <div [fxShow]="!loading" class="progress-placeholder"></div>
 
-<div class="padding-top-20 margin-bottom-10" fxLayout="row" fxLayoutAlign="center center">
+<div #top class="padding-top-20 margin-bottom-10" fxLayout="row" fxLayoutAlign="center center">
     <h2 class="margin-0-i" fxFlex="90">{{ 'jwt.header' | translate}}</h2>
 </div>
 
@@ -64,7 +64,7 @@
             </ng-container>
 
             <ng-container matColumnDef="table-actions">
-                <th *matHeaderCellDef mat-header-cell class="text-align-right-i" colspan="3">
+                <th *matHeaderCellDef mat-header-cell class="text-align-right-i noellipsis" colspan="3">
                     <button class="margin-left-20" (click)="loadData()" color="accent" mat-stroked-button
                             [disabled]="(nextData === null) || loading"
                             matTooltip="{{'element.load_1000_tooltip' | translate}}"
@@ -173,3 +173,5 @@
         </div>
     </div>
 </div>
+
+<button class="go-to-top" color="primary" (click)="scrollTo(top)" mat-icon-button><mat-icon>vertical_align_top</mat-icon></button>

@@ -1,24 +1,24 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
 import {
     cloneDeep as _cloneDeep,
     filter as _filter,
     floor as _floor,
     isEmpty as _isEmpty,
-    remove as _remove,
     sortBy as _sortBy,
-    sortedUniq as _sortedUniq,
-    uniq as _uniq
+    sortedUniq as _sortedUniq
 } from 'lodash';
-import { AutoUnsubscribe } from 'ngx-auto-unsubscribe';
-import { firstValueFrom, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { DataSet, Network } from 'vis-network/standalone';
-import { ApiService } from '../../services/api.service';
-import { DialogHelperService } from '../../services/dialog-helper.service';
-import { GlobalsService } from '../../services/globals.service';
-import { ToastService } from '../../services/toast.service';
+import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
+import {firstValueFrom, forkJoin, ReplaySubject, Subject, takeUntil} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {DataSet, Network} from 'vis-network/standalone';
+import {ApiService} from '../../services/api.service';
+import {DialogHelperService} from '../../services/dialog-helper.service';
+import {GlobalsService} from '../../services/globals.service';
+import {ToastService} from '../../services/toast.service';
+import {FormControl} from "@angular/forms";
+import {MatSelect} from "@angular/material/select";
 
 @AutoUnsubscribe()
 @Component({
@@ -52,7 +52,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     // Plugins activos
     enabledPlugins = [];
     // Filtros del grafo
-    netFilter = {tag: '', element: 'all', mode: false};
+    graphFilter = {tag: '', element: 'all', mode: false};
     // Posibles tipos de nodos que tienen acciones propias
     groupsInfo = ['service', 'route', 'upstream', 'target', 'plugin'];
     othersInfo = ['acl', 'key', 'jwt'];
@@ -72,12 +72,27 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         edges: new DataSet([])
     };
 
+    // TAGS
+    tagSubscription = null;
+    /** control for the selected tags for multi-selection */
+    public tagSelectedCtrl: FormControl<string[]> = new FormControl<string[]>([]);
+
+    /** control for the MatSelect filter keyword multi-selection */
+    public tagFilterCtrl: FormControl<string> = new FormControl<string>('');
+    /** list of available tags filtered by the filter control */
+    public tagFilteredList: ReplaySubject<string[]> = new ReplaySubject<string[]>(1);
+
+    @ViewChild('multiSelect', {static: true}) multiSelect: MatSelect;
+
+    protected _onDestroy = new Subject<void>();
+
     constructor(private api: ApiService, private route: Router, private toast: ToastService, private globals: GlobalsService,
                 private translate: TranslateService, private dialogHelper: DialogHelperService) {
         const lastFilters = localStorage.getItem('kongLastFilters');
         if (lastFilters && lastFilters !== '') {
             try {
-                this.netFilter = JSON.parse(lastFilters);
+                this.graphFilter = JSON.parse(lastFilters);
+                this.tagSelectedCtrl.setValue(this.graphFilter.tag.split('###'));
             } catch (e) {
             }
         }
@@ -110,7 +125,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         }).catch(() => this.toast.error('error.route_mode'));
     }
 
-    ngOnDestroy(): void {}
+    ngOnDestroy(): void {
+        this._onDestroy.next();
+        this._onDestroy.complete();
+    }
 
     ngAfterViewInit() {
         // Create a network. El setTimeout es para dejar tiempo a que cargue bien el DOM
@@ -201,8 +219,13 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                     }
                 });
 
-                this.populateGraph();
+                this.populateGraph(false);
                 this.showTools = true;
+
+
+                if (this.graphFilter.element === 'untagged') {
+                    this.tagSelectedCtrl.disable();
+                }
             }
         }, 1500);
     }
@@ -210,38 +233,61 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     /**
      Llama al API y genera nodos y edges
      */
-    populateGraph() {
-        this.loading = true;
-        this.selection = '';
+    populateGraph(loadTags = true) {
+        // Solo cargo datos en el grafo si estoy filtrando por etiquetas
+        if (!this.isTagfilterEmpty()) {
+            this.loading = true;
+            this.selection = '';
 
-        // Guardo la posición
-        this.lastPosition.scale = this.network.getScale();
-        this.lastPosition.position = this.network.getViewPosition();
+            // Guardo la posición
+            this.lastPosition.scale = this.network.getScale();
+            this.lastPosition.position = this.network.getViewPosition();
 
-        // Recojo las tags por si hay nuevas
-        this.getTags();
+            // Recojo las tags por si hay nuevas
+            if (loadTags) {
+                this.getTags();
+            }
 
-        // Llamo al API por la información para pintar el grafo
-        this.getGraphDataFromApi().subscribe((value) => {
-            this.dataApi = value;
-            this.filterGraphByTag();
-        });
+            // Llamo al API por la información para pintar el grafo
+            this.getGraphDataFromApi().subscribe((value) => {
+                this.dataApi = value;
+                this.filterGraphByTag();
+            });
+        } else {
+            this.loading = false;
+        }
     }
 
     /**
      Agrupo las llamadas al API para pedir los datos del grafo
      */
     getGraphDataFromApi() {
+        let tags = null;
+        if (!this.isTagfilterEmpty()) {
+            tags = this.tagSelectedCtrl.value.slice();
+        }
+
+        // ¿Estoy buscando los elementos sin tag?
+        if (this.graphFilter.element === 'untagged') {
+            tags = null;
+        }
+
         // Recojo del api los datos
         return forkJoin([
-            this.api.getServices(),
-            this.api.getRoutes(),
-            this.api.getUpstreams(),
-            this.api.getConsumers(),
-            this.api.getPlugins()
-        ]).pipe(map(([services, routes, upstreams, consumers, plugins]) => {
+            this.api.getAllServices(null, [], [], tags, this.graphFilter.mode),
+            this.api.getAllRoutes(null, [], [], tags, this.graphFilter.mode),
+            this.api.getAllUpstreams(null, [], [], tags, this.graphFilter.mode),
+            this.api.getAllConsumers(null, [], [], tags, this.graphFilter.mode),
+            this.api.getAllPlugins(null, [], [], tags, this.graphFilter.mode)
+        ]).pipe(map<any, any>(([services, routes, upstreams, consumers, plugins]) => {
             // forkJoin returns an array of values, here we map those values to an object
-            return {services: services['data'], routes: routes['data'], upstreams: upstreams['data'], consumers: consumers['data'], plugins: plugins['data']};
+            return {
+                services: services['data'],
+                routes: routes['data'],
+                upstreams: upstreams['data'],
+                consumers: consumers['data'],
+                plugins: plugins['data']
+            };
         }));
     }
 
@@ -259,6 +305,10 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             });
     }
 
+    isTagfilterEmpty() {
+        return !(this.tagSelectedCtrl.value.length > 0 && this.tagSelectedCtrl.value[0] !== '');
+    }
+
     /**
      * Obtiene todas las tags que existen en Kong
      */
@@ -267,16 +317,40 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .subscribe((res) => {
                 // Recojo las tags
                 res['data'].forEach(data => {
+                    // Me quedo con los cluster tags para generar los nodos del grafo
                     if (data.tag.startsWith('c-')) {
                         this.clusterTags.push(data.tag);
-                    } else {
-                        this.allTags.push(data.tag);
                     }
+                    this.allTags.push(data.tag);
                 });
                 this.allTags.sort();
                 this.allTags = _sortedUniq(this.allTags);
-                this.clusterTags.sort();
-                this.clusterTags = _sortedUniq(this.clusterTags);
+                this.tagFilteredList.next(this.allTags.slice());
+
+                if (this.tagSubscription) {
+                    this.tagSubscription.unsubscribe();
+                }
+
+                // listen for search field value changes
+                this.tagSubscription = this.tagFilterCtrl.valueChanges
+                    .pipe(takeUntil(this._onDestroy))
+                    .subscribe(() => {
+                        if (!this.allTags) {
+                            return;
+                        }
+                        // get the search keyword
+                        let search = this.tagFilterCtrl.value;
+                        if (!search) {
+                            this.tagFilteredList.next(this.allTags.slice());
+                            return;
+                        } else {
+                            search = search.toLowerCase();
+                        }
+                        // filter the tags
+                        this.tagFilteredList.next(
+                            this.allTags.filter(tag => tag.toLowerCase().indexOf(search) > -1)
+                        );
+                    });
             });
     }
 
@@ -293,78 +367,46 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      Filtra el grafo por la etiqueta elegida
      */
     filterGraphByTag() {
-        const tags = this.netFilter.tag;
-        let newData;
-
-        if (tags === '' || tags === null) {
-            newData = _cloneDeep(this.dataApi);
-        } else {
-            let theTags = splitter(tags, ',');
-            theTags = _uniq(theTags);
-            theTags = theTags.map(value => value.trim());
-            newData = {services: [], routes: [], upstreams: [], plugins: [], consumers: []};
-
-            // AND
-            if (this.netFilter.mode) {
-                newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: theTags}));
-                newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: theTags}));
-                newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: theTags}));
-                newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: theTags}));
-                newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: theTags}));
-
-                // Ahora añado las tags que son regExp
-                let regexpTags = [];
-                for (const tag of theTags) {
-                    if (tag.indexOf('*') !== -1) {
-                        regexpTags.push('#-#' + tag.replace(/\*/g, '(.*)'));
-                    }
-                }
-
-                for (const rTag of regexpTags) {
-                    newData.services = newData.services.concat(_filter(this.dataApi.services, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                    newData.routes = newData.routes.concat(_filter(this.dataApi.routes, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                    newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                    newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                    newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                }
-            }
-            // OR
-            else {
-                for (const tag of theTags) {
-                    newData.services = newData.services.concat(_filter(this.dataApi.services, {tags: [tag]}));
-                    newData.routes = newData.routes.concat(_filter(this.dataApi.routes, {tags: [tag]}));
-                    newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, {tags: [tag]}));
-                    newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, {tags: [tag]}));
-                    newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, {tags: [tag]}));
-
-                    if (tag.indexOf('*') !== -1) {
-                        const rTag = '#-#' + tag.replace(/\*/g, '(.*)');
-
-                        newData.services = newData.services.concat(_filter(this.dataApi.services, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                        newData.routes = newData.routes.concat(_filter(this.dataApi.routes, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                        newData.upstreams = newData.upstreams.concat(_filter(this.dataApi.upstreams, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                        newData.consumers = newData.consumers.concat(_filter(this.dataApi.consumers, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                        newData.plugins = newData.plugins.concat(_filter(this.dataApi.plugins, function (o) { return (new RegExp(rTag).test('#-#' + joiner(o.tags, '#-#'))); }));
-                    }
-                }
-
-                // Elimino duplicados
-                newData.services = _uniq(newData.services);
-                newData.routes = _uniq(newData.routes);
-                newData.upstreams = _uniq(newData.upstreams);
-                newData.consumers = _uniq(newData.consumers);
-                newData.plugins = _uniq(newData.plugins);
-            }
-        }
+        let newData = _cloneDeep(this.dataApi);
 
         // Filtro de elementos a mostrar
-        if (this.netFilter.element === 'mainonly') {
+        if (this.graphFilter.element === 'mainonly') {
             // Elimino consumers y plugins
             newData.consumers = [];
             newData.plugins = [];
         }
 
-        const filterJson = JSON.stringify(this.netFilter);
+        // Filtro los elementos para dejar solo los que no tengan etiquetas
+        if (this.graphFilter.element === 'untagged') {
+            // Me quedo sólo con los primeros 500 elementos de cada uno, y si me paso pongo mensaje
+            if (this.dataApi.services.length > 500 || this.dataApi.routes.length > 500 || this.dataApi.upstreams.length > 500 || this.dataApi.plugins.length > 500 || this.dataApi.consumers.length > 500) {
+                this.toast.info('architect.there_are_more', '',{timeOut: 8000, extendedTimeOut: 15000});
+            }
+
+            newData.services = this.dataApi.services.slice(0, 500);
+            newData.routes = this.dataApi.routes.slice(0, 500);
+            newData.upstreams = this.dataApi.upstreams.slice(0, 500);
+            newData.consumers = this.dataApi.consumers.slice(0, 500);
+            newData.plugins = this.dataApi.plugins.slice(0, 500);
+            newData.services = _filter(newData.services, function (o) {
+                return (o.tags === undefined || o.tags === null || o.tags.length === 0)
+            });
+            newData.routes = _filter(newData.routes, function (o) {
+                return (o.tags === undefined || o.tags === null || o.tags.length === 0)
+            });
+            newData.upstreams = _filter(newData.upstreams, function (o) {
+                return (o.tags === undefined || o.tags === null || o.tags.length === 0)
+            });
+            newData.consumers = _filter(newData.consumers, function (o) {
+                return (o.tags === undefined || o.tags === null || o.tags.length === 0)
+            });
+            newData.plugins = _filter(newData.plugins, function (o) {
+                return (o.tags === undefined || o.tags === null || o.tags.length === 0)
+            });
+        }
+
+        this.graphFilter.tag = this.tagSelectedCtrl.value.join('###');
+        const filterJson = JSON.stringify(this.graphFilter);
         localStorage.setItem('kongLastFilters', filterJson);
 
         // Ahora construyo los nodos y edges del grafo
@@ -393,7 +435,6 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             x: 0,
             y: 0,
             title: element,
-            // label: this.globals.NODE_API_URL,
             group: 'kong'
         });
 
@@ -856,7 +897,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -867,7 +909,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -878,7 +921,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -889,7 +933,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -900,7 +945,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -922,7 +968,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -933,7 +980,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             .then(() => {
                 this.populateGraph();
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -958,7 +1006,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                         error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -983,7 +1032,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                         error: (error) => this.toast.error_general(error, {disableTimeOut: true})
                     });
             })
-            .catch(() => {});
+            .catch(() => {
+            });
     }
 
     /**
@@ -1005,7 +1055,8 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 .then(() => {
                     this.populateGraph();
                 })
-                .catch(() => {});
+                .catch(() => {
+                });
         }
     }
 
@@ -1091,45 +1142,22 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
      * @param selection
      */
     filterTag(selection) {
-        this.netFilter.tag = joiner(selection.data.tags, ',');
-        this.netFilter.element = 'all';
-        this.netFilter.mode = false;
-        this.filterGraphByTag();
+        this.tagSelectedCtrl.setValue(selection.data.tags);
+        this.graphFilter.tag = joiner(selection.data.tags, ',');
+        this.graphFilter.element = 'all';
+        this.graphFilter.mode = false;
+        this.populateGraph();
     }
 
     /**
      * Limpia los filtros
      */
     cleanFilters() {
-        this.netFilter.tag = '';
-        this.netFilter.element = 'all';
-        this.netFilter.mode = false;
-        this.filterGraphByTag();
-    }
-
-    /**
-     * Añade una tag a los filtros
-     */
-    addTagFilter(tag: any) {
-        let newTags = splitter(this.netFilter.tag, ',');
-        newTags.push(tag);
-
-        newTags = _remove(newTags, function (n) {
-            return n !== '';
-        });
-
-        this.filterTag({
-            data: {
-                tags: newTags
-            }
-        });
-    }
-
-    /**
-     * Trocea una tag por longitud
-     */
-    chopTag(tag: any, length: number) {
-        return tag.match(new RegExp('.{1,' + length + '}', 'g'));
+        this.tagSelectedCtrl.setValue([]);
+        this.graphFilter.tag = '';
+        this.graphFilter.element = 'all';
+        this.graphFilter.mode = false;
+        this.populateGraph();
     }
 
     /**
@@ -1138,7 +1166,9 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     changeClusterize() {
         this.clusterize = !this.clusterize;
         localStorage.setItem('kongClusteredPref', '' + this.clusterize);
+        this.populateGraph();
     }
+
 }
 
 /**
@@ -1186,36 +1216,4 @@ function splitter(string, separator) {
         return [];
     }
     return string.split(separator);
-}
-
-function filterRegExpTags(source, tags) {
-    // {tags: [tag]}
-    //    obj = {tags:[na, dos, tres]}
-    //     return true/false
-    //    Si obj.tags contiene las tags que le
-    let newSource = [];
-
-    let regexpTags = [];
-    for (const tag of tags) {
-        if (tag.indexOf('*') !== -1) {
-            regexpTags.push('/^' + tag.replace(/\*/g, '.*') + '/');
-        }
-    }
-    for (const rTag of regexpTags) {
-        _filter(source, function (o) {
-            return (new RegExp(rTag).test(o.tags));
-        });
-    }
-
-    for (const elem of source) {
-        for (const tag of tags) {
-            if (elem.tags.includes(tag)) {
-                _filter(elem.tags, function (o) {
-                    return (new RegExp('/^hh/').test(o.tags));
-                });
-            }
-        }
-    }
-
-    return newSource;
 }

@@ -312,4 +312,8 @@ export class PluginListComponent implements OnInit, OnDestroy, AfterViewInit {
             return tag === '' || (tag.toLowerCase().includes(filterValue) && !this.currentTags.includes(tag.toLowerCase()));
         });
     }
+
+    scrollTo(element) {
+        element.scrollIntoView();
+    }
 }

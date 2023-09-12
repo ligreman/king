@@ -89,6 +89,8 @@ import {DialogInfoOauth2Component} from './components/dialog-info-oauth2/dialog-
 import {AccessOauth2Component} from './routes/access/access-oauth2/access-oauth2.component';
 import {DialogSettingsComponent} from "./components/dialog-settings/dialog-settings.component";
 import {AppHttpInterceptor} from "./services/app-http.interceptor";
+import {NgxMatSelectSearchModule} from "ngx-mat-select-search";
+import {TagFilterPipe} from './routes/architect/tag-filter.pipe';
 
 // AoT requires an exported function for factories
 export function HttpLoaderFactory(http: HttpClient) {
@@ -144,7 +146,8 @@ export function HttpLoaderFactory(http: HttpClient) {
         AccessJwtComponent,
         DialogInfoJwtComponent,
         DialogInfoOauth2Component,
-        AccessOauth2Component
+        AccessOauth2Component,
+        TagFilterPipe
     ],
     imports: [
         BrowserModule,
@@ -181,6 +184,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         ReactiveFormsModule,
         FormsModule,
         NgxJsonViewerModule,
+        NgxMatSelectSearchModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,

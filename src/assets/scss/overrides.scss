@@ -102,6 +102,20 @@ button.small-btn.mat-mdc-icon-button.mat-mdc-button-base {
     max-width: 500px;
 }
 
+.mdc-data-table__header-cell.noellipsis {
+    overflow: initial;
+}
+
+.mat-mdc-optgroup.optgroup {
+    color: mat-color($mat-teal, 300);
+}
+
+.mdc-floating-label.mat-mdc-floating-label mat-label.custom-label {
+    margin-left: 50px;
+}
+.mdc-floating-label.mat-mdc-floating-label.mdc-floating-label--float-above mat-label.custom-label {
+    margin-left: 0px;
+}
 
 /* Input box node connection */
 .connection-box {
@@ -110,7 +124,7 @@ button.small-btn.mat-mdc-icon-button.mat-mdc-button-base {
 }
 
 .connection-box .mat-mdc-text-field-wrapper.mdc-text-field--outlined .mat-mdc-form-field-infix {
-    padding-top: 12px;
+    padding-top: 9px;
     padding-bottom: 0;
 }
 

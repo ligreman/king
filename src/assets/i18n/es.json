@@ -78,6 +78,7 @@
         "created_at": "Creado el",
         "updated_at": "Actualizado el",
         "tags": "Etiquetas",
+        "clusters": "Clústers",
         "true": "Sí",
         "false": "No",
         "health": "Salud",
@@ -257,13 +258,17 @@
         "clusterize_on": "Clústers activados",
         "clusterize_off": "Clústers desactivados",
         "refresh": "Refrescar grafo",
-        "filter": "Filtrar por etiquetas, separadas por comas",
-        "filter_hint": "Puedes usar * como comodín para filtrar la etiqueta (ej. `app*` buscará todas las etiquetas empezadas por app)",
+        "filter": "Filtrar por etiquetas",
+        "filter_search": "Buscar etiquetas",
+        "filter_search_notfound": "No se han encontrado etiquetas",
+        "andor_btn_tooltip": "Indica el operador a usar a la hora de buscar por varias etiquetas",
         "filter_tooltip": "Filtrar",
         "filter_clear": "Limpiar filtros",
-        "filter_element_all": "Mostrar todos los elementos",
-        "filter_element_mainonly": "Mostrar sólo servicios, rutas y upstreams",
+        "filter_element_all": "Mostrar todos los elementos etiquetados",
+        "filter_element_mainonly": "Mostrar solo servicios, rutas y upstreams",
+        "filter_element_notags": "Mostrar los elementos sin etiquetas",
         "filter_selected_tags": "Filtrar por sus {{num}} etiquetas",
+        "there_are_more": "Se muestran un máximo de 500 elementos de cada tipo",
         "cluster_api": "Api",
         "cluster_consumers": "consumidores",
         "cluster_title": "Doble click para expandir todos los elementos",
@@ -274,7 +279,7 @@
     "service": {
         "label": "Servicio",
         "header": "Servicios",
-        "add": "Añadir Servicio",
+        "add": "Nuevo Servicio",
         "dialog": {
             "create": "Crear un Servicio nuevo",
             "edit": "Editar Servicio",
@@ -338,7 +343,7 @@
         }
     },
     "route": {
-        "add": "Añadir Ruta",
+        "add": "Nueva Ruta",
         "header": "Rutas",
         "label": "Ruta",
         "dialog": {
@@ -408,7 +413,7 @@
         }
     },
     "upstream": {
-        "add": "Añadir Upstream",
+        "add": "Nuevo Upstream",
         "header": "Upstreams",
         "label": "Upstream",
         "targets": "Targets del upstream",
@@ -509,7 +514,7 @@
     "vault": {
         "label": "Vault",
         "header": "Vaults",
-        "add": "Añadir Vault",
+        "add": "Nuevo Vault",
         "dialog": {
             "create": "Crear un Vault nuevo",
             "edit": "Editar Vault",
@@ -526,7 +531,7 @@
         }
     },
     "consumer": {
-        "add": "Añadir Consumidor",
+        "add": "Nuevo Consumidor",
         "label": "Consumidor",
         "header": "Consumidores",
         "dialog": {
@@ -541,7 +546,7 @@
         }
     },
     "plugin": {
-        "add": "Añadir Plugin",
+        "add": "Nuevo Plugin",
         "config": "Configuración del Plugin",
         "label": "Plugin",
         "header": "Plugins",
@@ -612,7 +617,7 @@
         "set_unhealthy_title": "Marcar dirección como errónea"
     },
     "sni": {
-        "add": "Añadir SNI",
+        "add": "Nuevo SNI",
         "header": "SNIs",
         "dialog": {
             "create": "Crear un SNI nuevo",
@@ -626,7 +631,7 @@
         }
     },
     "cert": {
-        "add": "Añadir Certificado",
+        "add": "Nuevo Certificado",
         "header": "Certificados",
         "dialog": {
             "create": "Crear un Certificado nuevo",
@@ -639,7 +644,7 @@
         }
     },
     "cacert": {
-        "add": "Añadir Certificado de CA",
+        "add": "Nuevo Certificado de CA",
         "header": "Certificados de CA",
         "dialog": {
             "create": "Crear un Certificado de CA nuevo",

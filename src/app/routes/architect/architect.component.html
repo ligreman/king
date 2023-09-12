@@ -5,103 +5,90 @@
         </p>
     </div>
     <!-- Contenedor de grafo -->
-    <div [fxShow]="!loading" class="graph-container" fxFlex.gt-md="85" fxFlex.lt-lg="75">
+    <div [fxShow]="!loading" class="graph-container" fxFlex.gt-md="83" fxFlex.lt-lg="73">
         <!-- Barra de herramientas horizontal -->
         <div *ngIf="showTools" fxLayout="row" fxLayoutAlign="space-between start" id="graph-tools">
-            <div fxFlex="initial" fxLayout="row" fxLayoutAlign="center center">
-                <div class="filter" fxFlex>
-                    <button (click)="drawer.toggle()" color="accent" mat-icon-button
-                            matTooltip="{{ 'text.tags' | translate }}" matTooltipClass="tooltip-teal">
-                        <mat-icon>label</mat-icon>
-                    </button>
-                </div>
+            <div fxFlex="none" fxLayout="row" fxLayoutAlign="end center" class="margin-top-8">
+                <button (click)="graphFilter.mode = !graphFilter.mode;" class="filter-btn"
+                        [disabled]="graphFilter.element === 'untagged'"
+                        matTooltip="{{'architect.andor_btn_tooltip' | translate}}" matTooltipClass="tooltip-teal"
+                        mat-stroked-button matPrefix>
+                    <span *ngIf="graphFilter.mode">AND</span>
+                    <span *ngIf="!graphFilter.mode">OR</span>
+                </button>
             </div>
             <div fxFlex="35" fxLayout="row" fxLayoutAlign="start center" class="margin-top-8">
                 <mat-form-field color="accent" appearance="outline" fxFlex class="connection-box height-40">
-                    <button (click)="netFilter.mode = !netFilter.mode" class="small-btn-icon" mat-icon-button matPrefix>
-                        <span *ngIf="netFilter.mode">AND</span>
-                        <span *ngIf="!netFilter.mode">OR</span>
-                    </button>
-                    <mat-label>{{ 'architect.filter' | translate}}</mat-label>
-                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput
-                           matTooltip="{{ 'architect.filter_hint' | translate }}"
-                           matTooltipClass="tooltip-teal" type="text">
-                    <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix class="small-btn">
-                        <mat-icon>close</mat-icon>
-                    </button>
+                    <mat-icon matPrefix class="tag-9-i" color="accent">label</mat-icon>
+                    <mat-select [formControl]="tagSelectedCtrl" placeholder="{{ 'architect.filter' | translate }}"
+                                [disabled]="graphFilter.element === 'untagged'"
+                                [multiple]="true" #multiSelect
+                                matTooltip="{{'architect.filter' | translate}}" matTooltipClass="tooltip-teal">
+                        <mat-option>
+                            <ngx-mat-select-search [formControl]="tagFilterCtrl"
+                                                   placeholderLabel="{{ 'architect.filter_search' | translate }}"
+                                                   noEntriesFoundLabel="{{ 'architect.filter_search_notfound' | translate }}">
+                            </ngx-mat-select-search>
+                        </mat-option>
+                        <mat-optgroup label="{{ 'text.tags' | translate }}" class="optgroup">
+                            <mat-option *ngFor="let tag of tagFilteredList | async | tagFilter:false" [value]="tag">
+                                {{tag}}
+                            </mat-option>
+                        </mat-optgroup>
+                        <mat-optgroup label="{{ 'text.clusters' | translate }}" class="optgroup">
+                            <mat-option *ngFor="let tag of tagFilteredList | async | tagFilter:true" [value]="tag">
+                                {{tag}}
+                            </mat-option>
+                        </mat-optgroup>
+                    </mat-select>
                 </mat-form-field>
             </div>
 
-            <mat-form-field color="accent" appearance="outline" fxFlex="30" class="connection-box no-pad height-40 margin-top-8">
-                <mat-select (selectionChange)="filterGraphByTag()" [(ngModel)]="netFilter.element">
-                    <mat-option value="all">{{'architect.filter_element_all' | translate}}</mat-option>
-                    <mat-option value="mainonly">{{'architect.filter_element_mainonly' | translate}}</mat-option>
+            <mat-form-field color="accent" appearance="outline" fxFlex="30"
+                            class="connection-box no-pad height-40 margin-top-8">
+                <mat-select [(ngModel)]="graphFilter.element" #modeSelect>
+                    <mat-option value="all"><mat-icon>label_alt</mat-icon>{{'architect.filter_element_all' | translate}}</mat-option>
+                    <mat-option value="mainonly"><mat-icon>label_important</mat-icon>{{'architect.filter_element_mainonly' | translate}}</mat-option>
+                    <mat-option value="untagged"><mat-icon>label_off</mat-icon>{{'architect.filter_element_notags' | translate}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
-            <button (click)="filterGraphByTag()" color="accent"
-                    mat-icon-button
+            <button (click)="populateGraph()" color="accent" mat-icon-button class="margin-top-5"
                     matTooltip="{{'architect.filter_tooltip' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>filter_alt</mat-icon>
             </button>
 
-            <button (click)="cleanFilters()" color="accent"
-                    mat-icon-button
+            <button (click)="cleanFilters()" color="accent" mat-icon-button class="margin-top-5"
                     matTooltip="{{'architect.filter_clear' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>delete</mat-icon>
             </button>
 
-            <button (click)="populateGraph()" color="accent"
-                    mat-icon-button
-                    matTooltip="{{'architect.refresh' | translate}}" matTooltipClass="tooltip-teal">
-                <mat-icon>refresh</mat-icon>
-            </button>
-
-            <button (click)="fitNetwork()" color="accent"
-                    mat-icon-button
+            <button (click)="fitNetwork()" color="accent" mat-icon-button class="margin-top-5"
                     matTooltip="{{'architect.center_network' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>center_focus_strong</mat-icon>
             </button>
 
-            <button (click)="changeClusterize()"
-                    color="accent"
-                    mat-icon-button
+            <button (click)="changeClusterize()" color="accent" mat-icon-button class="margin-top-5"
                     matTooltip="{{ ((clusterize) ? 'architect.clusterize_on' : 'architect.clusterize_off') | translate}}"
                     matTooltipClass="tooltip-teal">
                 <mat-icon [ngClass]="{'semiopacity': !clusterize}">token</mat-icon>
             </button>
         </div>
 
-        <mat-drawer-container>
-            <mat-drawer #drawer id="graph-filters" mode="side" opened>
-                <div fxLayout="column" fxLayoutAlign="start strecht">
-                    <p class="mat-subheader subheader margin-0-i padding-bottom-10 semi-bold">{{ 'text.tags' | translate }}</p>
-                    <button (click)="addTagFilter(tag)" *ngFor="let tag of allTags"
-                            [fxHide]="netFilter.tag.split(',').includes(tag)"
-                            [ngClass]="{'line-small': chopTag(tag, 14).length>1}" color="accent" mat-button>
-                        <span *ngFor="let piece of chopTag(tag, 14); let first = first">
-                            <br *ngIf="!first">{{ piece }}
-                        </span>
-                    </button>
-                </div>
-            </mat-drawer>
-            <mat-drawer-content class="graph-background" fxFlex>
-                <div id="node-network"></div>
-            </mat-drawer-content>
-        </mat-drawer-container>
+        <div id="node-network"></div>
     </div>
 
     <!-- Contenedor de acciones derecho -->
-    <div fxFlex.gt-md="15" fxFlex.lt-lg="25" id="graph-actions" class="scroller">
+    <div fxFlex.gt-md="17" fxFlex.lt-lg="27" id="graph-actions" class="scroller">
         <mat-list>
 
             <!--<mat-list-item class="margin-top-5">
                 <mat-form-field color="accent" fxFlex>
                     <mat-label>{{ 'architect.global_search' | translate}}</mat-label>
-                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="netFilter.tag" matInput
+                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="graphFilter.tag" matInput
                            matTooltip="{{ 'architect.global_search_hint' | translate }}"
                            matTooltipClass="tooltip-teal" type="text">
-                    <button (click)="netFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
+                    <button (click)="graphFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
                         <mat-icon>search</mat-icon>
                     </button>
                 </mat-form-field>
@@ -163,7 +150,7 @@
             <mat-divider *ngIf="groupsAll.includes(selection.group)"
                          class="margin-top-10 margin-bottom-10"></mat-divider>
 
-            <div *ngIf="groupsAll.includes(selection.group)" class="subheader" mat-subheader>
+            <div class="subheader margin-top-5-i" mat-subheader *ngIf="groupsAll.includes(selection.group)">
                 {{'architect.local_actions_' + selection.group | translate }}:&nbsp;<span
                 class="italic">{{ selection.label.split('\n')[0] }}</span>
             </div>

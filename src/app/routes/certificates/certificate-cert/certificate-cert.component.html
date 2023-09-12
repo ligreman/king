@@ -1,7 +1,7 @@
 <mat-progress-bar mode="indeterminate" color="accent" [fxShow]="loading"></mat-progress-bar>
 <div class="progress-placeholder" [fxShow]="!loading"></div>
 
-<div fxLayout="row" fxLayoutAlign="center center" class="padding-top-20 margin-bottom-10">
+<div #top fxLayout="row" fxLayoutAlign="center center" class="padding-top-20 margin-bottom-10">
     <h2 fxFlex="90" class="margin-0-i">{{ 'cert.header' | translate}}</h2>
 </div>
 
@@ -10,7 +10,7 @@
 
         <table mat-table [dataSource]="dataSource" matSort matSortActive="id" matSortDirection="asc" matSortDisableClear fxFlex>
             <ng-container matColumnDef="new-element">
-                <th *matHeaderCellDef mat-header-cell>
+                <th *matHeaderCellDef mat-header-cell colspan="2">
                     <button (click)="addEditCert()" color="accent" mat-stroked-button>
                         <mat-icon iconPositionEnd>add</mat-icon>
                         {{ 'cert.add' | translate }}
@@ -19,7 +19,7 @@
             </ng-container>
 
             <ng-container matColumnDef="filter-table">
-                <th *matHeaderCellDef mat-header-cell colspan="5" class="padding-top-10-i">
+                <th *matHeaderCellDef mat-header-cell colspan="4" class="padding-top-10-i">
                     <mat-form-field color="primary" appearance="fill" class="width-100">
                         <mat-label>{{ 'element.filter_table' | translate }}</mat-label>
                         <input (keyup)="applyFilter()" [(ngModel)]="filter"
@@ -33,7 +33,7 @@
             </ng-container>
 
             <ng-container matColumnDef="table-actions">
-                <th *matHeaderCellDef mat-header-cell class="text-align-right-i" colspan="2">
+                <th *matHeaderCellDef mat-header-cell class="text-align-right-i noellipsis" colspan="2">
                     <button (click)="reloadData()" color="accent" mat-icon-button matTooltip="{{'element.reload' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>refresh</mat-icon>
@@ -121,3 +121,5 @@
                        color="accent"></mat-paginator>
     </div>
 </div>
+
+<button class="go-to-top" color="primary" (click)="scrollTo(top)" mat-icon-button><mat-icon>vertical_align_top</mat-icon></button>

@@ -117,4 +117,8 @@ export class CertificateSniComponent implements OnInit, OnDestroy, AfterViewInit
     getPaginatorLength() {
         return this.paginator !== undefined ? this.paginator.pageSize : 0;
     }
+
+    scrollTo(element) {
+        element.scrollIntoView();
+    }
 }

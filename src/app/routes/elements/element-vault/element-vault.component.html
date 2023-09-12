@@ -1,7 +1,7 @@
 <mat-progress-bar [fxShow]="loading" color="accent" mode="indeterminate"></mat-progress-bar>
 <div [fxShow]="!loading" class="progress-placeholder"></div>
 
-<div class="padding-top-20" fxLayout="row" fxLayoutAlign="center center">
+<div #top class="padding-top-20" fxLayout="row" fxLayoutAlign="center center">
     <h2 class="margin-0-i" fxFlex="90">{{ 'vault.header' | translate}}</h2>
 </div>
 
@@ -34,7 +34,7 @@
             </ng-container>
 
             <ng-container matColumnDef="table-actions">
-                <th *matHeaderCellDef mat-header-cell class="text-align-right-i" colspan="1">
+                <th *matHeaderCellDef mat-header-cell class="text-align-right-i noellipsis" colspan="1">
                     <button (click)="loadData(false,false,true)" color="accent" mat-icon-button matTooltip="{{'element.reload' | translate}}"
                             matTooltipClass="tooltip-teal">
                         <mat-icon>refresh</mat-icon>
@@ -114,3 +114,5 @@
                        color="accent"></mat-paginator>
     </div>
 </div>
+
+<button class="go-to-top" color="primary" (click)="scrollTo(top)" mat-icon-button><mat-icon>vertical_align_top</mat-icon></button>

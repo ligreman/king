@@ -99,7 +99,7 @@
 
     <form [formGroup]="formNodes" fxFlex.gt-md="30" fxFlex.lt-lg="40">
         <button (click)="settingsDialog()" [matTooltipShowDelay]="1000" color="accent"
-                mat-icon-button matTooltipClass="tooltip-teal"
+                mat-icon-button matTooltipClass="tooltip-teal" type="button"
                 matTooltip="{{'header.menu.settings_tooltip' | translate}}"
                 *ngIf="allowConfig">
             <mat-icon>settings</mat-icon>
@@ -127,7 +127,7 @@
             <mat-hint class="grey-color" *ngIf="enableKongUrl">{{'header.menu.kong_node_hint' | translate}}</mat-hint>
         </mat-form-field>
         <button (click)="connectToNode()" [matTooltipShowDelay]="1000" color="accent"
-                mat-icon-button
+                mat-icon-button type="submit"
                 matTooltip="{{'header.menu.kong_node_button_tooltip' | translate}}"
                 matTooltipClass="tooltip-teal">
             <mat-icon>play_arrow</mat-icon>

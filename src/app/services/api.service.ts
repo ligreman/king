@@ -30,12 +30,22 @@ export class ApiService {
         if (offset !== null) {
             offsetQuery = '&offset=' + offset;
         }
+
         let tagsQuery = '';
         if (tags !== null && tags.length > 0) {
-            if (tagsAnd) {
-                tagsQuery = '&tags=' + tags.join(',');
-            } else {
-                tagsQuery = '&tags=' + tags.join('/');
+            let tt = [];
+            tags.forEach(t => {
+                if (t !== '') {
+                    tt.push(t);
+                }
+            });
+
+            if (tt.length > 0) {
+                if (tagsAnd) {
+                    tagsQuery = '&tags=' + tt.join(',');
+                } else {
+                    tagsQuery = '&tags=' + tt.join('/');
+                }
             }
         }
         return {offsetQuery, tagsQuery};
@@ -85,7 +95,7 @@ export class ApiService {
     public getServices(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/services?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/services?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getService(id: string) {
@@ -104,9 +114,9 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/services/' + id).pipe(catchError(this.handleError));
     }
 
-    async getAllServices(offset = null, results = [], fields = []) {
+    async getAllServices(offset = null, results = [], fields = [], tags = null, tagsAnd = true) {
         try {
-            const page = await firstValueFrom(this.getServices(1000, offset));
+            const page = await firstValueFrom(this.getServices(1000, offset, tags, tagsAnd));
 
             if (fields.length > 0) {
                 results.push(...this.cherrypickData(page['data'], fields));
@@ -116,7 +126,7 @@ export class ApiService {
 
             // is there more data?
             if (page['offset'] !== null && page['offset'] !== undefined) {
-                return this.getAllServices(page['offset'], results, fields);
+                return this.getAllServices(page['offset'], results, fields, tags, tagsAnd);
             } else {
                 return {data: results, total: results.length};
             }
@@ -131,7 +141,7 @@ export class ApiService {
     public getRoutes(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/routes?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/routes?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getRoute(id: string) {
@@ -150,9 +160,9 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/routes/' + id).pipe(catchError(this.handleError));
     }
 
-    async getAllRoutes(offset = null, results = [], fields = []) {
+    async getAllRoutes(offset = null, results = [], fields = [], tags = null, tagsAnd = true) {
         try {
-            const page = await firstValueFrom(this.getRoutes(1000, offset));
+            const page = await firstValueFrom(this.getRoutes(1000, offset, tags, tagsAnd));
 
             if (fields.length > 0) {
                 results.push(...this.cherrypickData(page['data'], fields));
@@ -162,7 +172,7 @@ export class ApiService {
 
             // is there more data?
             if (page['offset'] !== null && page['offset'] !== undefined) {
-                return this.getAllRoutes(page['offset'], results, fields);
+                return this.getAllRoutes(page['offset'], results, fields, tags, tagsAnd);
             } else {
                 return {data: results, total: results.length};
             }
@@ -177,7 +187,7 @@ export class ApiService {
     public getUpstreams(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getUpstream(id: string) {
@@ -192,7 +202,7 @@ export class ApiService {
     public getUpstreamTargetsHealth(id: string, size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id + '/health?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + id + '/health?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public postNewUpstream(body) {
@@ -207,9 +217,9 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/upstreams/' + id).pipe(catchError(this.handleError));
     }
 
-    async getAllUpstreams(offset = null, results = [], fields = []) {
+    async getAllUpstreams(offset = null, results = [], fields = [], tags = null, tagsAnd = true) {
         try {
-            const page = await firstValueFrom(this.getUpstreams(1000, offset));
+            const page = await firstValueFrom(this.getUpstreams(1000, offset, tags, tagsAnd));
 
             if (fields.length > 0) {
                 results.push(...this.cherrypickData(page['data'], fields));
@@ -219,7 +229,7 @@ export class ApiService {
 
             // is there more data?
             if (page['offset'] !== null && page['offset'] !== undefined) {
-                return this.getAllUpstreams(page['offset'], results, fields);
+                return this.getAllUpstreams(page['offset'], results, fields, tags, tagsAnd);
             } else {
                 return {data: results, total: results.length};
             }
@@ -235,7 +245,7 @@ export class ApiService {
     public getVaults(size: number = 1000, offset: string | null = null) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/vaults?size=' + size + offsetQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/vaults?sort_desc=1&size=' + size + offsetQuery).pipe(catchError(this.handleError));
     }
 
     public getVault(id: string) {
@@ -259,7 +269,7 @@ export class ApiService {
      */
     public getConsumers(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
-        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/consumers?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumer(id: string) {
@@ -278,9 +288,9 @@ export class ApiService {
         return this.httpClient.delete(this.globals.NODE_API_URL + '/consumers/' + id).pipe(catchError(this.handleError));
     }
 
-    async getAllConsumers(offset = null, results = [], fields = []) {
+    async getAllConsumers(offset = null, results = [], fields = [], tags = null, tagsAnd = true) {
         try {
-            const page = await firstValueFrom(this.getConsumers(1000, offset));
+            const page = await firstValueFrom(this.getConsumers(1000, offset, tags, tagsAnd));
 
             if (fields.length > 0) {
                 results.push(...this.cherrypickData(page['data'], fields));
@@ -290,7 +300,7 @@ export class ApiService {
 
             // is there more data?
             if (page['offset'] !== null && page['offset'] !== undefined) {
-                return this.getAllConsumers(page['offset'], results, fields);
+                return this.getAllConsumers(page['offset'], results, fields, tags, tagsAnd);
             } else {
                 return {data: results, total: results.length};
             }
@@ -304,7 +314,7 @@ export class ApiService {
      */
     public getTargets(upstreamId: string, size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
-        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/upstreams/' + upstreamId + '/targets?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public postNewTarget(body, upstreamId: string) {
@@ -359,7 +369,7 @@ export class ApiService {
     public getCertificates(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/certificates?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/certificates?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getCertificate(certId: string) {
@@ -380,7 +390,7 @@ export class ApiService {
 
     async getAllCertificates(offset = null, results = [], fields = []) {
         try {
-            const page = await firstValueFrom(this.getCertificates( 1000, offset));
+            const page = await firstValueFrom(this.getCertificates(1000, offset));
 
             if (fields.length > 0) {
                 results.push(...this.cherrypickData(page['data'], fields));
@@ -406,7 +416,7 @@ export class ApiService {
     public getCACertificates(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/ca_certificates?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/ca_certificates?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getCACertificate(certId: string) {
@@ -427,7 +437,7 @@ export class ApiService {
 
     async getAllCACertificates(offset = null, results = [], fields = []) {
         try {
-            const page = await firstValueFrom(this.getCACertificates( 1000, offset));
+            const page = await firstValueFrom(this.getCACertificates(1000, offset));
 
             if (fields.length > 0) {
                 results.push(...this.cherrypickData(page['data'], fields));
@@ -452,7 +462,7 @@ export class ApiService {
     */
     public getSnis(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
-        return this.httpClient.get(this.globals.NODE_API_URL + '/snis?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/snis?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getSni(id: string) {
@@ -497,7 +507,7 @@ export class ApiService {
      */
     public getPlugins(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
-        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getPlugin(id: string) {
@@ -505,7 +515,7 @@ export class ApiService {
     }
 
     public getPluginsEnabled() {
-        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins/enabled?size=1000').pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/plugins/enabled?sort_desc=1&size=1000').pipe(catchError(this.handleError));
     }
 
     public postNewPlugin(body) {
@@ -531,9 +541,9 @@ export class ApiService {
         return this.httpClient.get(this.globals.NODE_API_URL + '/schemas/plugins/' + plugin).pipe(catchError(this.handleError));
     }
 
-    async getAllPlugins(offset = null, results = [], fields = []) {
+    async getAllPlugins(offset = null, results = [], fields = [], tags = null, tagsAnd = true) {
         try {
-            const page = await firstValueFrom(this.getPlugins(1000, offset));
+            const page = await firstValueFrom(this.getPlugins(1000, offset, tags, tagsAnd));
 
             if (fields.length > 0) {
                 results.push(...this.cherrypickData(page['data'], fields));
@@ -543,7 +553,7 @@ export class ApiService {
 
             // is there more data?
             if (page['offset'] !== null && page['offset'] !== undefined) {
-                return this.getAllPlugins(page['offset'], results, fields);
+                return this.getAllPlugins(page['offset'], results, fields, tags, tagsAnd);
             } else {
                 return {data: results, total: results.length};
             }
@@ -557,7 +567,7 @@ export class ApiService {
      */
     public getAcls(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
-        return this.httpClient.get(this.globals.NODE_API_URL + '/acls?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/acls?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumerAcls(consumer: string) {
@@ -582,7 +592,7 @@ export class ApiService {
     public getBasicAuths(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/basic-auths?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/basic-auths?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumerBasicAuths(consumer: string) {
@@ -603,7 +613,7 @@ export class ApiService {
     public getApiKeys(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/key-auths?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/key-auths?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumerApiKeys(consumer: string) {
@@ -625,7 +635,7 @@ export class ApiService {
     public getJwtTokens(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/jwts?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/jwts?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumerJwtTokens(consumer: string) {
@@ -647,7 +657,7 @@ export class ApiService {
     public getOAuthApp(size: number = 1000, offset: string | null = null, tags = null, tagsAnd = true) {
         const {offsetQuery, tagsQuery} = this.parseOffsetAndTags(offset, tags, tagsAnd);
 
-        return this.httpClient.get(this.globals.NODE_API_URL + '/oauth2?size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
+        return this.httpClient.get(this.globals.NODE_API_URL + '/oauth2?sort_desc=1&size=' + size + offsetQuery + tagsQuery).pipe(catchError(this.handleError));
     }
 
     public getConsumerOAuthApp(consumer: string) {

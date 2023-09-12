@@ -2,6 +2,10 @@
 
 .subheader {
     color: mat-color($mat-blue-gray, 300);
+    margin-top:0;
+    margin-bottom:0;
+    line-height: 1.2rem;
+    font-size: 0.9rem;
 }
 
 .graph-container {
@@ -61,4 +65,17 @@ div#node-network:focus {
     max-height: 100%;
     height: 100%;
     overflow: auto;
+}
+
+.filter-btn {
+    color: #80cbc4;
+    height: 40px;
+}
+
+.filter-btn:disabled {
+    color: #747677;
+}
+
+.tag-9-i {
+    padding: 9px !important;
 }
