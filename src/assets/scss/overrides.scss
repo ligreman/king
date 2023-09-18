@@ -27,7 +27,6 @@
     -moz-appearance: textfield !important;
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of form-field that may no longer apply for the MDC version. */
 .mat-form-field-label {
     color: rgba(255, 255, 255, 0.5) !important;
 }
@@ -69,7 +68,6 @@
     background: mat-color($mat-teal, 500);
 }
 
-/* TODO(mdc-migration): The following rule targets internal classes of dialog that may no longer apply for the MDC version. */
 mat-dialog-content div div {
     overflow-wrap: break-word;
 }

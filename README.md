@@ -68,8 +68,10 @@ Note: If no config url is set, King by default will look for the config file at 
 
 Field description of the config file:
 
-* kong_admin_url: default kong url node to connect to.
-* kong_admin_authorization: authorization token for the admin url. Can be used to send Basic or Bearer tokens in base64 encoding. If provided, King will send this as an Authorization header. Format: 'Basic <insert here base64 token calculated like base64(username:password)>'. Example: 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='.
+* kong_admin_url: default kong url node to connect to. Note: it can be the Kong loopback url if you are using "Kong loopback security method".
+* kong_admin_authorization_method: method used to send the credentials/token. If filled, King will send the credentials along with all requests, using the method selected. Values: "header", "query" or "body". Leave empty if no authorization credentials are needed.
+* kong_admin_authorization_field: name of the field where the credentials/token will be sent. For example: "Authorization" (for an authorization header). Other example: "token" (in a query param).
+* kong_admin_authorization_token: can be used to send Basic or Bearer tokens in base64 encoding. King will send this in the field indicated, using the method selected. Format: 'Basic <insert here base64 token calculated like base64(username:password)>'. Example: 'Basic dXNlcm5hbWU6cGFzc3dvcmQ='.
 
 ### King Globals configuration
 

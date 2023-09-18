@@ -6,7 +6,9 @@ import {Injectable} from '@angular/core';
 export class GlobalsService {
     // Node Admin url
     private _NODE_API_URL = '';
-    private _AUTH_HEADER = '';
+    private _AUTH_METHOD = '';
+    private _AUTH_FIELD = '';
+    private _AUTH_TOKEN = '';
     // Default url for the configuration JSON file
     private _CONFIG_URL = '/config.json';
     // Enable or disable the config dialog in the interface
@@ -479,12 +481,28 @@ export class GlobalsService {
         this._NODE_API_URL = value;
     }
 
-    get AUTH_HEADER(): string {
-        return this._AUTH_HEADER;
+    get AUTH_METHOD(): string {
+        return this._AUTH_METHOD;
     }
 
-    set AUTH_HEADER(value: string) {
-        this._AUTH_HEADER = value;
+    set AUTH_METHOD(value: string) {
+        this._AUTH_METHOD = value;
+    }
+
+    get AUTH_FIELD(): string {
+        return this._AUTH_FIELD;
+    }
+
+    set AUTH_FIELD(value: string) {
+        this._AUTH_FIELD = value;
+    }
+
+    get AUTH_TOKEN(): string {
+        return this._AUTH_TOKEN;
+    }
+
+    set AUTH_TOKEN(value: string) {
+        this._AUTH_TOKEN = value;
     }
 
     get ROUTER_MODE(): string {

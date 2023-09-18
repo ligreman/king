@@ -11,6 +11,7 @@ import {NodeService} from './services/node.service';
 import {ToastService} from './services/toast.service';
 import {DialogSettingsComponent} from "./components/dialog-settings/dialog-settings.component";
 import {firstValueFrom} from "rxjs";
+import {isEmpty as _isEmpty} from 'lodash';
 
 @AutoUnsubscribe()
 @Component({
@@ -100,8 +101,12 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.loadConfig().then(value => {
             if (value !== null) {
-                this.globals.NODE_API_URL = value['kong_admin_url'];
-                this.globals.AUTH_HEADER = value['kong_admin_authorization'];
+                if (value['kong_admin_url'] && !_isEmpty(value['kong_admin_url'])) {
+                    this.globals.NODE_API_URL = value['kong_admin_url'];
+                }
+                this.globals.AUTH_METHOD = value['kong_admin_authorization_method'];
+                this.globals.AUTH_FIELD = value['kong_admin_authorization_field'];
+                this.globals.AUTH_TOKEN = value['kong_admin_authorization_token'];
             }
 
             // I connect to the node and if I don't get it I'm going to landing
@@ -132,7 +137,11 @@ export class AppComponent implements OnInit, OnDestroy {
         if (cfg === undefined || cfg === null) {
             cfg = localStorage.getItem('kongConfig');
             if (cfg !== undefined && cfg !== null && cfg !== '') {
-                config = JSON.parse(atob(cfg));
+                try {
+                    config = JSON.parse(atob(cfg));
+                } catch (e) {
+                    console.error(e);
+                }
             }
         } else {
             config = cfg;

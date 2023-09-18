@@ -150,7 +150,24 @@
             "cannot_change_config_url_hint": "Nota: No se puede modificar la url del fichero de configuración",
             "allow_kong_url": "Permitir que se modifique la url de conexión al nodo de Kong",
             "documentation": "Ver más documentación",
-            "loopback": "Kong API Loopback",
+            "auth": {
+                "title": "Autentificación",
+                "instructions": "Si el acceso al endpoint de administración está protegido mediante autentificación (por proxy o Kong loopback), puedes enviar un token junto a todas las peticiones que se hagan. En el caso de usar el modelo de loopback de Kong, hay que indicar la URL de loopback que quieres utilizar en el campo de texto de Conexión a nodo de Kong",
+                "warning": "Estas credenciales se almacenarán en el navegador. Ten precaución si compartes el navegador o el ordenador con otras personas.",
+                "enabled": "Usar loopback",
+                "where": "Cómo se envían las credenciales",
+                "where_none": "No enviar credenciales",
+                "where_header": "Cabecera",
+                "where_query": "Parámetro query",
+                "where_body": "Cuerpo",
+                "where_hint": "Método usado para el envío de las credenciales. Si se indica uno, hay que rellenar el resto de campos",
+                "key_field": "Dónde se envían las credenciales",
+                "key_field_hint": "Nombre del campo o parámetro en el que se envían las credenciales.",
+                "key_field_placeholder": "Authorization",
+                "token": "Credenciales",
+                "token_hint": "Si se usa el plugin Basic Authentication hay que indicar aquí el: base64(usuario:contraseña). En otro caso es el token JWT o Key-Auth.",
+                "token_placeholder": "Bearer a1b2c3d4e5f6="
+            },
             "error": {
                 "general": "Hay errores en algún campo de configuración",
                 "config_url": "Debe ser una url válida apuntando a un fichero .json"
@@ -274,7 +291,8 @@
         "cluster_title": "Doble click para expandir todos los elementos",
         "labels": "Etiquetas",
         "global_search": "Búsqueda global",
-        "global_search_hint": "Busca cualquier elemento por su ID o nombre"
+        "global_search_hint": "Busca cualquier elemento por su ID o nombre",
+        "add_element": "Nuevo elemento"
     },
     "service": {
         "label": "Servicio",

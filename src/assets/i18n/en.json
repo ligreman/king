@@ -150,7 +150,24 @@
             "cannot_change_config_url_hint": "Note: Cannot change the configuration file url",
             "allow_kong_url": "Allow Kong node connection url to be modified",
             "documentation": "See more documentation",
-            "loopback": "Kong API Loopback",
+            "auth": {
+                "title": "Authentication",
+                "instructions": "If access to the admin endpoint is protected by authentication (proxy or Kong loopback), you can send a token along with all requests. In the case of using the Kong loopback method, you must indicate the loopback URL you want to use in the Connection to Kong node text field",
+                "warning": "These credentials will be stored in the browser. Be careful if you share your browser or computer with others.",
+                "enabled": "Use loopback",
+                "where": "How credentials are sent",
+                "where_none": "Do not send credentials",
+                "where_header": "Header",
+                "where_query": "Query parameter",
+                "where_body": "Body",
+                "where_hint": "Method used to send credentials. If one is selected, the other fields must be filled in",
+                "key_field": "Where are credentials sent?",
+                "key_field_hint": "Name of the field or parameter in which the credentials are sent.",
+                "key_field_placeholder": "Authorization",
+                "token": "Credentials",
+                "token_hint": "If you use the Basic Authentication plugin, you must indicate here: base64(user:password). In another case it is the JWT or Key-Auth token.",
+                "token_placeholder": "Bearer a1b2c3d4e5f6="
+            },
             "error": {
                 "general": "There are errors in some configuration field",
                 "config_url": "Must be a valid url pointing to a .json file"
@@ -274,7 +291,8 @@
         "cluster_title": "Double click to expand all elements",
         "labels": "Labels",
         "global_search": "Global search",
-        "global_search_hint": "Search for any element by its ID or name"
+        "global_search_hint": "Search for any element by its ID or name",
+        "add_element": "New element"
     },
     "service": {
         "label": "Service",

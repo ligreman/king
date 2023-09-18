@@ -47,9 +47,15 @@
             <mat-form-field color="accent" appearance="outline" fxFlex="30"
                             class="connection-box no-pad height-40 margin-top-8">
                 <mat-select [(ngModel)]="graphFilter.element" #modeSelect>
-                    <mat-option value="all"><mat-icon>label_alt</mat-icon>{{'architect.filter_element_all' | translate}}</mat-option>
-                    <mat-option value="mainonly"><mat-icon>label_important</mat-icon>{{'architect.filter_element_mainonly' | translate}}</mat-option>
-                    <mat-option value="untagged"><mat-icon>label_off</mat-icon>{{'architect.filter_element_notags' | translate}}</mat-option>
+                    <mat-option value="all">
+                        <mat-icon>label_alt</mat-icon>
+                        {{'architect.filter_element_all' | translate}}</mat-option>
+                    <mat-option value="mainonly">
+                        <mat-icon>label_important</mat-icon>
+                        {{'architect.filter_element_mainonly' | translate}}</mat-option>
+                    <mat-option value="untagged">
+                        <mat-icon>label_off</mat-icon>
+                        {{'architect.filter_element_notags' | translate}}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -57,6 +63,11 @@
                     matTooltip="{{'architect.filter_tooltip' | translate}}" matTooltipClass="tooltip-teal">
                 <mat-icon>filter_alt</mat-icon>
             </button>
+
+            <!--<button (click)="globalSearch()" color="accent" mat-icon-button class="margin-top-5"
+                    matTooltip="{{'architect.global_search' | translate}}" matTooltipClass="tooltip-teal">
+                <mat-icon>manage_search</mat-icon>
+            </button>-->
 
             <button (click)="cleanFilters()" color="accent" mat-icon-button class="margin-top-5"
                     matTooltip="{{'architect.filter_clear' | translate}}" matTooltipClass="tooltip-teal">
@@ -81,19 +92,6 @@
     <!-- Contenedor de acciones derecho -->
     <div fxFlex.gt-md="17" fxFlex.lt-lg="27" id="graph-actions" class="scroller">
         <mat-list>
-
-            <!--<mat-list-item class="margin-top-5">
-                <mat-form-field color="accent" fxFlex>
-                    <mat-label>{{ 'architect.global_search' | translate}}</mat-label>
-                    <input (keyup.enter)="filterGraphByTag()" [(ngModel)]="graphFilter.tag" matInput
-                           matTooltip="{{ 'architect.global_search_hint' | translate }}"
-                           matTooltipClass="tooltip-teal" type="text">
-                    <button (click)="graphFilter.tag=''; filterGraphByTag()" mat-icon-button matSuffix>
-                        <mat-icon>search</mat-icon>
-                    </button>
-                </mat-form-field>
-            </mat-list-item>-->
-
             <div class="subheader" mat-subheader>{{'architect.global_actions' | translate}}</div>
             <mat-list-item *ngIf="expressions">
                 <div mat-line>
@@ -106,6 +104,29 @@
                     </button>
                 </div>
             </mat-list-item>
+
+            <!--<mat-list-item>
+                <div mat-line>
+                    <button mat-button [matMenuTriggerFor]="menu">
+                        <mat-icon color="accent">add</mat-icon>&nbsp;{{ 'architect.add_element' | translate }}
+                    </button>
+                    <mat-menu #menu="matMenu">
+                        <button (click)="addEdit(null, 'route')" mat-menu-item>
+                            <mat-icon class="color-route">timeline</mat-icon>&nbsp;
+                            {{'route.add' | translate}}
+                        </button>
+                        <button (click)="addEdit(null, 'service')" mat-menu-item>
+                            <mat-icon class="color-service">memory</mat-icon>&nbsp;
+                            {{'service.add' | translate}}
+                        </button>
+                        <button (click)="addEdit(null, 'upstream')" mat-menu-item>
+                            <mat-icon class="color-upstream">share</mat-icon>&nbsp;
+                            {{'upstream.add' | translate}}
+                        </button>
+                    </mat-menu>
+                </div>
+            </mat-list-item>-->
+
             <mat-list-item>
                 <div mat-line>
                     <button (click)="addEdit(null, 'route')" mat-button>

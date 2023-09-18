@@ -2,78 +2,84 @@
     <span>{{'dialog.settings.header' | translate}}</span>
 </h2>
 
-<mat-divider class="margin-bottom-20-i"></mat-divider>
+<mat-divider></mat-divider>
 
 <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
     <div fxFlex>
-        <mat-tab-group dynamicHeight mat-stretch-tabs color="accent">
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <mat-icon class="tab-icon">settings</mat-icon>
-                    {{ 'dialog.settings.config' | translate }}</ng-template>
-
-                <form [formGroup]="form" class="padding-30">
-                    <div class="margin-bottom-10" fxLayout="column">
-                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between center"
-                             *ngIf="allowChangeConfigFile">
-                            <mat-form-field appearance="outline" color="accent" fxFlex="75">
-                                <mat-label>{{'dialog.settings.config_url' | translate}}</mat-label>
-                                <input formControlName="config_url" matInput type="text"
-                                       [readonly]="!allowChangeConfigFile"
-                                       placeholder="https://host:8443/config.json"/>
-                                <mat-hint *ngIf="allowChangeConfigFile">
-                                    <mat-error *ngIf="form.hasError('configUrlValidation'); else hintAlone">
-                                        {{ 'dialog.settings.error.config_url' | translate }}
-                                    </mat-error>
-                                    <ng-template #hintAlone>
-                                        {{ 'dialog.settings.config_url_hint' | translate }}</ng-template>
-                                </mat-hint>
-                            </mat-form-field>
-                            <span>
-                                <a mat-button rel="noopener noreferrer" target="_blank"
-                                   href="https://github.com/ligreman/king/blob/main/README.md#configuration">
+        <form [formGroup]="form">
+            <div fxLayout="column">
+                <h2>{{ 'dialog.settings.config' | translate }}</h2>
+                <div class="margin-bottom-10 padding-left-20" fxLayout="row" fxLayoutAlign="space-between center"
+                     *ngIf="allowChangeConfigFile">
+                    <mat-form-field appearance="outline" color="accent" fxFlex="75">
+                        <mat-label>{{'dialog.settings.config_url' | translate}}</mat-label>
+                        <input formControlName="config_url" matInput type="text"
+                               [readonly]="!allowChangeConfigFile"
+                               placeholder="https://host:8443/config.json"/>
+                        <mat-hint *ngIf="allowChangeConfigFile">
+                            <mat-error *ngIf="form.hasError('configUrlValidation'); else hintAlone">
+                                {{ 'dialog.settings.error.config_url' | translate }}
+                            </mat-error>
+                            <ng-template #hintAlone>
+                                {{ 'dialog.settings.config_url_hint' | translate }}</ng-template>
+                        </mat-hint>
+                    </mat-form-field>
+                    <span><a mat-button rel="noopener noreferrer" target="_blank"
+                             href="https://github.com/ligreman/king/blob/main/README.md#configuration">
                                     <span>{{'dialog.settings.documentation' | translate}}</span>
                                     <mat-icon iconPositionEnd class="mini-icon">open_in_new</mat-icon>
                                 </a>
                             </span>
-                        </div>
-                        <div>
-                            <p *ngIf="!allowChangeConfigFile">{{ 'dialog.settings.cannot_change_config_url_hint' | translate }}
-                                : {{config_file_url}}</p>
-                        </div>
-                    </div>
-                </form>
-            </mat-tab>
+                </div>
+                <div class="padding-left-20">
+                    <p *ngIf="!allowChangeConfigFile">{{ 'dialog.settings.cannot_change_config_url_hint' | translate }}
+                        : {{config_file_url}}</p>
+                </div>
 
-            <mat-tab>
-                <ng-template mat-tab-label>
-                    <mat-icon class="tab-icon">loop</mat-icon>
-                    {{ 'dialog.settings.loopback' | translate }}</ng-template>
-                <span><a href="https://docs.konghq.com/gateway/latest/admin-api/#add-consumer" mat-button
-                         rel="noopener noreferrer"
-                         target="_blank">
-    {{'text.documentation' | translate}}
-                    <mat-icon class="mini-icon">open_in_new</mat-icon></a></span>
-                <form [formGroup]="form">
-                    <div class="margin-bottom-10" fxLayout="column">
-                        <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
-                            <mat-form-field appearance="outline" color="accent" fxFlex="48">
-                                <mat-label>{{'consumer.dialog.username' | translate}}</mat-label>
-                                <input formControlName="username" matInput type="text"/>
-                            </mat-form-field>
+                <h2 class="margin-top-10-i">{{ 'dialog.settings.auth.title' | translate }}</h2>
+                <div class="padding-left-20 margin-bottom-10">
+                    <p>{{ 'dialog.settings.auth.instructions' | translate }}.
+                        <a rel="noopener noreferrer" target="_blank" class="link"
+                           href="https://docs.konghq.com/gateway/latest/production/running-kong/secure-admin-api/#kong-api-loopback">
+                            <span>{{'dialog.settings.documentation' | translate}}</span>
+                            <mat-icon iconPositionEnd class="mini-icon">open_in_new</mat-icon>
+                        </a></p>
+                </div>
+                <div class="padding-left-20 margin-bottom-30-i" fxLayout="row" fxLayoutAlign="space-between center">
+                    <mat-form-field appearance="outline" color="accent" fxFlex>
+                        <mat-label>{{ 'dialog.settings.auth.where' | translate}}</mat-label>
+                        <mat-select formControlName="where">
+                            <mat-option value="">{{ 'dialog.settings.auth.where_none' | translate }}</mat-option>
+                            <mat-option
+                                value="header">{{ 'dialog.settings.auth.where_header' | translate }}</mat-option>
+                            <mat-option value="query">{{ 'dialog.settings.auth.where_query' | translate }}</mat-option>
+                            <mat-option value="body">{{ 'dialog.settings.auth.where_body' | translate }}</mat-option>
+                        </mat-select>
+                        <mat-hint>{{ 'dialog.settings.auth.where_hint' | translate}}</mat-hint>
+                    </mat-form-field>
 
-                            <mat-form-field appearance="outline" color="accent" fxFlex="48">
-                                <mat-label>{{'consumer.dialog.custom_id' | translate}}</mat-label>
-                                <input formControlName="custom_id" matInput type="text"/>
-                                <mat-icon matSuffix matTooltip="{{'consumer.dialog.custom_id_tooltip' | translate}}"
-                                          matTooltipClass="tooltip-teal">info_outline
-                                </mat-icon>
-                            </mat-form-field>
-                        </div>
-                    </div>
-                </form>
-            </mat-tab>
-        </mat-tab-group>
+                    <mat-form-field appearance="outline" color="accent" class="margin-left-10" fxFlex>
+                        <mat-label>{{'dialog.settings.auth.key_field' | translate}}</mat-label>
+                        <input formControlName="key_field" matInput type="text"
+                               placeholder="{{'dialog.settings.auth.key_field_placeholder' | translate}}"/>
+                        <mat-hint>{{'dialog.settings.auth.key_field_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="margin-bottom-10 padding-left-20" fxLayout="row" fxLayoutAlign="space-between start">
+                    <mat-form-field appearance="outline" color="accent" fxFlex>
+                        <mat-label>{{'dialog.settings.auth.token' | translate}}</mat-label>
+                        <textarea formControlName="token" matInput type="text"
+                                  placeholder="{{'dialog.settings.auth.token_placeholder' | translate}}"></textarea>
+                        <mat-hint>{{'dialog.settings.auth.token_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+                </div>
+                <div class="padding-left-20">
+                    <p>
+                        <mat-icon color="warn">privacy_tip</mat-icon>
+                        {{'dialog.settings.auth.warning' | translate}}</p>
+                </div>
+            </div>
+        </form>
     </div>
 </mat-dialog-content>
 

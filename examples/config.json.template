@@ -1,4 +1,6 @@
 {
     "kong_admin_url": "http://foo-hostname.com",
-    "kong_admin_authorization": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
+    "kong_admin_authorization_method": "header",
+    "kong_admin_authorization_field": "Authorization",
+    "kong_admin_authorization_token": "Basic dXNlcm5hbWU6cGFzc3dvcmQ="
 }
