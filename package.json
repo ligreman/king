@@ -30,7 +30,7 @@
     "@swimlane/ngx-charts": "20.4.1",
     "file-saver": "2.0.5",
     "hammerjs": "2.0.8",
-    "joi": "^17.11.0",
+    "joi": "17.11.0",
     "lodash": "4.17.21",
     "luxon": "3.4.3",
     "moment": "2.29.4",
@@ -42,7 +42,7 @@
     "tslib": "2.5.3",
     "vis-data": "7.1.7",
     "vis-network": "9.1.6",
-    "vis-util": "^5.0.5",
+    "vis-util": "5.0.5",
     "zone.js": "0.13.1"
   },
   "devDependencies": {
@@ -52,7 +52,7 @@
     "@types/hammerjs": "2.0.42",
     "@types/jasmine": "4.3.6",
     "@types/jasminewd2": "2.0.11",
-    "@types/lodash": "^4.14.199",
+    "@types/lodash": "4.14.199",
     "@types/luxon": "3.3.2",
     "@types/node": "18.17.17",
     "codelyzer": "6.0.2",
