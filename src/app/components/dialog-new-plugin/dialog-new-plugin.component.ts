@@ -108,7 +108,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             this.api.getAllRoutes(null, [], ['id', 'name']),
             this.api.getAllConsumers(null, [], ['id', 'username']),
             this.api.getPluginsEnabled(),
-            this.api.getAllPlugins(null, [], ['id', 'name'])
+            this.api.getAllPlugins(null, [], [])
         ]).pipe(map<any, any>(([services, routes, consumers, pluginsEnabled, plugins]) => {
             // forkJoin returns an array of values, here we map those values to an object
             return {
