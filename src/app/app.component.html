@@ -54,23 +54,23 @@
             </button>
             <button mat-menu-item routerLink="/access-acls" routerLinkActive="active-route">
                 <mat-icon>people</mat-icon>
-                {{'header.menu.acls' | translate | uppercase}}
+                {{ 'header.menu.acls' | translate | uppercase }}
             </button>
             <button mat-menu-item routerLink="/access-basic" routerLinkActive="active-route">
                 <mat-icon>face</mat-icon>
-                {{'header.menu.basic' | translate | uppercase}}
+                {{ 'header.menu.basic' | translate | uppercase }}
             </button>
             <button mat-menu-item routerLink="/access-key" routerLinkActive="active-route">
                 <mat-icon>vpn_key</mat-icon>
-                {{'header.menu.keys' | translate | uppercase}}
+                {{ 'header.menu.keys' | translate | uppercase }}
             </button>
             <button mat-menu-item routerLink="/access-jwt" routerLinkActive="active-route">
                 <mat-icon>confirmation_number</mat-icon>
-                {{'header.menu.jwt' | translate | uppercase}}
+                {{ 'header.menu.jwt' | translate | uppercase }}
             </button>
             <button mat-menu-item routerLink="/access-oauth2" routerLinkActive="active-route">
                 <mat-icon>motion_photos_auto</mat-icon>
-                {{'header.menu.oauth2' | translate | uppercase}}
+                {{ 'header.menu.oauth2' | translate | uppercase }}
             </button>
         </mat-menu>
         <button [disabled]="!isConnectedToNode()" [matMenuTriggerFor]="menuC" [ngClass]="isCertificateRouteActive()"
@@ -81,15 +81,15 @@
         <mat-menu #menuC="matMenu">
             <button mat-menu-item routerLink="/certificate-cert" routerLinkActive="active-route">
                 <mat-icon>https</mat-icon>
-                {{'header.menu.certificates' | translate | uppercase}}
+                {{ 'header.menu.certificates' | translate | uppercase }}
             </button>
             <button mat-menu-item routerLink="/certificate-cacert" routerLinkActive="active-route">
                 <mat-icon>account_balance</mat-icon>
-                {{'header.menu.cacerts' | translate | uppercase}}
+                {{ 'header.menu.cacerts' | translate | uppercase }}
             </button>
             <button mat-menu-item routerLink="/certificate-sni" routerLinkActive="active-route">
                 <mat-icon>vpn_lock</mat-icon>
-                {{'header.menu.snis' | translate | uppercase}}
+                {{ 'header.menu.snis' | translate | uppercase }}
             </button>
         </mat-menu>
 
@@ -106,7 +106,7 @@
         </button>
 
         <mat-form-field class="small-font connection-box" appearance="outline" color="accent" fxFlex>
-            <mat-label>{{'header.menu.kong_node' | translate}}</mat-label>
+            <mat-label>{{ 'header.menu.kong_node' | translate }}</mat-label>
             <input [matAutocomplete]="auto" [matTooltipShowDelay]="1000" aria-label=""
                    formControlName="node"
                    matInput
@@ -117,14 +117,16 @@
                    type="text"/>
             <mat-autocomplete #auto="matAutocomplete">
                 <mat-option *ngFor="let option of node_list" [value]="option" class="small-font">
-                    {{option}}
+                    {{ option }}
                 </mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="nodeField.invalid && (nodeField.dirty || nodeField.touched)">
                 <div *ngIf="nodeField.errors.required">{{ 'header.menu.error_node_field' | translate }}</div>
             </mat-error>
-            <mat-hint class="grey-color" *ngIf="!enableKongUrl">{{'header.menu.kong_node_disabled_hint' | translate}}</mat-hint>
-            <mat-hint class="grey-color" *ngIf="enableKongUrl">{{'header.menu.kong_node_hint' | translate}}</mat-hint>
+            <mat-hint class="grey-color"
+                      *ngIf="!enableKongUrl">{{ 'header.menu.kong_node_disabled_hint' | translate }}
+            </mat-hint>
+            <mat-hint class="grey-color" *ngIf="enableKongUrl">{{ 'header.menu.kong_node_hint' | translate }}</mat-hint>
         </mat-form-field>
         <button (click)="connectToNode()" [matTooltipShowDelay]="1000" color="accent"
                 mat-icon-button type="submit"
@@ -147,18 +149,21 @@
     <div>
         <button (click)="showAbout()" mat-button>
             <mat-icon>not_listed_location</mat-icon>
-            {{'footer.about' | translate}}
+            {{ 'footer.about' | translate }}
         </button>
         <button (click)="toggleManual()" mat-button>
             <mat-icon>import_contacts</mat-icon>
-            {{'footer.manual' | translate}}
+            {{ 'footer.manual' | translate }}
         </button>
     </div>
-    <a href="https://github.com/ligreman/king" mat-icon-button matTooltip="https://github.com/ligreman/king"
-       matTooltipPosition="left" rel="noopener noreferrer"
-       target="_blank">
-        <img alt="GitHub" src="assets/img/github.png"/>
-    </a>
+    <div fxLayout="row" fxLayoutAlign="center end">
+        <p class="version">v{{ version }}</p>
+        <a href="https://github.com/ligreman/king" mat-icon-button matTooltip="https://github.com/ligreman/king"
+           matTooltipPosition="left" rel="noopener noreferrer"
+           target="_blank">
+            <img alt="GitHub" src="assets/img/github.png"/>
+        </a>
+    </div>
 </footer>
 
 <div [fxShow]="openedManual" [ngClass]="{'showing': showManualText}"
@@ -166,7 +171,7 @@
      id="manual-container">
     <div class="manual-text" id="manual-text">
         <mat-toolbar color="accent" fxLayout="row" fxLayoutAlign="space-between center">
-            <span #mSummary id="mSummary">{{ 'manual.title' | translate}}</span>
+            <span #mSummary id="mSummary">{{ 'manual.title' | translate }}</span>
             <button (click)="toggleManual()" mat-icon-button>
                 <mat-icon>clear</mat-icon>
             </button>

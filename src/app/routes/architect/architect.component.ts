@@ -11,7 +11,7 @@ import {
 } from 'lodash';
 import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
 import {firstValueFrom, forkJoin, ReplaySubject, Subject, takeUntil} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {DataSet, Network} from 'vis-network/standalone';
 import {ApiService} from '../../services/api.service';
 import {DialogHelperService} from '../../services/dialog-helper.service';
@@ -254,14 +254,19 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
                 this.filterGraphByTag();
             });
         } else {
+            // No estoy filtrando por tags, cargaré solo parte de los datos por si son demasiados que no se rompa
             this.loading = false;
+            /* this.getGraphDataFromApi(true).subscribe((value) => {
+                 this.dataApi = value;
+                 this.filterGraphByTag();
+             });*/
         }
     }
 
     /**
      Agrupo las llamadas al API para pedir los datos del grafo
      */
-    getGraphDataFromApi() {
+    getGraphDataFromApi(loadPartial = false) {
         let tags = null;
         if (!this.isTagfilterEmpty()) {
             tags = this.tagSelectedCtrl.value.slice();
@@ -279,7 +284,12 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
             this.api.getAllUpstreams(null, [], [], tags, this.graphFilter.mode),
             this.api.getAllConsumers(null, [], [], tags, this.graphFilter.mode),
             this.api.getAllPlugins(null, [], [], tags, this.graphFilter.mode)
-        ]).pipe(map<any, any>(([services, routes, upstreams, consumers, plugins]) => {
+        ]).pipe(
+            catchError(error => {
+                this.toast.error('error.loading_elements');
+                throw error;
+            })
+        ).pipe(map<any, any>(([services, routes, upstreams, consumers, plugins]) => {
             // forkJoin returns an array of values, here we map those values to an object
             return {
                 services: services['data'],
@@ -380,7 +390,7 @@ export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
         if (this.graphFilter.element === 'untagged') {
             // Me quedo sólo con los primeros 500 elementos de cada uno, y si me paso pongo mensaje
             if (this.dataApi.services.length > 500 || this.dataApi.routes.length > 500 || this.dataApi.upstreams.length > 500 || this.dataApi.plugins.length > 500 || this.dataApi.consumers.length > 500) {
-                this.toast.info('architect.there_are_more', '',{timeOut: 8000, extendedTimeOut: 15000});
+                this.toast.info('architect.there_are_more', '', {timeOut: 8000, extendedTimeOut: 15000});
             }
 
             newData.services = this.dataApi.services.slice(0, 500);

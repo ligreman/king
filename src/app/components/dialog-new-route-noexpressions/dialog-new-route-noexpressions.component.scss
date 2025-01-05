@@ -1,0 +1,13 @@
+.mat-expansion-panel:not([class*="mat-elevation-z"]) {
+    box-shadow: none;
+}
+
+.list {
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    min-height: 50px;
+}
+
+.marleft {
+    margin-left:8px !important;
+}

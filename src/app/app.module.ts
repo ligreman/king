@@ -58,6 +58,9 @@ import {
     PluginFormFieldsComponent
 } from './components/dialog-new-plugin/plugin-form-fields/plugin-form-fields.component';
 import {DialogNewRouteComponent} from './components/dialog-new-route/dialog-new-route.component';
+import {
+    DialogNewRouteNoexpressionsComponent
+} from './components/dialog-new-route-noexpressions/dialog-new-route-noexpressions.component';
 import {DialogNewRsuComponent} from './components/dialog-new-rsu/dialog-new-rsu.component';
 import {DialogNewServiceComponent} from './components/dialog-new-service/dialog-new-service.component';
 import {DialogNewSniComponent} from './components/dialog-new-sni/dialog-new-sni.component';
@@ -114,6 +117,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         ElementVaultComponent,
         ElementConsumerComponent,
         DialogNewRouteComponent,
+        DialogNewRouteNoexpressionsComponent,
         DialogNewVaultComponent,
         DialogNewConsumerComponent,
         DialogNewUpstreamComponent,

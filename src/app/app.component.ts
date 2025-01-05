@@ -12,6 +12,7 @@ import {ToastService} from './services/toast.service';
 import {DialogSettingsComponent} from "./components/dialog-settings/dialog-settings.component";
 import {firstValueFrom} from "rxjs";
 import {isEmpty as _isEmpty} from 'lodash';
+import packageJson from '../../package.json';
 
 @AutoUnsubscribe()
 @Component({
@@ -27,6 +28,7 @@ export class AppComponent implements OnInit, OnDestroy {
     manualStyles = {'height': 0, 'top': 0};
     enabledPlugins = [];
     allowConfig = false;
+    version: string = packageJson.version;
 
     formNodes = this.fb.group({
         node: ['', Validators.required]
