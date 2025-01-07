@@ -18,7 +18,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-element-upstream',
     templateUrl: './element-upstream.component.html',
-    styleUrls: ['./element-upstream.component.scss']
+    styleUrls: ['./element-upstream.component.scss'],
+    standalone: false
 })
 export class ElementUpstreamComponent implements OnInit, AfterViewInit {
     displayedColumns: string[] = ['name', 'algorithm', 'hash_on', 'hash_fallback', 'health', 'tags', 'actions'];

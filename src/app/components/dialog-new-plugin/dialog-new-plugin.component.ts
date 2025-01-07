@@ -26,7 +26,8 @@ import {Utils} from '../../shared/utils';
 @Component({
     selector: 'app-dialog-new-plugin',
     templateUrl: './dialog-new-plugin.component.html',
-    styleUrls: ['./dialog-new-plugin.component.scss']
+    styleUrls: ['./dialog-new-plugin.component.scss'],
+    standalone: false
 })
 export class DialogNewPluginComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario

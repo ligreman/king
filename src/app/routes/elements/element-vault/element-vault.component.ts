@@ -11,7 +11,8 @@ import {ToastService} from '../../../services/toast.service';
 @Component({
     selector: 'app-element-vault',
     templateUrl: './element-vault.component.html',
-    styleUrls: ['./element-vault.component.scss']
+    styleUrls: ['./element-vault.component.scss'],
+    standalone: false
 })
 export class ElementVaultComponent implements OnInit, OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['name', 'prefix', 'description', 'config', 'tags', 'actions'];

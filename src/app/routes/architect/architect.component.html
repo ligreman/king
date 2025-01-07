@@ -96,7 +96,8 @@
             <mat-list-item *ngIf="expressions">
                 <div mat-line>
                     <button (click)="addEdit(null, 'rsu')" mat-button matTooltip="{{ 'rsu.add_tooltip' | translate }}"
-                            matTooltipClass="tooltip-teal" matTooltipPosition="left">
+                            matTooltipClass="tooltip-teal" matTooltipPosition="left"
+                    class="btn-clear">
                         <mat-icon class="color-route">timeline</mat-icon>&nbsp;
                         <mat-icon class="color-service">memory</mat-icon>&nbsp;
                         <mat-icon class="color-upstream">share</mat-icon>&nbsp;
@@ -129,7 +130,7 @@
 
             <mat-list-item>
                 <div mat-line>
-                    <button (click)="addEdit(null, 'route')" mat-button>
+                    <button class="btn-clear" (click)="addEdit(null, 'route')" mat-button>
                         <mat-icon class="color-route">timeline</mat-icon>&nbsp;
                         {{'route.add' | translate}}
                     </button>
@@ -137,7 +138,7 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button (click)="addEdit(null, 'service')" mat-button>
+                    <button class="btn-clear" (click)="addEdit(null, 'service')" mat-button>
                         <mat-icon class="color-service">memory</mat-icon>&nbsp;
                         {{'service.add' | translate}}
                     </button>
@@ -145,7 +146,7 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button (click)="addEdit(null, 'upstream')" mat-button>
+                    <button class="btn-clear" (click)="addEdit(null, 'upstream')" mat-button>
                         <mat-icon class="color-upstream">share</mat-icon>&nbsp;
                         {{'upstream.add' | translate}}
                     </button>
@@ -153,7 +154,7 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button (click)="addEdit(null, 'consumer')" mat-button>
+                    <button class="btn-clear" (click)="addEdit(null, 'consumer')" mat-button>
                         <mat-icon class="color-consumer">shopping_cart</mat-icon>&nbsp;
                         {{'consumer.add' | translate}}
                     </button>
@@ -161,7 +162,7 @@
             </mat-list-item>
             <mat-list-item>
                 <div mat-line>
-                    <button (click)="addEdit(null, 'plugin')" mat-button>
+                    <button class="btn-clear" (click)="addEdit(null, 'plugin')" mat-button>
                         <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
                         {{'plugin.add' | translate}}
                     </button>
@@ -177,8 +178,8 @@
             </div>
             <mat-list-item *ngIf="groupsInfo.includes(selection.group)">
                 <div mat-line>
-                    <button (click)="showInfo(selection)" mat-button>
-                        <mat-icon>info</mat-icon>
+                    <button class="btn-clear" (click)="showInfo(selection)" mat-button>
+                        <mat-icon class="color-info">info</mat-icon>
                         {{'text.info' | translate}}
                     </button>
                 </div>
@@ -187,9 +188,9 @@
             <!-- filtro por tag -->
             <mat-list-item *ngIf="groupsInfo.includes(selection.group) && (selection.data.tags.length > 0)">
                 <div mat-line>
-                    <button (click)="filterTag(selection)" mat-button matTooltip="{{selection.data.tags.join(', ')}}"
+                    <button class="btn-clear" (click)="filterTag(selection)" mat-button matTooltip="{{selection.data.tags.join(', ')}}"
                             matTooltipClass="tooltip-teal">
-                        <mat-icon>filter_alt</mat-icon>
+                        <mat-icon class="color-neutral">filter_alt</mat-icon>
                         {{'architect.filter_selected_tags' | translate:{num: selection.data.tags.length} }}
                     </button>
                 </div>
@@ -199,9 +200,9 @@
 
             <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('acl')">
                 <div mat-line>
-                    <button (click)="showInfo({id: selection.consumerId, group: 'acl', username: selection.label})"
+                    <button class="btn-clear" (click)="showInfo({id: selection.consumerId, group: 'acl', username: selection.label})"
                             mat-button>
-                        <mat-icon>people</mat-icon>
+                        <mat-icon class="color-neutral">people</mat-icon>
                         {{'acl.dialog.info' | translate}}
                     </button>
                 </div>
@@ -209,9 +210,9 @@
 
             <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('key-auth')">
                 <div mat-line>
-                    <button (click)="showInfo({id: selection.consumerId, group: 'key', username: selection.label})"
+                    <button class="btn-clear" (click)="showInfo({id: selection.consumerId, group: 'key', username: selection.label})"
                             mat-button>
-                        <mat-icon>vpn_key</mat-icon>
+                        <mat-icon class="color-neutral">vpn_key</mat-icon>
                         {{'apikey.dialog.info' | translate}}
                     </button>
                 </div>
@@ -219,9 +220,9 @@
 
             <mat-list-item *ngIf="selection.group === 'consumer' && isPluginActive('jwt')">
                 <div mat-line>
-                    <button (click)="showInfo({id: selection.consumerId, group: 'jwt', username: selection.label})"
+                    <button class="btn-clear" (click)="showInfo({id: selection.consumerId, group: 'jwt', username: selection.label})"
                             mat-button>
-                        <mat-icon>confirmation_number</mat-icon>
+                        <mat-icon class="color-neutral">confirmation_number</mat-icon>
                         {{'jwt.dialog.info' | translate}}
                     </button>
                 </div>
@@ -231,22 +232,22 @@
 
             <mat-list-item *ngIf="groupsEdit.includes(selection.group)">
                 <div mat-line>
-                    <button (click)="addEdit(selection, selection.group)" color="accent" mat-button>
-                        <mat-icon>edit</mat-icon>
+                    <button class="btn-clear" (click)="addEdit(selection, selection.group)" color="accent" mat-button>
+                        <mat-icon class="color-neutral">edit</mat-icon>
                         {{'text.edit' | translate}}</button>
                 </div>
             </mat-list-item>
             <mat-list-item *ngIf="groupsDelete.includes(selection.group)">
                 <div mat-line>
-                    <button (click)="delete(selection)" color="warn" mat-button>
-                        <mat-icon>delete</mat-icon>
+                    <button class="btn-clear" (click)="delete(selection)" color="warn" mat-button>
+                        <mat-icon class="color-delete">delete</mat-icon>
                         {{'text.delete' | translate}}
                     </button>
                 </div>
             </mat-list-item>
             <mat-list-item *ngIf="groupsAddPlugin.includes(selection.group)">
                 <div mat-line>
-                    <button (click)="addEditPlugin(null, selection)" mat-button>
+                    <button class="btn-clear" (click)="addEditPlugin(null, selection)" mat-button>
                         <mat-icon class="color-plugin">settings_input_component</mat-icon>&nbsp;
                         {{'plugin.add' | translate}}
                     </button>
@@ -254,7 +255,7 @@
             </mat-list-item>
             <mat-list-item *ngIf="groupsAddTarget.includes(selection.group)">
                 <div mat-line>
-                    <button (click)="addTarget(selection)" mat-button>
+                    <button class="btn-clear" (click)="addTarget(selection)" mat-button>
                         <mat-icon class="color-target">gps_fixed</mat-icon>&nbsp;
                         {{'target.add' | translate}}
                     </button>
@@ -263,7 +264,7 @@
 
             <mat-list-item *ngIf="groupsHealth.includes(selection.group)">
                 <div mat-line>
-                    <button (click)="setTargetHealthy(selection)" mat-button>
+                    <button class="btn-clear" (click)="setTargetHealthy(selection)" mat-button>
                         <mat-icon class="color-healthy">power</mat-icon>&nbsp;
                         {{'target.set_healthy' | translate}}
                     </button>
@@ -271,7 +272,7 @@
             </mat-list-item>
             <mat-list-item *ngIf="groupsHealth.includes(selection.group)">
                 <div mat-line>
-                    <button (click)="setTargetUnhealthy(selection)" mat-button>
+                    <button class="btn-clear" (click)="setTargetUnhealthy(selection)" mat-button>
                         <mat-icon class="color-unhealthy">power_off</mat-icon>&nbsp;
                         {{'target.set_unhealthy' | translate}}
                     </button>

@@ -14,7 +14,8 @@ import { CustomValidators } from '../../shared/custom-validators';
 @Component({
     selector: 'app-dialog-new-cacert',
     templateUrl: './dialog-new-cacert.component.html',
-    styleUrls: ['./dialog-new-cacert.component.scss']
+    styleUrls: ['./dialog-new-cacert.component.scss'],
+    standalone: false
 })
 export class DialogNewCacertComponent implements OnInit, OnDestroy {
     formValid = false;

@@ -19,7 +19,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-element-route',
     templateUrl: './element-route.component.html',
-    styleUrls: ['./element-route.component.scss']
+    styleUrls: ['./element-route.component.scss'],
+    standalone: false
 })
 export class ElementRouteComponent implements OnInit, OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['name', 'service', 'protocols', 'expression', 'tags', 'actions'];

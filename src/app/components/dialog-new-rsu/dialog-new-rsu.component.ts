@@ -18,7 +18,8 @@ import {Utils} from '../../shared/utils';
 @Component({
     selector: 'app-dialog-new-rsu',
     templateUrl: './dialog-new-rsu.component.html',
-    styleUrls: ['./dialog-new-rsu.component.scss']
+    styleUrls: ['./dialog-new-rsu.component.scss'],
+    standalone: false
 })
 export class DialogNewRsuComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario

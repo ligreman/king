@@ -12,7 +12,8 @@ import {ToastService} from '../../../services/toast.service';
 @Component({
     selector: 'app-certificate-sni',
     templateUrl: './certificate-sni.component.html',
-    styleUrls: ['./certificate-sni.component.scss']
+    styleUrls: ['./certificate-sni.component.scss'],
+    standalone: false
 })
 export class CertificateSniComponent implements OnInit, OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['id', 'name', 'certificate', 'tags', 'actions'];

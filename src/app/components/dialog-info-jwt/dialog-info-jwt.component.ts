@@ -18,7 +18,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-dialog-info-jwt',
     templateUrl: './dialog-info-jwt.component.html',
-    styleUrls: ['./dialog-info-jwt.component.scss']
+    styleUrls: ['./dialog-info-jwt.component.scss'],
+    standalone: false
 })
 export class DialogInfoJwtComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['key', 'algorithm', 'rsa_public_key', 'secret', 'actions'];

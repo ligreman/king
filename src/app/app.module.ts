@@ -1,5 +1,5 @@
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -100,8 +100,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         NodeInformationComponent,
         PageNotFoundComponent,
@@ -153,9 +152,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         AccessOauth2Component,
         TagFilterPipe
     ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
+    bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         FlexLayoutModule,
@@ -203,9 +200,7 @@ export function HttpLoaderFactory(http: HttpClient) {
             'progressBar': true,
             'positionClass': 'toast-bottom-right'
         }),
-        MatGridListModule
-    ],
-    providers: [
+        MatGridListModule], providers: [
         {
             provide: MatPaginatorIntl,
             useClass: MatPaginatorIntlSpanish
@@ -215,9 +210,8 @@ export function HttpLoaderFactory(http: HttpClient) {
             useClass: AppHttpInterceptor,
             multi: true
         },
-    ],
-    bootstrap: [AppComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
     constructor() {
     }

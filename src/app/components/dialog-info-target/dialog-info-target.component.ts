@@ -11,7 +11,8 @@ import {ToastService} from '../../services/toast.service';
 @Component({
     selector: 'app-dialog-info-target',
     templateUrl: './dialog-info-target.component.html',
-    styleUrls: ['./dialog-info-target.component.scss']
+    styleUrls: ['./dialog-info-target.component.scss'],
+    standalone: false
 })
 export class DialogInfoTargetComponent implements OnInit, OnDestroy {
     target;

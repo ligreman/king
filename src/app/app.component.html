@@ -120,13 +120,13 @@
                     {{ option }}
                 </mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="nodeField.invalid && (nodeField.dirty || nodeField.touched)">
+            <mat-error *ngIf="nodeField.invalid && (nodeField.dirty || !nodeField.untouched)">
                 <div *ngIf="nodeField.errors.required">{{ 'header.menu.error_node_field' | translate }}</div>
             </mat-error>
             <mat-hint class="grey-color"
                       *ngIf="!enableKongUrl">{{ 'header.menu.kong_node_disabled_hint' | translate }}
             </mat-hint>
-            <mat-hint class="grey-color" *ngIf="enableKongUrl">{{ 'header.menu.kong_node_hint' | translate }}</mat-hint>
+            <mat-hint class="mini-hint" *ngIf="enableKongUrl">{{ 'header.menu.kong_node_hint' | translate }}</mat-hint>
         </mat-form-field>
         <button (click)="connectToNode()" [matTooltipShowDelay]="1000" color="accent"
                 mat-icon-button type="submit"

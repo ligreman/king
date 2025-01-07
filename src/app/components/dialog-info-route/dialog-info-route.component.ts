@@ -12,7 +12,8 @@ import {ToastService} from '../../services/toast.service';
 @Component({
     selector: 'app-dialog-info-route',
     templateUrl: './dialog-info-route.component.html',
-    styleUrls: ['./dialog-info-route.component.scss']
+    styleUrls: ['./dialog-info-route.component.scss'],
+    standalone: false
 })
 export class DialogInfoRouteComponent implements OnInit, OnDestroy {
     route;

@@ -72,11 +72,11 @@
             </div>
             </form>
 
-            <h2 class="margin-top-20-i">{{'apikey.dialog.keys' | translate}}: <span>{{consumerName}}</span></h2>
+            <h2 class="h2-font margin-top-20-i">{{'apikey.dialog.keys' | translate}}: <span>{{consumerName}}</span></h2>
 
             <div fxLayout="row">
                 <mat-list fxFlex>
-                    <mat-list-item *ngFor="let apikey of keys">
+                    <mat-list-item class="margin-top-10" *ngFor="let apikey of keys">
                         <mat-icon matListItemIcon>vpn_key</mat-icon>
                         <div mat-line>
                             <span matTooltip="ID: {{apikey.id}}" matTooltipClass="tooltip-teal">{{showKey(apikey.key, apikey.hide || false)}}</span>
@@ -94,7 +94,7 @@
                             </button>
                         </div>
 
-                        <div class="text-small" mat-line>
+                        <div class="text-small-7" mat-line>
                             {{ (apikey.created_at * 1000) | date:'medium'}}
                             <span *ngIf="apikey.ttl" matTooltip="{{ 'apikey.dialog.add_ttl' | translate }}: {{apikey.ttl}}s"
                                   matTooltipClass="tooltip-teal"> {{'text.to' | translate}} {{ ((apikey.created_at * 1000) + (apikey.ttl * 1000)) | date:'medium'}}
@@ -108,7 +108,7 @@
 
     <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between start">
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between start" class="min-h70px">
         <mat-chip-listbox *ngIf="keys" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip-option *ngFor="let chip of keys['tags']" color="primary">{{chip}}</mat-chip-option>
         </mat-chip-listbox>

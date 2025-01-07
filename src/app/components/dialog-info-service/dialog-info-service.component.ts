@@ -9,7 +9,8 @@ import { ToastService } from '../../services/toast.service';
 @Component({
     selector: 'app-dialog-info-service',
     templateUrl: './dialog-info-service.component.html',
-    styleUrls: ['./dialog-info-service.component.scss']
+    styleUrls: ['./dialog-info-service.component.scss'],
+    standalone: false
 })
 export class DialogInfoServiceComponent implements OnInit, OnDestroy {
     service;

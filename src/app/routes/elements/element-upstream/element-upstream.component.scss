@@ -1,4 +1,3 @@
-@import '@angular/material/theming';
 
 table {
     width: 100%;
@@ -6,7 +5,7 @@ table {
 
 .delete-icon {
     margin-right: auto;
-    color: mat-color($mat-red, 600);
+    color: #E53935;
 }
 
 span.accent {

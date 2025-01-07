@@ -1,27 +1,27 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppComponent } from './app.component';
 import { ToastService } from './services/toast.service';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 
 describe('AppComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule,
-                HttpClientTestingModule,
-                TranslateModule.forRoot()
-            ],
-            providers: [
-                {provide: FormBuilder, useValue: {}},
-                {provide: ToastService, useValue: {}}
-            ],
-            declarations: [
-                AppComponent
-            ]
-        }).compileComponents();
+    declarations: [
+        AppComponent
+    ],
+    imports: [RouterTestingModule,
+        TranslateModule.forRoot()],
+    providers: [
+        { provide: FormBuilder, useValue: {} },
+        { provide: ToastService, useValue: {} },
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting()
+    ]
+}).compileComponents();
     });
 
     /*it('should create the app', () => {

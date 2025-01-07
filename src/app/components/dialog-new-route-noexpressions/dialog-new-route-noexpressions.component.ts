@@ -15,7 +15,8 @@ import {CustomValidators} from '../../shared/custom-validators';
 @Component({
     selector: 'app-dialog-new-route-noexpressions',
     templateUrl: './dialog-new-route-noexpressions.component.html',
-    styleUrls: ['./dialog-new-route-noexpressions.component.scss']
+    styleUrls: ['./dialog-new-route-noexpressions.component.scss'],
+    standalone: false
 })
 export class DialogNewRouteNoexpressionsComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario

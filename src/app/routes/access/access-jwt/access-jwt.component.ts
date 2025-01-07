@@ -20,7 +20,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-access-jwt',
     templateUrl: './access-jwt.component.html',
-    styleUrls: ['./access-jwt.component.scss']
+    styleUrls: ['./access-jwt.component.scss'],
+    standalone: false
 })
 export class AccessJwtComponent implements OnInit, OnDestroy {
 

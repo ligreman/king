@@ -24,7 +24,8 @@ import {MatSelect} from "@angular/material/select";
 @Component({
     selector: 'app-architect',
     templateUrl: './architect.component.html',
-    styleUrls: ['./architect.component.scss']
+    styleUrls: ['./architect.component.scss'],
+    standalone: false
 })
 export class ArchitectComponent implements OnInit, OnDestroy, AfterViewInit {
     loading = true;

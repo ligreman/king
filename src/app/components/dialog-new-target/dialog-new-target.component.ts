@@ -14,7 +14,8 @@ import { CustomValidators } from '../../shared/custom-validators';
 @Component({
     selector: 'app-dialog-new-target',
     templateUrl: './dialog-new-target.component.html',
-    styleUrls: ['./dialog-new-target.component.scss']
+    styleUrls: ['./dialog-new-target.component.scss'],
+    standalone: false
 })
 export class DialogNewTargetComponent implements OnInit, OnDestroy {
     formValid = false;

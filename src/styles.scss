@@ -1,54 +1,42 @@
 // Custom Theming for Angular Material
 // For more information: https://material.angular.io/guide/theming
-@import '@angular/material/theming';
-// Plus imports for other components in your app.
+@use '@angular/material' as mat;
 
-$custom-typography: mat-typography-config(
-    $font-family: 'Roboto'
-);
+@use 'assets/scss/fonts';
+@use 'assets/scss/overrides';
+@use 'assets/scss/colors';
+@use 'assets/scss/common';
 
-// Include the common styles for Angular Material. We include this here so that you only
-// have to load a single css file for Angular Material in your app.
-// Be sure that you only ever include this mixin once!
-@include mat-core();
-@include angular-material-typography($custom-typography);
-
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue. Available color palettes: https://material.io/design/color/
-$king-primary: mat-palette($mat-blue-gray, 400);
-$king-accent: mat-palette($mat-teal, 200);
-
-// The warn palette is optional (defaults to red).
-$king-warn: mat-palette($mat-red, 500);
-
-// Create the theme object. A theme consists of configurations for individual
-// theming systems such as "color" or "typography".
-$king-theme: mat-dark-theme((
+$theme: mat.define-theme((
     color: (
-        primary: $king-primary,
-        accent: $king-accent,
-        warn: $king-warn
+        theme-type: dark,
+        primary: mat.$cyan-palette,
     )
 ));
 
-// Include theme styles for core and each component used in your app.
-// Alternatively, you can import and @include the theme mixins for each component
-// that you are using.
-@include angular-material-theme($king-theme);
-
-/* You can add global styles to this file, and also import other style files */
-
-@import 'assets/scss/fonts';
-@import 'assets/scss/overrides';
-@import 'assets/scss/colors';
-@import 'assets/scss/common';
-
-html, body {
+html {
     height: 100%;
+    color-scheme: dark;
+    @include mat.theme((
+        color: mat.$cyan-palette,
+        typography: Roboto
+    ), $overrides: (
+        surface: #424242,
+        surface-variant: #616161,
+        surface-container: #333,
+        corner-full: 15px,
+        corner-extra-large: 20px
+    ));
+
+    //@include mat.all-component-themes($theme);
+    @include mat.color-variants-backwards-compatibility($theme);
+    @include mat.typography-hierarchy($theme, $back-compat: true);
 }
 
 body {
+    background: var(--mat-sys-surface-bright);
+    color: var(--mat-sys-on-surface);
+    height: 100%;
     font-family: Roboto, "Helvetica Neue", sans-serif;
     margin: 0;
     display: flex;
@@ -114,5 +102,13 @@ footer {
 
 .mat-ink-bar {
     height: 4px !important;
+}
+
+.h2-font {
+    font-size: 1.3rem !important;
+}
+
+.w-55vw {
+    width: 55vw;
 }
 

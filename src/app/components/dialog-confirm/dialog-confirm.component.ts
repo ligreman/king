@@ -12,7 +12,8 @@ export interface DialogData {
 @Component({
     selector: 'app-dialog-confirm',
     templateUrl: './dialog-confirm.component.html',
-    styleUrls: ['./dialog-confirm.component.scss']
+    styleUrls: ['./dialog-confirm.component.scss'],
+    standalone: false
 })
 export class DialogConfirmComponent implements OnInit {
 

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { Router, RouterModule } from '@angular/router';
@@ -15,22 +15,19 @@ describe('ArchitectComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ArchitectComponent],
-            providers: [
-
-
-                {provide: Router, useValue: {}},
-                {provide: MatDialog, useValue: {}},
-                {provide: MAT_DIALOG_DATA, useValue: {}}
-            ], imports: [
-                CommonModule,
-                RouterModule,
-                HttpClientModule,
-                AppRoutingModule,
-                TranslateModule.forRoot(),
-                ToastrModule.forRoot()
-            ]
-        })
+    declarations: [ArchitectComponent],
+    imports: [CommonModule,
+        RouterModule,
+        AppRoutingModule,
+        TranslateModule.forRoot(),
+        ToastrModule.forRoot()],
+    providers: [
+        { provide: Router, useValue: {} },
+        { provide: MatDialog, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+})
             .compileComponents();
     });
 

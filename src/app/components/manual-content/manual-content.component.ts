@@ -3,7 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 @Component({
     selector: 'app-manual-content',
     templateUrl: './manual-content.component.html',
-    styleUrls: ['./manual-content.component.scss']
+    styleUrls: ['./manual-content.component.scss'],
+    standalone: false
 })
 export class ManualContentComponent implements OnInit {
     @Input() summary;

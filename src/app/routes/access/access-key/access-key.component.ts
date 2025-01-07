@@ -20,7 +20,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-access-key',
     templateUrl: './access-key.component.html',
-    styleUrls: ['./access-key.component.scss']
+    styleUrls: ['./access-key.component.scss'],
+    standalone: false
 })
 export class AccessKeyComponent implements OnInit, OnDestroy {
 

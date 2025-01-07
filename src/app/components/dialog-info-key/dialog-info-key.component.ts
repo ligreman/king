@@ -16,7 +16,8 @@ import {FormBuilder} from "@angular/forms";
 @Component({
     selector: 'app-dialog-info-key',
     templateUrl: './dialog-info-key.component.html',
-    styleUrls: ['./dialog-info-key.component.scss']
+    styleUrls: ['./dialog-info-key.component.scss'],
+    standalone: false
 })
 export class DialogInfoKeyComponent implements OnInit, OnDestroy {
     keys;

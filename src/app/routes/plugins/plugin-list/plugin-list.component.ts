@@ -20,7 +20,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-plugin-list',
     templateUrl: './plugin-list.component.html',
-    styleUrls: ['./plugin-list.component.scss']
+    styleUrls: ['./plugin-list.component.scss'],
+    standalone: false
 })
 export class PluginListComponent implements OnInit, OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['enabled', 'name', 'route', 'service', 'consumer', 'protocols', 'tags', 'actions'];

@@ -20,7 +20,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-access-basic',
     templateUrl: './access-basic.component.html',
-    styleUrls: ['./access-basic.component.scss']
+    styleUrls: ['./access-basic.component.scss'],
+    standalone: false
 })
 export class AccessBasicComponent implements OnInit, OnDestroy {
 

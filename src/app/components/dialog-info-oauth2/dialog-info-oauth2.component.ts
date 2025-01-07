@@ -17,7 +17,8 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 @Component({
     selector: 'app-dialog-info-oauth2',
     templateUrl: './dialog-info-oauth2.component.html',
-    styleUrls: ['./dialog-info-oauth2.component.scss']
+    styleUrls: ['./dialog-info-oauth2.component.scss'],
+    standalone: false
 })
 export class DialogInfoOauth2Component implements OnInit, OnDestroy {
     displayedColumns: string[] = ['name', 'client_id', 'client_secret', 'redirect_uris', 'hash_secret', 'actions'];

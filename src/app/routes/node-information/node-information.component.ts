@@ -13,7 +13,8 @@ import { ToastService } from '../../services/toast.service';
 @Component({
     selector: 'app-node-information',
     templateUrl: './node-information.component.html',
-    styleUrls: ['./node-information.component.scss']
+    styleUrls: ['./node-information.component.scss'],
+    standalone: false
 })
 export class NodeInformationComponent implements OnInit, OnDestroy {
     node_info;

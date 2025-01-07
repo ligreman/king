@@ -18,7 +18,8 @@ import {COMMA, ENTER} from "@angular/cdk/keycodes";
 @Component({
     selector: 'app-element-service',
     templateUrl: './element-service.component.html',
-    styleUrls: ['./element-service.component.scss']
+    styleUrls: ['./element-service.component.scss'],
+    standalone: false
 })
 export class ElementServiceComponent implements OnInit, OnDestroy, AfterViewInit {
     displayedColumns: string[] = ['name', 'protocol', 'host', 'port', 'path', 'ssl', 'enabled', 'tags', 'actions'];

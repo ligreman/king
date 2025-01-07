@@ -14,7 +14,8 @@ import {CustomValidators} from '../../shared/custom-validators';
 @Component({
     selector: 'app-dialog-new-route',
     templateUrl: './dialog-new-route.component.html',
-    styleUrls: ['./dialog-new-route.component.scss']
+    styleUrls: ['./dialog-new-route.component.scss'],
+    standalone: false
 })
 export class DialogNewRouteComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
