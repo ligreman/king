@@ -17,11 +17,12 @@
                 <!-- Dropdown for Route names -->
                 <mat-form-field appearance="fill" class="margin-bottom-10" color="accent" fxFlex="80">
                     <mat-label>{{'text.templates' | translate}}</mat-label>
-                    <mat-select (selectionChange)="onRouteChange($event)">
-                        <mat-option *ngFor="let route of routes" [value]="route.id">
-                            {{route.name}}
+                    <input matInput [formControl]="searchControl" [matAutocomplete]="auto" />
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onRouteChange($event)" [displayWith]="displayFn">
+                        <mat-option *ngFor="let route of filteredRoutes" [value]="route.id">
+                          {{ route.name }}
                         </mat-option>
-                    </mat-select>
+                    </mat-autocomplete> 
                     <mat-hint>{{'text.templates_hint' | translate}}</mat-hint>
                 </mat-form-field>
             </div>

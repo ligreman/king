@@ -1,6 +1,6 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators, FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -26,6 +26,8 @@ export class DialogNewRouteNoexpressionsComponent implements OnInit, OnDestroy {
     validRedirectCodes = [426, 301, 302, 307, 308];
     allTags = [];
     routes = [];
+    filteredRoutes: any[] = [];
+    searchControl = new FormControl('');
     currentTags = [];
     currentHosts = [];
     currentPaths = [];
@@ -89,6 +91,25 @@ export class DialogNewRouteNoexpressionsComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadData();
+        this.searchControl.valueChanges.subscribe(value => {
+            this.filterRoutes(value);
+          });
+    }
+
+    filterRoutes(searchTerm: string): void {
+        if (!searchTerm) {
+          this.filteredRoutes = this.routes;
+        } else {
+            this.filteredRoutes = this.routes.filter(route => {
+                let instanceName = route.name ?? ''; // Use empty string if instance_name is null or undefined
+                return instanceName.toLowerCase().includes(searchTerm.toLowerCase());
+            });
+        }
+      }
+
+      displayFn = (routeId: any): string => {
+        const route = this.routes.find(r => r.id === routeId);
+        return route ? (route.name ? route.name : route.id) : '';
     }
 
     ngOnDestroy(): void {
@@ -96,7 +117,13 @@ export class DialogNewRouteNoexpressionsComponent implements OnInit, OnDestroy {
 
     onRouteChange(event) {
         // Find the selected route in the routes array
-        const selectedRoute = this.routes.find(route => route.id === event.value);
+        let event_value = '';
+        if (event instanceof MatAutocompleteSelectedEvent) {
+            event_value = event.option.value;
+        } else {
+            event_value = event.value;
+        }
+        const selectedRoute = this.routes.find(route => route.id === event_value);
         const selectedRouteCopy = {...selectedRoute};
 
         if (selectedRoute) {

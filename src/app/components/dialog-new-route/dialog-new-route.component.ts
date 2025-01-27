@@ -166,13 +166,13 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             });
 
         // Retrieve the list of routes
-        this.api.getRoutes()
-            .subscribe({
-                next: (routes) => {
-                    this.routes = routes['data'];
-                    this.filteredRoutes = this.routes;
-                },
-                error: (error) => this.toast.error_general(error)
+        this.api.getAllRoutes()
+            .then((routes) => {
+                this.routes = routes['data'];
+                this.filteredRoutes = this.routes;
+            })
+            .catch(error => {
+                this.toast.error_general(error);
             });
     }
 
