@@ -98,7 +98,7 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
 
       displayFn = (routeId: any): string => {
         const route = this.routes.find(r => r.id === routeId);
-        return route ? route.name : route.id;
+        return route ? (route.name ? route.name : route.id) : '';
     }
 
 

@@ -194,7 +194,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     // In your component's TypeScript file
     displayFn = (pluginId: any): string => {
         const plugin = this.plugins.find(r => r.id === pluginId);
-        return plugin ? `(${plugin.name}) ${plugin.instance_name}` : plugin.id;
+        return plugin ? ((plugin.name && plugin.instance_name) ? `(${plugin.name}) ${plugin.instance_name}` : plugin.id) : '';
     }
 
     filterPlugins(searchTerm: string): void {

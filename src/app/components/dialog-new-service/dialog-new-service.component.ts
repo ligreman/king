@@ -189,7 +189,7 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
     // In your component's TypeScript file
     displayFn = (svcId: any): string => {
         const svc = this.services.find(s => s.id === svcId);
-        return svc ? svc.name : svc.id;
+        return svc ? (svc.name ? svc.name : svc.id) : '';
     }
 
     filterServices(searchTerm: string): void {
