@@ -1,6 +1,6 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators, FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -21,6 +21,7 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
     formValid = false;
     validProtocols = ['http', 'https', 'grpc', 'grpcs', 'tcp', 'tls', 'udp'];
+    searchControl = new FormControl('');
     currentTags = [];
     certificatesAvailable = [];
     caCertificatesAvailable = [];
@@ -28,6 +29,7 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
     editMode = false;
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
     services = [];
+    filteredServices: any[] = [];
 
     form = this.fb.group({
         name: ['', [Validators.required, CustomValidators.isAlphaNum()]],
@@ -171,18 +173,45 @@ export class DialogNewServiceComponent implements OnInit, OnDestroy {
         this.api.getAllServices()
             .then((services) => {
                 this.services = services['data'];
+                this.filteredServices = this.services;
             })
             .catch(error=>{
                 this.toast.error_general(error);
+            });
+        this.searchControl.valueChanges.subscribe((value: string) => {
+            this.filterServices(value);
             });
     }
 
     ngOnDestroy(): void {
     }
 
+    // In your component's TypeScript file
+    displayFn = (svcId: any): string => {
+        const svc = this.services.find(s => s.id === svcId);
+        return svc ? svc.name : svc.id;
+    }
+
+    filterServices(searchTerm: string): void {
+        if (!searchTerm) {
+          this.filteredServices = this.services;
+        } else {
+            this.filteredServices = this.services.filter(svc => {
+                let instanceName = svc.name ?? ''; // Use empty string if instance_name is null or undefined
+                return instanceName.toLowerCase().includes(searchTerm.toLowerCase());
+            });
+        }
+      } 
+
     onServiceChange(event) {
+        let event_value = '';
+        if (event instanceof MatAutocompleteSelectedEvent) {
+            event_value = event.option.value;
+        } else {
+            event_value = event.value;
+        }
         // Find the selected route in the routes array
-        const selectedService = this.services.find(svc => svc.id === event.value);
+        const selectedService = this.services.find(svc => svc.id === event_value);
         const selectedServiceCopy = {...selectedService};
 
         if (selectedService) {

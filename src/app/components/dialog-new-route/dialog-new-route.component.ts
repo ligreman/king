@@ -1,6 +1,6 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators, FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -30,6 +30,8 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
     eType = 'string';
     allTags = [];
     routes = [];
+    filteredRoutes: any[] = [];
+    searchControl = new FormControl('');
     currentTags = [];
     servicesAvailable = [];
     editMode = false;
@@ -78,16 +80,41 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.loadData();
+        this.searchControl.valueChanges.subscribe(value => {
+            this.filterRoutes(value);
+          });
     }
+
+    filterRoutes(searchTerm: string): void {
+        if (!searchTerm) {
+          this.filteredRoutes = this.routes;
+        } else {
+            this.filteredRoutes = this.routes.filter(route => {
+                let instanceName = route.name ?? ''; // Use empty string if instance_name is null or undefined
+                return instanceName.toLowerCase().includes(searchTerm.toLowerCase());
+            });
+        }
+      }
+
+      displayFn = (routeId: any): string => {
+        const route = this.routes.find(r => r.id === routeId);
+        return route ? route.name : route.id;
+    }
+
 
     ngOnDestroy(): void {
     }
 
     onRouteChange(event) {
         // Find the selected route in the routes array
-        const selectedRoute = this.routes.find(route => route.id === event.value);
+        let event_value = '';
+        if (event instanceof MatAutocompleteSelectedEvent) {
+            event_value = event.option.value;
+        } else {
+            event_value = event.value;
+        }
+        const selectedRoute = this.routes.find(route => route.id === event_value);
         const selectedRouteCopy = {...selectedRoute};
-
         if (selectedRoute) {
             // Prepare the data for the form based on the selected route
             const formData = this.prepareDataForForm(selectedRouteCopy);
@@ -139,12 +166,13 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             });
 
         // Retrieve the list of routes
-        this.api.getAllRoutes()
-            .then((routes) => {
-                this.routes = routes['data'];
-            })
-            .catch(error => {
-                this.toast.error_general(error);
+        this.api.getRoutes()
+            .subscribe({
+                next: (routes) => {
+                    this.routes = routes['data'];
+                    this.filteredRoutes = this.routes;
+                },
+                error: (error) => this.toast.error_general(error)
             });
     }
 
