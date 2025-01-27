@@ -8,15 +8,15 @@ import {TranslateModule} from '@ngx-translate/core';
 import {ToastrModule} from 'ngx-toastr';
 import {AppRoutingModule} from '../../app-routing.module';
 
-import {DialogSettingsComponent} from './dialog-settings.component';
+import {DialogNewRouteNoexpressionsComponent} from './dialog-new-route-noexpressions.component';
 
-describe('DialogNewConsumerComponent', () => {
-    let component: DialogSettingsComponent;
-    let fixture: ComponentFixture<DialogSettingsComponent>;
+describe('DialogNewRouteNoexpressionsComponent', () => {
+    let component: DialogNewRouteNoexpressionsComponent;
+    let fixture: ComponentFixture<DialogNewRouteNoexpressionsComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    declarations: [DialogSettingsComponent],
+    declarations: [DialogNewRouteNoexpressionsComponent],
     imports: [CommonModule,
         MatDialogModule,
         FormsModule,
@@ -35,7 +35,7 @@ describe('DialogNewConsumerComponent', () => {
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(DialogSettingsComponent);
+        fixture = TestBed.createComponent(DialogNewRouteNoexpressionsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

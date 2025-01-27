@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
 import { ApiService } from './api.service';
@@ -9,11 +9,9 @@ describe('ApiService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [], imports: [
-                CommonModule,
-                HttpClientModule
-            ]
-        });
+    imports: [CommonModule],
+    providers: [provideHttpClient(withInterceptorsFromDi())]
+});
         service = TestBed.inject(ApiService);
     });
 

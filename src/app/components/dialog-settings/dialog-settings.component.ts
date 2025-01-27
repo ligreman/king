@@ -11,7 +11,8 @@ import {GlobalsService} from "../../services/globals.service";
 @Component({
     selector: 'app-dialog-settings',
     templateUrl: './dialog-settings.component.html',
-    styleUrls: ['./dialog-settings.component.scss']
+    styleUrls: ['./dialog-settings.component.scss'],
+    standalone: false
 })
 export class DialogSettingsComponent implements OnInit, OnDestroy {
     formValid = false;

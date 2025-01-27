@@ -26,6 +26,9 @@ import {ApiService} from './api.service';
 import {GlobalsService} from './globals.service';
 import {ToastService} from './toast.service';
 import {DialogInfoOauth2Component} from "../components/dialog-info-oauth2/dialog-info-oauth2.component";
+import {
+    DialogNewRouteNoexpressionsComponent
+} from "../components/dialog-new-route-noexpressions/dialog-new-route-noexpressions.component";
 
 @Injectable({
     providedIn: 'root'
@@ -53,7 +56,13 @@ export class DialogHelperService {
                     component = DialogNewServiceComponent;
                     break;
                 case 'route':
-                    component = DialogNewRouteComponent;
+                    if (this.globals.ROUTER_MODE) {
+                        // Expressions
+                        component = DialogNewRouteComponent;
+                    } else {
+                        // No Expressions
+                        component = DialogNewRouteNoexpressionsComponent;
+                    }
                     break;
                 case 'vault':
                     component = DialogNewVaultComponent;

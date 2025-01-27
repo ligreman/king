@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpRequest} from "@angular/common/http";
+import { HttpEvent, HttpHandler, HttpRequest } from "@angular/common/http";
 import {Observable} from 'rxjs';
 import {GlobalsService} from "./globals.service";
 import {isEmpty as _isEmpty} from 'lodash';

@@ -1,4 +1,3 @@
-@import '@angular/material/theming';
 
 .title {
     text-decoration: none;
@@ -11,8 +10,8 @@
     height: 60%;
 }
 
-.toolbar-color{
-    background-color: mat-color($mat-blue-gray, 900);
+.toolbar-color {
+    background-color: #263238;
 }
 
 .small-font {
@@ -20,7 +19,7 @@
 }
 
 .active-route {
-    color: mat-color($mat-teal, A400);
+    color: #1DE9B6;
 }
 
 .grey-color {
@@ -29,7 +28,7 @@
 
 #manual-container {
     position: fixed;
-    width: 100%;
+    width: 99%;
     transition: 0.5s;
     z-index: 999;
 }
@@ -52,7 +51,7 @@
 }
 
 #manual-container.showing div.manual-text {
-    right: -10px;
+    right: -17px;
     transition: 0.5s;
 }
 
@@ -64,4 +63,18 @@
 
 #manual-container section {
     padding-left: 1rem;
+}
+
+.version {
+    color: #666;
+    font-style: italic;
+    margin-right: 10px;
+}
+
+.mini-hint.mat-mdc-form-field-bottom-align::before {
+    height: 12px;
+}
+
+.mini-hint {
+    color: #999;
 }

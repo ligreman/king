@@ -16,7 +16,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-dialog-info-basic',
     templateUrl: './dialog-info-basic.component.html',
-    styleUrls: ['./dialog-info-basic.component.scss']
+    styleUrls: ['./dialog-info-basic.component.scss'],
+    standalone: false
 })
 export class DialogInfoBasicComponent implements OnInit, OnDestroy {
     auths;

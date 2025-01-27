@@ -1,4 +1,4 @@
-import {HttpClient, HttpErrorResponse, HttpParams} from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {firstValueFrom, throwError} from 'rxjs';
 import {catchError} from 'rxjs/operators';

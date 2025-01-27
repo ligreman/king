@@ -16,7 +16,8 @@ import {FormBuilder} from "@angular/forms";
 @Component({
     selector: 'app-dialog-info-acl',
     templateUrl: './dialog-info-acl.component.html',
-    styleUrls: ['./dialog-info-acl.component.scss']
+    styleUrls: ['./dialog-info-acl.component.scss'],
+    standalone: false
 })
 export class DialogInfoAclComponent implements OnInit, OnDestroy, AfterViewInit {
     acls;

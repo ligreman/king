@@ -9,7 +9,8 @@ import { ToastService } from '../../services/toast.service';
 @Component({
     selector: 'app-dialog-info-vault',
     templateUrl: './dialog-info-vault.component.html',
-    styleUrls: ['./dialog-info-vault.component.scss']
+    styleUrls: ['./dialog-info-vault.component.scss'],
+    standalone: false
 })
 export class DialogInfoVaultComponent implements OnInit, OnDestroy {
     vault;

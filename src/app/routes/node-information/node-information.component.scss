@@ -1,11 +1,9 @@
-@import '@angular/material/theming';
-
 .list-block {
     padding: 16px;
 }
 
 .badge {
-    background: mat-color($mat-teal, 800);
+    background: #00695C;
     border-radius: 5px;
     margin-right: 10px;
     padding: 1px 15px;

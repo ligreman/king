@@ -1,5 +1,5 @@
 import {ClipboardModule} from '@angular/cdk/clipboard';
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import {NgModule} from '@angular/core';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -58,6 +58,9 @@ import {
     PluginFormFieldsComponent
 } from './components/dialog-new-plugin/plugin-form-fields/plugin-form-fields.component';
 import {DialogNewRouteComponent} from './components/dialog-new-route/dialog-new-route.component';
+import {
+    DialogNewRouteNoexpressionsComponent
+} from './components/dialog-new-route-noexpressions/dialog-new-route-noexpressions.component';
 import {DialogNewRsuComponent} from './components/dialog-new-rsu/dialog-new-rsu.component';
 import {DialogNewServiceComponent} from './components/dialog-new-service/dialog-new-service.component';
 import {DialogNewSniComponent} from './components/dialog-new-sni/dialog-new-sni.component';
@@ -97,8 +100,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         AppComponent,
         NodeInformationComponent,
         PageNotFoundComponent,
@@ -114,6 +116,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         ElementVaultComponent,
         ElementConsumerComponent,
         DialogNewRouteComponent,
+        DialogNewRouteNoexpressionsComponent,
         DialogNewVaultComponent,
         DialogNewConsumerComponent,
         DialogNewUpstreamComponent,
@@ -149,9 +152,7 @@ export function HttpLoaderFactory(http: HttpClient) {
         AccessOauth2Component,
         TagFilterPipe
     ],
-    imports: [
-        BrowserModule,
-        HttpClientModule,
+    bootstrap: [AppComponent], imports: [BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
         FlexLayoutModule,
@@ -199,9 +200,7 @@ export function HttpLoaderFactory(http: HttpClient) {
             'progressBar': true,
             'positionClass': 'toast-bottom-right'
         }),
-        MatGridListModule
-    ],
-    providers: [
+        MatGridListModule], providers: [
         {
             provide: MatPaginatorIntl,
             useClass: MatPaginatorIntlSpanish
@@ -211,9 +210,8 @@ export function HttpLoaderFactory(http: HttpClient) {
             useClass: AppHttpInterceptor,
             multi: true
         },
-    ],
-    bootstrap: [AppComponent]
-})
+        provideHttpClient(withInterceptorsFromDi()),
+    ] })
 export class AppModule {
     constructor() {
     }

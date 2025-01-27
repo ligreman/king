@@ -4,7 +4,8 @@ import { Utils } from '../../../shared/utils';
 @Component({
     selector: 'app-plugin-form-fields',
     templateUrl: './plugin-form-fields.component.html',
-    styleUrls: ['./plugin-form-fields.component.scss']
+    styleUrls: ['./plugin-form-fields.component.scss'],
+    standalone: false
 })
 export class PluginFormFieldsComponent implements OnInit, OnChanges {
     @Input() fields;

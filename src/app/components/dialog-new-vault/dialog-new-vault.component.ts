@@ -20,7 +20,8 @@ import {CustomValidators} from '../../shared/custom-validators';
 @Component({
     selector: 'app-dialog-new-vault',
     templateUrl: './dialog-new-vault.component.html',
-    styleUrls: ['./dialog-new-vault.component.scss']
+    styleUrls: ['./dialog-new-vault.component.scss'],
+    standalone: false
 })
 export class DialogNewVaultComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario

@@ -8,7 +8,7 @@
     <div fxFlex>
         <form [formGroup]="form">
             <div fxLayout="column">
-                <h2>{{ 'dialog.settings.config' | translate }}</h2>
+                <h3 class="titulo">{{ 'dialog.settings.config' | translate }}</h3>
                 <div class="margin-bottom-10 padding-left-20" fxLayout="row" fxLayoutAlign="space-between center"
                      *ngIf="allowChangeConfigFile">
                     <mat-form-field appearance="outline" color="accent" fxFlex="75">
@@ -36,14 +36,19 @@
                         : {{config_file_url}}</p>
                 </div>
 
-                <h2 class="margin-top-10-i">{{ 'dialog.settings.auth.title' | translate }}</h2>
-                <div class="padding-left-20 margin-bottom-10">
+                <h3 class="titulo margin-top-10-i">{{ 'dialog.settings.auth.title' | translate }}</h3>
+                <div class="padding-left-20">
                     <p>{{ 'dialog.settings.auth.instructions' | translate }}.
                         <a rel="noopener noreferrer" target="_blank" class="link"
                            href="https://docs.konghq.com/gateway/latest/production/running-kong/secure-admin-api/#kong-api-loopback">
                             <span>{{'dialog.settings.documentation' | translate}}</span>
                             <mat-icon iconPositionEnd class="mini-icon">open_in_new</mat-icon>
                         </a></p>
+                </div>
+                <div class="padding-left-20 margin-bottom-10">
+                    <p>
+                        <mat-icon color="warn">privacy_tip</mat-icon>
+                        {{'dialog.settings.auth.warning' | translate}}</p>
                 </div>
                 <div class="padding-left-20 margin-bottom-30-i" fxLayout="row" fxLayoutAlign="space-between center">
                     <mat-form-field appearance="outline" color="accent" fxFlex>
@@ -72,11 +77,6 @@
                                   placeholder="{{'dialog.settings.auth.token_placeholder' | translate}}"></textarea>
                         <mat-hint>{{'dialog.settings.auth.token_hint' | translate}}</mat-hint>
                     </mat-form-field>
-                </div>
-                <div class="padding-left-20">
-                    <p>
-                        <mat-icon color="warn">privacy_tip</mat-icon>
-                        {{'dialog.settings.auth.warning' | translate}}</p>
                 </div>
             </div>
         </form>

@@ -17,7 +17,8 @@ import {CustomValidators} from '../../shared/custom-validators';
 @Component({
     selector: 'app-dialog-new-upstream',
     templateUrl: './dialog-new-upstream.component.html',
-    styleUrls: ['./dialog-new-upstream.component.scss']
+    styleUrls: ['./dialog-new-upstream.component.scss'],
+    standalone: false
 })
 export class DialogNewUpstreamComponent implements OnInit, OnDestroy {
     loading = true;

@@ -12,7 +12,8 @@ import { ToastService } from '../../services/toast.service';
 @Component({
     selector: 'app-dialog-info-upstream',
     templateUrl: './dialog-info-upstream.component.html',
-    styleUrls: ['./dialog-info-upstream.component.scss']
+    styleUrls: ['./dialog-info-upstream.component.scss'],
+    standalone: false
 })
 export class DialogInfoUpstreamComponent implements OnInit, OnDestroy {
     upstream;

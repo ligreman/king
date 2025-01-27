@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
@@ -16,22 +16,21 @@ describe('DialogNewPluginComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [DialogNewPluginComponent],
-            providers: [
-                {provide: Router, useValue: {}},
-                {provide: FormBuilder, useValue: {}},
-                {provide: MatDialogRef, useValue: {}},
-                {provide: MAT_DIALOG_DATA, useValue: {}}
-            ], imports: [
-                CommonModule,
-                MatDialogModule,
-                FormsModule,
-                HttpClientModule,
-                AppRoutingModule,
-                TranslateModule.forRoot(),
-                ToastrModule.forRoot()
-            ]
-        })
+    declarations: [DialogNewPluginComponent],
+    imports: [CommonModule,
+        MatDialogModule,
+        FormsModule,
+        AppRoutingModule,
+        TranslateModule.forRoot(),
+        ToastrModule.forRoot()],
+    providers: [
+        { provide: Router, useValue: {} },
+        { provide: FormBuilder, useValue: {} },
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: {} },
+        provideHttpClient(withInterceptorsFromDi())
+    ]
+})
             .compileComponents();
     });
 

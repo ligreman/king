@@ -1,11 +1,10 @@
-@import '@angular/material/theming';
 
 table {
     width: 100%;
 }
 
 .cell-highlight {
-    color: mat-color($mat-gray, 700);
+    //color: #616161;
     font-weight: bold;
     font-variant: small-caps;
 }
@@ -16,9 +15,9 @@ table {
 }
 
 .cell-highlight .on {
-    color: mat-color($mat-teal, 400);
+    color: #26A69A;
 }
 
 .cell-highlight .off {
-    color: mat-color($mat-red, 500);
+    color: #26A69A;
 }

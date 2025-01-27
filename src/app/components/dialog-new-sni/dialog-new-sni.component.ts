@@ -13,7 +13,8 @@ import {ToastService} from '../../services/toast.service';
 @Component({
     selector: 'app-dialog-new-sni',
     templateUrl: './dialog-new-sni.component.html',
-    styleUrls: ['./dialog-new-sni.component.scss']
+    styleUrls: ['./dialog-new-sni.component.scss'],
+    standalone: false
 })
 export class DialogNewSniComponent implements OnInit, OnDestroy {
     formValid = false;

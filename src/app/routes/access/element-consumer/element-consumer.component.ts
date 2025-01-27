@@ -18,7 +18,8 @@ import {map} from "rxjs/operators";
 @Component({
     selector: 'app-element-consumer',
     templateUrl: './element-consumer.component.html',
-    styleUrls: ['./element-consumer.component.scss']
+    styleUrls: ['./element-consumer.component.scss'],
+    standalone: false
 })
 export class ElementConsumerComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['username', 'custom_id', 'tags', 'credentials', 'actions'];

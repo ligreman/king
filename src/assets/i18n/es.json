@@ -2,6 +2,7 @@
     "error": {
         "unknown": "Error desconocido",
         "node_connection": "Error al conectar con el nodo de Kong",
+        "loading_elements": "Error cargando elementos",
         "load_loopback": "Error al recoger la información de Loopback",
         "route_mode": "Error al obtener el modo de funcionamiento del Router de Kong",
         "get_data": "Error obteniendo información",

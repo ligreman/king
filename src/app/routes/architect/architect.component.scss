@@ -1,7 +1,6 @@
-@import '@angular/material/theming';
 
 .subheader {
-    color: mat-color($mat-blue-gray, 300);
+    color: #90A4AE;
     margin-top:0;
     margin-bottom:0;
     line-height: 1.2rem;
@@ -78,4 +77,8 @@ div#node-network:focus {
 
 .tag-9-i {
     padding: 9px !important;
+}
+
+.btn-clear {
+    color: #C7FFFF !important;
 }

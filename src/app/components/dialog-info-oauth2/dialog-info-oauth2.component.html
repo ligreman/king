@@ -25,7 +25,7 @@
     <div fxFlex>
         <mat-dialog-content *ngIf="dataSource && !loading" class="margin-0-i">
             <div fxFlex fxLayout="column">
-                <h2>{{'oauth2.add' | translate}}</h2>
+                <h2 class="h2-font">{{'oauth2.add' | translate}}</h2>
 
                 <form [formGroup]="form" class="margin-bottom-30-i" fxFlex fxLayout="column">
                     <div fxFlex fxLayout="row" fxLayoutAlign="space-between center">
@@ -92,7 +92,7 @@
                     </div>
                 </form>
 
-                <h2>{{'oauth2.dialog.info' | translate}}: <span>{{consumerName}}</span></h2>
+                <h2 class="h2-font">{{'oauth2.dialog.info' | translate}}: <span>{{consumerName}}</span></h2>
 
                 <div fxLayout="row" class="margin-top-10">
                     <table [dataSource]="dataSource" fxFlex mat-table>
@@ -153,7 +153,7 @@
 
     <mat-divider *ngIf="!loading" class="margin-bottom-10-i margin-top-10-i"></mat-divider>
 
-    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between start">
+    <mat-dialog-actions *ngIf="!loading" fxFlex fxLayout="row" fxLayoutAlign="space-between start" class="min-h70px">
         <mat-chip-listbox *ngIf="keys" matTooltip="{{'text.tags' | translate}}" matTooltipClass="tooltip-teal">
             <mat-chip-option *ngFor="let chip of keys['tags']" color="primary">{{chip}}</mat-chip-option>
         </mat-chip-listbox>

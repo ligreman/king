@@ -12,7 +12,8 @@ import {ToastService} from '../../../services/toast.service';
 @Component({
     selector: 'app-certificate-cacert',
     templateUrl: './certificate-cacert.component.html',
-    styleUrls: ['./certificate-cacert.component.scss']
+    styleUrls: ['./certificate-cacert.component.scss'],
+    standalone: false
 })
 export class CertificateCacertComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['id', 'certificate', 'digest', 'tags', 'actions'];

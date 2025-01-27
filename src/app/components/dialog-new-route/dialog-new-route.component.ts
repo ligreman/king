@@ -4,12 +4,9 @@ import {AbstractControl, FormBuilder, ValidationErrors, ValidatorFn, Validators}
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import * as Joi from 'joi';
-import {isEmpty as _isEmpty, orderBy as _orderBy, size as _size, sortedUniq as _sortedUniq} from 'lodash';
+import {orderBy as _orderBy, sortedUniq as _sortedUniq} from 'lodash';
 import {AutoUnsubscribe} from 'ngx-auto-unsubscribe';
 import {ApiService} from '../../services/api.service';
-import {DialogHelperService} from '../../services/dialog-helper.service';
-import {GlobalsService} from '../../services/globals.service';
 import {ToastService} from '../../services/toast.service';
 import {CustomValidators} from '../../shared/custom-validators';
 
@@ -17,13 +14,13 @@ import {CustomValidators} from '../../shared/custom-validators';
 @Component({
     selector: 'app-dialog-new-route',
     templateUrl: './dialog-new-route.component.html',
-    styleUrls: ['./dialog-new-route.component.scss']
+    styleUrls: ['./dialog-new-route.component.scss'],
+    standalone: false
 })
 export class DialogNewRouteComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario
     formValid = false;
     validProtocols = ['http', 'https', 'tcp', 'tls', 'udp', 'grpc', 'grpcs'];
-    validMethods = ['GET', 'POST', 'PATCH', 'PUT', 'DELETE', 'HEAD', 'CONNECT', 'OPTIONS', 'TRACE'];
     validRedirectCodes = [426, 301, 302, 307, 308];
     validETransforms = [];
     validETransformsStrings = ['lower'];
@@ -34,15 +31,8 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
     allTags = [];
     routes = [];
     currentTags = [];
-    currentHosts = [];
-    currentPaths = [];
-    currentHeaders = {};
-    currentSources = [];
-    currentDestinations = [];
     servicesAvailable = [];
-    snisAvailable = [];
     editMode = false;
-    expressions = true;
     formE = this.fb.group({
         name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\-._~]+$/)]],
         service: ['', [Validators.required]],
@@ -55,111 +45,39 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
         preserve_host: [false],
         request_buffering: [true, [Validators.required]],
         response_buffering: [true, [Validators.required]]
-    }, {validators: [FinalFormValidator(this.expressions)]});
-    formNE = this.fb.group({
-        name: ['', [Validators.required, Validators.pattern(/^[a-zA-Z0-9\-._~]+$/)]],
-        service: ['', [Validators.required]],
-        protocols: ['', [Validators.required, CustomValidators.isProtocolListValidForRoute(this.validProtocols)]],
-        methods: ['', []],
-        https_redirect_status_code: [426, [Validators.required, CustomValidators.isOneOf(this.validRedirectCodes)]],
-        tags: [''],
-        regex_priority: [0, [CustomValidators.isNumber(), Validators.min(0), Validators.max(999999)]],
-        path_handling: ['v0', [Validators.pattern(/(v0|v1)/)]],
-        hosts: [''],
-        paths: [''],
-        snis: [''],
-        strip_path: [true],
-        preserve_host: [false],
-        request_buffering: [true, [Validators.required]],
-        response_buffering: [true, [Validators.required]],
-        hosts_validation: [''],
-        paths_validation: [''],
-        headers: [''],
-        sources: [''],
-        destinations: ['']
-    }, {validators: [FinalFormValidator(this.expressions)]});
+    }, {validators: [FinalFormValidator()]});
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
     constructor(@Inject(MAT_DIALOG_DATA) public routeIdEdit: any, private fb: FormBuilder, private api: ApiService, private toast: ToastService,
-                public dialogRef: MatDialogRef<DialogNewRouteComponent>, private globals: GlobalsService, private dialogHelper: DialogHelperService) {
+                public dialogRef: MatDialogRef<DialogNewRouteComponent>) {
     }
 
     /*
         Getters de campos del formulario
      */
     get nameField() {
-        if (this.expressions) {
-            return this.formE.get('name');
-        } else {
-            return this.formNE.get('name');
-        }
+        return this.formE.get('name');
     }
 
     get serviceField() {
-        if (this.expressions) {
-            return this.formE.get('service');
-        } else {
-            return this.formNE.get('service');
-        }
+        return this.formE.get('service');
     }
 
     get protocolsField() {
-        if (this.expressions) {
-            return this.formE.get('protocols');
-        } else {
-            return this.formNE.get('protocols');
-        }
-    }
-
-    get methodsField() {
-        if (this.expressions) {
-            return {value: ''};
-        } else {
-            return this.formNE.get('methods');
-        }
-    }
-
-    get pathsField() {
-        if (this.expressions) {
-            return '';
-        } else {
-            return this.formNE.get('paths');
-        }
-    }
-
-    get regexPriorityField() {
-        if (this.expressions) {
-            return '';
-        } else {
-            return this.formNE.get('regex_priority');
-        }
+        return this.formE.get('protocols');
     }
 
     get expressionField() {
-        if (this.expressions) {
-            return this.formE.get('expression');
-        } else {
-            return '';
-        }
+        return this.formE.get('expression');
     }
 
     get priorityField() {
-        if (this.expressions) {
-            return this.formE.get('priority');
-        } else {
-            return '';
-        }
+        return this.formE.get('priority');
     }
 
     ngOnInit(): void {
-        this.dialogHelper.getRouterMode().then(() => {
-            // Si no estoy en modo expressions cambio la tabla
-            if (this.globals.ROUTER_MODE !== 'expressions') {
-                this.expressions = false;
-            }
-            this.loadData();
-        }).catch(() => this.toast.error('error.route_mode'));
+        this.loadData();
     }
 
     ngOnDestroy(): void {
@@ -175,17 +93,13 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             const formData = this.prepareDataForForm(selectedRouteCopy);
 
             // Update the form with the data from the selected route
-            if (this.expressions) {
-                this.formE.patchValue(formData);
-            } else {
-                this.formNE.patchValue(formData);
-            }
+            this.formE.patchValue(formData);
         }
     }
 
     loadData() {
         // Recupero la lista de servicios
-        this.api.getAllServices(null, [], ['id','name'])
+        this.api.getAllServices(null, [], ['id', 'name'])
             .then((services) => {
                 for (let serv of services['data']) {
                     this.servicesAvailable.push({id: serv.id, name: serv.name});
@@ -194,22 +108,9 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
                 // ordeno
                 this.servicesAvailable = _orderBy(this.servicesAvailable, ['name'], ['asc']);
             })
-            .catch(error=>{
+            .catch(error => {
                 this.toast.error_general(error);
             });
-
-        if (!this.expressions) {
-            // La lista de SNIs
-            this.api.getAllSnis(null, [], ['id', 'name'])
-                .then((snis) => {
-                    for (let sni of snis['data']) {
-                        this.snisAvailable.push({id: sni.id, name: sni.name});
-                    }
-                })
-                .catch(error=>{
-                    this.toast.error_general(error);
-                });
-        }
 
         // Si viene un route para editar
         if (this.routeIdEdit !== null) {
@@ -220,11 +121,7 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
                 .subscribe({
                     next: (route) => {
                         // Relleno el formuarlio
-                        if (this.expressions) {
-                            this.formE.setValue(this.prepareDataForForm(route));
-                        } else {
-                            this.formNE.setValue(this.prepareDataForForm(route));
-                        }
+                        this.formE.setValue(this.prepareDataForForm(route));
                     },
                     error: (error) => this.toast.error_general(error)
                 });
@@ -246,7 +143,7 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             .then((routes) => {
                 this.routes = routes['data'];
             })
-            .catch(error=>{
+            .catch(error => {
                 this.toast.error_general(error);
             });
     }
@@ -256,11 +153,7 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
      */
     onSubmit() {
         let result;
-        if (this.expressions) {
-            result = this.prepareDataForKong(this.formE.value);
-        } else {
-            result = this.prepareDataForKong(this.formNE.value);
-        }
+        result = this.prepareDataForKong(this.formE.value);
 
         if (!this.editMode) {
             // llamo al API
@@ -315,165 +208,6 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
         this.currentTags.push($event.option.viewValue);
     }
 
-    /*
-        Gestión de hosts
-     */
-    addHost(event: MatChipInputEvent): void {
-        const input = event.chipInput.inputElement;
-        const value = event.value.trim();
-
-        // Add
-        if ((value || '') && /^[^*]*\*?[^*]*$/.test(value) && (/^\*\./.test(value) || /\.\*$/.test(value) || /^[^*]*$/.test(value))) {
-            this.currentHosts.push(value);
-            this.formNE.get('hosts_validation').setValue('true');
-
-            // Reset the input value
-            if (input) {
-                input.value = '';
-            }
-        }
-    }
-
-    removeHost(host): void {
-        const index = this.currentHosts.indexOf(host);
-        if (index >= 0) {
-            this.currentHosts.splice(index, 1);
-            if (this.currentHosts.length === 0) {
-                // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
-                this.formNE.get('hosts_validation').setValue(null);
-            }
-        }
-    }
-
-    /*
-        Gestión de rutas
-     */
-    addPath(event: MatChipInputEvent): void {
-        const input = event.chipInput.inputElement;
-        const value = event.value.trim();
-
-        // Add
-        if ((value || '') && /^\//.test(value) && !/\/\//.test(value)) {
-            this.currentPaths.push(value);
-            this.formNE.get('paths_validation').setValue('true');
-
-            // Reset the input value
-            if (input) {
-                input.value = '';
-            }
-        }
-    }
-
-    removePath(host): void {
-        const index = this.currentPaths.indexOf(host);
-        if (index >= 0) {
-            this.currentPaths.splice(index, 1);
-            if (this.currentPaths.length === 0) {
-                // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
-                this.formNE.get('paths_validation').setValue(null);
-            }
-        }
-    }
-
-    /*
-        Gestión de headers
-     */
-    addHeader(keyInput, valInput): void {
-        const {error, value} = Joi.object({
-            key: Joi.string().invalid('Host').required(),
-            value: Joi.string().required()
-        }).validate({key: keyInput.value, value: valInput.value});
-
-        // Add
-        if (error === undefined) {
-            this.currentHeaders[keyInput.value] = valInput.value.split(',');
-            this.formNE.get('headers').setValue('true');
-
-            keyInput.value = '';
-            valInput.value = '';
-        }
-    }
-
-    removeHeader(key): void {
-        delete this.currentHeaders[key];
-        if (_size(this.currentHeaders) === 0) {
-            // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
-            this.formNE.get('headers').setValue(null);
-        }
-    }
-
-    /*
-        Gestión de sources
-     */
-    addSource(ipInput, portInput): void {
-        let obj = {};
-        if (ipInput.value !== '') {
-            obj['ip'] = ipInput.value;
-        }
-        if (portInput.value !== '') {
-            obj['port'] = portInput.value;
-        }
-
-        const schema = Joi.object({
-            ip: Joi.string().ip().trim().allow(''),
-            port: Joi.number().port().allow('')
-        }).or('ip', 'port');
-        const {error, value} = schema.validate(obj);
-
-        // Add
-        if (error === undefined && !this.currentSources.includes(value)) {
-            this.currentSources.push(value);
-            this.formNE.get('sources').setValue('true');
-
-            ipInput.value = '';
-            portInput.value = '';
-        }
-    }
-
-    removeSource(idx): void {
-        this.currentSources.splice(idx, 1);
-        if (this.currentSources.length === 0) {
-            // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
-            this.formNE.get('sources').setValue(null);
-        }
-    }
-
-    /*
-        Gestión de destinations
-     */
-    addDestination(ipInput, portInput): void {
-        let obj = {};
-        if (ipInput.value !== '') {
-            obj['ip'] = ipInput.value;
-        }
-        if (portInput.value !== '') {
-            obj['port'] = portInput.value;
-        }
-
-        const schema = Joi.object({
-            ip: Joi.string().ip().trim().allow(''),
-            port: Joi.number().port().allow('')
-        }).or('ip', 'port');
-        const {error, value} = schema.validate(obj);
-
-        // Add
-        if (error === undefined && !this.currentDestinations.includes(value)) {
-            this.currentDestinations.push(value);
-            this.formNE.get('destinations').setValue('true');
-
-            ipInput.value = '';
-            portInput.value = '';
-        }
-    }
-
-    removeDestination(idx): void {
-        this.currentDestinations.splice(idx, 1);
-        if (this.currentDestinations.length === 0) {
-            // Para poder consultar este campo en la validación final del formulario y saber si tiene algo
-            this.formNE.get('destinations').setValue(null);
-        }
-    }
-
     btnAppend(txt): void {
         if (txt) {
             this.formE.get('expression').setValue(this.formE.get('expression').value + txt);
@@ -520,32 +254,19 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             route['service'] = '';
         }
 
+        // Elimino campos del route_flavour "no expressions" que vienen en la respuesta y provocan errores
+        delete route['destinations'];
+        delete route['methods'];
+        delete route['regex_priority'];
+        delete route['paths'];
+        delete route['snis'];
+        delete route['hosts'];
+        delete route['headers'];
+        delete route['path_handling'];
+        delete route['sources'];
+
         this.currentTags = route['tags'] || [];
         route['tags'] = [];
-
-        // Dependiendo del modo de router
-        if (!this.expressions) {
-            this.currentHosts = route['hosts'] || [];
-            route['hosts'] = [];
-
-            this.currentPaths = route['paths'] || [];
-            route['paths'] = [];
-
-            this.currentHeaders = route['headers'] || [];
-            this.currentSources = route['sources'] || [];
-            this.currentDestinations = route['destinations'] || [];
-
-            route['hosts_validation'] = '';
-            route['paths_validation'] = '';
-
-            // Si estos campos vienen ya completos, la validación es correcta
-            if (this.currentHosts.length > 0) {
-                route['hosts_validation'] = 'true';
-            }
-            if (this.currentPaths.length > 0) {
-                route['paths_validation'] = 'true';
-            }
-        }
 
         return route;
     }
@@ -561,47 +282,6 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
             body.tags = this.currentTags;
         } else {
             body.tags = [];
-        }
-
-        // Dependiendo del modo de router
-        if (!this.expressions) {
-            if (this.currentHosts && this.currentHosts.length > 0) {
-                body.hosts = this.currentHosts;
-            } else {
-                body.hosts = [];
-            }
-
-            if (this.currentPaths && this.currentPaths.length > 0) {
-                body.paths = this.currentPaths;
-            } else {
-                body.paths = [];
-            }
-
-            if (this.currentHeaders && Object.getOwnPropertyNames(this.currentHeaders).length > 0) {
-                body.headers = this.currentHeaders;
-            } else {
-                body.headers = {};
-            }
-
-            if (this.currentSources && this.currentSources.length > 0) {
-                body.sources = this.currentSources;
-            } else {
-                body.sources = [];
-            }
-
-            if (this.currentDestinations && this.currentDestinations.length > 0) {
-                body.destinations = this.currentDestinations;
-            } else {
-                body.destinations = [];
-            }
-
-            if (_isEmpty(this.methodsField.value)) {
-                body.methods = [];
-            }
-
-            if (_isEmpty(body.snis)) {
-                body.snis = null;
-            }
         }
 
         // Si es http o https no admite sources y destionations
@@ -630,41 +310,11 @@ export class DialogNewRouteComponent implements OnInit, OnDestroy {
 /*
     Validación final del formulario
  */
-function FinalFormValidator(expressions): ValidatorFn {
+function FinalFormValidator(): ValidatorFn {
     return (fg: AbstractControl): ValidationErrors => {
 
         const protos = fg.get('protocols').value;
         let valid = true;
-
-        // Dependiendo del modo de router
-        if (!expressions) {
-            // For http, at least one of methods, hosts, headers or paths;
-            if (protos.includes('http') && ((_isEmpty(fg.get('methods').value) && _isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value)))) {
-                valid = false;
-            }
-            // For https, at least one of methods, hosts, headers, paths or snis;
-            if (protos.includes('https') && ((_isEmpty(fg.get('methods').value) && _isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value)))) {
-                valid = false;
-            }
-
-            // For tcp or udp, at least one of sources or destinations;
-            if ((protos.includes('tcp') || protos.includes('udp')) && ((_isEmpty(fg.get('sources').value) && _isEmpty(fg.get('destinations').value)) || (!_isEmpty(fg.get('methods').value) || !_isEmpty(fg.get('hosts_validation').value) || !_isEmpty(fg.get('headers').value) || !_isEmpty(fg.get('paths_validation').value)))) {
-                valid = false;
-            }
-            // For tls, at least one of sources, destinations or snis;
-            if (protos.includes('tls') && _isEmpty(fg.get('sources').value) && ((_isEmpty(fg.get('destinations').value) && _isEmpty(fg.get('snis').value)) || (!_isEmpty(fg.get('methods').value) || !_isEmpty(fg.get('hosts_validation').value) || !_isEmpty(fg.get('headers').value) || !_isEmpty(fg.get('paths_validation').value)))) {
-                valid = false;
-            }
-
-            // For grpc, at least one of hosts, headers or paths;
-            if (protos.includes('grpc') && ((_isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value) || !_isEmpty(fg.get('methods').value)))) {
-                valid = false;
-            }
-            // For grpcs, at least one of hosts, headers, paths or snis
-            if (protos.includes('grpcs') && ((_isEmpty(fg.get('hosts_validation').value) && _isEmpty(fg.get('headers').value) && _isEmpty(fg.get('paths_validation').value) && _isEmpty(fg.get('snis').value)) || (!_isEmpty(fg.get('sources').value) || !_isEmpty(fg.get('destinations').value) || !_isEmpty(fg.get('methods').value)))) {
-                valid = false;
-            }
-        }
 
         return valid ? null : {finalValidation: protos};
     };

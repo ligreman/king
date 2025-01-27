@@ -13,7 +13,8 @@ import { ToastService } from '../../services/toast.service';
 @Component({
     selector: 'app-dialog-new-consumer',
     templateUrl: './dialog-new-consumer.component.html',
-    styleUrls: ['./dialog-new-consumer.component.scss']
+    styleUrls: ['./dialog-new-consumer.component.scss'],
+    standalone: false
 })
 export class DialogNewConsumerComponent implements OnInit, OnDestroy {
     formValid = false;

@@ -14,7 +14,8 @@ import {CustomValidators} from '../../shared/custom-validators';
 @Component({
     selector: 'app-dialog-new-service',
     templateUrl: './dialog-new-service.component.html',
-    styleUrls: ['./dialog-new-service.component.scss']
+    styleUrls: ['./dialog-new-service.component.scss'],
+    standalone: false
 })
 export class DialogNewServiceComponent implements OnInit, OnDestroy {
     // Uso la variable para el estado del formulario

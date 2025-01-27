@@ -21,7 +21,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-access-oauth2',
     templateUrl: './access-oauth2.component.html',
-    styleUrls: ['./access-oauth2.component.scss']
+    styleUrls: ['./access-oauth2.component.scss'],
+    standalone: false
 })
 export class AccessOauth2Component implements OnInit, OnDestroy {
     displayedColumns: string[] = ['name', 'client_id', 'client_secret', 'redirect_uris', 'hash_secret', 'tags', 'actions'];

@@ -1,0 +1,396 @@
+<h2 class="margin-bottom-5-i" mat-dialog-title>
+    <span *ngIf="!editMode">{{'route.dialog.create' | translate}}</span>
+    <span *ngIf="editMode">{{'route.dialog.edit' | translate}}</span>
+    <span class="btn-doc-right"><a href="https://docs.konghq.com/gateway/api/admin-oss/latest/#/Routes/create-routehttps://docs.konghq.com/gateway/api/admin-oss/latest/#/Routes/create-route" mat-button
+                                   rel="noopener noreferrer"
+                                   target="_blank">
+    {{'text.documentation' | translate}}
+        <mat-icon class="mini-icon" iconPositionEnd>open_in_new</mat-icon></a></span>
+</h2>
+
+<mat-divider class="margin-bottom-20-i"></mat-divider>
+
+<mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start">
+    <div fxFlex="90">
+        <form [formGroup]="formNE">
+            <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="center center" *ngIf="!editMode">
+                <!-- Dropdown for Route names -->
+                <mat-form-field appearance="fill" class="margin-bottom-10" color="accent" fxFlex="80">
+                    <mat-label>{{'text.templates' | translate}}</mat-label>
+                    <mat-select (selectionChange)="onRouteChange($event)">
+                        <mat-option *ngFor="let route of routes" [value]="route.id">
+                            {{route.name}}
+                        </mat-option>
+                    </mat-select>
+                    <mat-hint>{{'text.templates_hint' | translate}}</mat-hint>
+                </mat-form-field>
+            </div>
+
+            <mat-divider class="margin-bottom-20-i" *ngIf="!editMode"></mat-divider>
+
+            <!--Nombre-->
+            <div class="margin-bottom-10" fxLayout="column">
+                <div fxLayout="row" fxLayoutAlign="space-between start">
+
+                    <!--NAME-->
+                    <mat-form-field appearance="outline" class="margin-bottom-10" color="accent" fxFlex="50">
+                        <mat-label>{{'route.dialog.name' | translate}}</mat-label>
+                        <input aria-label="" cdkFocusInitial formControlName="name" matInput
+                               placeholder="{{'route.dialog.name_example' | translate}}"
+                               required type="text"/>
+                        <mat-error *ngIf="nameField.hasError('required')">
+                            {{ 'error.field_required' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="nameField.hasError('pattern')">
+                            {{ 'route.dialog.error.name_pattern' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!--TAGS-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="45">
+                        <mat-chip-grid #chipList aria-label="">
+                            <mat-chip-row (removed)="removeTag(tag)"
+                                          *ngFor="let tag of currentTags" removable="true">{{tag}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip-row>
+                            <input (matChipInputTokenEnd)="addTag($event)"
+                                   [matAutocomplete]="auto"
+                                   [matChipInputFor]="chipList"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   formControlName="tags"
+                                   matChipInputAddOnBlur="true"
+                                   placeholder="{{'service.dialog.tags' | translate}}">
+                        </mat-chip-grid>
+                        <mat-hint>{{'service.dialog.tags_hint' | translate}}</mat-hint>
+                        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTag($event)">
+                            <mat-option *ngFor="let tag of allTags" [value]="tag">
+                                {{tag}}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </div>
+
+                <div class="margin-bottom-10 margin-top-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <!--Servicio-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="50">
+                        <mat-label>{{'service.label' | translate}}</mat-label>
+                        <mat-select formControlName="service" required>
+                            <mat-option *ngFor="let serv of servicesAvailable" value="{{serv.id}}">
+                                {{serv.name}}</mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="serviceField.invalid">
+                            {{ 'error.field_required' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <!--Protocols-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="45">
+                        <mat-label>{{'route.dialog.protocols' | translate}}</mat-label>
+                        <mat-select formControlName="protocols" multiple required>
+                            <mat-option *ngFor="let proto of validProtocols" [value]="proto">{{proto}}</mat-option>
+                        </mat-select>
+                        <mat-icon matSuffix matTooltip="{{'route.dialog.protocols_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal tooltip-multi">info_outline
+                        </mat-icon>
+                        <mat-error *ngIf="protocolsField.hasError('required')">
+                            {{ 'error.field_required' | translate }}
+                        </mat-error>
+                        <mat-error *ngIf="protocolsField.hasError('isProtocolListValidForRoute')">
+                            {{ 'route.dialog.error.protocols_exclusions' | translate }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <!--Hosts-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="70">
+                        <mat-chip-grid #chipList2 aria-label="">
+                            <mat-chip-row (removed)="removeHost(host)"
+                                          *ngFor="let host of currentHosts" removable="true">{{host}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip-row>
+                            <input (matChipInputTokenEnd)="addHost($event)"
+                                   [matChipInputFor]="chipList2"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   formControlName="hosts"
+                                   matChipInputAddOnBlur="true"
+                                   placeholder="{{'route.dialog.hosts' | translate}}">
+                        </mat-chip-grid>
+                        <mat-icon matSuffix matTooltip="{{'route.dialog.hosts_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-hint>{{'route.dialog.hosts_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+
+                    <!--Métodos-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="25">
+                        <mat-label>{{'route.dialog.methods' | translate}}</mat-label>
+                        <mat-select formControlName="methods" multiple>
+                            <mat-option *ngFor="let method of validMethods" [value]="method">{{method}}</mat-option>
+                        </mat-select>
+                        <mat-icon matSuffix matTooltip="{{'route.dialog.methods_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <div class="margin-bottom-20-i" fxLayout="row" fxLayoutAlign="space-between start">
+                    <!--Rutas-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="50">
+                        <mat-chip-grid #chipList3 aria-label="">
+                            <mat-chip-row (removed)="removePath(path)"
+                                          *ngFor="let path of currentPaths" removable="true">{{path}}
+                                <mat-icon matChipRemove>cancel</mat-icon>
+                            </mat-chip-row>
+                            <input (matChipInputTokenEnd)="addPath($event)"
+                                   [matChipInputFor]="chipList3"
+                                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                   formControlName="paths"
+                                   matChipInputAddOnBlur="true"
+                                   placeholder="{{'route.dialog.paths' | translate}}">
+                        </mat-chip-grid>
+                        <mat-icon matSuffix matTooltip="{{'route.dialog.paths_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                        <mat-hint>{{'route.dialog.hosts_hint' | translate}}</mat-hint>
+                    </mat-form-field>
+
+                    <!--SNIs-->
+                    <mat-form-field appearance="outline" color="accent" fxFlex="45">
+                        <mat-label>{{'route.dialog.snis' | translate}}</mat-label>
+                        <mat-select formControlName="snis" multiple>
+                            <mat-option *ngFor="let sni of snisAvailable" value="{{sni.id}}">{{sni.name}}</mat-option>
+                        </mat-select>
+                        <mat-icon matSuffix matTooltip="{{'route.dialog.snis_tooltip' | translate}}"
+                                  matTooltipClass="tooltip-teal">info_outline
+                        </mat-icon>
+                    </mat-form-field>
+                </div>
+
+                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="space-between start">
+                    <!--Cabeceras-->
+                    <div fxFlex="55" fxLayout="row" fxLayoutAlign="space-between center">
+                        <mat-form-field class="margin-bottom-10" color="accent" fxFlex="40">
+                            <mat-label>{{'route.dialog.header' | translate}}</mat-label>
+                            <input #hKey matInput type="text"/>
+                        </mat-form-field>
+
+                        <mat-form-field class="margin-bottom-10" color="accent" fxFlex="40">
+                            <mat-label>{{'route.dialog.header_value' | translate}}</mat-label>
+                            <input #hVal matInput type="text"/>
+                            <mat-hint>{{ 'route.dialog.header_value_hint' | translate}}</mat-hint>
+                        </mat-form-field>
+
+                        <button (click)="addHeader(hKey, hVal)" color="accent" mat-icon-button>
+                            <mat-icon>add_box</mat-icon>
+                        </button>
+                        <div fxFlex="5"></div>
+                    </div>
+
+                    <div fxFlex="45" fxLayout="column">
+                        <div class="margin-bottom-5" fxLayout="row">{{'route.dialog.headers' | translate}}</div>
+                        <mat-list class="list" fxFlex="40" role="list">
+                            <mat-list-item *ngFor="let head of currentHeaders | keyvalue" role="listitem">
+                                {{head.key}}: {{head.value.join(', ')}}
+                                <button (click)="removeHeader(head.key)" color="warn" mat-icon-button>
+                                    <mat-icon>clear</mat-icon>
+                                </button>
+                            </mat-list-item>
+                        </mat-list>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- ADVANCED -->
+            <mat-accordion displayMode="flat" hideToggle multi>
+                <mat-expansion-panel #matExp disabled>
+                    <mat-expansion-panel-header class="margin-bottom-20-i">
+                        <mat-panel-description fxLayout="row" fxLayoutAlign="center start">
+                            <button (click)="matExp.toggle(); $event.stopPropagation();" color="accent" fxFlex="50"
+                                    mat-stroked-button>
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'">expand_more</mat-icon>
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'">expand_less</mat-icon>
+                                {{'text.advanced_fields' | translate}}
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='collapsed'" iconPositionEnd>
+                                    expand_more
+                                </mat-icon>
+                                <mat-icon [fxShow]="matExp._getExpandedState()==='expanded'" iconPositionEnd
+                                          class="marleft">expand_less
+                                </mat-icon>
+                            </button>
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <div fxLayout="row" fxLayoutAlign="space-between start">
+                        <!--Redirect-->
+                        <mat-form-field appearance="outline" color="accent" fxFlex="30">
+                            <mat-label>{{'route.dialog.redirect' | translate}}</mat-label>
+                            <mat-select formControlName="https_redirect_status_code" required>
+                                <mat-option *ngFor="let redirect of validRedirectCodes"
+                                            [value]="redirect">{{redirect}}</mat-option>
+                            </mat-select>
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.redirect_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                        </mat-form-field>
+
+                        <!--RegExp priority-->
+                        <mat-form-field appearance="outline" class="margin-bottom-10"
+                                        color="accent" fxFlex="30">
+                            <mat-label>{{'route.dialog.regex_priority' | translate}}</mat-label>
+                            <input aria-label="" formControlName="regex_priority" matInput type="number"/>
+                            <mat-icon matSuffix matTooltip="{{'route.dialog.regex_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                            <mat-error *ngIf="regexPriorityField.invalid">
+                                {{ 'route.dialog.error.regex_min_max' | translate }}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <!--Path handling-->
+                        <mat-form-field appearance="outline" class="margin-bottom-10"
+                                        color="accent" fxFlex="30">
+                            <mat-label>{{'route.dialog.path_handling' | translate}}</mat-label>
+                            <mat-select formControlName="path_handling">
+                                <mat-option value="v0">v0</mat-option>
+                                <mat-option value="v1">v1</mat-option>
+                            </mat-select>
+                            <mat-hint>{{'route.dialog.path_handling_hint' | translate}}</mat-hint>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="margin-top-10 margin-bottom-20-i" fxLayout="row" fxLayoutAlign="space-between start">
+                        <!--    Strip path-->
+                        <div class="margin-bottom-10" fxFlex="23" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-checkbox
+                                formControlName="strip_path">{{'route.dialog.strip_path' | translate}}</mat-checkbox>
+                            <mat-icon class="margin-left-10" matSuffix
+                                      matTooltip="{{'route.dialog.strip_path_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                        </div>
+
+                        <!-- Preserve host-->
+                        <div class="margin-bottom-10" fxFlex="23" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-checkbox
+                                formControlName="preserve_host">{{'route.dialog.preserve_host' | translate}}</mat-checkbox>
+                            <mat-icon class="margin-left-10" matSuffix
+                                      matTooltip="{{'route.dialog.preserve_host_tooltip' | translate}}"
+                                      matTooltipClass="tooltip-teal">info_outline
+                            </mat-icon>
+                        </div>
+
+                        <!-- request_buffering-->
+                        <div class="margin-bottom-10" fxFlex="23" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-checkbox
+                                formControlName="request_buffering">{{'route.dialog.request_buffering' | translate}}</mat-checkbox>
+                        </div>
+
+                        <!-- response_buffering-->
+                        <div class="margin-bottom-10" fxFlex="23" fxLayout="row" fxLayoutAlign="start center">
+                            <mat-checkbox
+                                formControlName="response_buffering">{{'route.dialog.response_buffering' | translate}}</mat-checkbox>
+                        </div>
+                    </div>
+
+                    <div class="margin-bottom-10" fxLayout="row"
+                         fxLayoutAlign="space-between start">
+                        <!--Sources and destinations-->
+                        <div fxFlex="47" fxLayout="column">
+                            <div fxLayout="row">{{'route.dialog.sources' | translate}}
+                                <mat-icon class="margin-left-10" matSuffix
+                                          matTooltip="{{'route.dialog.sources_hint' | translate}}"
+                                          matTooltipClass="tooltip-teal">info_outline
+                                </mat-icon>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <mat-form-field class="margin-bottom-10" color="accent"
+                                                fxFlex="40">
+                                    <mat-label>{{'route.dialog.sources_ip' | translate}}</mat-label>
+                                    <input #ipVal matInput type="text"/>
+                                </mat-form-field>
+
+                                <mat-form-field class="margin-bottom-10" color="accent"
+                                                fxFlex="40">
+                                    <mat-label>{{'route.dialog.sources_port' | translate}}</mat-label>
+                                    <input #portVal matInput type="text"/>
+                                </mat-form-field>
+
+                                <button (click)="addSource(ipVal, portVal)" color="accent" mat-icon-button>
+                                    <mat-icon>add_box</mat-icon>
+                                </button>
+                            </div>
+
+                            <mat-list class="list" role="list">
+                                <mat-list-item *ngFor="let source of currentSources; let idx = index" role="listitem">
+                                    {{source.ip}}:{{source.port}}
+                                    <button (click)="removeSource(idx)" color="warn" mat-icon-button>
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+
+                        <div fxFlex="47" fxLayout="column">
+                            <div fxLayout="row">{{'route.dialog.destinations' | translate}}
+                                <mat-icon class="margin-left-10" matSuffix
+                                          matTooltip="{{'route.dialog.destinations_hint' | translate}}"
+                                          matTooltipClass="tooltip-teal">info_outline
+                                </mat-icon>
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="space-between center">
+                                <mat-form-field class="margin-bottom-10" color="accent"
+                                                fxFlex="40">
+                                    <mat-label>{{'route.dialog.sources_ip' | translate}}</mat-label>
+                                    <input #ipVal2 matInput type="text"/>
+                                </mat-form-field>
+
+                                <mat-form-field class="margin-bottom-10" color="accent"
+                                                fxFlex="40">
+                                    <mat-label>{{'route.dialog.sources_port' | translate}}</mat-label>
+                                    <input #portVal2 matInput type="text"/>
+                                </mat-form-field>
+
+                                <button (click)="addDestination(ipVal2, portVal2)" color="accent" mat-icon-button>
+                                    <mat-icon>add_box</mat-icon>
+                                </button>
+                            </div>
+
+                            <mat-list class="list" role="list">
+                                <mat-list-item *ngFor="let destination of currentDestinations; let idx2 = index"
+                                               role="listitem">
+                                    {{destination.ip}}:{{destination.port}}
+                                    <button (click)="removeDestination(idx2)" color="warn" mat-icon-button>
+                                        <mat-icon>clear</mat-icon>
+                                    </button>
+                                </mat-list-item>
+                            </mat-list>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </form>
+    </div>
+</mat-dialog-content>
+
+<mat-divider class="margin-bottom-10-i margin-top-10-i"></mat-divider>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="space-between start">
+    <div>
+        <mat-error *ngIf="formNE.hasError('finalValidation')">
+            {{ 'route.dialog.error.final_validation' | translate }}
+        </mat-error>
+    </div>
+
+    <div>
+        <button color="warn" mat-button mat-dialog-close="null">{{'text.cancel' | translate}}</button>
+        <!-- Si a disabled le pasamos una función da error de ExpressionChangedAfterItHasBeenCheckedError -->
+        <button (click)="onSubmit()" [disabled]="formNE.invalid"
+                color="accent" mat-flat-button>
+            <span *ngIf="!editMode">{{'text.create' | translate}}</span>
+            <span *ngIf="editMode">{{'text.edit' | translate}}</span>
+        </button>
+    </div>
+</mat-dialog-actions>
+

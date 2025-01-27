@@ -19,7 +19,8 @@ import {MatAutocompleteSelectedEvent} from "@angular/material/autocomplete";
 @Component({
     selector: 'app-access-acls',
     templateUrl: './access-acls.component.html',
-    styleUrls: ['./access-acls.component.scss']
+    styleUrls: ['./access-acls.component.scss'],
+    standalone: false
 })
 export class AccessAclsComponent implements OnInit, OnDestroy {
     displayedColumns: string[] = ['group', 'consumer', 'created_at', 'tags', 'actions'];
