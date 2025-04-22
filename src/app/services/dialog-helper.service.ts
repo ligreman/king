@@ -56,7 +56,7 @@ export class DialogHelperService {
                     component = DialogNewServiceComponent;
                     break;
                 case 'route':
-                    if (this.globals.ROUTER_MODE) {
+                    if (this.globals.ROUTER_MODE === 'expressions') {
                         // Expressions
                         component = DialogNewRouteComponent;
                     } else {

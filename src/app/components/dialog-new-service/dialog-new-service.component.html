@@ -17,11 +17,12 @@
             <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="center center" *ngIf="!editMode">
                 <mat-form-field appearance="fill" class="margin-bottom-10" color="accent" fxFlex="80">
                     <mat-label>{{'text.templates' | translate}}</mat-label>
-                    <mat-select (selectionChange)="onServiceChange($event)">
-                        <mat-option *ngFor="let svc of services" [value]="svc.id">
-                            {{svc.name}}
+                    <input matInput [formControl]="searchControl" [matAutocomplete]="auto" />
+                    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onServiceChange($event)" [displayWith]="displayFn">
+                        <mat-option *ngFor="let svc of filteredServices" [value]="svc.id">
+                          {{ svc.name }}
                         </mat-option>
-                    </mat-select>
+                    </mat-autocomplete>
                     <mat-hint>{{'text.templates_hint' | translate}}</mat-hint>
                 </mat-form-field>
             </div>

@@ -10,29 +10,28 @@
     </h2>
 
     <mat-divider class="margin-bottom-20-i"></mat-divider>
+        <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
+            <p fxFlex="50">
+                <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
+            </p>
+        </div>
 
-    <div [fxShow]="loading" fxFlex fxLayoutAlign="center center">
-        <p fxFlex="50">
-            <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
-        </p>
-    </div>
-
-    <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start" *ngIf="!loading">
-        <div fxFlex="90">
+        <mat-dialog-content class="mat-typography" fxLayout="row" fxLayoutAlign="center start" *ngIf="!loading">
+            <div fxFlex="90">
             <form [formGroup]="form">
-                <!-- Dropdown for Plugin names -->
-                <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="center center" *ngIf="!editMode">
-                    <mat-form-field appearance="fill" class="margin-bottom-10" color="accent" fxFlex="80">
-                        <mat-label>{{'text.templates' | translate}}</mat-label>
-                        <mat-select (selectionChange)="onPluginChange($event)">
-                            <mat-option *ngFor="let plugin of plugins" [value]="plugin.id">
+                    <!-- Dropdown for Plugin names -->
+                    <div class="margin-bottom-10" fxLayout="row" fxLayoutAlign="center center" *ngIf="!editMode">
+                        <mat-form-field appearance="fill" class="margin-bottom-10" color="accent" fxFlex="80">
+                            <mat-label>{{'text.templates' | translate}}</mat-label>
+                            <input matInput [formControl]="searchControl" [matAutocomplete]="auto" />
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onPluginChange($event)" [displayWith]="displayFn">
+                            <mat-option *ngFor="let plugin of filteredPlugins" [value]="plugin.id">
                                 ({{ plugin.name }}) {{ plugin.instance_name }}
                             </mat-option>
-                        </mat-select>
-                        <mat-hint>{{'text.templates_hint' | translate}}</mat-hint>
-                    </mat-form-field>
-                </div>
-
+                            </mat-autocomplete>
+                            <mat-hint>{{'text.templates_hint' | translate}}</mat-hint>
+                        </mat-form-field>
+                    </div>
                 <mat-divider class="margin-bottom-20-i" *ngIf="!editMode"></mat-divider>
 
                 <!--Nombre-->

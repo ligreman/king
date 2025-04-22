@@ -1,6 +1,6 @@
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, Validators, FormControl} from '@angular/forms';
 import {MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
 import {MatChipInputEvent} from '@angular/material/chips';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
@@ -34,6 +34,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     formValid = false;
     defaultProtocols = ['http', 'https', 'tcp', 'tls', 'udp', 'grpc', 'grpcs'];
     validProtocols = this.defaultProtocols;
+    searchControl = new FormControl('');
     currentTags = [];
     allTags = [];
     editMode = false;
@@ -48,6 +49,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     fieldTypes = {};
     plugins = [];
     loading = false;
+    filteredPlugins: any[] = [];
 
     readonly separatorKeysCodes: number[] = [ENTER, COMMA];
 
@@ -129,6 +131,7 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             this.consumersList = value.consumers;
             this.pluginsEnabled = value.pluginsEnabled.sort();
             this.plugins = value.plugins;
+            this.filteredPlugins = this.plugins;
 
             // ¿vienen datos extra con el service, route o consumer ya elegido?
             if (this.pluginData !== null && this.pluginData.extras !== null) {
@@ -169,6 +172,10 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
             }
         });
 
+        this.searchControl.valueChanges.subscribe(value => {
+            this.filterPlugins(value);
+          });
+
         // Lista de tags
         this.api.getTags()
             .subscribe((res) => {
@@ -184,9 +191,33 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
     ngOnDestroy(): void {
     }
 
+    // In your component's TypeScript file
+    displayFn = (pluginId: any): string => {
+        const plugin = this.plugins.find(r => r.id === pluginId);
+        return plugin ? ((plugin.name && plugin.instance_name) ? `(${plugin.name}) ${plugin.instance_name}` : plugin.id) : '';
+    }
+
+    filterPlugins(searchTerm: string): void {
+        if (!searchTerm) {
+          this.filteredPlugins = this.plugins;
+        } else {
+            this.filteredPlugins = this.plugins.filter(plugin => {
+                let instanceName = plugin.instance_name ?? plugin.name; // Use empty string if instance_name is null or undefined
+                return instanceName.toLowerCase().includes(searchTerm.toLowerCase());
+            });
+        }
+      }
+    
+
     onPluginChange(event) {
         // Find the selected route in the routes array
-        const selectedPlugin = this.plugins.find(plugin => plugin.id === event.value);
+        let event_value = '';
+        if (event instanceof MatAutocompleteSelectedEvent) {
+            event_value = event.option.value;
+        } else {
+            event_value = event.value;
+        }
+        const selectedPlugin = this.plugins.find(plugin => plugin.id === event_value);
         const selectedPluginCopy = {...selectedPlugin};
 
         if (selectedPlugin) {
@@ -432,7 +463,6 @@ export class DialogNewPluginComponent implements OnInit, OnDestroy {
                 this.mapFields = [];
                 this.fieldTypes = {};
                 this.form.get('config').reset();
-
                 const data = this.generateFormFields(pluginSchemaFields, 'config');
 
                 this.form.setControl('config', data.dConfig);
