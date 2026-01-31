@@ -1,5 +1,11 @@
 ## King for [Kong API Gateway](https://docs.konghq.com)
 
+> [!WARNING]
+> Since Kong now distributes its UI through the open-source version of Kong API Gateway, this project loses some of its purpose.
+> 
+> Therefore, and due to a lack of time to keep it updated with new versions of Kong, it will be put on hold.
+> 
+
 Complete administration UI for Kong API Gateway.
 
 [![King architect](https://raw.githubusercontent.com/ligreman/king/main/docs/images/cap.png)](https://ligreman.github.io/king)
